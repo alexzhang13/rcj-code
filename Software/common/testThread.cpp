@@ -1,4 +1,4 @@
-#include "../_headers/testThread.h"
+#include "testThread.h"
 
 using namespace std;
 

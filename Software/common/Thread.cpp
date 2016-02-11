@@ -1,4 +1,4 @@
-#include "../_headers/Thread.h"
+#include "Thread.h"
 
 #include <string.h>
 #include <stdio.h>

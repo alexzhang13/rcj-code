@@ -8,7 +8,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../_headers/ARobot.h"
+#include "ARobot.h"
 
 class ARobot;
 class RangeData {

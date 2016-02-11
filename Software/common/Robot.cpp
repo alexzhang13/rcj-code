@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include "Robot.h"
-#include "../_headers/Thread.h"
+#include "Thread.h"
 
 Robot::Robot()
 {

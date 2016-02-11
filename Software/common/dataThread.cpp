@@ -1,4 +1,4 @@
-#include "../_headers/dataThread.h"
+#include "dataThread.h"
 
 using namespace std;
 

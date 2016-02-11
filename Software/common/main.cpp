@@ -5,17 +5,17 @@
 #include <wiringPi.h>
 
 #include <vector>
-#include "../_headers/ARobot.h"
-#include "../_headers/IMUData.h"
-#include "../_headers/navThread.h"
-#include "../_headers/dataThread.h"
-#include "../_headers/testThread.h"
-#include "../_headers/processThread.h"
-#include "../_headers/RangeData.h"
-#include "../_headers/SerialPort.h"
-#include "../_headers/Thread.h"
-#include "../_headers/UartRx.h"
-#include "../_headers/UartTx.h"
+#include "ARobot.h"
+#include "IMUData.h"
+#include "navThread.h"
+#include "dataThread.h"
+#include "testThread.h"
+#include "processThread.h"
+#include "RangeData.h"
+#include "SerialPort.h"
+#include "Thread.h"
+#include "UartRx.h"
+#include "UartTx.h"
 
 using namespace std;
 

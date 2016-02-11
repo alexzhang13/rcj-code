@@ -1,9 +1,9 @@
-#include "../_headers/RangeData.h"
+#include "RangeData.h"
 
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
-#include "../_headers/IMUData.h"
+#include "IMUData.h"
 
 #define OFFSET 17.5
 #define PI 3.1415926535

@@ -1,4 +1,4 @@
-#include "../_headers/LightData.h"
+#include "LightData.h"
 
 #include <stdio.h>
 #include <string.h>

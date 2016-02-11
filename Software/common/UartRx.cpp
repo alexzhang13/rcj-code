@@ -1,12 +1,12 @@
-#include "../_headers/UartRx.h"
+#include "UartRx.h"
 
 #include <unistd.h> // for sleep
 #include <stdio.h>
 #include <string.h>
-#include "../_headers/IMUData.h"
-#include "../_headers/LightData.h"
-#include "../_headers/RangeData.h"
-#include "../_headers/TempData.h"
+#include "IMUData.h"
+#include "LightData.h"
+#include "RangeData.h"
+#include "TempData.h"
 
 #ifdef WIN32
 #include <windows.h>

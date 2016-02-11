@@ -1,8 +1,8 @@
 #ifndef _UartTx_h_
 #define _UartTx_h_
 
-#include "../_headers/SerialPort.h"
-#include "../_headers/Thread.h"
+#include "SerialPort.h"
+#include "Thread.h"
 
 class UartTx : public Thread {
  public:

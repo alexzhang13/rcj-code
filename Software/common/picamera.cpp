@@ -1,4 +1,4 @@
-#include "../_headers/picamera.h"
+#include "picamera.h"
 
 #include <stdio.h>
 #include <unistd.h> // for sleep

@@ -8,14 +8,14 @@
 #include <iostream>
 
 #include <vector>
-#include "../_headers/ARobot.h"
-#include "../_headers/IMUData.h"
-#include "../_headers/processThread.h"
-#include "../_headers/RangeData.h"
-#include "../_headers/SerialPort.h"
-#include "../_headers/Thread.h"
-#include "../_headers/UartRx.h"
-#include "../_headers/UartTx.h"
+#include "ARobot.h"
+#include "IMUData.h"
+#include "processThread.h"
+#include "RangeData.h"
+#include "SerialPort.h"
+#include "Thread.h"
+#include "UartRx.h"
+#include "UartTx.h"
 
 class TestThread : public Thread {
  public:

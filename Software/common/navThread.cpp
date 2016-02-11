@@ -1,4 +1,4 @@
-#include "../_headers/navThread.h"
+#include "navThread.h"
 
 using namespace std;
 

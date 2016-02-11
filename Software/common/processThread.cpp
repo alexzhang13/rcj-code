@@ -1,4 +1,4 @@
-#include "../_headers/processThread.h"
+#include "processThread.h"
 
 #include <unistd.h> // for sleep
 
