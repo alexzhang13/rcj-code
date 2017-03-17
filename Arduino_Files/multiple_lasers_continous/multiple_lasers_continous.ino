@@ -41,7 +41,12 @@ void setup()
   delay(50); //delay
   laser2.init(); //init laser object, look for it
   laser2.configureDefault(); //laser config
+  laser2.writeReg(VL6180X::SYSRANGE__MAX_CONVERGENCE_TIME, 30);
+  laser2.writeReg16Bit(VL6180X::SYSALS__INTEGRATION_PERIOD, 50);
   laser2.setTimeout(500); //in case you can't find the laser object, timeout for this long
+  //laser2.stopContinuous();
+  delay(300);
+  laser2.startInterleavedContinuous();
   laser2.setAddress(0x26);
 
   digitalWrite(GPIO_PINL1, HIGH); //begin writing to XSHUT of first laser
@@ -49,21 +54,32 @@ void setup()
   laser3.init(); //init laser object, look for it
   //laser3.configureDefault(); //laser config
   laser3.setTimeout(500); //in case you can't find the laser object, timeout for this long
+  //laser3.stopContinuous();
+  delay(300);
+  laser3.startContinuous();
   laser3.setAddress(0x27);
-
-  digitalWrite(GPIO_PIN1, HIGH); //begin writing to XSHUT of first laser
-  delay(50); //delay
-  laser1.init(); //init laser object, look for it
-  laser1.configureDefault(); //laser config
-  laser1.setTimeout(500); //in case you can't find the laser object, timeout for this long
-  laser1.setAddress(0x25);
 
   digitalWrite(GPIO_PINL2, HIGH); //begin writing to XSHUT of first laser
   delay(50); //delay
   laser4.init(); //init laser object, look for it
   //laser4.configureDefault(); //laser config
   laser4.setTimeout(500); //in case you can't find the laser object, timeout for this long
+  //laser4.stopContinuous();
+  delay(300);
+  laser4.startContinuous();
   laser4.setAddress(0x28);
+
+  /*digitalWrite(GPIO_PIN1, HIGH); //begin writing to XSHUT of first laser
+  delay(50); //delay
+  laser1.init(); //init laser object, look for it
+  laser1.configureDefault(); //laser config
+  laser1.writeReg(VL6180X::SYSRANGE__MAX_CONVERGENCE_TIME, 30);
+  laser1.writeReg16Bit(VL6180X::SYSALS__INTEGRATION_PERIOD, 50);
+  laser1.setTimeout(500); //in case you can't find the laser object, timeout for this long
+  laser1.setAddress(0x25);
+  laser1.stopContinuous();
+  delay(300);
+  laser1.startInterleavedContinuous(100);*/
 }
 
 void loop()
@@ -113,7 +129,7 @@ void loop()
   {
     curr_time = millis(); //get the current time
     Wire.beginTransmission(37); //0x25 address for laser1
-    Serial.print("l1 "); Serial.print(laser1.readRangeSingleMillimeters()); //label with l1 and get the laser reading (mm)
+    Serial.print("l1 "); Serial.print(laser1.readRangeContinuousMillimeters()); //label with l1 and get the laser reading (mm)
     if (laser1.timeoutOccurred())
     {
       Serial.print(" TIMEOUT");  //if the laser isn't found, print TIMEOUT
@@ -121,7 +137,7 @@ void loop()
     Wire.endTransmission(); //end transmission to laser1
 
     Wire.beginTransmission(38); //0x26 address for laser2
-    Serial.print(" l2 ");  Serial.print(laser2.readRangeSingleMillimeters()); //label with l2 and get the laser reading (mm)
+    Serial.print(" l2 ");  Serial.print(laser2.readRangeContinuousMillimeters()); //label with l2 and get the laser reading (mm)
     if (laser2.timeoutOccurred())
     {
       Serial.print(" TIMEOUT");  //if the laser isn't found, print TIMEOUT
@@ -129,7 +145,7 @@ void loop()
     Wire.endTransmission(); //end transmission to laser2
 
     Wire.beginTransmission(39); //0x27 address for laser3
-    Serial.print(" l3 ");  Serial.print(laser3.readRangeSingleMillimeters()); //label with l3 and get the laser reading (mm)
+    Serial.print(" l3 ");  Serial.print(laser3.readRangeContinuousMillimeters()); //label with l3 and get the laser reading (mm)
     if (laser3.timeoutOccurred())
     {
       Serial.print(" TIMEOUT");  //if the laser isn't found, print TIMEOUT
@@ -137,7 +153,7 @@ void loop()
     Wire.endTransmission(); //end transmission to laser2
 
     Wire.beginTransmission(40); //0x28 address for laser4
-    Serial.print(" l4 ");  Serial.print(laser4.readRangeSingleMillimeters()); //label with l4 and get the laser reading (mm)
+    Serial.print(" l4 ");  Serial.print(laser4.readRangeContinuousMillimeters()); //label with l4 and get the laser reading (mm)
     if (laser4.timeoutOccurred())
     {
       Serial.print(" TIMEOUT");  //if the laser isn't found, print TIMEOUT
