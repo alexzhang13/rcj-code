@@ -27,8 +27,8 @@ void setup() {
   pinMode(R_ENCODER_B, INPUT); //set encoderB as INPUT
 
   // initialize hardware interrupts
-  attachInterrupt(3, leftEncoderEvent, CHANGE);
-  attachInterrupt(4, rightEncoderEvent, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(2), leftEncoderEvent, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(3), rightEncoderEvent, CHANGE);
 
   Serial.begin(9600);
   Serial.println("DC Motor Test");
@@ -51,7 +51,7 @@ void loop() {
 
   //ON this bot the motors are flipped, forwards is backwards
   
-  myMotor->run(BACKWARD);
+  myMotor->run(FORWARD);
   myMotor2->run(FORWARD);
   for (i=0; i<255; i++) {
     myMotor->setSpeed(i);  
@@ -68,7 +68,7 @@ void loop() {
     delay(10);
   }
 
-  myMotor->run(FORWARD);
+  myMotor->run(BACKWARD);
   myMotor2->run(BACKWARD);
   for (i=0; i<255; i++) {
     myMotor->setSpeed(i);
