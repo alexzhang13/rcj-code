@@ -7,8 +7,8 @@ set(SRCS
   common/Thread.cpp
   common/UartRx.cpp
   common/UartTx.cpp
-  #imu/MadgwickAHRS.c
-  #imu/MahonyAHRS.c
+  imu/MadgwickAHRS.c
+  imu/MahonyAHRS.c
 )
 
 #include path
