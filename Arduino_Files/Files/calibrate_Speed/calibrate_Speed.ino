@@ -1,7 +1,7 @@
-#define L_ENCODER_A 2 //INTERRUPT
-#define L_ENCODER_B 11 //PWM
-#define R_ENCODER_A 3 //PWM && INTERRUPT
-#define R_ENCODER_B 8
+#define L_ENCODER_A 6
+#define L_ENCODER_B 7
+#define R_ENCODER_A 12
+#define R_ENCODER_B 13
 
 #include <Wire.h>
 #include <Adafruit_MotorShield.h>
@@ -12,8 +12,11 @@ Adafruit_MotorShield AFMS = Adafruit_MotorShield(); //motorshield object
 Adafruit_DCMotor *myMotor = AFMS.getMotor(1); //left
 Adafruit_DCMotor *myMotor2 = AFMS.getMotor(2); //right
 
-volatile long int leftCount = 0; //left encoder
-volatile long int rightCount = 0; //right encoder
+volatile unsigned long leftCount = 0; //left encoder
+volatile unsigned long rightCount = 0; //right encoder
+unsigned long curr_time;
+unsigned long init_time;
+int i = 0;
 
 void setup() {
   pinMode(L_ENCODER_A, INPUT); //set encoderA as INPUT
@@ -22,7 +25,7 @@ void setup() {
   pinMode(R_ENCODER_B, INPUT); //set encoderB as INPUT
 
   attachInterrupt(0, leftEncoderEvent, CHANGE);
-  attachInterrupt(1, rightEncoderEvent, CHANGE);
+  //attachInterrupt(1, rightEncoderEvent, CHANGE);
   
   Serial.begin(115200);
   Serial.println("DC Motor Test");
@@ -38,16 +41,22 @@ void setup() {
   // turn on motor
   myMotor->run(RELEASE);
   myMotor2->run(RELEASE);
-  leftCount = 0;
-  rightCount = 0;
 }
 
 void loop() {
-  myMotor->run(FORWARD);
-  myMotor2->run(FORWARD);
-  Serial.print(millis());
-  Serial.print("   Left: "); Serial.print(leftCount);
-  Serial.print("   Right: "); Serial.println(rightCount);
+  if(i = 0)
+  {
+    init_time = millis();
+  }
+  curr_time = millis();
+  while((curr_time - init_time) >= 5000)
+  {
+    myMotor->run(RELEASE);
+    myMotor2->run(RELEASE);
+  }
+  myMotor->run(BACKWARD);
+  myMotor2->run(BACKWARD);
+  i++;
   
 }
 
