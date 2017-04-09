@@ -20,7 +20,6 @@ Servo servo;
 int angle = 0;   // servo position in degrees 
 
 unsigned long curr_time;
-int i = 0;
 
 void setup()
 {
@@ -98,40 +97,40 @@ void loop()
   {         
     servo.write(angle);     
     if(angle % 3 == 0)
-    {
-      i++;           
-      Serial.print(" Iteration: "); Serial.print(i); 
-      Serial.print(" l1 "); Serial.print(laser1.readRangeContinuousMillimeters()); //label with l1 and get the laser reading (mm)
+    {       
+      Serial.print(millis());    
+      Serial.print(" l "); Serial.print(angle); 
+      Serial.print(" "); Serial.print(laser1.readRangeContinuousMillimeters()); //label with l1 and get the laser reading (mm)
 
-      Serial.print(" l2 ");  Serial.print(laser2.readRangeContinuousMillimeters()); //label with l2 and get the laser reading (mm)
+      Serial.print(" ");  Serial.print(laser2.readRangeContinuousMillimeters()); //label with l2 and get the laser reading (mm)
 
-      Serial.print(" l3 ");  Serial.print(laser3.readRangeContinuousMillimeters()); //label with l3 and get the laser reading (mm)
+      Serial.print(" ");  Serial.print(laser3.readRangeContinuousMillimeters()); //label with l3 and get the laser reading (mm)
 
-      Serial.print(" l4 ");  Serial.println(laser4.readRangeContinuousMillimeters()); //label with l4 and get the laser reading (mm)                 
+      Serial.print(" ");  Serial.println(laser4.readRangeContinuousMillimeters()); //label with l4 and get the laser reading (mm)                 
     }          
-    delay(10);                   
+    delay(8);                   
   } 
 
-  delay(1000);
+  delay(500);
   // now scan back from 180 to 0 degrees
   for(angle = 180; angle > 0; angle--)    
   {                                
     servo.write(angle);  
     if(angle % 3 == 0)
-    {
-      i++;           
-      Serial.print(" Iteration: "); Serial.print(i); 
-      Serial.print(" l1 "); Serial.print(laser1.readRangeContinuousMillimeters()); //label with l1 and get the laser reading (mm)
+    { 
+      Serial.print(millis());    
+      Serial.print(" l "); Serial.print(angle); 
+      Serial.print(" "); Serial.print(laser1.readRangeContinuousMillimeters()); //label with l1 and get the laser reading (mm)
 
-      Serial.print(" l2 ");  Serial.print(laser2.readRangeContinuousMillimeters()); //label with l2 and get the laser reading (mm)
+      Serial.print(" ");  Serial.print(laser2.readRangeContinuousMillimeters()); //label with l2 and get the laser reading (mm)
 
-      Serial.print(" l3 ");  Serial.print(laser3.readRangeContinuousMillimeters()); //label with l3 and get the laser reading (mm)
+      Serial.print(" ");  Serial.print(laser3.readRangeContinuousMillimeters()); //label with l3 and get the laser reading (mm)
 
-      Serial.print(" l4 ");  Serial.println(laser4.readRangeContinuousMillimeters()); //label with l4 and get the laser reading (mm)   
+      Serial.print(" ");  Serial.println(laser4.readRangeContinuousMillimeters()); //label with l4 and get the laser reading (mm)   
                    
     }               
-    delay(10);       
+    delay(8);       
   } 
-  delay(1000);
+  delay(500);
 
 }
