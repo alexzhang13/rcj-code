@@ -138,7 +138,7 @@ void loop()
 
     Serial.print(" l3 ");  Serial.print(laser3.readRangeContinuousMillimeters()); //label with l3 and get the laser reading (mm)
 
-    Serial.print(" l4 ");  Serial.print(laser4.readRangeContinuousMillimeters()); //label with l4 and get the laser reading (mm)
+    Serial.print(" l4 ");  Serial.println(laser4.readRangeContinuousMillimeters()); //label with l4 and get the laser reading (mm)
 
     i++;
   }

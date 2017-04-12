@@ -43,8 +43,8 @@ void setup() {
 }
 
 void loop() {
-  myMotor->run(FORWARD);
-  myMotor2->run(FORWARD);
+  myMotor->run(RELEASE);
+  myMotor2->run(RELEASE);
   Serial.print(millis());
   Serial.print("   Left: "); Serial.print(leftCount);
   Serial.print("   Right: "); Serial.println(rightCount);
