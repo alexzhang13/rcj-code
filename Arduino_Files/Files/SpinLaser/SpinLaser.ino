@@ -58,7 +58,6 @@ void setup()
   digitalWrite(GPIO_PINL1, HIGH); //begin writing to XSHUT of first laser
   delay(50); //delay
   laser3.init(); //init laser object, look for it
-  laser3.writeReg(VL6180X::SYSRANGE__MAX_CONVERGENCE_TIME, 35);
   laser3.setTimeout(500); //in case you can't find the laser object, timeout for this long
   laser3.stopContinuous();
   delay(300);
@@ -69,7 +68,6 @@ void setup()
   digitalWrite(GPIO_PINL2, HIGH); //begin writing to XSHUT of first laser
   delay(50); //delay
   laser4.init(); //init laser object, look for it
-  laser4.writeReg(VL6180X::SYSRANGE__MAX_CONVERGENCE_TIME, 35);
   laser4.setTimeout(500); //in case you can't find the laser object, timeout for this long
   laser4.stopContinuous();
   delay(300);
