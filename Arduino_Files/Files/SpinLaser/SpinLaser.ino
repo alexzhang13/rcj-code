@@ -24,29 +24,24 @@ unsigned long curr_time;
 void setup()
 {
 
-  /*RESET PINS AND WRITE*/
-  pinMode(LED_PIN, OUTPUT);
-  pinMode(L_ENCODER_A, INPUT); //set encoderA as INPUT
-  pinMode(L_ENCODER_B, INPUT); //set encoderB as INPUT
-  pinMode(R_ENCODER_A, INPUT); //set encoderA as INPUT
-  pinMode(R_ENCODER_B, INPUT); //set encoderB as INPUT
-  pinMode(GPIO_PIN1, INPUT); //set encoderA as INPUT
-  pinMode(GPIO_PIN2, INPUT); //set encoderB as INPUT
-  pinMode(GPIO_PINL1, INPUT); //set encoderA as INPUT
-  pinMode(GPIO_PINL2, INPUT); //set encoderB as INPUT
-  delay(100);
+  pinMode(GPIO_PIN1, OUTPUT); //set XSHUT as OUTPUT
+  pinMode(GPIO_PIN2, OUTPUT); //set XSHUT of second laser as OUTPUT
+  pinMode(GPIO_PINL1, OUTPUT); //set XSHUT of third laser as OUTPUT
+  pinMode(GPIO_PINL2, OUTPUT); //set XSHUT of fourth laser as OUTPUT
+  
+  digitalWrite(GPIO_PIN2, LOW); //reset XSHUT of second laser
+  digitalWrite(GPIO_PINL1, LOW); //reset XSHUT of third laser
+  digitalWrite(GPIO_PINL2, LOW); //reset XSHUT of fourth laser
+  digitalWrite(GPIO_PIN1, LOW); //reset XSHUT of first laser
+  servo.attach(SERVO); 
 
-  digitalWrite(LED_PIN, LOW); //turn off LED
-  digitalWrite(GPIO_PIN1, LOW); //reset XSHUT of first short laser
-  digitalWrite(GPIO_PINL1, LOW); //reset XSHUT of first long laser
-  digitalWrite(GPIO_PIN2, LOW); //reset XSHUT of second short laser
-  digitalWrite(GPIO_PINL2, LOW); //reset XSHUT of second long laser
-  delay(100);
+  delay(500);
 
-  // initialize hardware interrupts
-  attachInterrupt(digitalPinToInterrupt(2), leftEncoderEvent, CHANGE);    //Pins 2 and 3 are the only Interrupt Pins 2-3
-  attachInterrupt(digitalPinToInterrupt(3), rightEncoderEvent, CHANGE);
-  delay(100);
+  Serial.begin(115200); //set baud rate to max to maximize rs232 -> sensor speed
+  Wire.begin(); //init i2c as master
+
+  Serial.println("Quad Distance Sensors");
+
 
   digitalWrite(GPIO_PIN2, HIGH); //begin writing to XSHUT of first laser
   delay(50); //delay
@@ -54,7 +49,7 @@ void setup()
   laser2.configureDefault(); //laser config
   laser2.writeReg(VL6180X::SYSRANGE__MAX_CONVERGENCE_TIME, 35);
   laser2.setTimeout(500); //in case you can't find the laser object, timeout for this long
-  //laser2.stopContinuous();
+  laser2.stopContinuous();
   delay(300);
   laser2.startRangeContinuous(30);
   laser2.setAddress(0x26);
