@@ -35,8 +35,8 @@
 
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();  //Initialize Motorshield
 
-Adafruit_DCMotor *motorRight = AFMS.getMotor(1); //Right is M3
-Adafruit_DCMotor *motorLeft = AFMS.getMotor(2); //Left is M4
+Adafruit_DCMotor *motorRight = AFMS.getMotor(2); //Right is M3
+Adafruit_DCMotor *motorLeft = AFMS.getMotor(1); //Left is M4
 
 VL6180X laserA_s; //init laser var1 SHORT
 VL6180X laserB_s; //init laser var2 SHORT
@@ -44,20 +44,19 @@ VL53L0X laserA_l; //init laser var3 LONG
 VL53L0X laserB_l; //init laser var4 LONG
 
 Adafruit_TMP007 tempA; //init temp_sensor var 1
-Adafruit_TMP007 tempB; //init temp_sensor var 1
+Adafruit_TMP007 tempB(0x41); //init temp_sensor var 2
 
 Servo dropper; //init dropper RC Servo
 Servo mount_laser; //init laser mount RC Servo
 
-static struct pt drop_pt, dcmotor_pt, distance_pt, sensor_pt; //Protothread Structs
+static struct pt drop_pt, dcmotor_pt, distance_pt, sensor_pt, imu_pt, write_pt; //Protothread Structs
 
 String command = "";
-QueueArray <String> write_queue; //Queue for writing commands to the PI
-QueueArray <String> command_queue; //Queue for receiving all commands
-QueueArray <String> sensor_queue; //Queue for sensor commands (toggle)
-QueueArray <String> dropper_queue; //Queue for dropper commands
-QueueArray <String> motor_queue; //Queue for motor commands
-QueueArray <String> distance_queue; //Queue for distance commands
+String sensor_queue; //Queue for sensor commands (toggle)
+String dropper_queue; //Queue for dropper commands
+String motor_queue; //Queue for motor commands
+String distance_queue; //Queue for distance commands
+String imu_queue; //Queue for IMU commands
 
 bool motorWait = false; //wait for motor thread
 bool distanceWait = false; //wait for distance thread
@@ -68,29 +67,24 @@ bool imuSwitch = true; //false meaning turn off
 bool distanceSwitch = true; //false meaning turn off
 bool motorSwitch = true; //false meaning turn off
 bool isMoving = false; //if the robot is running
+int speed_left = 0; //the speed used to control the other motor (Which is imbalanced)
+float distance_mm = 0;
 volatile long int leftEncoder = 0; //left encoder
 volatile long int rightEncoder = 0; //right encoder
+volatile float left_mm = 0;
+volatile float right_mm = 0;
 
-void setup() {
-
-  
-  /*START PROTOTHREADS*/
-  PT_INIT(&drop_pt);  // Init Protothread for Dropper and LED (10 hz)
-  PT_INIT(&dcmotor_pt);  // Init Protothread DC Motor (50 hz)
-  PT_INIT(&distance_pt);  // Init Protothread Laser and Mount (120 hz)
-  PT_INIT(&sensor_pt);  // Init Protothread other Sensors(Temp, Light) (5 hz)
-  delay(1000);
-  
+void setup() {  
   /*RESET PINS AND WRITE*/
   pinMode(LED_PIN, OUTPUT);
   pinMode(L_ENCODER_A, INPUT); //set encoderA as INPUT
   pinMode(L_ENCODER_B, INPUT); //set encoderB as INPUT
   pinMode(R_ENCODER_A, INPUT); //set encoderA as INPUT
   pinMode(R_ENCODER_B, INPUT); //set encoderB as INPUT
-  pinMode(GPIO_PIN1, INPUT); //set encoderA as INPUT
-  pinMode(GPIO_PIN2, INPUT); //set encoderB as INPUT
-  pinMode(GPIO_PINL1, INPUT); //set encoderA as INPUT
-  pinMode(GPIO_PINL2, INPUT); //set encoderB as INPUT
+  pinMode(GPIO_PIN1, OUTPUT); //set encoderA as INPUT
+  pinMode(GPIO_PIN2, OUTPUT); //set encoderB as INPUT
+  pinMode(GPIO_PINL1, OUTPUT); //set encoderA as INPUT
+  pinMode(GPIO_PINL2, OUTPUT); //set encoderB as INPUT
   delay(100);
 
   digitalWrite(LED_PIN, LOW); //turn off LED
@@ -99,13 +93,6 @@ void setup() {
   digitalWrite(GPIO_PIN2, LOW); //reset XSHUT of second short laser
   digitalWrite(GPIO_PINL2, LOW); //reset XSHUT of second long laser
   delay(100);
-
-  /*START SENSORS*/
-  mount_laser.attach(SERVO_MOUNT);   //Attach pin 10 to be for the laser mount
-  dropper.attach(SERVO_DROPPER);    //Attach pin 9 to be for the dropper
-  mount_laser.write(0);
-  dropper.write(60);
-  delay(500);
 
   // initialize hardware interrupts
   attachInterrupt(digitalPinToInterrupt(2), leftEncoderEvent, CHANGE);    //Pins 2 and 3 are the only Interrupt Pins 2-3
@@ -116,30 +103,9 @@ void setup() {
   Serial.begin(115200);
   Wire.begin();
   AFMS.begin();  // create with the default frequency 1.6KHz
-  delay(100);
-
-  /*INITIALIZE MPU9250 AND REQUEST BYTES*/
-  // Configure gyroscope range
-  I2CwriteByte(MPU9250_ADDRESS,27,GYRO_FULL_SCALE_250_DPS);
-  delay(500);
-  // Configure accelerometers range
-  I2CwriteByte(MPU9250_ADDRESS,28,ACC_FULL_SCALE_2_G);
-  delay(500);
-  // Set by pass mode for the magnetometers
-  I2CwriteByte(MPU9250_ADDRESS,0x37,0x02);
-  delay(500);
+  TWBR = ((F_CPU/400000l) - 16) / 2; //change i2c clock speed to 400k
   
-  /*INITIALIZE MOTORS*/
-  motorRight->setSpeed(150);
-  motorLeft->setSpeed(150);
-
-  motorRight->run(FORWARD);
-  motorLeft->run(FORWARD);
-  // turn on motor
-  motorRight->run(RELEASE);
-  motorLeft->run(RELEASE);
   delay(100);
-  
   digitalWrite(GPIO_PIN1, HIGH); //begin writing to XSHUT of first laser
   delay(50); //delay
   laserA_s.init(); //init laser object, look for it
@@ -191,6 +157,36 @@ void setup() {
   delay(100);
   laserB_l.setAddress(0x28);
   delay(100);
+  
+  /*INITIALIZE MPU9250 AND REQUEST BYTES*/
+  // Configure gyroscope range
+  I2CwriteByte(MPU9250_ADDRESS,27,GYRO_FULL_SCALE_250_DPS);
+  delay(50);
+  // Configure accelerometers range
+  I2CwriteByte(MPU9250_ADDRESS,28,ACC_FULL_SCALE_2_G);
+  delay(50);
+  // Set by pass mode for the magnetometers
+  I2CwriteByte(MPU9250_ADDRESS,0x37,0x02);
+  delay(50);
+
+  /*START SENSORS*/
+  mount_laser.attach(SERVO_MOUNT);   //Attach pin 10 to be for the laser mount
+  mount_laser.write(0);
+  delay(500);
+  dropper.attach(SERVO_DROPPER);    //Attach pin 9 to be for the dropper
+  dropper.write(60);
+  delay(500);
+  
+  /*INITIALIZE MOTORS*/
+  motorRight->setSpeed(69);
+  motorLeft->setSpeed(60);
+
+  motorRight->run(FORWARD);
+  motorLeft->run(FORWARD);
+  // turn on motor
+  motorRight->run(RELEASE);
+  motorLeft->run(RELEASE);
+  delay(50);
 
   /*INITIALIZE ALL SENSORS*/
   if (! tempA.begin()) { //look for tmp007 sensor
@@ -203,24 +199,29 @@ void setup() {
     while (1);
   }
   delay(100);
+
+  /*START PROTOTHREADS*/
+  PT_INIT(&drop_pt);  // Init Protothread for Dropper and LED
+  PT_INIT(&dcmotor_pt);  // Init Protothread DC Motor
+  PT_INIT(&distance_pt);  // Init Protothread Laser and Mount 
+  PT_INIT(&sensor_pt);  // Init Protothread other Sensors(Temp, Light)
+  PT_INIT(&imu_pt); //Init Protothread IMU
+  delay(1000);
+  
 }
 
 void loop() {
-   while (Serial.available() > 0) {
+   if (Serial.available() > 0) {
       command = Serial.readString(); //Await command
-      command_queue.push(command);
-      }
-   if(!command_queue.isEmpty()) {
-      sortCommands(); //sort queues into each respective protothread queue to check each function
+      sortCommands(command);
+      command = " ";
    }
-   if(!write_queue.isEmpty()) {
-      writeQueue(); //write to the PI if there is a writing queue
-   }
-
-   drop_pt_func(&drop_pt, 150);
-   dcmotor_pt_func(&dcmotor_pt, 25);
-   distance_pt_func(&distance_pt, 150);
-   sensor_pt_func(&sensor_pt, 250);
+        
+   drop_pt_func(&drop_pt, 201);
+   dcmotor_pt_func(&dcmotor_pt, 24);
+   distance_pt_func(&distance_pt, 253);
+   sensor_pt_func(&sensor_pt, 101);
+   imu_pt_func(&imu_pt, 25);
 }
 
 static int drop_pt_func(struct pt *pt, int interval) { //10 hz = 100ms
@@ -228,17 +229,18 @@ static int drop_pt_func(struct pt *pt, int interval) { //10 hz = 100ms
   static char func;
   PT_BEGIN(pt);
   while(1) { // never stop 
-    if(!dropper_queue.isEmpty()) { //check dropper queue
-      func = dropper_queue.peek().charAt(0); //func char val
-      dropper_queue.peek().remove(0, 2); //leave only parameter left
+    if(!(dropper_queue == " ")) { //check dropper queue
+      func = dropper_queue.charAt(0); //func char val
+      dropper_queue.remove(0, 2); //leave only parameter left
       if(func == 'a') { 
         drop();
-        dropper_queue.pop();
+        dropper_queue = " ";
       } else if (func == 'b') {
         lightUp(3000);
-        dropper_queue.pop();
+        dropper_queue = " ";
       } else {
         Serial.println("ERROR: FUNCTION IN DROPPER QUEUE HAS INVALID FUNCTION CALL (LETTER INVALID)");
+        dropper_queue = " ";
       }
     }
     
@@ -251,47 +253,48 @@ static int drop_pt_func(struct pt *pt, int interval) { //10 hz = 100ms
 static int dcmotor_pt_func(struct pt *pt, int interval) { //50 hz = 20ms
   static unsigned long timestamp = 0;
   static char func;
-  static String command;
   PT_BEGIN(pt);
   while(1) { // never stop 
-    if(!motor_queue.isEmpty()) {
-      command = motor_queue.peek();
-      func = command.charAt(0); //func char val
-      command.remove(0, 2); //leave only parameter left
+    if(!(motor_queue == " ")) {
+      func = motor_queue.charAt(0); //func char val
+      motor_queue.remove(0, 2); //leave only parameter left
       if(func == 'a') { 
-         Motor_Forward();
+         Motor_Forward(motor_queue.toInt());
          isMoving = true;
-         motor_queue.pop();
+         motor_queue = " ";
       } else if (func == 'b') {
-         Motor_Backward();
+         Motor_Backward(motor_queue.toInt());
          isMoving = true;
-         motor_queue.pop();
+         motor_queue = " ";
       } else if (func == 'c') {
          Motor_Stop();
          isMoving = false;
-         motor_queue.pop();
+         motor_queue = " ";
       } else if (func == 'd') {
          Motor_TurnRight();
          isMoving = true;
-         motor_queue.pop();
+         motor_queue = " ";
       } else if (func == 'e') {
          Motor_TurnLeft();
          isMoving = true;
-         motor_queue.pop();
+         motor_queue = " ";
       } else if (func == 'f'){
-         int split = command.indexOf(' ');
-         String split_str = command;
-         command.remove(split);  
+         int split = motor_queue.indexOf(' ');
+         String split_str = motor_queue;
+         motor_queue.remove(split);  
          split_str.remove(0, split+1);
-         Motor_setSpeed(command.toInt(), split_str.toInt());
-         motor_queue.pop();
+         Motor_setSpeed(motor_queue.toInt(), split_str.toInt());
+         motor_queue = " ";
+      } else if (func == 'g') {
+         resetEncoder();
+         motor_queue = " ";
       } else {
          Serial.println("ERROR: FUNCTION IN MOTOR QUEUE HAS INVALID FUNCTION CALL (LETTER INVALID)");
-         motor_queue.pop();
+         motor_queue = " ";
       }
-      if(isMoving == true) {
+    }
+    if(isMoving == true) {
          Motor_Encoder();
-      }
     }
     
     PT_WAIT_UNTIL(pt, millis() - timestamp > interval);
@@ -303,36 +306,28 @@ static int dcmotor_pt_func(struct pt *pt, int interval) { //50 hz = 20ms
 static int distance_pt_func(struct pt *pt, int interval) { //125 hz = 8ms
   static unsigned long timestamp = 0;
   static char func;
-  static String command;
   PT_BEGIN(pt);
   while(1) { // never stop 
-    if(!distance_queue.isEmpty()) {
-      command = distance_queue.peek();
-      func = command.charAt(0); //func char val
-      command.remove(0, 2); //leave only parameter left
+    if(!(distance_queue == " ")) {
+      func = distance_queue.charAt(0); //func char val
+      distance_queue.remove(0, 2); //leave only parameter left
       if(func == 'a') { 
          Mount_Sweep();
-         distance_queue.pop();
+         distance_queue = " ";
       } else if (func == 'b') { //toggle on
          if(distanceSwitch == true) {
+            distanceSwitch = false;
          } else {
+            distanceSwitch = true;
          }
-         distance_queue.pop(); 
-      } else if (func == 'c') {
-         if(imuSwitch == true) {
-         } else {
-         }
-         distance_queue.pop();
+         distance_queue = " ";
       } else {
         Serial.println("ERROR: FUNCTION IN DISTANCE QUEUE HAS INVALID FUNCTION CALL (LETTER INVALID)");
-        distance_queue.pop();
+        distance_queue = " ";
       }
     } else {
       if(distanceSwitch == true) {
-        //getDistanceReading();
-      }
-      if(imuSwitch == true) {
-        getIMU();
+        getDistanceReading();
       }
     }
     PT_WAIT_UNTIL(pt, millis() - timestamp > interval);
@@ -345,17 +340,20 @@ static int sensor_pt_func(struct pt *pt, int interval) { //5 hz = 200ms
   static unsigned long timestamp = 0;
   static char func;
   PT_BEGIN(pt);
-  while(1) { // never stop 
-    if(!sensor_queue.isEmpty()) {
-      func = sensor_queue.peek().charAt(0); //func char val
-      sensor_queue.peek().remove(0, 2); //leave only parameter left
+  while(1) {
+    if(!(sensor_queue == " ")) {
+      func = sensor_queue.charAt(0); //func char val
+      sensor_queue.remove(0, 2); //leave only parameter left
       if(func == 'a') { //toggle sending data to the PI
         if(sensorSwitch == true) {
+          sensorSwitch = false;
         } else {
+          sensorSwitch = true;
         }
-        sensor_queue.pop();
+        sensor_queue = " ";
       } else {
         Serial.println("ERROR: FUNCTION IN SENSOR QUEUE HAS INVALID FUNCTION CALL (LETTER INVALID)");
+        sensor_queue = " ";
       }
     }
     if(sensorSwitch == true) {
@@ -363,6 +361,35 @@ static int sensor_pt_func(struct pt *pt, int interval) { //5 hz = 200ms
       getLightReading(); //get photocell reading
     }
     
+    PT_WAIT_UNTIL(pt, millis() - timestamp > interval);
+    timestamp = millis(); // take a new timestamp
+  }
+  PT_END(pt);
+}
+
+static int imu_pt_func(struct pt *pt, int interval) { //125 hz = 8ms
+  static unsigned long timestamp = 0;
+  static char func;
+  PT_BEGIN(pt);
+  while(1) { // never stop 
+    if(!(imu_queue == " ")) {
+      func = imu_queue.charAt(0); //func char val
+      imu_queue.remove(0, 2); //leave only parameter left
+      if(func == 'a') { 
+         if(imuSwitch == true) {
+            imuSwitch = false;
+         } else {
+            imuSwitch = true;
+         }
+         imu_queue = " ";
+      } else {
+        Serial.println("i e");
+        imu_queue = " ";
+      }
+    } 
+    if(imuSwitch == true) {
+        getIMU();
+    }
     PT_WAIT_UNTIL(pt, millis() - timestamp > interval);
     timestamp = millis(); // take a new timestamp
   }
@@ -394,68 +421,52 @@ void I2CwriteByte(uint8_t Address, uint8_t Register, uint8_t Data)
   Wire.endTransmission();
 }
 
-void sortCommands()
+void sortCommands(String command)
 {
-  char type;
-  String command;
-  while(!command_queue.isEmpty()) { //until the queue is completely empty
-    type = command_queue.peek().charAt(0);
-    command = command_queue.peek();
+    char type;
+    type = command.charAt(0);
     if(type == 'r') { //enqueue laser command
        command.remove(0, 2); //remove label
-       command_queue.front() = command;
-       distance_queue.push(command); //enqueue distance command queue
-       command_queue.pop(); //dequeue central queue 
+       distance_queue = command; //enqueue distance command queue
+       command = " "; //dequeue central queue 
     } else if (type == 'm') { //enqueue motor command
        command.remove(0, 2); //remove label
-       command_queue.front() = command;
-       motor_queue.push(command); //enqueue motor command queue
-       command_queue.pop(); //dequeue central queue 
+       motor_queue = command; //enqueue motor command queue
+       command = " "; //dequeue central queue
     } else if (type == 'd') { //enqueue dropper/led command
        command.remove(0, 2); //remove label
-       command_queue.front() = command;
-       dropper_queue.push(command);
-       command_queue.pop(); //dequeue central queue 
+       dropper_queue = command;
+       command = " "; //dequeue central queue
     } else if (type == 's') {
        command.remove(0, 2); //remove label
-       command_queue.front() = command;
-       sensor_queue.push(command);
-       command_queue.pop(); //dequeue central queue 
+       sensor_queue = command;
+       command = " "; //dequeue central queue
+    } else if (type == 'i') {
+       command.remove(0, 2); //remove label
+       imu_queue = command;
+       command = " "; //dequeue central queue
     } else { //not supposed to happen but if it somehow does
-       Serial.println("ERROR: COMMAND IN SORTCOMMANDS() DOES NOT HAVE A PROPER LABEL");
-       command_queue.pop(); //dequeue central queue 
+       command = " "; //dequeue central queue
     }
-  }
-}
-void writeQueue()
-{
-  String towrite;
-  while(!write_queue.isEmpty())
-  {
-    towrite = write_queue.peek();
-    for (int i = 0; i < towrite.length(); i++)
-    {
-      Serial.write(towrite[i]);   // Push individual chars of the String through the loop (write doesn't support String, only string/char*)
-    }
-    Serial.write("\n");
-    write_queue.pop();
-  }
 }
 
-void Motor_Forward() //Function for moving forward a certain distance
+void Motor_Forward(int distance) //Function for moving forward a certain distance
 {
+  distance_mm = distance;
   motorRight->run(BACKWARD); //INVERTED
   motorLeft->run(BACKWARD);
 }
 
-void Motor_Backward()
+void Motor_Backward(int distance)
 {
+  distance_mm = distance;
   motorRight->run(FORWARD);    //Direction is inverted
   motorLeft->run(FORWARD);
 }
 
 void Motor_Stop()
 {
+  resetEncoder();
   motorRight->run(RELEASE);
   motorLeft->run(RELEASE);
 }
@@ -473,16 +484,25 @@ void Motor_TurnLeft() //Makes a x degree turn to the left
 }
 void Motor_setSpeed(int left_speed, int right_speed)
 {
-  motorRight->setSpeed(right_speed);
   motorLeft->setSpeed(left_speed);
+  motorRight->setSpeed(right_speed);
+  speed_left = left_speed;
 }
 
 void Motor_Encoder()
 {
+  if(left_mm >= distance_mm) {
+    motor_queue = "c";
+  }
   String reading = "";
+  if(abs(leftEncoder) < rightEncoder){
+    motorRight->setSpeed(speed_left); //corecting
+  } else {
+    motorRight->setSpeed(speed_left+10); //take 
+  }
   reading += millis(); reading += " m ";
-  reading += leftEncoder; reading += " "; reading += rightEncoder;
-  //write_queue.push(reading);
+  reading += left_mm; reading += " "; reading += right_mm;
+  Serial.println(reading);
 }
 
 void Mount_Sweep()
@@ -499,7 +519,7 @@ void Mount_Sweep()
       reading += " "; reading += laserA_s.readRangeContinuousMillimeters(); //laser 1 val (mm)
       reading += " "; reading += laserB_l.readRangeContinuousMillimeters(); //laser 4 val (mm)
       reading += " "; reading += laserB_s.readRangeContinuousMillimeters(); //laser 3 val (mm)
-      //write_queue.push(reading); //add line to write queue
+      Serial.println(reading);
       reading = "";  
     }        
     delay(8);                   
@@ -517,7 +537,7 @@ void Mount_Sweep()
       reading += " "; reading += laserA_s.readRangeContinuousMillimeters(); //laser 1 val (mm)
       reading += " "; reading += laserB_l.readRangeContinuousMillimeters(); //laser 4 val (mm)
       reading += " "; reading += laserB_s.readRangeContinuousMillimeters(); //laser 3 val (mm)
-      //write_queue.push(reading); //add line to write queue
+      Serial.println(reading);
       reading = "";  
     }               
     delay(8);       
@@ -532,7 +552,7 @@ void getDistanceReading()
   reading += " "; reading += laserA_s.readRangeContinuousMillimeters(); //laser 1 val (mm)
   reading += " "; reading += laserB_l.readRangeContinuousMillimeters(); //laser 4 val (mm)
   reading += " "; reading += laserB_s.readRangeContinuousMillimeters(); //laser 3 val (mm)
-  //write_queue.push(reading); //add line to write queue           
+  Serial.println(reading);     
 }
 
 void getIMU()
@@ -562,7 +582,7 @@ void getIMU()
   // Gyroscope
   reading += gx; reading += " "; reading += gy; reading += " "; reading += gz; reading += " ";
   
-  //write_queue.push(reading);
+  Serial.println(reading);
 }
 
 void drop() //drop a kit
@@ -607,16 +627,15 @@ void getLightReading() //photocell sensor/transistor
 {
   String reading = "";
   reading += millis(); reading += " l ";
-  reading += analogRead(PHOTOCELL); //write_queue.push(reading);
+  reading += analogRead(PHOTOCELL); Serial.println(reading); //writeQueue();
 }
 
 void getTempReading() //temperature sensor(s)
 {
   String reading = ""; 
   reading += millis(); reading += " t ";
-  reading += tempA.readObjTempC(); reading += " "; reading += tempB.readObjTempC(); //write_queue.push(reading);
+  reading += tempA.readObjTempC(); reading += " "; reading += tempB.readObjTempC(); Serial.println(reading); //writeQueue();
 }
-
 // encoder event for the interrupt call
 void leftEncoderEvent() {
   if (digitalRead(L_ENCODER_A) == HIGH) {
@@ -632,6 +651,7 @@ void leftEncoderEvent() {
       leftEncoder++;
     }
   }
+  left_mm = leftEncoder*3.1415926535*71.5094666677/1806.96;
 }
 
 // encoder event for the interrupt call
@@ -649,12 +669,15 @@ void rightEncoderEvent() {
       rightEncoder++;
     }
   }
+  right_mm = rightEncoder*3.1415926535*71.5094666677/1806.96;
 }
 
 void resetEncoder()
 {
   rightEncoder = 0;
   leftEncoder = 0;
+  left_mm = 0;
+  right_mm = 0;
 }
 
 
