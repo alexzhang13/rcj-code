@@ -58,6 +58,12 @@ String motor_queue; //Queue for motor commands
 String distance_queue; //Queue for distance commands
 String imu_queue; //Queue for IMU commands
 
+int16_t gx_drift, gy_drift, gz_drift; //gyro drift values
+int16_t gx_arr[10] = {0}; //10 values of gyro_x when not moving
+int16_t gy_arr[10] = {0}; //10 values of gyro_y when not moving
+int16_t gz_arr[10] = {0}; //10 values of gyro_z when not moving
+int g_iter = 0; //current gyro iteration
+
 bool motorWait = false; //wait for motor thread
 bool distanceWait = false; //wait for distance thread
 bool dropperWait = false; //wait for dropper thread
@@ -67,7 +73,7 @@ bool imuSwitch = true; //false meaning turn off
 bool distanceSwitch = true; //false meaning turn off
 bool motorSwitch = true; //false meaning turn off
 bool isMoving = false; //if the robot is running
-int speed_left = 0; //the speed used to control the other motor (Which is imbalanced)
+int speed_left = 60; //the speed used to control the other motor (Which is imbalanced)
 float distance_mm = 0;
 volatile long int leftEncoder = 0; //left encoder
 volatile long int rightEncoder = 0; //right encoder
@@ -81,10 +87,10 @@ void setup() {
   pinMode(L_ENCODER_B, INPUT); //set encoderB as INPUT
   pinMode(R_ENCODER_A, INPUT); //set encoderA as INPUT
   pinMode(R_ENCODER_B, INPUT); //set encoderB as INPUT
-  pinMode(GPIO_PIN1, OUTPUT); //set encoderA as INPUT
-  pinMode(GPIO_PIN2, OUTPUT); //set encoderB as INPUT
-  pinMode(GPIO_PINL1, OUTPUT); //set encoderA as INPUT
-  pinMode(GPIO_PINL2, OUTPUT); //set encoderB as INPUT
+  pinMode(GPIO_PIN1, OUTPUT); //set lasers as OUTPUT
+  pinMode(GPIO_PIN2, OUTPUT); //set lasers as OUTPUT
+  pinMode(GPIO_PINL1, OUTPUT); //set lasers as OUTPUT
+  pinMode(GPIO_PINL2, OUTPUT); //set lasers as OUTPUT
   delay(100);
 
   digitalWrite(LED_PIN, LOW); //turn off LED
@@ -104,59 +110,53 @@ void setup() {
   Wire.begin();
   AFMS.begin();  // create with the default frequency 1.6KHz
   TWBR = ((F_CPU/400000l) - 16) / 2; //change i2c clock speed to 400k
-  
-  delay(100);
-  digitalWrite(GPIO_PIN1, HIGH); //begin writing to XSHUT of first laser
-  delay(50); //delay
-  laserA_s.init(); //init laser object, look for it
-  delay(100);
-  laserA_s.configureDefault(); //laser config
-  delay(100);
-  laserA_s.writeReg(VL6180X::SYSRANGE__MAX_CONVERGENCE_TIME, 30);
-  delay(100);
-  laserA_s.writeReg16Bit(VL6180X::SYSALS__INTEGRATION_PERIOD, 50);
-  delay(100);
-  laserA_s.setTimeout(500); //in case you can't find the laser object, timeout for this long
-  laserA_s.setAddress(0x25);
-  delay(100);
-  laserA_s.startInterleavedContinuous(100);
-  delay(100);
-
-  digitalWrite(GPIO_PINL1, HIGH); //begin writing to XSHUT of first laser
-  delay(50); //delay
-  laserA_l.init(); //init laser object, look for it
-  delay(100);
-  laserA_l.setTimeout(500); //in case you can't find the laser object, timeout for this long
-  laserA_l.startContinuous();
-  delay(100);
-  laserA_l.setAddress(0x27);
   delay(100);
   
   digitalWrite(GPIO_PIN2, HIGH); //begin writing to XSHUT of first laser
   delay(50); //delay
   laserB_s.init(); //init laser object, look for it
-  delay(100);
   laserB_s.configureDefault(); //laser config
-  delay(100);
-  laserB_s.writeReg(VL6180X::SYSRANGE__MAX_CONVERGENCE_TIME, 30);
-  delay(100);
-  laserB_s.writeReg16Bit(VL6180X::SYSALS__INTEGRATION_PERIOD, 50);
-  delay(100);
+  laserB_s.writeReg(VL6180X::SYSRANGE__MAX_CONVERGENCE_TIME, 35);
   laserB_s.setTimeout(500); //in case you can't find the laser object, timeout for this long
-  laserB_s.startInterleavedContinuous();
-  delay(100);
+  laserB_s.writeReg16Bit(VL6180X::SYSALS__INTEGRATION_PERIOD, 50);
+  laserB_s.stopContinuous();
+  delay(300);
+  laserB_s.startRangeContinuous(30);
   laserB_s.setAddress(0x26);
-  delay(100);
+  delay(100); //delay
+
+  digitalWrite(GPIO_PINL1, HIGH); //begin writing to XSHUT of first laser
+  delay(50); //delay
+  laserA_l.init(); //init laser object, look for it
+  laserA_l.setTimeout(500); //in case you can't find the laser object, timeout for this long
+  laserA_l.stopContinuous();
+  delay(300);
+  laserA_l.startContinuous(30);
+  laserA_l.setAddress(0x27);
+  delay(100); //delay
 
   digitalWrite(GPIO_PINL2, HIGH); //begin writing to XSHUT of first laser
   delay(50); //delay
   laserB_l.init(); //init laser object, look for it
-  delay(100);
   laserB_l.setTimeout(500); //in case you can't find the laser object, timeout for this long
-  laserB_l.startContinuous();
-  delay(100);
+  laserB_l.stopContinuous();
+  delay(300);
+  laserB_l.startContinuous(30);
   laserB_l.setAddress(0x28);
-  delay(100);
+  delay(100); //delay
+
+  digitalWrite(GPIO_PIN1, HIGH); //begin writing to XSHUT of first laser
+  delay(50); //delay
+  laserA_s.init(); //init laser object, look for it
+  laserA_s.configureDefault(); //laser config
+  laserA_s.writeReg(VL6180X::SYSRANGE__MAX_CONVERGENCE_TIME, 35);
+  laserA_s.setTimeout(500); //in case you can't find the laser object, timeout for this long
+  laserB_s.writeReg16Bit(VL6180X::SYSALS__INTEGRATION_PERIOD, 50);
+  laserA_s.setAddress(0x25);
+  laserA_s.stopContinuous();
+  delay(300);
+  laserA_s.startRangeContinuous(30);
+  delay(100); //delay
   
   /*INITIALIZE MPU9250 AND REQUEST BYTES*/
   // Configure gyroscope range
@@ -219,7 +219,7 @@ void loop() {
         
    drop_pt_func(&drop_pt, 201);
    dcmotor_pt_func(&dcmotor_pt, 24);
-   distance_pt_func(&distance_pt, 253);
+   distance_pt_func(&distance_pt, 153);
    sensor_pt_func(&sensor_pt, 101);
    imu_pt_func(&imu_pt, 25);
 }
@@ -259,24 +259,24 @@ static int dcmotor_pt_func(struct pt *pt, int interval) { //50 hz = 20ms
       func = motor_queue.charAt(0); //func char val
       motor_queue.remove(0, 2); //leave only parameter left
       if(func == 'a') { 
-         Motor_Forward(motor_queue.toInt());
          isMoving = true;
+         Motor_Forward(motor_queue.toInt());
          motor_queue = " ";
       } else if (func == 'b') {
-         Motor_Backward(motor_queue.toInt());
          isMoving = true;
+         Motor_Backward(motor_queue.toInt());
          motor_queue = " ";
       } else if (func == 'c') {
          Motor_Stop();
          isMoving = false;
          motor_queue = " ";
       } else if (func == 'd') {
-         Motor_TurnRight();
          isMoving = true;
+         Motor_TurnRight();
          motor_queue = " ";
       } else if (func == 'e') {
-         Motor_TurnLeft();
          isMoving = true;
+         Motor_TurnLeft();
          motor_queue = " ";
       } else if (func == 'f'){
          int split = motor_queue.indexOf(' ');
@@ -491,11 +491,11 @@ void Motor_setSpeed(int left_speed, int right_speed)
 
 void Motor_Encoder()
 {
-  if(left_mm >= distance_mm) {
+  if(abs(left_mm) >= distance_mm) {
     motor_queue = "c";
   }
   String reading = "";
-  if(abs(leftEncoder) < rightEncoder){
+  if(abs(leftEncoder) < abs(rightEncoder)){
     motorRight->setSpeed(speed_left); //corecting
   } else {
     motorRight->setSpeed(speed_left+10); //take 
@@ -576,7 +576,36 @@ void getIMU()
   int16_t gx=Buf[8]<<8 | Buf[9];
   int16_t gy=Buf[10]<<8 | Buf[11];
   int16_t gz=Buf[12]<<8 | Buf[13];
- 
+
+  //check and remove drift
+  if(isMoving == false) {
+    //Cycle 0-9 iterations in array and average for drift
+    gx_arr[g_iter%10] = gx; 
+    gy_arr[g_iter%10] = gy; 
+    gz_arr[g_iter%10] = gz;
+
+    //Take avgs for each gyro value
+    gx_drift = (gx_arr[0]+gx_arr[1]+gx_arr[2]+gx_arr[3]+gx_arr[4]+gx_arr[5]+gx_arr[6]+gx_arr[7]+gx_arr[8]+gx_arr[9]); 
+    gy_drift = (gy_arr[0]+gy_arr[1]+gy_arr[2]+gy_arr[3]+gy_arr[4]+gy_arr[5]+gy_arr[6]+gy_arr[7]+gy_arr[8]+gy_arr[9]); 
+    gz_drift = (gz_arr[0]+gz_arr[1]+gz_arr[2]+gz_arr[3]+gz_arr[4]+gz_arr[5]+gz_arr[6]+gz_arr[7]+gz_arr[8]+gz_arr[9]);   
+
+    //First 10 iterations
+    if(g_iter < 10) {
+      gx_drift /= g_iter;
+      gy_drift /= g_iter;
+      gz_drift /= g_iter;
+    } else {
+      gx_drift /= 10;
+      gy_drift /= 10;
+      gz_drift /= 10;
+    }
+
+    //increase iteration count
+    ++g_iter;
+  }
+  //Apply drift
+  gx -= gx_drift; gy -= gy_drift; gz -= gz_drift;
+  
   // Accelerometer
   reading += ax; reading += " "; reading += ay; reading += " "; reading += az; reading += " ";
   // Gyroscope
