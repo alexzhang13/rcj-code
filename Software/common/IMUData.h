@@ -1,6 +1,7 @@
 #ifndef _IMU_DATA_H_
 #define _IMU_DATA_H_
 
+#include <sys/types.h>
 #include <stdio.h>
 #include <string>
 #include <iostream>
@@ -12,7 +13,7 @@ class IMUData {
 public:
 
 	typedef struct {
-		uint32_t tstamp; //timestamp
+		uint16_t tstamp; //timestamp
 		char id; //always comes out as i for imu
 		float ax; //2g: scale factor: 16384
 		float ay; //2g: scale factor: 16384
@@ -25,7 +26,7 @@ public:
 	IMUData();
 	~IMUData();
 
-	int IMUData::parseData(char* buf);
+	int parseData(char* buf);
 	int runFilter();
 
 private:
@@ -37,4 +38,4 @@ private:
 
 };
 
-#endif // !_IMU_TEST_H_
+#endif // !_IMU_DATA_H_

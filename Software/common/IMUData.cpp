@@ -4,12 +4,12 @@
 
 IMUData::IMUData()
 {
-	m_data.clear();
+	//m_data.clear();
 }
 
 IMUData::~IMUData()
 {
-	m_data.clear();
+	//m_data.clear();
 }
 
 int IMUData::parseData(char* buf)
@@ -25,6 +25,6 @@ int IMUData::runFilter()
 	m_pitch = madgwick.getPitch();
 	m_yaw = madgwick.getYaw();
 
-	printf("Timestamp: %i Roll: %f Pitch: %f Yaw: %f\n", tstamp,  m_roll, m_pitch, m_yaw);
+	printf("Timestamp: %i Roll: %f Pitch: %f Yaw: %f\n", data.tstamp,  m_roll, m_pitch, m_yaw);
 	return 0;
 }
