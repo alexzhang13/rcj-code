@@ -8,6 +8,7 @@
 
 int main(int argc,char **argv){
 #if 1
+    IMUData imu;
     char buf[40];
     //SerialPort *port = new SerialPort("/dev/ttyUSB0",115200);
     SerialPort *port = new SerialPort("/dev/ttyAMA0",115200);
@@ -19,7 +20,15 @@ int main(int argc,char **argv){
 			buf[i] = ' ';
 		}
     	port->fgets(buf,40);
-		printf("%s\n",buf);
+        for(int i = 0; i < 40; i++) {
+            if(buf[i] == 'i') { //check if it's IMU
+                imu.parseData(buf);
+                imu.runFilter();
+                break;
+            }
+        }
+
+		//printf("%s\n",buf);
 	}
 #endif
 

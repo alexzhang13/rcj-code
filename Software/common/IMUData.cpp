@@ -12,45 +12,19 @@ IMUData::~IMUData()
 	m_data.clear();
 }
 
-int IMUData::readData(const char *fname)
+int IMUData::parseData(char* buf)
 {
-	IMU_DataType data;
-	int32_t line_nums = 0;
-	int ch;
-	FILE *data_file;
-
-
-	if (fname == NULL)
-		return -1;
-
-	data_file = fopen(fname, "r");
-
-	while (EOF != (ch = getc(data_file)))
-		if ('\n' == ch)
-			++line_nums;
-	rewind(data_file);
-	for (int i = 0; i < line_nums; i++) {
-		// read per line
-		fscanf(data_file, "%i %f %f %f %f %f %f", &data.tstamp, &data.ax, &data.ay, &data.az, &data.gx, &data.gy, &data.gz/*, &data.mx, &data.my, &data.mz*/);
-		m_data.push_back(data);
-	}
-	fclose(data_file);
+	sscanf(buf, "%f %c %f %f %f %f %f %f", &data.tstamp, &data.id, &data.ax, &data.ay, &data.az, &data.gx, &data.gy, &data.gz);
 	return 0;
 }
+
 int IMUData::runFilter()
 {
-	if (m_data.size() == 0)
-		return -1;
+	madgwick.updateIMU(data.gx/131, data.gy/131, data.gz/131, data.ax/16384, data.ay/16384, data.az/16384);
+	m_roll = madgwick.getRoll();
+	m_pitch = madgwick.getPitch();
+	m_yaw = madgwick.getYaw();
 
-	for (int32_t i = 0; i < m_data.size(); i++) {
-		//gx and gy are inverted
-		madgwick.updateIMU(m_data[i].gx/131, m_data[i].gy/131, m_data[i].gz/131, m_data[i].ax/16384, m_data[i].ay/16384, m_data[i].az/16384);
-		m_roll = madgwick.getRoll();
-		m_pitch = madgwick.getPitch();
-		m_yaw = madgwick.getYaw();
-
-		printf("Timestamp: %i Roll: %f Pitch: %f Yaw: %f\n", m_data[i].tstamp,  m_roll, m_pitch, m_yaw);
-
-	}
+	printf("Timestamp: %i Roll: %f Pitch: %f Yaw: %f\n", tstamp,  m_roll, m_pitch, m_yaw);
 	return 0;
 }

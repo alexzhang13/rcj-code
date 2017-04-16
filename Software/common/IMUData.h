@@ -12,26 +12,24 @@ class IMUData {
 public:
 
 	typedef struct {
-		uint32_t tstamp;
+		uint32_t tstamp; //timestamp
+		char id; //always comes out as i for imu
 		float ax; //2g: scale factor: 16384
 		float ay; //2g: scale factor: 16384
 		float az; //2g: scale factor: 16384
 		float gx; //250dps: scale factor: 131 
 		float gy; //250dps: scale factor: 131 
 		float gz; //250dps: scale factor: 131 
-		float mx;
-		float my;
-		float mz;
 	}IMU_DataType;
 
 	IMUData();
 	~IMUData();
 
-	int readData(const char *fname);
+	int IMUData::parseData(char* buf);
 	int runFilter();
 
 private:
-	std::vector<IMU_DataType> m_data;
+	IMU_DataType data;
 	Madgwick madgwick;
 	float m_roll; // 
 	float m_pitch; //
