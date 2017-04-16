@@ -7,7 +7,8 @@ set(SRCS
   common/Thread.cpp
   common/UartRx.cpp
   common/UartTx.cpp
-  imu/MadgwickAHRS.c
+  common/IMUData.cpp
+  imu/MadgwickAHRS.cpp
   imu/MahonyAHRS.c
 )
 
