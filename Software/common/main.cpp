@@ -7,15 +7,15 @@
 
 int main(int argc,char **argv){
 #if 1
-    char* curr_line;
+    char buf[30];
     //SerialPort *port = new SerialPort("/dev/ttyUSB0",115200);
     SerialPort *port = new SerialPort("/dev/ttyAMA0",115200);
 
     // loopback
     //port->printf("hello world!\n");
-    port->fgetln(curr_line);
+    port->fgets(buf,30);
 
-    printf("%s\n", curr_line);
+    printf("%s\n",buf);
 #endif
 
     //UartRx *uartrx = new UartRx(port);
