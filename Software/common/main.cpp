@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <unistd.h> // for sleep
 
+#include "IMUData.h"
 #include "SerialPort.h"
 #include "UartRx.h"
 #include "UartTx.h"
