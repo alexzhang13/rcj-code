@@ -1,0 +1,31 @@
+#ifndef _TEMP_DATA_H_
+#define _TEMP_DATA_H_
+
+#include <stdio.h>
+#include <string>
+#include <iostream>
+#include <vector>
+
+
+class TempData {
+public:
+
+	typedef struct {
+		uint32_t tstamp; //timestamp
+		char id; //always comes out as t for temp
+		float tmpR; //0x40
+		float tmpL; //0x41 (AD0)
+		float threshold;
+	}TMP_DataType;
+
+	TempData();
+	~TempData();
+
+	parseData(char* buf);
+	int checkTemp();
+
+private:
+	TMP_DataType data;
+};
+
+#endif // !_TEMP_DATA_H_
