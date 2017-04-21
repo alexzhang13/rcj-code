@@ -12,9 +12,12 @@ IMUData::~IMUData()
 	//m_data.clear();
 }
 
-int IMUData::parseData(char* buf)
+int IMUData::storeCommand(char* buf) {
+	command = buf;
+}
+int IMUData::parseData()
 {
-	sscanf(buf, "%d %c %f %f %f %f %f %f", &data.tstamp, &data.id, &data.ax, &data.ay, &data.az, &data.gx, &data.gy, &data.gz);
+	sscanf(command, "%d %c %f %f %f %f %f %f", &data.tstamp, &data.id, &data.ax, &data.ay, &data.az, &data.gx, &data.gy, &data.gz);
 	data.az *= -1; //inverted
 	return 0;
 }

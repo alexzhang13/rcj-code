@@ -26,7 +26,8 @@ public:
 	IMUData();
 	~IMUData();
 
-	int parseData(char* buf);
+	int storeCommand(char* buf);
+	int parseData();
 	int runFilter();
 
 private:
@@ -35,7 +36,7 @@ private:
 	float m_roll; // 
 	float m_pitch; //
 	float m_yaw;  //
-
+	char* command; //stored command
 };
 
 #endif // !_IMU_DATA_H_

@@ -31,7 +31,8 @@ public:
 	RangeData();
 	~RangeData();
 
-	parseData(char* buf);
+	int storeCommand(char* buf);
+	int parseData();
 	int getPosition();
 
 private:
@@ -40,6 +41,7 @@ private:
 	uint8_t x_count = 0; //count if the lasers don't see anything
 	uint8_t y_count = 0;
 	float distance[4];
+	char* command; //stored command
 };
 
 #endif // !_TEMP_DATA_H_

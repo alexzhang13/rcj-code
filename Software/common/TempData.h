@@ -15,17 +15,18 @@ public:
 		char id; //always comes out as t for temp
 		float tmpR; //0x40
 		float tmpL; //0x41 (AD0)
-		float threshold;
 	}TMP_DataType;
 
 	TempData();
 	~TempData();
 
-	parseData(char* buf);
+	int storeCommand(char* buf);
+	int parseData();
 	int checkTemp();
 
 private:
 	TMP_DataType data;
+	float threshold;
 };
 
 #endif // !_TEMP_DATA_H_

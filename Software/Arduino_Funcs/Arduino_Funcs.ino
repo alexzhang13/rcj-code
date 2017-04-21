@@ -492,6 +492,7 @@ void Motor_setSpeed(int left_speed, int right_speed)
 void Motor_Encoder()
 {
   if(abs(left_mm) >= distance_mm) {
+    Serial.println("m d");
     motor_queue = "c";
   }
   String reading = "";
@@ -502,7 +503,6 @@ void Motor_Encoder()
   }
   reading += millis(); reading += " m ";
   reading += left_mm; reading += " "; reading += right_mm;
-  Serial.println(reading);
 }
 
 void Mount_Sweep()
@@ -637,6 +637,7 @@ void drop() //drop a kit
     delay(5);       
   } 
   delay(500);
+  Serial.println("d d");
 }
 
 void lightUp(int time_stamp) //milliseconds
@@ -650,6 +651,7 @@ void lightUp(int time_stamp) //milliseconds
     delay(100);
     curr_time = millis();
   }
+  Serial.println("l d");
 }
 
 void getLightReading() //photocell sensor/transistor

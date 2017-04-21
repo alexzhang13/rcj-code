@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="cell.cpp" />
+    <ClCompile Include="floormap.cpp" />
+    <ClCompile Include="greedy_dijkstra.cpp" />
+    <ClCompile Include="mazemap.cpp" />
+    <ClCompile Include="mazemap_gen.cpp" />
+    <ClCompile Include="navigate_simul.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cell.h" />
+    <ClInclude Include="floormap.h" />
+    <ClInclude Include="globals.h" />
+    <ClInclude Include="greedy_dijkstra.h" />
+    <ClInclude Include="mazemap.h" />
+    <ClInclude Include="mazemap_gen.h" />
+    <ClInclude Include="navigate_defs.h" />
+    <ClInclude Include="navigate_simul.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGUID>{556FA37C-BBB3-F485-9494-C63C5F7E5861}</ProjectGUID>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>x64</Platform>
+    <ProjectName>Navigation</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.dll</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.dll</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <TargetName>$(ProjectName)_d</TargetName>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_WIN32_WINNT=0x0501;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Debug";NAVIGATE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(cvpath)\include;..\</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_WIN32_WINNT=0x0501;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\projects\ChangeDetect-build\win7-vc2012-64\pkg\include\boost-1_54;C:\projects\ChangeDetect-build\win7-vc2012-64\pkg\include;C:\projects\ChangeDetect-build\win7-vc2012-64\pkg\include\opencv;C:\projects\ChangeDetect-build\win7-vc2012-64\featuredescriptorlib\include;C:\projects\ChangeDetect\include;C:\projects\ChangeDetect\src\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\projects\ChangeDetect-build\win7-vc2012-64\pkg\include\boost-1_54;C:\projects\ChangeDetect-build\win7-vc2012-64\pkg\include;C:\projects\ChangeDetect-build\win7-vc2012-64\pkg\include\opencv;C:\projects\ChangeDetect-build\win7-vc2012-64\featuredescriptorlib\include;C:\projects\ChangeDetect\include;C:\projects\ChangeDetect\src\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
+      <AdditionalLibraryDirectories>$(OutDir);$(cvpath)\x64\vc11\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>tinyxml_d.lib;opencv_core$(cv_ver)d.lib;opencv_features2d$(cv_ver)d.lib;opencv_flann$(cv_ver)d.lib;opencv_highgui$(cv_ver)d.lib;opencv_imgproc$(cv_ver)d.lib;opencv_nonfree$(cv_ver)d.lib;opencv_objdetect$(cv_ver)d.lib;opencv_video$(cv_ver)d.lib;opencv_videostab$(cv_ver)d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(cvpath)\include;..\</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Release/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <Optimization>Full</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_WIN32_WINNT=0x0501;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Release";NAVIGATE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_WIN32_WINNT=0x0501;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\projects\ChangeDetect-build\win7-vc2012-64\pkg\include\boost-1_54;C:\projects\ChangeDetect-build\win7-vc2012-64\pkg\include;C:\projects\ChangeDetect-build\win7-vc2012-64\pkg\include\opencv;C:\projects\ChangeDetect-build\win7-vc2012-64\featuredescriptorlib\include;C:\projects\ChangeDetect\include;C:\projects\ChangeDetect\src\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\projects\ChangeDetect-build\win7-vc2012-64\pkg\include\boost-1_54;C:\projects\ChangeDetect-build\win7-vc2012-64\pkg\include;C:\projects\ChangeDetect-build\win7-vc2012-64\pkg\include\opencv;C:\projects\ChangeDetect-build\win7-vc2012-64\featuredescriptorlib\include;C:\projects\ChangeDetect\include;C:\projects\ChangeDetect\src\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>tinyxml.lib;opencv_core$(cv_ver)d.lib;opencv_features2d$(cv_ver)d.lib;opencv_flann$(cv_ver)d.lib;opencv_highgui$(cv_ver)d.lib;opencv_nonfree$(cv_ver)d.lib;opencv_imgproc$(cv_ver)d.lib;opencv_objdetect$(cv_ver)d.lib;opencv_video$(cv_ver)d.lib;opencv_videostab$(cv_ver)d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);$(cvpath)\x64\vc11\lib</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

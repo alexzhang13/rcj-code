@@ -1,4 +1,16 @@
-*.[oad]
+
+#ignore thumbnails created by windows
+Thumbs.db
+
+#Ignore Mac files
+.DS_Store
+
+#Ignore Emacs temp files
 *~
-cscope.*
-build/
+\#*\#
+
+# Ignore matlab aux files
+*.asv
+
+# Ignore out-of-source build tree
+src-build/

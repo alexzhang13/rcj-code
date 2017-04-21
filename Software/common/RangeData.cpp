@@ -11,9 +11,13 @@ RangeData::~RangeData()
 	
 }
 
-int RangeData::parseData(char* buf)
+int IMUData::storeCommand(char* buf) {
+	command = buf;
+}
+
+int RangeData::parseData()
 {
-	sscanf(buf, "%f %c %f %f %f %f", &data.tstamp, &data.id, &data.laserL_a, &data.laserS_a, &data.laserL_b, &data.laserS_b);
+	sscanf(command, "%f %c %f %f %f %f", &data.tstamp, &data.id, &data.laserL_a, &data.laserS_a, &data.laserL_b, &data.laserS_b);
 	return 0;
 }
 
