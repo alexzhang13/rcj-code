@@ -317,6 +317,8 @@ int32_t NavigateSimul::navigatePlanning()
 	std::vector<GreedyDijkstra::DistInfo>* dist_list = m_dijkstra.getDistList();
 	for(i = 0; i < dist_list->size(); i++) {
 		MazeCell *acell = m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell((*dist_list)[i].node_index);
+		if((*dist_list)[i].node_index == 0) // home
+			m_dijkstra.setHomePath((*dist_list)[i]);
 		if(acell->getVisitStatus() == MazeCell::Visited) {
 			dist_list->erase(dist_list->begin()+i);
 			i--;
@@ -330,8 +332,12 @@ int32_t NavigateSimul::navigatePlanning()
 
 	std::vector<GreedyDijkstra::DistInfo> *vlist = m_dijkstra.sortShortestPath();
 
-	m_next_cell = (*vlist)[0];
-
+	if(vlist != 0)
+		m_next_cell = (*vlist)[0];
+	else {
+		std::vector<GreedyDijkstra::DistInfo>* lst = m_dijkstra.getDistList();
+		m_next_cell = m_dijkstra.getHomePath();
+	}
 	return 0;
 }
 

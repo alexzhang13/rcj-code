@@ -37,6 +37,8 @@ public:
 
 	inline int32_t **getGraph() { return m_graph; }
 	inline std::vector<DistInfo>* getDistList() { return &m_dist_list;}
+	inline void setHomePath(DistInfo di) {m_home_path = di;}
+	inline DistInfo getHomePath() {return m_home_path;}
 
 protected:
 	static bool sortbyDistance(const DistInfo &node1, const DistInfo &node2);
@@ -58,6 +60,7 @@ private:
 	std::vector<bool> m_sptSet;
 	std::vector<int32_t> m_parent;
 	std::vector<DistInfo> m_dist_list;
+	DistInfo m_home_path;
 };
 
 #endif
