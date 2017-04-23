@@ -2,16 +2,17 @@
 #define _LIGHT_DATA_H_
 
 #include <stdio.h>
+#include <stdint.h>
 #include <string>
 #include <iostream>
 #include <vector>
 
-
+class IMUData;
 class LightData {
 public:
 
 	typedef struct {
-		uint32_t tstamp; //timestamp
+		uint16_t tstamp; //timestamp
 		char id; //always comes out as t for temp
 		float l_reading;
 	}Light_DataType;
