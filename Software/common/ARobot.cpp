@@ -11,6 +11,9 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     initialYaw = 0;
     toTurn = 0;
     backingBlack = false;
+    currTileLight = WHITE;
+    currDir = FRONT; 
+    currState = IDLE;
 }
 
 ARobot::~ARobot() 

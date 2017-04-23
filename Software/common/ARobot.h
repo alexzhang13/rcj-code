@@ -5,6 +5,8 @@
 #include "Thread.h"
 #include "IMUData.h"
 #include "RangeData.h"
+#include "TempData.h"
+#include "LightData.h"
 #include "SerialPort.h"
 #include "UartRx.h"
 #include "UartTx.h"
@@ -64,9 +66,9 @@ class ARobot {
 	std::queue<TempData> tempParseList;
 	std::queue<LightData> lightParseList;
 
-	LightVal currTileLight = WHITE;
-	BotDir currDir = FRONT; 
-	CurrentState currState = IDLE;
+	LightVal currTileLight;
+	BotDir currDir; 
+	CurrentState currState;
 
  protected:
  	SerialPort *mPort;
