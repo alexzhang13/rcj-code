@@ -16,8 +16,8 @@ public:
 		float l_reading;
 	}Light_DataType;
 
-	Light();
-	~Light();
+	LightData();
+	~LightData();
 
 	int storeCommand(char* buf);
 	int parseData();

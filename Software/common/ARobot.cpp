@@ -38,18 +38,18 @@ void ARobot::checkVictimTemp()
 
 void ARobot::setTempThresh(float left, float right)
 {
-    tempLeft = left;
-    tempRight = right;
+    threshLeft = left;
+    threshRight = right;
 }
 
 float ARobot::getLeftVictimTemp()
 {
-    return tempLeft;
+    return threshLeft;
 }
 
 float ARobot::getRightVictimTemp()
 {
-    return tempRight;
+    return threshRight;
 }
 
 void ARobot::setLightThresh(int black, int silver)

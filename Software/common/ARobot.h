@@ -45,8 +45,8 @@ class ARobot {
 
  	/*DC Motor Control*/
  	void SetSpeed(int left_speed, int right_speed);
- 	void MoveDistance(int distance_mm, bool forward);
- 	void TurnDistance(int degrees, bool right);
+ 	void MoveDistance(int distance_mm, botDir forward);
+ 	void TurnDistance(int degrees, botDir right);
  	void StopTurn(bool right);
 
  	/*Parsing*/
