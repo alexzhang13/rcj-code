@@ -1,0 +1,16 @@
+﻿Build started 4/21/2017 8:31:25 PM.
+     1>Project "C:\projects\StormingRobots2017\Software\navigate\navigation.vcxproj" on node 2 (Build target(s)).
+     1>Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\projects\StormingRobots2017\Software\workspace\x64\Release\Navigation.dll" /NOLOGO /LIBPATH:C:\projects\StormingRobots2017\Software\workspace\x64\Release\ /LIBPATH:C:\pkg\opencv\build\install\x64\vc11\lib tinyxml.lib opencv_core310d.lib opencv_features2d310d.lib opencv_flann310d.lib opencv_highgui310d.lib opencv_imgcodecs310.lib opencv_imgproc310d.lib opencv_objdetect310d.lib opencv_video310d.lib opencv_videoio310d.lib opencv_videostab310d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:\projects\StormingRobots2017\Software\workspace\x64\Release\Navigation.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\projects\StormingRobots2017\Software\workspace\x64\Release\Navigation.lib" /MACHINE:X64 /DLL x64\Release\cell.obj
+         x64\Release\floormap.obj
+         x64\Release\greedy_dijkstra.obj
+         x64\Release\mazemap.obj
+         x64\Release\mazemap_gen.obj
+         x64\Release\navigate_simul.obj
+            Creating library C:\projects\StormingRobots2017\Software\workspace\x64\Release\Navigation.lib and object C:\projects\StormingRobots2017\Software\workspace\x64\Release\Navigation.exp
+         navigation.vcxproj -> C:\projects\StormingRobots2017\Software\workspace\x64\Release\Navigation.dll
+     1>Done Building Project "C:\projects\StormingRobots2017\Software\navigate\navigation.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.35

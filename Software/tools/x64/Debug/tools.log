@@ -1,0 +1,89 @@
+﻿Build started 4/21/2017 8:37:46 PM.
+     1>Project "C:\projects\StormingRobots2017\Software\tools\tools.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\CL.exe /c /IC:\pkg\opencv\build\install\x64\vc11\include /I..\ /Zi /nologo /W3 /WX- /Od /Ob0 /D WIN32 /D _WINDOWS /D _DEBUG /D _WIN32_WINNT=0x0501 /D _CRT_SECURE_NO_WARNINGS /D "CMAKE_INTDIR=\"Debug\"" /D NAVIGATE_EXPORTS /D _MBCS /Gm- /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"x64\Debug\\" /Fd"x64\Debug\vc110.pdb" /Gd /TP /errorReport:prompt navigate_main.cpp
+         navigate_main.cpp
+     1>C:\projects\StormingRobots2017\Software\navigate/greedy_dijkstra.h(55): warning C4251: 'GreedyDijkstra::m_path' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'GreedyDijkstra'
+                 with
+                 [
+                     _Ty=int32_t
+                 ]
+     1>C:\projects\StormingRobots2017\Software\navigate/greedy_dijkstra.h(56): warning C4251: 'GreedyDijkstra::m_short_paths' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'GreedyDijkstra'
+                 with
+                 [
+                     _Ty=GreedyDijkstra::DistInfo
+                 ]
+     1>C:\projects\StormingRobots2017\Software\navigate/greedy_dijkstra.h(59): warning C4251: 'GreedyDijkstra::m_dist' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'GreedyDijkstra'
+                 with
+                 [
+                     _Ty=int32_t
+                 ]
+     1>C:\projects\StormingRobots2017\Software\navigate/greedy_dijkstra.h(60): warning C4251: 'GreedyDijkstra::m_sptSet' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'GreedyDijkstra'
+                 with
+                 [
+                     _Ty=bool
+                 ]
+     1>C:\projects\StormingRobots2017\Software\navigate/greedy_dijkstra.h(61): warning C4251: 'GreedyDijkstra::m_parent' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'GreedyDijkstra'
+                 with
+                 [
+                     _Ty=int32_t
+                 ]
+     1>C:\projects\StormingRobots2017\Software\navigate/greedy_dijkstra.h(62): warning C4251: 'GreedyDijkstra::m_dist_list' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'GreedyDijkstra'
+                 with
+                 [
+                     _Ty=GreedyDijkstra::DistInfo
+                 ]
+     1>C:\projects\StormingRobots2017\Software\navigate/floormap.h(64): warning C4251: 'MazeFloorMap::m_cell_list' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'MazeFloorMap'
+                 with
+                 [
+                     _Ty=MazeCell
+                 ]
+     1>C:\projects\StormingRobots2017\Software\navigate/floormap.h(65): warning C4251: 'MazeFloorMap::m_visited_list' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'MazeFloorMap'
+                 with
+                 [
+                     _Ty=int32_t
+                 ]
+     1>C:\projects\StormingRobots2017\Software\navigate/floormap.h(66): warning C4251: 'MazeFloorMap::m_to_be_visited_list' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'MazeFloorMap'
+                 with
+                 [
+                     _Ty=int32_t
+                 ]
+     1>C:\projects\StormingRobots2017\Software\navigate/floormap.h(67): warning C4251: 'MazeFloorMap::m_unknown_list' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'MazeFloorMap'
+                 with
+                 [
+                     _Ty=int32_t
+                 ]
+     1>C:\projects\StormingRobots2017\Software\navigate/floormap.h(68): warning C4251: 'MazeFloorMap::m_checkPtList' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'MazeFloorMap'
+                 with
+                 [
+                     _Ty=int32_t
+                 ]
+     1>c:\projects\stormingrobots2017\software\navigate\mazemap.h(64): warning C4251: 'MazeMaps::m_disp_img' : class 'cv::Mat' needs to have dll-interface to be used by clients of class 'MazeMaps'
+                 C:\pkg\opencv\build\install\x64\vc11\include\opencv2/core/mat.hpp(741) : see declaration of 'cv::Mat'
+     1>C:\projects\StormingRobots2017\Software\navigate/navigate_simul.h(55): warning C4251: 'NavigateSimul::m_map_file' : class 'std::basic_string<_Elem,_Traits,_Alloc>' needs to have dll-interface to be used by clients of class 'NavigateSimul'
+                 with
+                 [
+                     _Elem=char,
+                     _Traits=std::char_traits<char>,
+                     _Alloc=std::allocator<char>
+                 ]
+     1>C:\projects\StormingRobots2017\Software\navigate/navigate_simul.h(60): warning C4251: 'NavigateSimul::m_newcell_list' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'NavigateSimul'
+                 with
+                 [
+                     _Ty=int32_t
+                 ]
+     1>C:\projects\StormingRobots2017\Software\navigate/navigate_simul.h(69): warning C4251: 'NavigateSimul::m_route_trace' : class 'std::vector<_Ty>' needs to have dll-interface to be used by clients of class 'NavigateSimul'
+                 with
+                 [
+                     _Ty=GreedyDijkstra::DistInfo
+                 ]
+     1>navigate_main.cpp(139): warning C4996: '_sleep': This function or variable has been superceded by newer library or operating system functionality. Consider using Sleep instead. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\stdlib.h(881) : see declaration of '_sleep'
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\projects\StormingRobots2017\Software\workspace\x64\Debug\tools_d.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\projects\StormingRobots2017\Software\workspace\x64\Debug\ /LIBPATH:C:\pkg\opencv\build\install\x64\vc11\lib tinyxml_d.lib navigation_d.lib opencv_core310d.lib opencv_features2d310d.lib opencv_flann310d.lib opencv_highgui310d.lib opencv_imgcodecs310d.lib opencv_imgproc310d.lib opencv_objdetect310d.lib opencv_video310d.lib opencv_videoio310d.lib opencv_videostab310d.lib opencv_ximgproc310d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\projects\StormingRobots2017\Software\workspace\x64\Debug\tools_d.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\projects\StormingRobots2017\Software\workspace\x64\Debug\tools_d_d.lib" /MACHINE:X64 x64\Debug\navigate_main.obj
+         tools.vcxproj -> C:\projects\StormingRobots2017\Software\workspace\x64\Debug\tools_d.exe
+     1>Done Building Project "C:\projects\StormingRobots2017\Software\tools\tools.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:03.02
