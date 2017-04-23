@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <unistd.h> // for sleep
+#include <string>
+#include <iostream>
 
 #include "processThread.h"
 #include "ARobot.h"
@@ -17,11 +19,10 @@ int main(int argc,char **argv){
     SerialPort *port = new SerialPort("/dev/ttyAMA0",115200);
     ARobot *robot = new ARobot(port);
     UartRx *uartrx = new UartRx(port, robot);
+    //UartTx *uarttx = new UartTx(port);
     Process_T *process_thread = new Process_T(port, robot);
 
-    //UartTx *uarttx = new UartTx(port);
-
-    //readConfig(unsigned char* filename);
+    readConfig(unsigned char* filename);
 
     //readCurrentMap(unsigned char* filename);
 
@@ -34,3 +35,12 @@ int main(int argc,char **argv){
     return 0;
 }
 
+int readConfig(unsigned char* filename)
+{
+    FILE *datafile;
+    if (filename == NULL)
+        return -1;
+
+    datafile = fopen(filename, "r");
+    fscanf(datafile, "%d %d %d %d %d", robot->black_thresh, robot->silver_thresh, robot->white_thresh, robot->threshLeft, robot->threshRight);
+}

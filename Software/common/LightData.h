@@ -7,7 +7,7 @@
 #include <vector>
 
 
-class Light {
+class LightData {
 public:
 
 	typedef struct {

@@ -86,8 +86,9 @@ class ARobot {
  	bool backingBlack; //if the robot is backing up on a black tile
  	uint16_t silver_thresh;
  	uint16_t black_thresh;
- 	float tempLeft;
- 	float tempRight;
+ 	uint16_t white_thresh;
+ 	float threshLeft;
+ 	float threshight;
  	size_t mlen_light;
  	size_t mlen_imu;
  	size_t mlen_range;
