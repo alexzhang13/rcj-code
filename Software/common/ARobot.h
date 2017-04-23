@@ -52,7 +52,7 @@ class ARobot {
 	template<typename T> void pop_front(std::vector<T>& vec);
 
 	enum LightVal {WHITE, BLACK, SILVER};
-	enum BotDir {RIGHT, LEFT, FRONT, BACK}
+	enum BotDir {RIGHT, LEFT, FRONT, BACK};
 	enum CurrentState {DROP, MOVE, TURN, LED, IDLE};
 
 
