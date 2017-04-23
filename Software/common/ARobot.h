@@ -2,6 +2,7 @@
 #define _ROBOT_h_
 
 #include <vector>
+#include <queue>
 #include "Thread.h"
 #include "IMUData.h"
 #include "RangeData.h"
@@ -34,7 +35,7 @@ class ARobot {
 
  	/*Light Sensor -> Tile Control*/
  	void setLightThresh(int black, int silver);
- 	void checkLight();
+ 	void checkLightTile();
  	int getBlackThresh();
  	int getSilverThresh(); 	
 
@@ -53,10 +54,11 @@ class ARobot {
  	void ParseRange();
  	void ParseTemp();
  	void ParseLight();
-	void ClearVectors();
-	template<typename T> void pop_front(std::vector<T>& vec);
+	void ClearImu();
+	void ClearRange();
+	void ClearTemp();
 
-	enum LightVal {WHITE, BLACK, SILVER};
+	enum LightVal {WHITE=0, BLACK=1, SILVER=2};
 	enum BotDir {RIGHT, LEFT, FRONT, BACK};
 	enum CurrentState {DROP, MOVE, TURN, LED, IDLE};
 
@@ -81,11 +83,14 @@ class ARobot {
  private:
  	float initialYaw;
  	float toTurn;
- 	uint8_t lightCounter; //counter for determining 
  	bool backingBlack; //if the robot is backing up on a black tile
  	uint16_t silver_thresh;
  	uint16_t black_thresh;
  	float tempLeft;
  	float tempRight;
+ 	size_t mlen_light;
+ 	size_t mlen_imu;
+ 	size_t mlen_range;
+ 	size_t mlen_temp;
 }; // class Thread
 #endif // _Thread_h_
