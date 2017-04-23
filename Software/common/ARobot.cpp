@@ -128,11 +128,11 @@ void ARobot::TurnDistance(int degrees, BotDir dir)
     initialYaw = imuDataList.end().m_yaw;
     char* command;
     if(dir == RIGHT) {
-        sprintf(command, "%c %c %d", 'm', 'd', distance_mm);
+        //sprintf(command, "%c %c %d", 'm', 'd', distance_mm);
         toTurn = initialYaw + degrees;
         currDir = RIGHT;
     } else {
-        sprintf(command, "%c %c %d", 'm', 'e', distance_mm);
+        //sprintf(command, "%c %c %d", 'm', 'e', distance_mm);
         toTurn = initialYaw - degrees;
         currDir = LEFT;
     }
