@@ -54,7 +54,7 @@ class ARobot {
  	void ParseRange();
  	void ParseTemp();
  	void ParseLight();
-	void ClearImu();
+	void ClearIMU();
 	void ClearRange();
 	void ClearTemp();
 

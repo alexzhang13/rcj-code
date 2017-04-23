@@ -188,15 +188,15 @@ void ARobot::ParseRange() {
 
 void ARobot::ParseTemp() {
     tempParseList.front().parseData();
+    tempParseList.front()->checkTemp();
     tempDataList.push_back(tempParseList.front());
-    tempDataList.front()->checkTemp();
     tempParseList.pop();
 }
 
 void ARobot::ParseLight() {
     lightParseList.front().parseData();
+    lightParseList.front().checkLight();
     lightDataList.push_back(lightParseList.front());
-    lightDataList.begin()->checkLight();
     lightParseList.pop();
 }
 
