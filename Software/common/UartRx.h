@@ -1,6 +1,7 @@
 #ifndef _UartRx_h_
 #define _UartRx_h_
 
+#include "ARobot.h"
 #include "Thread.h"
 #include "SerialPort.h"
 #include "Thread.h"

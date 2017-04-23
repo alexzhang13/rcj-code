@@ -11,10 +11,7 @@
 
 class ARobot {
  public:
- 	ARobot(SerialPort *port)
- 		:mPort(port)
- 	{}
-
+ 	ARobot();
  	~ARobot();
  	/*Writing to Arduino*/
  	void WriteCommand(char* command, int size);

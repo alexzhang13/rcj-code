@@ -5,11 +5,12 @@
 
 using namespace std;
 
-ARobot::ARobot()
+ARobot::ARobot(SerialPort *port) :mPort(port)
 {
     lightCounter = 0;
     initialYaw = 0;
     toTurn = 0;
+    backingBlack = false;
 }
 
 ARobot::~ARobot() 
