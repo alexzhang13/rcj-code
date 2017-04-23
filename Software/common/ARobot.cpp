@@ -80,7 +80,7 @@ void ARobot::checkLightTile()
         currTileLight = BLACK;
         if(backingBlack == false) {
             backingBlack = true;
-            MoveDistance(160, false); //move back 16 cm
+            MoveDistance(160, BACK); //move back 16 cm
             //update map
         }
     } else {

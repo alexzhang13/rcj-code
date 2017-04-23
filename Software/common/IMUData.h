@@ -22,6 +22,9 @@ public:
 		float gy; //250dps: scale factor: 131 
 		float gz; //250dps: scale factor: 131 
 	}IMU_DataType;
+	float m_roll; // 
+	float m_pitch; //
+	float m_yaw;  //
 
 	IMUData();
 	~IMUData();
@@ -33,9 +36,6 @@ public:
 private:
 	IMU_DataType data;
 	Madgwick madgwick;
-	float m_roll; // 
-	float m_pitch; //
-	float m_yaw;  //
 	char* command; //stored command
 };
 
