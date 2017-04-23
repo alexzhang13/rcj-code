@@ -21,6 +21,12 @@ class ARobot {
  public:
  	ARobot(SerialPort *port);
  	~ARobot();
+
+ 	/*Enums*/
+ 	enum LightVal {WHITE=0, BLACK=1, SILVER=2};
+	enum BotDir {RIGHT=0, LEFT=1, FRONT=2, BACK=3};
+	enum CurrentState {DROP=0, MOVE=1, TURN=2, LED=3, IDLE=4};
+
  	/*Writing to Arduino*/
  	void WriteCommand(char* command, int size);
 
@@ -47,7 +53,7 @@ class ARobot {
  	void SetSpeed(int left_speed, int right_speed);
  	void MoveDistance(int distance_mm, BotDir forward);
  	void TurnDistance(int degrees, BotDir right);
- 	void StopTurn(BotDir dir right);
+ 	void StopTurn(BotDir right);
 
  	/*Parsing*/
  	void ParseIMU();
@@ -57,10 +63,6 @@ class ARobot {
 	void ClearIMU();
 	void ClearRange();
 	void ClearTemp();
-
-	enum LightVal {WHITE=0, BLACK=1, SILVER=2};
-	enum BotDir {RIGHT, LEFT, FRONT, BACK};
-	enum CurrentState {DROP, MOVE, TURN, LED, IDLE};
 
 
  	std::vector<IMUData> imuDataList;
