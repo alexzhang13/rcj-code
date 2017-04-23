@@ -11,6 +11,11 @@
 #include "UartRx.h"
 #include "UartTx.h"
 
+class LightData;
+class RangeData;
+class IMUData;
+class TempData;
+
 class ARobot {
  public:
  	ARobot();

@@ -6,9 +6,12 @@
 #include "SerialPort.h"
 #include "Thread.h"
 #include "IMUData.h"
+#include "TempData.h"
+#include "LightData.h"
 #include "RangeData.h"
 #include "SerialPort.h"
 
+class ARobot;
 class UartRx : public Thread {
  public:
     UartRx(SerialPort *port, ARobot *robot)
