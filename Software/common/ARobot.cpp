@@ -6,8 +6,10 @@
 #include "Thread.h"
 #include "IMUData.h"
 #include "RangeData.h"
+#include "SerialPort.h"
 #include "UartRx.h"
 #include "UartTx.h"
+#include <vector>
 
 using namespace std;
 
@@ -16,9 +18,92 @@ ARobot::~ARobot()
 
 }
 
+
 void ARobot::WriteCommand(char* command, int size)
 {
     port->write(command, size);
+}
+
+void ARobot::checkRamp()
+{
+    //check if pitch has exceeded certain threshold
+}
+
+void ARobot::checkVictimTemp()
+{
+
+}
+
+void ARobot::setTempThresh(float left, float right)
+{
+    tempLeft = left;
+    tempRight = right;
+}
+
+float ARobot::getLeftVictimTemp()
+{
+    return tempLeft;
+}
+
+float ARobot::getRightVictimTemp()
+{
+    return tempRight;
+}
+
+void ARobot::setLightThresh(int black, int silver)
+{
+    black_thresh = black;
+    silver_thresh = silver;
+}
+
+int ARobot::getBlackThresh() 
+{
+    return black_thresh;
+}
+
+int ARobot::getSilverThresh()
+{
+    return silver_thresh;
+}
+
+void ARobot::checkLight()
+{
+    if(lightDataList.end().checkLight() == 2) {
+        if(lightDataList.end().checkLight() == 2) {
+           ++lightCounter;
+        } else {
+            lightCounter = 0;
+        }
+        if(lightCounter >= 3) {
+            currTileLight = SILVER;
+        }
+    } else if (lightDataList.end().checkLight() == 1) {
+        currTileLight = BLACK;
+        if(backingBlack == false) {
+            backingBlack = true;
+            MoveDistance(160, false); //move back 16 cm
+            //update map
+        }
+    } else {
+        currTileLight = WHITE;
+        backingBlack = false; //reset
+    }
+}
+
+void ARobot::LEDLight(int time)
+{
+    char* command;
+    sprintf(command, "%c %c %d", 'd', 'b', time);
+    WriteCommand(command, command.length());
+    currState = LED;
+}
+
+void ARobot::Drop()
+{
+    char* command;
+    sprintf(command, "%c %c", 'd', 'a');
+    WriteCommand(command, command.length());
+    currState = DROP;
 }
 
 void ARobot::SetSpeed(int left_speed, int right_speed) {
@@ -27,42 +112,59 @@ void ARobot::SetSpeed(int left_speed, int right_speed) {
     WriteCommand(command, command.length());
 }
 
-void ARobot::MoveDistance(int distance_mm, bool forward) //forward = true
+void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
 {
     char* command;
-    if(forward == true) {
+    if(dir == FRONT) {
         sprintf(command, "%c %c %d", 'm', 'a', distance_mm);
     } else {
         sprintf(command, "%c %c %d", 'm', 'b', distance_mm);
     }
-    isMoving = true;
+    currState = MOVE;
     WriteCommand(command, command.length());
 }
-void ARobot::TurnDistance(int degrees, bool right)
+void ARobot::TurnDistance(int degrees, BotDir dir)
 {
-    currentYaw = imuDataList.end().m_yaw;
+    initialYaw = imuDataList.end().m_yaw;
     char* command;
-    if(right == true) {
+    if(dir == RIGHT) {
         //sprintf(command, "%c %c %d", 'm', 'd', distance_mm);
-        toTurn = currentYaw + degrees;
+        toTurn = initialYaw + degrees;
+        currDir = RIGHT;
     } else {
         //sprintf(command, "%c %c %d", 'm', 'e', distance_mm);
-        toTurn = currentYaw - degrees;
+        toTurn = initialYaw - degrees;
+        currDir = LEFT;
     }
-    isMoving = true;
-    isTurning = true;
+    currState = TURN;
     WriteCommand(command, command.length());
 }
 
-void ARobot::StopTurn(bool right)
+void ARobot::StopTurn(BotDir dir)
 {
-    if(imuDataList.end().m_yaw >= toTurn) {
-        char* command;
-        sprintf(command, "%c %c", 'm', 'c');
-        isMoving = false;
-        isTurning = false;
-        WriteCommand(command, command.length());
+    IMUData currYaw = imuDataList.end();
+    if(dir == RIGHT) {
+        if(initialYaw >= 0.0f && currYaw.m_yaw < 0.0f) { //if robot crosses over from 180 to -180, direction switches
+            currYaw.m_yaw += 360; //range fixing
+        }
+        if(currYaw.m_yaw >= toTurn) {
+            char* command;
+            sprintf(command, "%c %c", 'm', 'c');
+            currState = TURN;
+            WriteCommand(command, command.length());
+        }
+    } else if(dir == LEFT) {
+        if(initialYaw <= 0.0f && currYaw.m_yaw > 0.0f) { //if robot crosses over from -180 to 180, direction switches
+            currYaw.m_yaw -= 360; //range fixing
+        }
+        if(currYaw.m_yaw <= toTurn) {
+            char* command;
+            sprintf(command, "%c %c", 'm', 'c');
+            currState = TURN;
+            WriteCommand(command, command.length());
+        }
     }
+    
 }
 
 void ARobot::ParseIMU()
@@ -81,15 +183,15 @@ void ARobot::ParseRange() {
 
 void ARobot::ParseTemp() {
     tempParseList.front().parseData();
-    tempParseList.front().getPosition();
     tempDataList.push_back(tempParseList.front());
+    //tempDataList.front().checkTemp();
     tempParseList.pop();
 }
 
 void ARobot::ParseLight() {
     lightParseList.front().parseData();
-    lightParseList.front().checkLight();
     lightDataList.push_back(lightParseList.front());
+    //lightDataList.front().checkLight();
     lightParseList.pop();
 }
 

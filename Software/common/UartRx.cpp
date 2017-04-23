@@ -21,13 +21,13 @@ void UartRx::run(void){
              	parseLight(buf);
              	break;
         	} else if (buf[i] == 'm') {
-              	myRobot->isMoving = false;
+              	myRobot->currState = IDLE;
              	break;
             } else if (buf[i] == 'l') {
-              	myRobot->ledFlag = false;
+              	myRobot->currState = IDLE;
              	break;
             } else if (buf[i] == 'd') {
-              	myRobot->dropperFlag = false;
+              	myRobot->currState = IDLE;
              	break;
         	} else {
             	printf("Error in parsing");

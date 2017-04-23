@@ -11,8 +11,10 @@ LightData::~LightData()
 	
 }
 
-int IMUData::storeCommand(char* buf) {
+int IMUData::storeCommand(char* buf/*, int thresh_black, int thresh_silver*/) {
 	command = buf;
+	threshold_black = thresh_black;
+	threshold_silver = thresh_silver;
 }
 
 int LightData::parseData()
