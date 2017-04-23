@@ -218,6 +218,11 @@ void ARobot::ClearRange()
 
 void ARobot::ClearTemp()
 {
+<<<<<<< HEAD
+    assert(!vec.empty());
+    vec.erase(vec.begin());
+}
+=======
     mlen_temp = tempDataList.size();
     while(mlen_temp > 200) {
         tempDataList.erase(tempDataList.begin(), tempDataList.begin() + mlen_temp - 200);
@@ -225,3 +230,4 @@ void ARobot::ClearTemp()
 }
 
 
+>>>>>>> c93799b274f83ed435a2a0b2a535aec3755c9f7b
