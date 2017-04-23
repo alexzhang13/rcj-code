@@ -7,7 +7,6 @@ using namespace std;
 
 ARobot::ARobot(SerialPort *port) :mPort(port)
 {
-    lightCounter = 0;
     initialYaw = 0;
     toTurn = 0;
     backingBlack = false;
@@ -24,7 +23,7 @@ ARobot::~ARobot()
 
 void ARobot::WriteCommand(char* command, int size)
 {
-    port->write(command, size);
+    mPort->write(command, size);
 }
 
 void ARobot::checkRamp()
@@ -69,18 +68,15 @@ int ARobot::getSilverThresh()
     return silver_thresh;
 }
 
-void ARobot::checkLight()
+void ARobot::checkLightTile()
 {
-    if(lightDataList.end().checkLight() == 2) {
-        if(lightDataList.end().checkLight() == 2) {
-           ++lightCounter;
-        } else {
-            lightCounter = 0;
-        }
-        if(lightCounter >= 3) {
-            currTileLight = SILVER;
-        }
-    } else if (lightDataList.end().checkLight() == 1) {
+    mlen_light = lightDataList.size();
+    if(mlen_light < 3)
+        return;
+
+    if(lightDataList[mlen_light-1].checkLight() == 2 && lightDataList[mlen_light-2]checkLight() == 2 && lightDataList[mlen_light-3]checkLight() == 2) {
+        currTileLight = SILVER;
+    } else if (lightDataList[mlen_light-1]checkLight() == 1 && lightDataList[mlen_light-2]checkLight() == 1 && lightDataList[mlen_light-3]checkLight() == 1) {
         currTileLight = BLACK;
         if(backingBlack == false) {
             backingBlack = true;
@@ -91,13 +87,16 @@ void ARobot::checkLight()
         currTileLight = WHITE;
         backingBlack = false; //reset
     }
+    if(mlen_light > 200) 
+        lightDataList.erase(lightDataList.begin(), lightDataList.begin() + mlen_light - 200);
+    return;
 }
 
 void ARobot::LEDLight(int time)
 {
     char* command;
     sprintf(command, "%c %c %d", 'd', 'b', time);
-    WriteCommand(command, command.length());
+    WriteCommand(command, sizeof(command) / sizeof(command[0]));
     currState = LED;
 }
 
@@ -105,14 +104,14 @@ void ARobot::Drop()
 {
     char* command;
     sprintf(command, "%c %c", 'd', 'a');
-    WriteCommand(command, command.length());
+    WriteCommand(command, sizeof(command) / sizeof(command[0]));
     currState = DROP;
 }
 
 void ARobot::SetSpeed(int left_speed, int right_speed) {
     char* command;
     sprintf(command, "%c %c %d %d", 'm', 'f', left_speed, right_speed);
-    WriteCommand(command, command.length());
+    WriteCommand(command, sizeof(command) / sizeof(command[0]));
 }
 
 void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
@@ -124,11 +123,11 @@ void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
         sprintf(command, "%c %c %d", 'm', 'b', distance_mm);
     }
     currState = MOVE;
-    WriteCommand(command, command.length());
+    WriteCommand(command, sizeof(command) / sizeof(command[0]));
 }
 void ARobot::TurnDistance(int degrees, BotDir dir)
 {
-    initialYaw = imuDataList.end().m_yaw;
+    initialYaw = imuDataList.end()->m_yaw;
     char* command;
     if(dir == RIGHT) {
         //sprintf(command, "%c %c %d", 'm', 'd', distance_mm);
@@ -140,7 +139,7 @@ void ARobot::TurnDistance(int degrees, BotDir dir)
         currDir = LEFT;
     }
     currState = TURN;
-    WriteCommand(command, command.length());
+    WriteCommand(command, sizeof(command) / sizeof(command[0]));
 }
 
 void ARobot::StopTurn(BotDir dir)
@@ -154,7 +153,7 @@ void ARobot::StopTurn(BotDir dir)
             char* command;
             sprintf(command, "%c %c", 'm', 'c');
             currState = TURN;
-            WriteCommand(command, command.length());
+            WriteCommand(command, sizeof(command) / sizeof(command[0]));
         }
     } else if(dir == LEFT) {
         if(initialYaw <= 0.0f && currYaw.m_yaw > 0.0f) { //if robot crosses over from -180 to 180, direction switches
@@ -164,7 +163,7 @@ void ARobot::StopTurn(BotDir dir)
             char* command;
             sprintf(command, "%c %c", 'm', 'c');
             currState = TURN;
-            WriteCommand(command, command.length());
+            WriteCommand(command, sizeof(command) / sizeof(command[0]));
         }
     }
     
@@ -172,10 +171,13 @@ void ARobot::StopTurn(BotDir dir)
 
 void ARobot::ParseIMU()
 {
-    imuParseList.front().parseData();
-    imuParseList.front().runFilter();
-    imuDataList.push_back(imuParseList.front());
-    imuParseList.pop();
+    for(int i = 0; i < imuParseList.size(); i++)
+    {
+        imuParseList.front().parseData();
+        imuParseList.front().runFilter();
+        imuDataList.push_back(imuParseList.front());
+        imuParseList.pop();
+    }
 }
 void ARobot::ParseRange() {
     rangeParseList.front().parseData();
@@ -187,36 +189,45 @@ void ARobot::ParseRange() {
 void ARobot::ParseTemp() {
     tempParseList.front().parseData();
     tempDataList.push_back(tempParseList.front());
-    //tempDataList.front().checkTemp();
+    tempDataList.front()->checkTemp();
     tempParseList.pop();
 }
 
 void ARobot::ParseLight() {
     lightParseList.front().parseData();
     lightDataList.push_back(lightParseList.front());
-    //lightDataList.front().checkLight();
+    lightDataList.begin()->checkLight();
     lightParseList.pop();
 }
 
-void ARobot::ClearVectors()
+void ARobot::ClearIMU()
 {
-    while(imuDataList.size() > 200) {
-        pop_front(imuDataList);
-    }
-    while(rangeDataList.size() > 200) {
-        pop_front(rangeDataList);
-    }
-    while(tempDataList.size() > 200) {
-        pop_front(tempDataList);
-    }
-    while(lightDataList.size() > 200) {
-        pop_front(lightDataList);
+    mlen_imu = imuDataList.size();
+    while(mlen_imu > 200) {
+        imuDataList.erase(imuDataList.begin(), imuDataList.begin() + mlen_imu - 200);
     }
 }
-//function for popping the front of a vector
-template<typename T>
-void ARobot::pop_front(std::vector<T>& vec)
+
+void ARobot::ClearRange()
 {
+    mlen_range = rangeDataList.size();
+    while(mlen_range > 200) {
+        rangeDataList.erase(rangeDataList.begin(), rangeDataList.begin() + mlen_range - 200);
+    }
+}
+
+void ARobot::ClearTemp()
+{
+<<<<<<< HEAD
     assert(!vec.empty());
     vec.erase(vec.begin());
 }
+=======
+    mlen_temp = tempDataList.size();
+    while(mlen_temp > 200) {
+        tempDataList.erase(tempDataList.begin(), tempDataList.begin() + mlen_temp - 200);
+    }
+}
+
+
+>>>>>>> c93799b274f83ed435a2a0b2a535aec3755c9f7b
