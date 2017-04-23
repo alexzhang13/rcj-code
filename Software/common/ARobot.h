@@ -90,7 +90,7 @@ class ARobot {
  	uint16_t black_thresh;
  	uint16_t white_thresh;
  	float threshLeft;
- 	float threshight;
+ 	float threshRight;
  	size_t mlen_light;
  	size_t mlen_imu;
  	size_t mlen_range;
