@@ -11,6 +11,11 @@
 #include "UartRx.h"
 #include "UartTx.h"
 
+class LightData;
+class RangeData;
+class IMUData;
+class TempData;
+
 class ARobot {
  public:
  	ARobot();
@@ -52,7 +57,7 @@ class ARobot {
 	template<typename T> void pop_front(std::vector<T>& vec);
 
 	enum LightVal {WHITE, BLACK, SILVER};
-	enum BotDir {RIGHT, LEFT, FRONT, BACK}
+	enum BotDir {RIGHT, LEFT, FRONT, BACK};
 	enum CurrentState {DROP, MOVE, TURN, LED, IDLE};
 
 
