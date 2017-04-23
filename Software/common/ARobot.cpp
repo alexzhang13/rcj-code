@@ -144,22 +144,22 @@ void ARobot::TurnDistance(int degrees, BotDir dir)
 
 void ARobot::StopTurn(BotDir dir)
 {
-    IMUData currYaw = imuDataList.end();
+    float currYaw = imuDataList.end()->m_yaw;
     if(dir == RIGHT) {
-        if(initialYaw >= 0.0f && currYaw.m_yaw < 0.0f) { //if robot crosses over from 180 to -180, direction switches
-            currYaw.m_yaw += 360; //range fixing
+        if(initialYaw >= 0.0f && currYaw < 0.0f) { //if robot crosses over from 180 to -180, direction switches
+            currYaw += 360; //range fixing
         }
-        if(currYaw.m_yaw >= toTurn) {
+        if(currYaw >= toTurn) {
             char* command;
             sprintf(command, "%c %c", 'm', 'c');
             currState = TURN;
             WriteCommand(command, sizeof(command) / sizeof(command[0]));
         }
     } else if(dir == LEFT) {
-        if(initialYaw <= 0.0f && currYaw.m_yaw > 0.0f) { //if robot crosses over from -180 to 180, direction switches
-            currYaw.m_yaw -= 360; //range fixing
+        if(initialYaw <= 0.0f && currYaw > 0.0f) { //if robot crosses over from -180 to 180, direction switches
+            currYaw -= 360; //range fixing
         }
-        if(currYaw.m_yaw <= toTurn) {
+        if(currYaw <= toTurn) {
             char* command;
             sprintf(command, "%c %c", 'm', 'c');
             currState = TURN;
