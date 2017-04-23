@@ -1,17 +1,16 @@
 #include <string.h>
 #include <stdio.h>
 #include <errno.h>
-
 #include "ARobot.h"
-#include "Thread.h"
-#include "IMUData.h"
-#include "RangeData.h"
-#include "SerialPort.h"
-#include "UartRx.h"
-#include "UartTx.h"
-#include <vector>
 
 using namespace std;
+
+ARobot::ARobot()
+{
+    lightCounter = 0;
+    initialYaw = 0;
+    toTurn = 0;
+}
 
 ARobot::~ARobot() 
 {

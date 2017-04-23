@@ -1,6 +1,14 @@
 #ifndef _ROBOT_h_
 #define _ROBOT_h_
 
+#include <vector>
+#include "Thread.h"
+#include "IMUData.h"
+#include "RangeData.h"
+#include "SerialPort.h"
+#include "UartRx.h"
+#include "UartTx.h"
+
 class ARobot {
  public:
  	ARobot(SerialPort *port)
@@ -67,10 +75,10 @@ class ARobot {
  	SerialPort *mPort;
 
  private:
- 	float initialYaw = 0;
- 	float toTurn = 0;
- 	uint8_t lightCounter = 0; //counter for determining 
- 	bool backingBlack = false; //if the robot is backing up on a black tile
+ 	float initialYaw;
+ 	float toTurn;
+ 	uint8_t lightCounter; //counter for determining 
+ 	bool backingBlack; //if the robot is backing up on a black tile
  	uint16_t silver_thresh;
  	uint16_t black_thresh;
  	float tempLeft;
