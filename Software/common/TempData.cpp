@@ -11,7 +11,7 @@ TempData::~TempData()
 	
 }
 
-int IMUData::storeCommand(char* buf) {
+int IMUData::storeCommand(char* buf/*, int thresh*/) {
 	command = buf;
 }
 
@@ -24,11 +24,10 @@ int TempData::parseData()
 int TempData::checkTemp()
 {
 	if(data.tmpL > threshold) {
-
+		return 1;
 	}
 	if (data.tmpR > threshold) {
-		
+		return 2;
 	}
-
 	return 0;
 }

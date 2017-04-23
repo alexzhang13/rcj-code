@@ -8,17 +8,45 @@ class ARobot {
  	{}
 
  	~ARobot();
+ 	/*Writing to Arduino*/
  	void WriteCommand(char* command, int size);
+
+ 	/*Ramp*/
+ 	void checkRamp();
+
+ 	/*Temperature Sensor -> Victim Control*/
+ 	void checkVictimTemp();
+ 	void setTempThresh(float left, float right);
+ 	float getLeftVictimTemp();
+ 	float getRightVictimTemp();
+
+ 	/*Light Sensor -> Tile Control*/
+ 	void setLightThresh(int black, int silver);
+ 	void checkLight();
+ 	int getBlackThresh();
+ 	int getSilverThresh(); 	
+
+ 	/*Dropper Components*/
+ 	void LEDLight(int time);
+ 	void Drop();
+
+ 	/*DC Motor Control*/
  	void SetSpeed(int left_speed, int right_speed);
  	void MoveDistance(int distance_mm, bool forward);
  	void TurnDistance(int degrees, bool right);
  	void StopTurn(bool right);
+
+ 	/*Parsing*/
  	void ParseIMU();
  	void ParseRange();
  	void ParseTemp();
  	void ParseLight();
 	void ClearVectors();
 	template<typename T> void pop_front(std::vector<T>& vec);
+
+	enum LightVal {WHITE, BLACK, SILVER};
+	enum BotDir {RIGHT, LEFT, FRONT, BACK}
+	enum CurrentState {DROP, MOVE, TURN, LED, IDLE};
 
 
  	std::vector<IMUData> imuDataList;
@@ -31,18 +59,21 @@ class ARobot {
 	std::queue<TempData> tempParseList;
 	std::queue<LightData> lightParseList;
 
-	bool dropperFlag = false;
-	bool ledFlag = false;
-	bool isMoving = false;
-	bool isTurning = false;
-	bool turnDir = true; //true is right, false is left
-
+	LightVal currTileLight = WHITE;
+	BotDir currDir = FRONT; 
+	CurrentState currState = IDLE;
 
  protected:
  	SerialPort *mPort;
 
  private:
- 	float currentYaw;
- 	float toTurn;
+ 	float initialYaw = 0;
+ 	float toTurn = 0;
+ 	uint8_t lightCounter = 0; //counter for determining 
+ 	bool backingBlack = false; //if the robot is backing up on a black tile
+ 	uint16_t silver_thresh;
+ 	uint16_t black_thresh;
+ 	float tempLeft;
+ 	float tempRight;
 }; // class Thread
 #endif // _Thread_h_
