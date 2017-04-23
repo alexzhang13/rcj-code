@@ -19,7 +19,7 @@ public:
 		float laserL_b; //reading from the long laser facing backwards
 		float laserS_a; //reading from the short laser facing right
 		float laserS_b; //reading from the short laser facing left
-		int dir = 0; //n = 0, e = 1, s = 2, w = 3
+		int dir; //n = 0, e = 1, s = 2, w = 3
 	}Range_DataType;
 	typedef struct {
 		float x;
@@ -38,8 +38,8 @@ public:
 private:
 	Range_DataType data;
 	Range_Coord coord;
-	uint8_t x_count = 0; //count if the lasers don't see anything
-	uint8_t y_count = 0;
+	uint8_t x_count; //count if the lasers don't see anything
+	uint8_t y_count;
 	float distance[4];
 	char* command; //stored command
 };
