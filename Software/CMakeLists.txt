@@ -1,13 +1,19 @@
 project(robot)
+cmake_minimum_required(VERSION 3.5)
+set (OpenCV_DIR /home/alex/opencv-3.1.0/build)
 
 # source code
 set(SRCS
+  common/ARobot.cpp
+  common/IMUData.cpp
+  common/LightData.cpp
+  common/processThread.cpp
+  common/RangeData.cpp
   common/main.cpp
   common/SerialPort.cpp
   common/Thread.cpp
   common/UartRx.cpp
   common/UartTx.cpp
-  common/IMUData.cpp
   imu/MadgwickAHRS.cpp
   imu/MahonyAHRS.c
 )

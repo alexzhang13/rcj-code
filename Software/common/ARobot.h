@@ -1,6 +1,11 @@
 #ifndef _ROBOT_h_
 #define _ROBOT_h_
 
+#include "SerialPort.h"
+#include <vector>
+#include <queue>
+
+ 
 class ARobot {
  public:
  	ARobot(SerialPort *port)
