@@ -74,9 +74,9 @@ void ARobot::checkLightTile()
     if(mlen_light < 3)
         return;
 
-    if(lightDataList[mlen_light-1].checkLight() == 2 && lightDataList[mlen_light-2]checkLight() == 2 && lightDataList[mlen_light-3]checkLight() == 2) {
+    if(lightDataList[mlen_light-1].checkLight() == 2 && lightDataList[mlen_light-2].checkLight() == 2 && lightDataList[mlen_light-3].checkLight() == 2) {
         currTileLight = SILVER;
-    } else if (lightDataList[mlen_light-1]checkLight() == 1 && lightDataList[mlen_light-2]checkLight() == 1 && lightDataList[mlen_light-3]checkLight() == 1) {
+    } else if (lightDataList[mlen_light-1].checkLight() == 1 && lightDataList[mlen_light-2].checkLight() == 1 && lightDataList[mlen_light-3].checkLight() == 1) {
         currTileLight = BLACK;
         if(backingBlack == false) {
             backingBlack = true;

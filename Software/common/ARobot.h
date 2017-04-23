@@ -19,7 +19,7 @@ class TempData;
 
 class ARobot {
  public:
- 	ARobot();
+ 	ARobot(SerialPort *port);
  	~ARobot();
  	/*Writing to Arduino*/
  	void WriteCommand(char* command, int size);
