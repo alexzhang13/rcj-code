@@ -6,10 +6,8 @@
 #include "Thread.h"
 #include "IMUData.h"
 #include "RangeData.h"
-#include "SerialPort.h"
 #include "UartRx.h"
 #include "UartTx.h"
-#include <vector>
 
 using namespace std;
 
@@ -45,10 +43,10 @@ void ARobot::TurnDistance(int degrees, bool right)
     currentYaw = imuDataList.end().m_yaw;
     char* command;
     if(right == true) {
-        sprintf(command, "%c %c %d", 'm', 'd', distance_mm);
+        //sprintf(command, "%c %c %d", 'm', 'd', distance_mm);
         toTurn = currentYaw + degrees;
     } else {
-        sprintf(command, "%c %c %d", 'm', 'e', distance_mm);
+        //sprintf(command, "%c %c %d", 'm', 'e', distance_mm);
         toTurn = currentYaw - degrees;
     }
     isMoving = true;
