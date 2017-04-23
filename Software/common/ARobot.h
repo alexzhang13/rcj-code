@@ -34,7 +34,7 @@ class ARobot {
  	float getRightVictimTemp();
 
  	/*Light Sensor -> Tile Control*/
- 	void setLightThresh(int black, int silver);
+ 	void setLightThresh(uint16_t black, uint16_t silver);
  	void checkLightTile();
  	int getBlackThresh();
  	int getSilverThresh(); 	
@@ -45,9 +45,9 @@ class ARobot {
 
  	/*DC Motor Control*/
  	void SetSpeed(int left_speed, int right_speed);
- 	void MoveDistance(int distance_mm, botDir forward);
- 	void TurnDistance(int degrees, botDir right);
- 	void StopTurn(bool right);
+ 	void MoveDistance(int distance_mm, BotDir forward);
+ 	void TurnDistance(int degrees, BotDir right);
+ 	void StopTurn(BotDir dir right);
 
  	/*Parsing*/
  	void ParseIMU();

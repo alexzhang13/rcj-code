@@ -52,7 +52,7 @@ float ARobot::getRightVictimTemp()
     return threshRight;
 }
 
-void ARobot::setLightThresh(int black, int silver)
+void ARobot::setLightThresh(uint16_t black, uint16_t silver)
 {
     black_thresh = black;
     silver_thresh = silver;
