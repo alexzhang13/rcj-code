@@ -1,5 +1,9 @@
 #include "UartRx.h"
 #include <unistd.h> // for sleep
+#include "IMUData.h"
+#include "TempData.h"
+#include "LightData.h"
+#include "RangeData.h"
 
 void UartRx::run(void){     
     while(1) {
@@ -9,25 +13,25 @@ void UartRx::run(void){
     	mPort->fgets(buf,64);
     	for(int i = 0; i < 64; i++) {
         	if(buf[i] == 'i') { //check if it's IMU
-            	parseIMU(buf);
+            	storeIMU(buf);
             	break;
         	} else if (buf[i] == 'r') {
-             	parseRange(buf);
+             	storeRange(buf);
              	break;
          	} else if (buf[i] == 't') {
-             	parseTemp(buf);
+             	storeTemp(buf);
               	break;
         	} else if (buf[i] == 'l') {
-             	parseLight(buf);
+             	storeLight(buf);
              	break;
         	} else if (buf[i] == 'm') {
-              	myRobot->currState = IDLE;
+              	myRobot->currState = 4; //IDLE
              	break;
             } else if (buf[i] == 'l') {
-              	myRobot->currState = IDLE;
+              	myRobot->currState = 4; //IDLE
              	break;
             } else if (buf[i] == 'd') {
-              	myRobot->currState = IDLE;
+              	myRobot->currState = 4; //IDLE
              	break;
         	} else {
             	printf("Error in parsing");
