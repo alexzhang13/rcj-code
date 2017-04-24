@@ -2,7 +2,7 @@
 #include "IMUData.h"
 
 
-RangeData::RangeData()
+RangeData::RangeData(ARobot *robot): myRobot(robot)
 {
 	x_count = 0;
 	y_count = 0;
@@ -23,34 +23,34 @@ int RangeData::parseData()
 	return 0;
 }
 
-int RangeData::getPosition(IMUData imu)
+int RangeData::getPosition()
 {	
-	if(imu.m_yaw <= 45.0 && imu.m_yaw >= -45.0) { //north
+	if(myRobot->imuDataList.end()->m_yaw <= 45.0 && myRobot->imuDataList.end()->m_yaw >= -45.0) { //north
 		data.dir = 0;
-	} else if (imu.m_yaw <= -45.0 && imu.m_yaw >= -135.0) { //east
+	} else if (myRobot->imuDataList.end()->m_yaw <= -45.0 && myRobot->imuDataList.end()->m_yaw >= -135.0) { //east
 		data.dir = 1;
-	} else if (imu.m_yaw <= -135.0 && imu.m_yaw >= 135.0) { //south
+	} else if (myRobot->imuDataList.end()->m_yaw <= -135.0 && myRobot->imuDataList.end()->m_yaw >= 135.0) { //south
 		data.dir = 2;
 	} else { //west
 		data.dir = 3;
 	}
 	if(data.laserL_a != 8190) { //check if reading is valid LONG FRONT
-		distance[0] = (data.laserL_a+29.76) * cos((3.1415926535*imu.m_yaw)/180) % 300; //30 - x - 15 = 15 - x 
+		distance[0] = (data.laserL_a+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180) % 300; //30 - x - 15 = 15 - x 
 	} else {
 		distance[0] = 316; //impossible number for distance[0], as it's %300
 	} 
 	if(data.laserL_b != 8190) { //check if reading is valid LONG BACK
-		distance[2] = (data.laserL_b+29.76) * cos((3.1415926535*imu.m_yaw)/180) % 300; //x - 15
+		distance[2] = (data.laserL_b+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180) % 300; //x - 15
 	} else {
 		distance[2] = 316; //impossible number for distance[2], as it's %300
 	}
 	if(data.laserS_a != 255) { //check if reading is valid SHORT RIGHT
-		distance[1] = (data.laserS_a+29.76) * cos((3.1415926535*imu.m_yaw)/180) % 300; //30 - x - 15 = 15 - x 
+		distance[1] = (data.laserS_a+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180) % 300; //30 - x - 15 = 15 - x 
 	} else {
 		distance[1] = 316;
 	}
 	if(data.laserS_b != 255) { //check if reading is valid SHORT LEFT
-		distance[3] = (data.laserS_b+29.76) * cos((3.1415926535*imu.m_yaw)/180) % 300; //x - 15
+		distance[3] = (data.laserS_b+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180) % 300; //x - 15
 	} else {
 		distance[3] = 316;
 	}

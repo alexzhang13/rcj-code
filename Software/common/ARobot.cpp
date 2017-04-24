@@ -183,7 +183,7 @@ void ARobot::ParseRange() {
     for(int i = 0; i < rangeParseList.size(); i++)
     {
         rangeParseList.front().parseData();
-        rangeParseList.front().getPosition(&imuDataList.end());
+        rangeParseList.front().getPosition();
         rangeDataList.push_back(rangeParseList.front());
         rangeParseList.pop();
     }
