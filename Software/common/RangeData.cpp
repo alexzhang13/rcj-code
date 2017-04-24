@@ -1,5 +1,6 @@
 #include "RangeData.h"
 #include "IMUData.h"
+#include <math.h>
 
 
 RangeData::RangeData(ARobot *robot) :myRobot(robot)
@@ -35,22 +36,30 @@ int RangeData::getPosition()
 		data.dir = 3;
 	}
 	if(data.laserL_a != 8190) { //check if reading is valid LONG FRONT
-		distance[0] = (data.laserL_a+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180) % 300.0; //30 - x - 15 = 15 - x 
+		temp_range = (data.laserL_a+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180);
+		temp_dist = (int)temp_range%300;
+		distance[0] = temp_range -= temp_dist*300;
 	} else {
 		distance[0] = 316.0f; //impossible number for distance[0], as it's %300
 	} 
 	if(data.laserL_b != 8190) { //check if reading is valid LONG BACK
-		distance[2] = (data.laserL_b+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180) % 300.0; //x - 15
+		temp_range = (data.laserL_b+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180);
+		temp_dist = (int)temp_range%300;
+		distance[2] = temp_range -= temp_dist*300;
 	} else {
 		distance[2] = 316.0f; //impossible number for distance[2], as it's %300
 	}
 	if(data.laserS_a != 255) { //check if reading is valid SHORT RIGHT
-		distance[1] = (data.laserS_a+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180) % 300.0; //30 - x - 15 = 15 - x 
+		temp_range = (data.laserS_a+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180) % 300.0; //30 - x - 15 = 15 - x 
+		temp_dist = (int)temp_range%300;
+		distance[1] = temp_range -= temp_dist*300;
 	} else {
 		distance[1] = 316.0f;
 	}
 	if(data.laserS_b != 255) { //check if reading is valid SHORT LEFT
-		distance[3] = (data.laserS_b+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180) % 300.0 //x - 15
+		temp_range = (data.laserS_b+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180) % 300.0 //x - 15
+		temp_dist = (int)temp_range%300;
+		distance[3] = temp_range -= temp_dist*300;
 	} else {
 		distance[3] = 316.0f;
 	}
