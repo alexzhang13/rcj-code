@@ -2,6 +2,7 @@
 #define _TEMP_DATA_H_
 
 #include <stdio.h>
+#include <stdint.h>
 #include <string>
 #include <iostream>
 #include <vector>
@@ -27,6 +28,7 @@ public:
 private:
 	TMP_DataType data;
 	float threshold;
+	char* command;
 };
 
 #endif // !_TEMP_DATA_H_
