@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void readConfig(const char* filename);
+void readConfig(const char* filename, ARobot *robot);
 
 int main(int argc,char **argv){
     const char* fileConfig = "./Mem/config.txt";
