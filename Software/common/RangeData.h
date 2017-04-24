@@ -9,7 +9,7 @@
 #include <vector>
 #include "ARobot.h"
 
-
+class ARobot;
 class RangeData {
 public:
 
