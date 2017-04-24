@@ -46,5 +46,5 @@ void readConfig(const char* filename, ARobot *robot)
         return;
 
     datafile = fopen(filename, "r");
-    fscanf(datafile, "%d %d %d %d %d", &robot->black_thresh, &robot->silver_thresh, &robot->white_thresh, &robot->threshLeft, &robot->threshRight);
+    fscanf(datafile, "%d %d %d %f %f", &robot->black_thresh, &robot->silver_thresh, &robot->white_thresh, &robot->threshLeft, &robot->threshRight);
 }
