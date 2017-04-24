@@ -50,14 +50,14 @@ int RangeData::getPosition()
 		distance[2] = 316.0f; //impossible number for distance[2], as it's %300
 	}
 	if(data.laserS_a != 255) { //check if reading is valid SHORT RIGHT
-		temp_range = (data.laserS_a+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180) % 300.0; //30 - x - 15 = 15 - x 
+		temp_range = (data.laserS_a+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180); //30 - x - 15 = 15 - x 
 		temp_dist = (int)temp_range%300;
 		distance[1] = temp_range -= temp_dist*300;
 	} else {
 		distance[1] = 316.0f;
 	}
 	if(data.laserS_b != 255) { //check if reading is valid SHORT LEFT
-		temp_range = (data.laserS_b+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180) % 300.0 //x - 15
+		temp_range = (data.laserS_b+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180); //x - 15
 		temp_dist = (int)temp_range%300;
 		distance[3] = temp_range -= temp_dist*300;
 	} else {
