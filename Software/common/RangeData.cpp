@@ -2,7 +2,7 @@
 #include "IMUData.h"
 
 
-RangeData::RangeData(ARobot *robot): myRobot(robot)
+RangeData::RangeData(ARobot *robot) :myRobot(robot)
 {
 	x_count = 0;
 	y_count = 0;
