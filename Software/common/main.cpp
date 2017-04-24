@@ -15,14 +15,16 @@
 
 using namespace std;
 
+void readConfig(const char* filename);
+
 int main(int argc,char **argv){
     SerialPort *port = new SerialPort("/dev/ttyAMA0",115200);
-    ARobot *robot = new ARobot(port);
-    UartRx *uartrx = new UartRx(port, robot);
+    ARobot *myRobot = new ARobot(port);
+    UartRx *uartrx = new UartRx(port, myRobot);
     //UartTx *uarttx = new UartTx(port);
-    Process_T *process_thread = new Process_T(port, robot);
+    Process_T *process_thread = new Process_T(port, myRobot);
 
-    readConfig(unsigned char* filename);
+    readConfig(unsigned char* filename, myRobot);
 
     //readCurrentMap(unsigned char* filename);
 
@@ -35,11 +37,11 @@ int main(int argc,char **argv){
     return 0;
 }
 
-int readConfig(unsigned char* filename)
+void readConfig(const char* filename, ARobot *robot)
 {
     FILE *datafile;
     if (filename == NULL)
-        return -1;
+        return;
 
     datafile = fopen(filename, "r");
     fscanf(datafile, "%d %d %d %d %d", robot->black_thresh, robot->silver_thresh, robot->white_thresh, robot->threshLeft, robot->threshRight);
