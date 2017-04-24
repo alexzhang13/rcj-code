@@ -11,13 +11,13 @@ TempData::~TempData()
 	
 }
 
-int IMUData::storeCommand(char* buf/*, int thresh*/) {
+int TempData::storeCommand(char* buf/*, int thresh*/) {
 	command = buf;
 }
 
 int TempData::parseData()
 {
-	sscanf(command, "%f %c %f %f", &data.tstamp, &data.id, &data.tmpR, &data.tmpL);
+	sscanf(command, "%d %c %f %f", &data.tstamp, &data.id, &data.tmpR, &data.tmpL);
 	return 0;
 }
 

@@ -12,7 +12,7 @@ class LightData {
 public:
 
 	typedef struct {
-		uint16_t tstamp; //timestamp
+		uint32_t tstamp; //timestamp
 		char id; //always comes out as t for temp
 		float l_reading;
 	}Light_DataType;
