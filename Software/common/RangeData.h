@@ -34,7 +34,7 @@ public:
 
 	int storeCommand(char* buf);
 	int parseData();
-	int getPosition();
+	int getPosition(IMUData imu);
 
 private:
 	Range_DataType data;
