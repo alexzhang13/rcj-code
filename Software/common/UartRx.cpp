@@ -25,13 +25,13 @@ void UartRx::run(void){
              	storeLight(buf);
              	break;
         	} else if (buf[i] == 'm') {
-              	myRobot->currState = ARobot.CurrentState.IDLE; //IDLE
+              	myRobot->currState = ARobot::IDLE; //IDLE
              	break;
             } else if (buf[i] == 'l') {
-              	myRobot->currState = ARobot.CurrentState.IDLE; //IDLE
+              	myRobot->currState = ARobot::IDLE; //IDLE
              	break;
             } else if (buf[i] == 'd') {
-              	myRobot->currState = ARobot.CurrentState.IDLE; //IDLE
+              	myRobot->currState = ARobot::IDLE; //IDLE
              	break;
         	} else {
             	printf("Error in parsing");
