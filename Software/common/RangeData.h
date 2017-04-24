@@ -30,7 +30,7 @@ public:
 		bool y_flag; //if valid point
 	}Range_Coord;
 
-	RangeData();
+	RangeData(ARobot *robot);
 	~RangeData();
 
 	int storeCommand(char* buf);
