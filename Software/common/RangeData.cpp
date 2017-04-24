@@ -1,9 +1,9 @@
 #include "RangeData.h"
+#include "IMUData.h"
 
 
 RangeData::RangeData()
 {
-	dir = 0;
 	x_count = 0;
 	y_count = 0;
 }
