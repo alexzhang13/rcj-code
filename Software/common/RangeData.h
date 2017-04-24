@@ -7,6 +7,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include "ARobot.h"
 
 
 class RangeData {
@@ -34,8 +35,10 @@ public:
 
 	int storeCommand(char* buf);
 	int parseData();
-	int getPosition(IMUData imu);
+	int getPosition();
 
+protected:
+	ARobot *myRobot;
 private:
 	Range_DataType data;
 	Range_Coord coord;
