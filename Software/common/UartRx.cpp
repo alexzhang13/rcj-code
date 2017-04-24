@@ -13,25 +13,25 @@ void UartRx::run(void){
     	mPort->fgets(buf,64);
     	for(int i = 0; i < 64; i++) {
         	if(buf[i] == 'i') { //check if it's IMU
-            	storeIMU(buf);
+            	storeIMU(buf, myRobot);
             	break;
         	} else if (buf[i] == 'r') {
-             	storeRange(buf);
+             	storeRange(buf, myRobot);
              	break;
          	} else if (buf[i] == 't') {
-             	storeTemp(buf);
+             	storeTemp(buf, myRobot);
               	break;
         	} else if (buf[i] == 'l') {
-             	storeLight(buf);
+             	storeLight(buf, myRobot);
              	break;
         	} else if (buf[i] == 'm') {
-              	myRobot->currState = 4; //IDLE
+              	myRobot->currState = IDLE; //IDLE
              	break;
             } else if (buf[i] == 'l') {
-              	myRobot->currState = 4; //IDLE
+              	myRobot->currState = IDLE; //IDLE
              	break;
             } else if (buf[i] == 'd') {
-              	myRobot->currState = 4; //IDLE
+              	myRobot->currState = IDLE; //IDLE
              	break;
         	} else {
             	printf("Error in parsing");
@@ -42,26 +42,26 @@ void UartRx::run(void){
     }
 }
 
-void UartRX::storeIMU(char* buf) {
+void UartRX::storeIMU(char* buf, ARobot *mRobot) {
     IMUData curr_imu;
     curr_imu.storeCommand(buf);
-    myRobot->imuParseList.push(curr_imu); //push imu data
+    mRobot->imuParseList.push(curr_imu); //push imu data
 }
 
-void UartRX::storeRange(char* buf) {
+void UartRX::storeRange(char* buf, ARobot *mRobot) {
     RangeData curr_range;
     curr_range.storeCommand(buf);
-    myRobot->rangeParseList.push(curr_range); //push range data
+    mRobot->rangeParseList.push(curr_range); //push range data
 }
 
-void UartRX::storeTemp(char* buf) {
+void UartRX::storeTemp(char* buf, ARobot *mRobot) {
     TempData curr_temp;
     curr_temp.storeCommand(buf);
-    myRobot->tempParseList.push(curr_temp); //push temp data
+    mRobot->tempParseList.push(curr_temp); //push temp data
 }
 
-void UartRX::storeLight(char* buf) {
+void UartRX::storeLight(char* buf, ARobot *mRobot) {
     LightData curr_light;
     curr_light.storeCommand(buf);
-    myRobot->lightParseList.push(curr_light); //push light data
+    mRobot->lightParseList.push(curr_light); //push light data
 }
