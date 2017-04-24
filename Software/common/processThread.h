@@ -1,6 +1,7 @@
 #ifndef _PROCESS_THREAD_h_
 #define _PROCESS_THREAD_h_
 
+#include "ARobot.h"
 #include "Thread.h"
 #include "SerialPort.h"
 #include "Thread.h"
