@@ -80,9 +80,9 @@ class ARobot {
 	CurrentState currState;
 
 	bool backingBlack; //if the robot is backing up on a black tile
- 	uint16_t silver_thresh;
- 	uint16_t black_thresh;
- 	uint16_t white_thresh;
+ 	int silver_thresh;
+ 	int black_thresh;
+ 	int white_thresh;
  	float threshLeft;
  	float threshRight;
 
