@@ -43,6 +43,12 @@ public:
 	inline MazeFloorMap *getFloorMap(int32_t floor_num) { return &m_floormap[floor_num]; }
 	inline int32_t getNumOfFloors() { return m_floors;}
 	inline int32_t getHomeFloorNum() { return m_home_floor;}
+	inline int32_t getHomeCellIndex() { return m_home_cell_index;}
+	inline int32_t getFloorNums() { return m_floors;}
+	inline int32_t getCurFloorNum() { return m_cur_floor;}
+	inline int32_t getCurCellIndex() { return m_cur_cell_index;}
+
+	inline std::vector<GreedyDijkstra::DistInfo> *getTracedRoute(int32_t floor_num) { return &m_route_trace[floor_num];}
 
 protected:
 
@@ -53,8 +59,8 @@ protected:
 	int32_t getWallColor(MazeCell::WallProp ct, cv::Scalar &color);
 	int32_t getCellColor(MazeCell::CellType ct, cv::Scalar &color);
 
-	int32_t m_cur_floor_staircell_index;
-	int32_t m_cur_floor_latest_checkpoint;
+	int32_t m_cur_floor;
+	int32_t m_cur_cell_index;
 	int32_t m_home_cell_index;
 	int32_t m_home_floor;
 	int32_t m_floors;
@@ -62,6 +68,7 @@ protected:
 	MazeFloorMap m_floormap[2];
 	FloorMapStatus m_floor[2];
 	cv::Mat m_disp_img[2];
+	std::vector<GreedyDijkstra::DistInfo> m_route_trace[2];
 	int32_t m_disp_cell_size;
 };
 

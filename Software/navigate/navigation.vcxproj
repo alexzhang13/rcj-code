@@ -16,6 +16,7 @@
     <ClCompile Include="greedy_dijkstra.cpp" />
     <ClCompile Include="mazemap.cpp" />
     <ClCompile Include="mazemap_gen.cpp" />
+    <ClCompile Include="navigate2D.cpp" />
     <ClCompile Include="navigate_simul.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -25,6 +26,7 @@
     <ClInclude Include="greedy_dijkstra.h" />
     <ClInclude Include="mazemap.h" />
     <ClInclude Include="mazemap_gen.h" />
+    <ClInclude Include="navigate2D.h" />
     <ClInclude Include="navigate_defs.h" />
     <ClInclude Include="navigate_simul.h" />
   </ItemGroup>

@@ -4,6 +4,7 @@
 #include <navigate/floormap.h>
 #include <navigate/mazemap_gen.h>
 #include <navigate/navigate_simul.h>
+#include <navigate/navigate2D.h>
 
 
 // simulation
@@ -117,14 +118,14 @@ int navigation_simul_test()
 
 	NavigateSimul nav_simul;
 
-	nav_simul.readInGtMaps(in_dir, xmlname);
+	nav_simul.readChkPtMaps(in_dir, xmlname);
 	nav_simul.displayGtMap(0);
 	nav_simul.displayGtMap(1);
 
 	// in real app, the information is derived from the input file
 	nav_simul.setHomeCell(home_floor_num, heading);
 
-	for(i = 0; i < 50; i++) {
+	for(i = 0; i < 100; i++) {
 		nav_simul.configureCurCell();
 		nav_simul.detectLocalCells();
 		nav_simul.updateLocalMap();
@@ -139,5 +140,12 @@ int navigation_simul_test()
 		_sleep(1000);
 	}
 
+	return 0;
+}
+
+int testMapLoad()
+{
+
+	Navigate2D nav_RT;
 	return 0;
 }
