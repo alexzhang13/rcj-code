@@ -27,8 +27,8 @@ public:
 private:
 	char* command;
 	Light_DataType data;
-	float threshold_black;
-	float threshold_silver;
+	int threshold_black;
+	int threshold_silver;
 };
 
 #endif // !_TEMP_DATA_H_

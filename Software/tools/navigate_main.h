@@ -18,6 +18,8 @@ extern "C" {
 
 	int navigation_simul_test();
 
+	int testMapLoad();
+
 #ifdef __cplusplus
 }
 #endif

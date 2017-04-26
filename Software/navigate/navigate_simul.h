@@ -16,10 +16,13 @@ public:
 	~NavigateSimul();
 
 	// read in ground truth maps
-	int32_t readInGtMaps(const char* out_dir, const char* filename);
+	int32_t readChkPtMaps(const char* out_dir, const char* filename);
 
 	//! set home cell
 	int32_t setHomeCell(int floor_num, MazeCell::NavDir heading);
+
+	//! set home cell
+	int32_t setStairCell(int floor_num, MazeCell *staircell);
 
 	//! configure current cell based on sensor info
 	int32_t configureCurCell();
@@ -66,7 +69,6 @@ private:
 	int32_t m_cur_cell_index;
 	GreedyDijkstra m_dijkstra;
 	GreedyDijkstra::DistInfo m_next_cell;
-	std::vector<GreedyDijkstra::DistInfo> m_route_trace;
 };
 
 //////////////////////////////////////////////////////////////

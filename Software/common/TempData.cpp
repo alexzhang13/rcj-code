@@ -11,8 +11,10 @@ TempData::~TempData()
 	
 }
 
-int TempData::storeCommand(char* buf/*, int thresh*/) {
+int TempData::storeCommand(char* buf, float threshLeft, float threshRight) {
 	command = buf;
+	thresholdL = threshLeft;
+	thresholdR = threshRight;
 }
 
 int TempData::parseData()
@@ -23,10 +25,10 @@ int TempData::parseData()
 
 int TempData::checkTemp()
 {
-	if(data.tmpL > threshold) {
+	if(data.tmpL > thresholdL) {
 		return 1;
 	}
-	if (data.tmpR > threshold) {
+	if (data.tmpR > thresholdR) {
 		return 2;
 	}
 	return 0;

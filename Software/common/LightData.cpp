@@ -11,10 +11,10 @@ LightData::~LightData()
 	
 }
 
-int LightData::storeCommand(char* buf) {
+int LightData::storeCommand(char* buf. int thresh_black, int thresh_silver, int thresh_white) {
 	command = buf;
-	//threshold_black = thresh_black;
-	//threshold_silver = thresh_silver;
+	threshold_black = thresh_black;
+	threshold_silver = thresh_silver;
 }
 
 int LightData::parseData()
@@ -25,7 +25,7 @@ int LightData::parseData()
 
 int LightData::checkLight()
 {
-	if(data.l_reading > threshold_black) {
+	if(data.l_reading < threshold_black) {
 		printf("black");
 		return 1;
 	} else if (data.l_reading > threshold_silver) {

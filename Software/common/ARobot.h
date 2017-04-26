@@ -25,6 +25,7 @@ class ARobot {
  	/*Enums*/
  	enum LightVal {WHITE=0, BLACK=1, SILVER=2};
 	enum BotDir {RIGHT=0, LEFT=1, FRONT=2, BACK=3};
+	enum BotOrientation {NORTH=0, EAST=1, SOUTH=2, WEST=3};
 	enum CurrentState {DROP=0, MOVE=1, TURN=2, LED=3, IDLE=4};
 
  	/*Writing to Arduino*/
@@ -75,16 +76,17 @@ class ARobot {
 	std::queue<TempData> tempParseList;
 	std::queue<LightData> lightParseList;
 
-	LightVal currTileLight;
-	BotDir currDir; 
-	CurrentState currState;
+	LightVal currTileLight; //Current Tile's Light Status
+	BotDir currDir; //Turning and Moving directions, local to current pos and next direction
+	CurrentState currState; //Current state of the Robot
+	BotOrientation currOrientation; //Current Direction through Compass System, Global
 
 	bool backingBlack; //if the robot is backing up on a black tile
- 	int silver_thresh;
- 	int black_thresh;
- 	int white_thresh;
- 	float threshLeft;
- 	float threshRight;
+ 	int silver_thresh; //Silver Tile Threshold
+ 	int black_thresh; //Black Tile Threshold
+ 	int white_thresh; //White Tile Threshold
+ 	float threshLeft; //Left Temperature Threshold
+ 	float threshRight; //Right Temperature Threshold
 
  protected:
  	SerialPort *mPort;

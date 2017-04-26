@@ -4,6 +4,7 @@
 #include <navigate/floormap.h>
 #include <navigate/mazemap_gen.h>
 #include <navigate/navigate_simul.h>
+#include <navigate/navigate2D.h>
 
 
 // simulation
@@ -77,7 +78,7 @@ int mapgen_test()
 	const float walls = 0.2f;
 	int32_t home_floor_num = 0;
 	int32_t floors = 2;
-	const char* out_dir = "C:/projects/StormingRobots2017/Data/navigation_data/";
+	const char* out_dir = "D:/users/family/alex/rcj-code/Software/simul/output/";
 	const char* xmlname = "mazemap";
 	const char* xmlname_new = "mazemap_new";
 	// generate floor maps
@@ -110,21 +111,21 @@ int mapgen_test()
 int navigation_simul_test()
 {
 	int32_t i;
-	const char* in_dir = "C:/projects/StormingRobots2017/Data/navigation_data/";
+	const char* in_dir = "D:/users/family/alex/rcj-code/Software/simul/output/";
 	const char* xmlname = "mazemap";
 	int32_t home_floor_num = 0;
 	MazeCell::NavDir heading = MazeCell::navNorth;
 
 	NavigateSimul nav_simul;
 
-	nav_simul.readInGtMaps(in_dir, xmlname);
+	nav_simul.readChkPtMaps(in_dir, xmlname);
 	nav_simul.displayGtMap(0);
 	nav_simul.displayGtMap(1);
 
 	// in real app, the information is derived from the input file
 	nav_simul.setHomeCell(home_floor_num, heading);
 
-	for(i = 0; i < 50; i++) {
+	for(i = 0; i < 100; i++) {
 		nav_simul.configureCurCell();
 		nav_simul.detectLocalCells();
 		nav_simul.updateLocalMap();
@@ -139,5 +140,12 @@ int navigation_simul_test()
 		_sleep(1000);
 	}
 
+	return 0;
+}
+
+int testMapLoad()
+{
+
+	Navigate2D nav_RT;
 	return 0;
 }
