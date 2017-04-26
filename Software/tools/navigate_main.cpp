@@ -13,6 +13,7 @@ int main(int argc, char **argv)
 	//int ret = greedy_dikjstra_test();
 	//int ret = mapgen_test();
 	int ret = navigation_simul_test();
+	//int ret = testMapLoad();
 	return ret;
 }
 
@@ -145,7 +146,46 @@ int navigation_simul_test()
 
 int testMapLoad()
 {
+	int32_t i;
+	const char* in_dir = "D:/users/family/alex/rcj-code/Software/simul/output/";
+	const char* xmlname = "mazemap_04252017";
+	int32_t home_floor_num = 0;
+	MazeCell::NavDir heading = MazeCell::navNorth;
+	Navigate2D nav_rt;
 
-	Navigate2D nav_RT;
+	nav_rt.getCurTime();
+	if(nav_rt.readChkPtMaps(in_dir, xmlname)!= 0) {
+		nav_rt.setHomeCell(home_floor_num, heading);	
+	}
+
+	// configure wall and cell info
+	// find victim or letter on the wall
+	MazeCell sensor_info; // filled in by sensor info
+	nav_rt.configureCurCell(&sensor_info);
+	// in cell operations: dropper, blinking, etc.
+
+	// filled in by sensor info
+	// neighbor cells update 
+	std::vector<MazeCell> next_cell_list; 
+	nav_rt.detectLocalCells(next_cell_list);
+
+	// update local map
+	nav_rt.updateLocalMap();
+
+	// write local map to file - will move to another thead
+	//nav_rt.writeMap(in_dir, xmlname);
+
+	// line fitting to correct position and orientation
+	//nav_rt.slam2d(); // will move to another thread
+
+	// what to do next
+	nav_rt.navigatePlanning();
+
+	// move on to the next cell
+	nav_rt.navigation2D();
+
+
+
+
 	return 0;
 }
