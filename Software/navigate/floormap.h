@@ -36,10 +36,17 @@ public:
 	// reset cell map
 	void resetMap();
 
+	inline bool isHomeCell() { return m_is_home;}
+	inline void setHomeCellFlag(bool flag) {m_is_home = flag;}
+	inline int32_t getHomeCellNum() { return m_home_cell_index;}
+	inline void setHomeCellNum(int32_t num) { m_home_cell_index = num;}
+	inline void setHomeCell(MazeCell *cell) { m_home_cell = cell;} 
 	inline MazeCell *getHomeCell() { return m_home_cell;}
 	inline MazeCell *getCurrentCell() { return m_cur_cell;}
 	inline int32_t getCurCellIndex() { return m_cur_cell_index;}
 	inline void setCurCellIndex(int32_t indx) { m_cur_cell_index = indx; m_cur_cell = &m_cell_list[indx];}
+	inline MazeCell* getStairCell() { return m_stair_cell;}
+	inline void setStairCell(MazeCell *cell) { m_stair_cell = cell;} 
 
 	inline int32_t getCellSize() { return (int32_t)m_cell_list.size();}
 	inline MazeCell *getCell(int32_t i) { if(i < 0) return NULL; else return &m_cell_list[i];}
@@ -47,6 +54,7 @@ public:
 	inline std::vector<int32_t> *getVisitedList() { return &m_visited_list; }
 	inline std::vector<int32_t> *getToBeVisitedList() { return &m_to_be_visited_list; }
 	inline std::vector<int32_t> *getCheckPtList() { return &m_checkPtList;}
+	inline std::vector<int32_t> *getUnknownList() { return &m_unknown_list;}
 
 	inline void setMapHsize(float hsize) { m_map_hsize = hsize;}
 	inline void setMapVsize(float vsize) { m_map_vsize = vsize;}
@@ -58,9 +66,19 @@ public:
 	inline int32_t getGridHsize(void) { return m_grid_wsize;}
 	inline int32_t getGridVsize(void) { return m_grid_hsize;}
 
+	inline void setStairCellIndex(int32_t indx) { m_stair_cell_index = indx;}
+	inline int32_t getStairCellIndex() { return m_stair_cell_index;}
+	inline void setLatestChkPtCellIndex(int32_t indx) { m_latest_checkpt_index = indx;}
+	inline int32_t getLatestChkPtCellIndex() { return m_latest_checkpt_index;}
+
+
 protected:
 	bool m_initialized; 
+	bool m_is_home;
+	int32_t m_home_cell_index;
 	int32_t m_cur_cell_index;
+	int32_t m_stair_cell_index;
+	int32_t m_latest_checkpt_index;
 	std::vector<MazeCell> m_cell_list; // the cell is listed by the order of cell number
 	std::vector<int32_t> m_visited_list;
 	std::vector<int32_t> m_to_be_visited_list;

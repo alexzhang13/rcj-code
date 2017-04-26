@@ -23,12 +23,20 @@ public:
 		float laserS_b; //reading from the short laser facing left
 		int dir; //n = 0, e = 1, s = 2, w = 3
 	}Range_DataType;
+
 	typedef struct {
 		float x;
 		float y;
 		bool x_flag; //if valid
 		bool y_flag; //if valid point
 	}Range_Coord;
+
+	typedef struct {
+		uint8_t wallN; //how many cells away is a wall
+		uint8_t wallE;
+		uint8_t wallS;
+		uint8_t wallW;
+	}Wall_Dist;
 
 	RangeData(ARobot *robot);
 	~RangeData();
@@ -37,11 +45,13 @@ public:
 	int parseData();
 	int getPosition();
 
+	Range_DataType data;
+	Range_Coord coord;
+	Wall_Dist walls;
+
 protected:
 	ARobot *myRobot;
 private:
-	Range_DataType data;
-	Range_Coord coord;
 	uint8_t x_count; //count if the lasers don't see anything
 	uint8_t y_count;
 	float distance[4];

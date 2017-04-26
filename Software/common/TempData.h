@@ -21,13 +21,14 @@ public:
 	TempData();
 	~TempData();
 
-	int storeCommand(char* buf);
+	int storeCommand(char* buf, float threshLeft, float threshRight);
 	int parseData();
 	int checkTemp();
 
 private:
 	TMP_DataType data;
-	float threshold;
+	float thresholdL;
+	float thresholdR;
 	char* command;
 };
 

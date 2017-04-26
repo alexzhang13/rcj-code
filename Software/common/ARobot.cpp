@@ -26,6 +26,11 @@ void ARobot::WriteCommand(char* command, int size)
     mPort->write(command, size);
 }
 
+void ARobot::MoveTile()
+{
+
+}
+
 void ARobot::checkRamp()
 {
     //check if pitch has exceeded certain threshold

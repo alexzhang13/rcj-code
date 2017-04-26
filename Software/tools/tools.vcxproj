@@ -82,8 +82,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <ImportLibrary>$(OutDir)$(TargetName)_d.lib</ImportLibrary>
-      <AdditionalLibraryDirectories>$(OutDir);$(cvpath)\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>tinyxml_d.lib;navigation_d.lib;opencv_core$(cv_ver)d.lib;opencv_features2d$(cv_ver)d.lib;opencv_flann$(cv_ver)d.lib;opencv_highgui$(cv_ver)d.lib;opencv_imgcodecs$(cv_ver)d.lib;opencv_imgproc$(cv_ver)d.lib;opencv_objdetect$(cv_ver)d.lib;opencv_video$(cv_ver)d.lib;opencv_videoio$(cv_ver)d.lib;opencv_videostab$(cv_ver)d.lib;opencv_ximgproc$(cv_ver)d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);$(cvpath)\x64\vc11\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>tinyxml_d.lib;navigation_d.lib;opencv_core$(cv_ver)d.lib;opencv_features2d$(cv_ver)d.lib;opencv_flann$(cv_ver)d.lib;opencv_highgui$(cv_ver)d.lib;opencv_imgproc$(cv_ver)d.lib;opencv_nonfree$(cv_ver)d.lib;opencv_objdetect$(cv_ver)d.lib;opencv_video$(cv_ver)d.lib;opencv_videostab$(cv_ver)d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -122,8 +122,8 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>tinyxml.lib;navigation.lib;opencv_core$(cv_ver)d.lib;opencv_features2d$(cv_ver)d.lib;opencv_flann$(cv_ver)d.lib;opencv_highgui$(cv_ver)d.lib;opencv_imgcodecs$(cv_ver).lib;opencv_imgproc$(cv_ver)d.lib;opencv_objdetect$(cv_ver)d.lib;opencv_video$(cv_ver)d.lib;opencv_videoio$(cv_ver)d.lib;opencv_videostab$(cv_ver)d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OutDir);$(cvpath)\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>tinyxml.lib;navigation.lib;opencv_core$(cv_ver)d.lib;opencv_features2d$(cv_ver)d.lib;opencv_flann$(cv_ver)d.lib;opencv_highgui$(cv_ver)d.lib;opencv_nonfree$(cv_ver)d.lib;opencv_imgproc$(cv_ver)d.lib;opencv_objdetect$(cv_ver)d.lib;opencv_video$(cv_ver)d.lib;opencv_videostab$(cv_ver)d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);$(cvpath)\x64\vc11\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

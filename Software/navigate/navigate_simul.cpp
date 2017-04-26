@@ -9,7 +9,6 @@ NavigateSimul::NavigateSimul()
 	m_home_floor_num = 0;
 	m_home_cell_index = 0;
 	m_newcell_list.clear();
-	m_route_trace.clear();
 	m_graph_matrix = NULL;
 	m_graph_size = 0;
 }
@@ -21,8 +20,9 @@ NavigateSimul::~NavigateSimul()
 }
 
 // read in ground truth maps
-int32_t NavigateSimul::readInGtMaps(const char* out_dir, const char* filename)
+int32_t NavigateSimul::readChkPtMaps(const char* out_dir, const char* filename)
 {
+	m_map_file = std::string(out_dir) + std::string(filename) + ".xml";
 	if(m_gt_maps.readXmlMap(out_dir, filename) != 0)
 		return -1;
 
@@ -55,6 +55,28 @@ int32_t NavigateSimul::setHomeCell(int32_t floor_num, MazeCell::NavDir heading)
 	return 0;
 }
 
+int32_t NavigateSimul::setStairCell(int floor_num, MazeCell *stair_cell)
+{
+	if(stair_cell== NULL)
+		return -1;
+	 MazeCell::NavDir heading;
+	m_cur_floor_index = floor_num;
+
+	heading = stair_cell->getNavDirection();
+	int32_t indx = m_navigateMaps.getFloorMap(m_cur_floor_index)->allocateHomeCell("stair");
+	MazeCell *staircell = m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(indx);
+	staircell->setCellType(stair_cell->getCellType());
+	staircell->setNavDirection(heading);
+	staircell->setDebugLinkCell(m_gt_maps.getFloorMap(m_cur_floor_index)->getStairCell());
+	staircell->setWallNorth(staircell->getDebugLinkCell()->getWallNorth());
+	staircell->setWallEast(staircell->getDebugLinkCell()->getWallEast());
+	staircell->setWallSouth(staircell->getDebugLinkCell()->getWallSouth());
+	staircell->setWallWest(staircell->getDebugLinkCell()->getWallWest());
+	m_navigateMaps.getFloorMap(m_cur_floor_index)->setStairCell(staircell);
+	m_cur_cell_index = indx;
+	return m_cur_cell_index;
+}
+
 //! display ground truth map 
 bool NavigateSimul::displayGtMap(int32_t floor_num)
 {
@@ -74,7 +96,7 @@ bool NavigateSimul::displayLocalMap()
 //! displat current local map with way points
 bool NavigateSimul::displayRouteMap()
 {
-	int32_t status = m_navigateMaps.displayPhysicalMap(m_cur_floor_index, &m_route_trace);
+	int32_t status = m_navigateMaps.displayPhysicalMap(m_cur_floor_index, m_navigateMaps.getTracedRoute(m_cur_floor_index));
 
 	return (status == 0);
 }
@@ -96,6 +118,8 @@ int32_t NavigateSimul::configureCurCell()
 	cur_cell->setWallSouth(gt_cur_cell->getWallSouth());
 	cur_cell->setWallWest(gt_cur_cell->getWallWest());
 	cur_cell->setVisitStatus(MazeCell::Visited);
+	if(cur_cell->getStairCell())
+		m_navigateMaps.getFloorMap(m_cur_floor_index)->setStairCell(cur_cell);
 
 	std::vector<int32_t> *vlist = m_navigateMaps.getFloorMap(m_cur_floor_index)->getVisitedList();
 	bool matched = false;
@@ -119,22 +143,54 @@ int32_t NavigateSimul::configureCurCell()
 	if(matched)
 		(*tbvlist).erase((*tbvlist).begin() + j);
 
-	// update neighbor cell walls
-	int32_t cellN_num = cur_cell->getNeighborCellNorth();
-	if(m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellN_num) != NULL)
-		m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellN_num)->setWallSouth(cur_cell->getWallNorth());
+	if(cur_cell->getStairCell()) 
+	{
+		if(m_cur_floor_index ==0) {
+			int32_t temp_floor = 1;
+			// this floor has not be explored
+			if(m_navigateMaps.getFloorMap(temp_floor)->getCellSize() == 0) {
+				m_cur_floor_index = 1;
+				setStairCell(m_cur_floor_index, cur_cell);
+			}
+			else { // this floor has be explored
+				if(m_home_floor_num != m_cur_floor_index)
+					m_cur_floor_index = m_home_floor_num;
+				m_cur_cell_index = m_navigateMaps.getFloorMap(m_cur_floor_index)->getStairCell()->getCellNum();
+			}
+		}
+		else {
+			int32_t temp_floor = 0;
+			// this floor has not be explored
+			if(m_navigateMaps.getFloorMap(temp_floor)->getCellSize() == 0) {
+				m_cur_floor_index = 0;
+				setStairCell(m_cur_floor_index, cur_cell);
+			}
+			else { // this floor has be explored
+				if(m_home_floor_num != m_cur_floor_index)
+					m_cur_floor_index = m_home_floor_num;
+				m_cur_cell_index = m_navigateMaps.getFloorMap(m_cur_floor_index)->getStairCell()->getCellNum();
+			}
+		}
+		
+	}
+	else {
+		// update neighbor cell walls
+		int32_t cellN_num = cur_cell->getNeighborCellNorth();
+		if(m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellN_num) != NULL)
+			m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellN_num)->setWallSouth(cur_cell->getWallNorth());
 
-	int32_t cellE_num = cur_cell->getNeighborCellEast();
-	if(m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellE_num) != NULL)
-		m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellE_num)->setWallWest(cur_cell->getWallEast());
+		int32_t cellE_num = cur_cell->getNeighborCellEast();
+		if(m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellE_num) != NULL)
+			m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellE_num)->setWallWest(cur_cell->getWallEast());
 
-	int32_t cellS_num = cur_cell->getNeighborCellSouth();
-	if(m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellS_num) != NULL)
-		m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellS_num)->setWallNorth(cur_cell->getWallSouth());
+		int32_t cellS_num = cur_cell->getNeighborCellSouth();
+		if(m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellS_num) != NULL)
+			m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellS_num)->setWallNorth(cur_cell->getWallSouth());
 
-	int32_t cellW_num = cur_cell->getNeighborCellWest();
-	if(m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellW_num) != NULL)
-		m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellW_num)->setWallEast(cur_cell->getWallWest());
+		int32_t cellW_num = cur_cell->getNeighborCellWest();
+		if(m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellW_num) != NULL)
+			m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellW_num)->setWallEast(cur_cell->getWallWest());
+	}
 	return 0;
 }
 
@@ -359,7 +415,7 @@ int32_t NavigateSimul::navigation2D()
 	// set the destination cell to be the current cell
 	int32_t waypts = (int32_t)m_next_cell.waypts.size();
 	m_cur_cell_index = m_next_cell.waypts[0];
-	m_route_trace.push_back(m_next_cell);
+	m_navigateMaps.getTracedRoute(m_cur_floor_index)->push_back(m_next_cell);
 	MazeCell *curcell = m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(m_cur_cell_index);
 	curcell->setNavDirection(heading);
 	curcell->setVisitStatus(MazeCell::Visited);

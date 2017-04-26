@@ -1,19 +1,20 @@
-#ifndef _NAVIGATION_SIMUL_H_
-#define _NAVIGATION_SIMUL_H_
+#ifndef _NAVIGATE_H_
+#define _NAVIGATE_H_
+
 
 #include "navigate_defs.h"
 #include "mazemap.h"
 #include "mazemap_gen.h"
 #include "greedy_dijkstra.h"
-#include "navigate2D.h"
 
-class NAVIGATE_EXPORT NavigateSimul : public Navigate2D {
+
+class NAVIGATE_EXPORT Navigate2D {
 
 public:
 	//! constructor
-	NavigateSimul();
+	Navigate2D();
 	//! destructor
-	~NavigateSimul();
+	~Navigate2D();
 
 	// read in ground truth maps
 	virtual int32_t readChkPtMaps(const char* out_dir, const char* filename);
@@ -25,10 +26,10 @@ public:
 	virtual int32_t setStairCell(int floor_num, MazeCell *staircell);
 
 	//! configure current cell based on sensor info
-	virtual int32_t configureCurCell();
+	virtual int32_t configureCurCell(MazeCell *sensor_info);
 
-	//! detect local cells in simulation
-	virtual int32_t detectLocalCells();
+	//! detect local cells from sensor measures
+	virtual int32_t detectLocalCells(std::vector<MazeCell> next_cell_list);
 
 	//! update local map based on parsed sensor data
 	virtual int32_t updateLocalMap(); 
@@ -39,22 +40,38 @@ public:
 	//! navigation
 	virtual int32_t navigation2D();
 
-	//! display ground truth map 
-	virtual bool displayGtMap(int32_t floor_num);
-
 	//! display current local map
 	virtual bool displayLocalMap();
 
 	//! displat current local map with way points
 	virtual bool displayRouteMap();
 
+	//! get current time as a string
+	virtual std::string getCurTime();
 
 protected:
 	void resetGraphMatrix();
 	void allocateGraphMatrix(int32_t cellsize);
 	int32_t generateGraphMatrix();
-	MazeMapGen m_gt_maps;
+
+protected:
+	std::string m_map_file;
+	int32_t m_floors;
+	int32_t m_home_floor_num;
+	MazeCell::NavDir m_chkpt_heading;
+	std::vector<int32_t> m_newcell_list;
+	int32_t **m_graph_matrix;
+	int32_t m_graph_size;
+	MazeMaps m_navigateMaps;
+	int32_t m_home_cell_index; 
+	int32_t m_cur_floor_index;
+	int32_t m_cur_cell_index;
+	GreedyDijkstra m_dijkstra;
+	GreedyDijkstra::DistInfo m_next_cell;
 };
 
-//////////////////////////////////////////////////////////////
+
+
+
+
 #endif

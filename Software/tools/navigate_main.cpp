@@ -4,6 +4,7 @@
 #include <navigate/floormap.h>
 #include <navigate/mazemap_gen.h>
 #include <navigate/navigate_simul.h>
+#include <navigate/navigate2D.h>
 
 
 // simulation
@@ -12,6 +13,7 @@ int main(int argc, char **argv)
 	//int ret = greedy_dikjstra_test();
 	//int ret = mapgen_test();
 	int ret = navigation_simul_test();
+	//int ret = testMapLoad();
 	return ret;
 }
 
@@ -77,7 +79,7 @@ int mapgen_test()
 	const float walls = 0.2f;
 	int32_t home_floor_num = 0;
 	int32_t floors = 2;
-	const char* out_dir = "C:/projects/StormingRobots2017/Data/navigation_data/";
+	const char* out_dir = "D:/users/family/alex/rcj-code/Software/simul/output/";
 	const char* xmlname = "mazemap";
 	const char* xmlname_new = "mazemap_new";
 	// generate floor maps
@@ -110,21 +112,21 @@ int mapgen_test()
 int navigation_simul_test()
 {
 	int32_t i;
-	const char* in_dir = "C:/projects/StormingRobots2017/Data/navigation_data/";
+	const char* in_dir = "D:/users/family/alex/rcj-code/Software/simul/output/";
 	const char* xmlname = "mazemap";
 	int32_t home_floor_num = 0;
 	MazeCell::NavDir heading = MazeCell::navNorth;
 
 	NavigateSimul nav_simul;
 
-	nav_simul.readInGtMaps(in_dir, xmlname);
+	nav_simul.readChkPtMaps(in_dir, xmlname);
 	nav_simul.displayGtMap(0);
 	nav_simul.displayGtMap(1);
 
 	// in real app, the information is derived from the input file
 	nav_simul.setHomeCell(home_floor_num, heading);
 
-	for(i = 0; i < 50; i++) {
+	for(i = 0; i < 100; i++) {
 		nav_simul.configureCurCell();
 		nav_simul.detectLocalCells();
 		nav_simul.updateLocalMap();
@@ -138,6 +140,52 @@ int navigation_simul_test()
 		nav_simul.displayRouteMap();
 		_sleep(1000);
 	}
+
+	return 0;
+}
+
+int testMapLoad()
+{
+	int32_t i;
+	const char* in_dir = "D:/users/family/alex/rcj-code/Software/simul/output/";
+	const char* xmlname = "mazemap_04252017";
+	int32_t home_floor_num = 0;
+	MazeCell::NavDir heading = MazeCell::navNorth;
+	Navigate2D nav_rt;
+
+	nav_rt.getCurTime();
+	if(nav_rt.readChkPtMaps(in_dir, xmlname)!= 0) {
+		nav_rt.setHomeCell(home_floor_num, heading);	
+	}
+
+	// configure wall and cell info
+	// find victim or letter on the wall
+	MazeCell sensor_info; // filled in by sensor info
+	nav_rt.configureCurCell(&sensor_info);
+	// in cell operations: dropper, blinking, etc.
+
+	// filled in by sensor info
+	// neighbor cells update 
+	std::vector<MazeCell> next_cell_list; 
+	nav_rt.detectLocalCells(next_cell_list);
+
+	// update local map
+	nav_rt.updateLocalMap();
+
+	// write local map to file - will move to another thead
+	//nav_rt.writeMap(in_dir, xmlname);
+
+	// line fitting to correct position and orientation
+	//nav_rt.slam2d(); // will move to another thread
+
+	// what to do next
+	nav_rt.navigatePlanning();
+
+	// move on to the next cell
+	nav_rt.navigation2D();
+
+
+
 
 	return 0;
 }

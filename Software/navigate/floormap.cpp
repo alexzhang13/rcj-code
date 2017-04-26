@@ -9,6 +9,11 @@ MazeFloorMap::MazeFloorMap()
 	m_map_hsize = 0.0f;
 	m_map_vsize = 0.0f;
 	m_2dcell_array = NULL;
+	m_stair_cell_index = -1;
+	m_latest_checkpt_index = -1;
+	m_cur_cell_index = -1;
+	m_home_cell_index = -1;
+	m_is_home = false;
 	resetMap();
 	m_initialized = false;
 }
@@ -47,6 +52,7 @@ int32_t MazeFloorMap::allocateHomeCell(std::string basecell)
 	MazeCell first_cell;
 	int32_t sindex = 0;
 	m_cur_cell_index = sindex;
+	m_latest_checkpt_index = sindex;
 	first_cell.setCellNum(sindex);
 	first_cell.setCellGrid(0,0);
 	first_cell.setCenterXY(0.0f, 0.0f);

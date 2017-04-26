@@ -19,10 +19,10 @@ void UartRx::run(void){
              	storeRange(buf);
              	break;
          	} else if (buf[i] == 't') {
-             	storeTemp(buf);
+             	storeTemp(buf, myRobot->threshLeft, myRobot->threshRight);
               	break;
         	} else if (buf[i] == 'l') {
-             	storeLight(buf);
+             	storeLight(buf, myRobot->black_thresh, myRobot->silver_thresh, myRobot->white_thresh);
              	break;
         	} else if (buf[i] == 'm') {
               	myRobot->currState = ARobot::IDLE; //IDLE
