@@ -29,6 +29,7 @@ private:
 	Light_DataType data;
 	int threshold_black;
 	int threshold_silver;
+	int threshold_white;
 };
 
 #endif // !_TEMP_DATA_H_
