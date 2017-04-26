@@ -12,7 +12,8 @@ int main(int argc, char **argv)
 {
 	//int ret = greedy_dikjstra_test();
 	//int ret = mapgen_test();
-	int ret = navigation_simul_test();
+	//int ret = navigation_simul_test();
+	int ret = testMapLoad();
 	return ret;
 }
 
@@ -145,7 +146,15 @@ int navigation_simul_test()
 
 int testMapLoad()
 {
+	int32_t i;
+	const char* in_dir = "D:/users/family/alex/rcj-code/Software/simul/output/";
+	const char* xmlname = "mazemap_04252017";
+	int32_t home_floor_num = 0;
+	MazeCell::NavDir heading = MazeCell::navNorth;
+	Navigate2D nav_rt;
 
-	Navigate2D nav_RT;
+	nav_rt.getCurTime();
+	nav_rt.readChkPtMaps(in_dir, xmlname);
+
 	return 0;
 }
