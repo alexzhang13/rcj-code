@@ -2,6 +2,7 @@
 #define _TEMP_DATA_H_
 
 #include <stdio.h>
+#include <stdint.h>
 #include <string>
 #include <iostream>
 #include <vector>
@@ -20,13 +21,15 @@ public:
 	TempData();
 	~TempData();
 
-	int storeCommand(char* buf);
+	int storeCommand(char* buf, float threshLeft, float threshRight);
 	int parseData();
 	int checkTemp();
 
 private:
 	TMP_DataType data;
-	float threshold;
+	float thresholdL;
+	float thresholdR;
+	char* command;
 };
 
 #endif // !_TEMP_DATA_H_

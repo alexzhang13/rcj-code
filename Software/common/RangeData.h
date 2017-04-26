@@ -2,12 +2,14 @@
 #define _RANGE_DATA_H_
 
 #include <stdio.h>
+#include <stdint.h>
 #include <math.h>
 #include <string>
 #include <iostream>
 #include <vector>
+#include "ARobot.h"
 
-
+class ARobot;
 class RangeData {
 public:
 
@@ -19,7 +21,7 @@ public:
 		float laserL_b; //reading from the long laser facing backwards
 		float laserS_a; //reading from the short laser facing right
 		float laserS_b; //reading from the short laser facing left
-		int dir = 0; //n = 0, e = 1, s = 2, w = 3
+		int dir; //n = 0, e = 1, s = 2, w = 3
 	}Range_DataType;
 	typedef struct {
 		float x;
@@ -28,20 +30,24 @@ public:
 		bool y_flag; //if valid point
 	}Range_Coord;
 
-	RangeData();
+	RangeData(ARobot *robot);
 	~RangeData();
 
 	int storeCommand(char* buf);
 	int parseData();
 	int getPosition();
 
+protected:
+	ARobot *myRobot;
 private:
 	Range_DataType data;
 	Range_Coord coord;
-	uint8_t x_count = 0; //count if the lasers don't see anything
-	uint8_t y_count = 0;
+	uint8_t x_count; //count if the lasers don't see anything
+	uint8_t y_count;
 	float distance[4];
 	char* command; //stored command
+	float temp_range; //temporary number
+	int temp_dist; //temporary number
 };
 
 #endif // !_TEMP_DATA_H_

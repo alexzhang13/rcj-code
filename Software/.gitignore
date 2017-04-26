@@ -1,3 +1,5 @@
+#ignore opensdf temp VS files
+*.opensdf
 
 #ignore thumbnails created by windows
 Thumbs.db

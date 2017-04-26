@@ -236,7 +236,7 @@ static int drop_pt_func(struct pt *pt, int interval) { //10 hz = 100ms
         drop();
         dropper_queue = " ";
       } else if (func == 'b') {
-        lightUp(3000);
+        lightUp(dropper_queue.toInt());
         dropper_queue = " ";
       } else {
         Serial.println("ERROR: FUNCTION IN DROPPER QUEUE HAS INVALID FUNCTION CALL (LETTER INVALID)");
