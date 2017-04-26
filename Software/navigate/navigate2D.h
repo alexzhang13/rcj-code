@@ -26,7 +26,7 @@ public:
 	int32_t setStairCell(int floor_num, MazeCell *staircell);
 
 	//! configure current cell based on sensor info
-	int32_t configureCurCell();
+	int32_t configureCurCell(MazeCell *sensor_info);
 
 	//! update local map based on parsed sensor data
 	int32_t updateLocalMap(); 
@@ -49,6 +49,8 @@ public:
 	//! detect local cells in simulation
 	int32_t detectLocalCells();
 
+	//! get current time as a string
+	std::string getCurTime();
 
 protected:
 	void resetGraphMatrix();

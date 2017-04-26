@@ -1,9 +1,0 @@
-﻿Build started 4/21/2017 8:32:52 PM.
-     1>Project "C:\projects\StormingRobots2017\Software\navigate\navigation.vcxproj" on node 2 (Build target(s)).
-     1>Link:
-         navigation.vcxproj -> C:\projects\StormingRobots2017\Software\workspace\x64\Debug\Navigation_d.dll
-     1>Done Building Project "C:\projects\StormingRobots2017\Software\navigate\navigation.vcxproj" (Build target(s)).
-
-Build succeeded.
-
-Time Elapsed 00:00:00.05

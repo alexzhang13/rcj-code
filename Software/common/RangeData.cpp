@@ -7,6 +7,10 @@ RangeData::RangeData(ARobot *robot) :myRobot(robot)
 {
 	x_count = 0;
 	y_count = 0;
+	walls.wallN = 0;
+	walls.wallE = 0;
+	walls.wallS = 0;
+	walls.wallW = 0;
 }
 
 RangeData::~RangeData()
@@ -23,6 +27,8 @@ int RangeData::parseData()
 	sscanf(command, "%d %c %f %f %f %f", &data.tstamp, &data.id, &data.laserL_a, &data.laserS_a, &data.laserL_b, &data.laserS_b);
 	return 0;
 }
+
+
 
 int RangeData::getPosition()
 {	
