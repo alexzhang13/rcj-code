@@ -20,6 +20,10 @@ extern "C" {
 
 	int testMapLoad();
 
+	int linefittingTest();
+
+	int textDetectTest();
+
 #ifdef __cplusplus
 }
 #endif
