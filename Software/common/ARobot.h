@@ -12,7 +12,7 @@
 #include "UartRx.h"
 #include "UartTx.h"
 #include "cell.h"
-
+#include "navigate2D.h"
 
 class LightData;
 class RangeData;
@@ -33,6 +33,10 @@ class ARobot {
  	/*Writing to Arduino*/
  	void WriteCommand(char* command, int size);
 
+ 	/*Algorithm <-> Control*/
+ 	void UpdateCellMap();
+ 	void TileTransition();
+
  	/*Ramp*/
  	void checkRamp();
 
@@ -44,7 +48,6 @@ class ARobot {
 
  	/*Light Sensor -> Tile Control*/
  	void setLightThresh(uint16_t black, uint16_t silver);
-    void MoveTile();
  	void checkLightTile();
  	int getBlackThresh();
  	int getSilverThresh(); 	
@@ -68,6 +71,7 @@ class ARobot {
 	void ClearRange();
 	void ClearTemp();
 
+	std::vector<MazeCell> maze_cell;
 
  	std::vector<IMUData> imuDataList;
 	std::vector<RangeData> rangeDataList;
