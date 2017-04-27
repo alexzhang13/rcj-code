@@ -13,6 +13,7 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     currTileLight = WHITE;
     currDir = FRONT; 
     currState = IDLE;
+
 }
 
 ARobot::~ARobot() 
@@ -20,13 +21,17 @@ ARobot::~ARobot()
 
 }
 
-
 void ARobot::WriteCommand(char* command, int size)
 {
     mPort->write(command, size);
 }
 
-void ARobot::MoveTile()
+void ARobot::UpdateCellMap()
+{
+
+}
+
+void ARobot::TileTransition()
 {
 
 }

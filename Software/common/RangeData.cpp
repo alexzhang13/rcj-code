@@ -39,19 +39,21 @@ int RangeData::getPosition()
 	} else { //west
 		data.dir = 3;
 	}
-	if(data.laserL_a != 8190) { //check if reading is valid LONG FRONT
+	if(data.laserL_a <= 1200) { //check if reading is valid LONG FRONT
 		temp_range[0] = (data.laserL_a+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180);
 		temp_dist = (int)temp_range[0]%300;
 		distance[0] = temp_range[0] -= temp_dist*300;
 	} else {
 		distance[0] = 316.0f; //impossible number for distance[0], as it's %300
+		temp_range[0] = -300;
 	} 
-	if(data.laserL_b != 8190) { //check if reading is valid LONG BACK
+	if(data.laserL_b != 1200) { //check if reading is valid LONG BACK
 		temp_range[2] = (data.laserL_b+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180);
 		temp_dist = (int)temp_range[2]%300;
 		distance[2] = temp_range[2] -= temp_dist*300;
 	} else {
 		distance[2] = 316.0f; //impossible number for distance[2], as it's %300
+		temp_range[2] = -300;
 	}
 	if(data.laserS_a != 255) { //check if reading is valid SHORT RIGHT
 		temp_range[1] = (data.laserS_a+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180); //30 - x - 15 = 15 - x 
@@ -59,6 +61,7 @@ int RangeData::getPosition()
 		distance[1] = temp_range[1] -= temp_dist*300;
 	} else {
 		distance[1] = 316.0f;
+		temp_range[1] = -300;
 	}
 	if(data.laserS_b != 255) { //check if reading is valid SHORT LEFT
 		temp_range[3] = (data.laserS_b+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180); //x - 15
@@ -66,6 +69,7 @@ int RangeData::getPosition()
 		distance[3] = temp_range[3] -= temp_dist*300;
 	} else {
 		distance[3] = 316.0f;
+		temp_range[3] = -300;
 	}
 
 	/*Convert Readings into Cartersian Coordinates where (0,0) is the center of the cell*/
@@ -75,6 +79,9 @@ int RangeData::getPosition()
 	distance[(3+data.dir)%4] -= 15;
 
 	walls.wallN = (int)temp_range[(0+data.dir)%4]/300;
+	walls.wallE = (int)temp_range[(1+data.dir)%4]/300;
+	walls.wallS = (int)temp_range[(2+data.dir)%4]/300;
+	walls.wallW = (int)temp_range[(3+data.dir)%4]/300;
 
 	coord.x = 0; coord.y = 0; //default center (0,0)
 	coord.x_flag = true; coord.y_flag = true; //assume readings are true at first

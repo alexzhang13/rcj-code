@@ -32,10 +32,10 @@ public:
 	}Range_Coord;
 
 	typedef struct {
-		uint8_t wallN; //how many cells away is a wall
-		uint8_t wallE;
-		uint8_t wallS;
-		uint8_t wallW;
+		int8_t wallN; //how many cells away is a wall
+		int8_t wallE;
+		int8_t wallS;
+		int8_t wallW;
 	}Wall_Dist;
 
 	RangeData(ARobot *robot);
