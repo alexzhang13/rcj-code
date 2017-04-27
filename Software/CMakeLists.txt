@@ -1,5 +1,6 @@
 project(robot)
 cmake_minimum_required(VERSION 3.5)
+SET( CMAKE_CXX_FLAGS "-std=c++11 -O3")
 set (OpenCV_DIR /home/alex/opencv-3.1.0/build)
 
 # source code
@@ -17,12 +18,28 @@ set(SRCS
   common/UartTx.cpp
   imu/MadgwickAHRS.cpp
   imu/MahonyAHRS.c
+  navigate/cell.cpp
+  navigate/floormap.cpp
+  navigate/greedy_dijkstra.cpp
+  navigate/linefitting.cpp
+  navigate/mazemap_gen.cpp
+  navigate/mazemap.cpp
+  navigate/navigateMap.cpp
+  navigate/navigate2D.cpp
+  navigate/navigate_simul.cpp
+  navigate/textDetect.cpp
+  xml/tinystr.cpp
+  xml/tinyxml.cpp
+  xml/tinyxmlparser.cpp
+  xml/tinyxmlerror.cpp
 )
 
 #include path
 include_directories(
   common
   imu
+  navigate
+  xml
 )
 
 # need pthread

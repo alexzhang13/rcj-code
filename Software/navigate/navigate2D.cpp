@@ -388,10 +388,11 @@ bool Navigate2D::displayRouteMap()
 
 std::string Navigate2D::getCurTime()
 {
+std::string cur_time;
 #ifdef WIN32
 	SYSTEMTIME  system_time;
 	GetLocalTime(&system_time);
-	std::string cur_time = std::to_string(system_time.wYear) + "_" +
+	cur_time = std::to_string(system_time.wYear) + "_" +
 		std::to_string(system_time.wMonth) + "_" +
 		std::to_string(system_time.wDay);
 #else

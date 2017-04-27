@@ -4,6 +4,8 @@
 #include <assert.h>
 #include <array>
 #include <vector>
+#include <cstring>
+#include <algorithm>
 
 // constructor
 GreedyDijkstra::GreedyDijkstra()
