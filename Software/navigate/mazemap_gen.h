@@ -10,7 +10,7 @@
 #include "floormap.h"
 #include "mazemap.h"
 #include <opencv2/opencv.hpp>
-#include <xml/tinyxml.h>
+#include <tinyxml.h>
 
 
 class NAVIGATE_EXPORT MazeMapGen : public MazeMaps {

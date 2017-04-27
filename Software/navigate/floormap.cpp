@@ -1,6 +1,8 @@
 #include "cell.h"
 #include "floormap.h"
 #include <assert.h>
+#include <string.h>
+
 
 MazeFloorMap::MazeFloorMap()
 {

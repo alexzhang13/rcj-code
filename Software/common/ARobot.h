@@ -11,6 +11,8 @@
 #include "SerialPort.h"
 #include "UartRx.h"
 #include "UartTx.h"
+#include "cell.h"
+
 
 class LightData;
 class RangeData;

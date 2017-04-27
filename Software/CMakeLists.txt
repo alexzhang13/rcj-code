@@ -21,7 +21,13 @@ set(SRCS
   navigate/cell.cpp
   navigate/floormap.cpp
   navigate/greedy_dijkstra.cpp
+  navigate/linefitting.cpp
+  navigate/mazemap_gen.cpp
   navigate/mazemap.cpp
+  navigate/navigateMap.cpp
+  navigate/navigate2D.cpp
+  navigate/navigate_simul.cpp
+  navigate/textDetect.cpp
   xml/tinystr.cpp
   xml/tinyxml.cpp
   xml/tinyxmlparser.cpp
