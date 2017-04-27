@@ -42,6 +42,7 @@ class ARobot {
 
  	/*Light Sensor -> Tile Control*/
  	void setLightThresh(uint16_t black, uint16_t silver);
+    void MoveTile();
  	void checkLightTile();
  	int getBlackThresh();
  	int getSilverThresh(); 	
