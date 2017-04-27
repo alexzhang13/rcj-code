@@ -1,10 +1,10 @@
 #include "navigate_main.h"
-#include <navigate/greedy_dijkstra.h>
-#include <navigate/cell.h>
-#include <navigate/floormap.h>
-#include <navigate/mazemap_gen.h>
-#include <navigate/navigate_simul.h>
-#include <navigate/navigate2D.h>
+#include <greedy_dijkstra.h>
+#include <cell.h>
+#include <floormap.h>
+#include <mazemap_gen.h>
+#include <navigate_simul.h>
+#include <navigate2D.h>
 
 
 // simulation
