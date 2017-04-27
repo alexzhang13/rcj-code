@@ -9,7 +9,7 @@
 #include "cell.h"
 #include "floormap.h"
 #include <opencv2/opencv.hpp>
-#include <xml/tinyxml.h>
+#include <tinyxml.h>
 #include "greedy_dijkstra.h"
 
 class NAVIGATE_EXPORT MazeMaps {
