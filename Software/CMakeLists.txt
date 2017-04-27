@@ -7,6 +7,7 @@ set(SRCS
   common/ARobot.cpp
   common/IMUData.cpp
   common/LightData.cpp
+  common/TempData.cpp
   common/processThread.cpp
   common/RangeData.cpp
   common/main.cpp
