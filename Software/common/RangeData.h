@@ -56,7 +56,7 @@ private:
 	uint8_t y_count;
 	float distance[4];
 	char* command; //stored command
-	float temp_range; //temporary number
+	float temp_range[4]; //temporary number
 	int temp_dist; //temporary number
 };
 
