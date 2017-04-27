@@ -19,10 +19,10 @@ void UartRx::run(void){
              	storeRange(buf);
              	break;
          	} else if (buf[i] == 't') {
-             	storeTemp(buf, myRobot->threshLeft, myRobot->threshRight);
+             	storeTemp(buf);
               	break;
         	} else if (buf[i] == 'l') {
-             	storeLight(buf, myRobot->black_thresh, myRobot->silver_thresh, myRobot->white_thresh);
+             	storeLight(buf);
              	break;
         	} else if (buf[i] == 'm') {
               	myRobot->currState = ARobot::IDLE; //IDLE
@@ -56,12 +56,12 @@ void UartRx::storeRange(char* buf) {
 
 void UartRx::storeTemp(char* buf) {
     TempData curr_temp;
-    curr_temp.storeCommand(buf);
+    curr_temp.storeCommand(buf, myRobot->threshLeft, myRobot->threshRight);
     myRobot->tempParseList.push(curr_temp); //push temp data
 }
 
 void UartRx::storeLight(char* buf) {
     LightData curr_light;
-    curr_light.storeCommand(buf);
+    curr_light.storeCommand(buf, myRobot->black_thresh, myRobot->silver_thresh, myRobot->white_thresh);
     myRobot->lightParseList.push(curr_light); //push light data
 }

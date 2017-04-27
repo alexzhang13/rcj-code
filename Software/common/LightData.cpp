@@ -11,7 +11,7 @@ LightData::~LightData()
 	
 }
 
-int LightData::storeCommand(char* buf. int thresh_black, int thresh_silver, int thresh_white) {
+int LightData::storeCommand(char* buf, int thresh_black, int thresh_silver, int thresh_white) {
 	command = buf;
 	threshold_black = thresh_black;
 	threshold_silver = thresh_silver;

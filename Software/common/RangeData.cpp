@@ -28,8 +28,6 @@ int RangeData::parseData()
 	return 0;
 }
 
-
-
 int RangeData::getPosition()
 {	
 	if(myRobot->imuDataList.end()->m_yaw <= 45.0 && myRobot->imuDataList.end()->m_yaw >= -45.0) { //north
@@ -42,30 +40,30 @@ int RangeData::getPosition()
 		data.dir = 3;
 	}
 	if(data.laserL_a != 8190) { //check if reading is valid LONG FRONT
-		temp_range = (data.laserL_a+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180);
-		temp_dist = (int)temp_range%300;
-		distance[0] = temp_range -= temp_dist*300;
+		temp_range[0] = (data.laserL_a+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180);
+		temp_dist = (int)temp_range[0]%300;
+		distance[0] = temp_range[0] -= temp_dist*300;
 	} else {
 		distance[0] = 316.0f; //impossible number for distance[0], as it's %300
 	} 
 	if(data.laserL_b != 8190) { //check if reading is valid LONG BACK
-		temp_range = (data.laserL_b+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180);
-		temp_dist = (int)temp_range%300;
-		distance[2] = temp_range -= temp_dist*300;
+		temp_range[2] = (data.laserL_b+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180);
+		temp_dist = (int)temp_range[2]%300;
+		distance[2] = temp_range[2] -= temp_dist*300;
 	} else {
 		distance[2] = 316.0f; //impossible number for distance[2], as it's %300
 	}
 	if(data.laserS_a != 255) { //check if reading is valid SHORT RIGHT
-		temp_range = (data.laserS_a+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180); //30 - x - 15 = 15 - x 
-		temp_dist = (int)temp_range%300;
-		distance[1] = temp_range -= temp_dist*300;
+		temp_range[1] = (data.laserS_a+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180); //30 - x - 15 = 15 - x 
+		temp_dist = (int)temp_range[1]%300;
+		distance[1] = temp_range[1] -= temp_dist*300;
 	} else {
 		distance[1] = 316.0f;
 	}
 	if(data.laserS_b != 255) { //check if reading is valid SHORT LEFT
-		temp_range = (data.laserS_b+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180); //x - 15
-		temp_dist = (int)temp_range%300;
-		distance[3] = temp_range -= temp_dist*300;
+		temp_range[3] = (data.laserS_b+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180); //x - 15
+		temp_dist = (int)temp_range[3]%300;
+		distance[3] = temp_range[3] -= temp_dist*300;
 	} else {
 		distance[3] = 316.0f;
 	}
@@ -75,6 +73,9 @@ int RangeData::getPosition()
 	distance[(1+data.dir)%4] = 15 - distance[(1+data.dir)%4]; //we have to use the same reference, thus making north and east (15 - distance) for the coordinate, it's normally 30 - distance, but because of -15, it becomes 15 - distance 
 	distance[(2+data.dir)%4] -= 15; //for south and west it is regularly just subtracting 15 
 	distance[(3+data.dir)%4] -= 15;
+
+	walls.wallN = (int)temp_range[(0+data.dir)%4]/300;
+
 	coord.x = 0; coord.y = 0; //default center (0,0)
 	coord.x_flag = true; coord.y_flag = true; //assume readings are true at first
 
