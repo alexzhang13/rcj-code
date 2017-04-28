@@ -15,9 +15,9 @@
 
 using namespace std;
 
-void readConfig(const char* filename, ARobot *robot);
-void readCurrentMap(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt);
-void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt);
+static void readConfig(const char* filename, ARobot *robot);
+static void readCurrentMap(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt);
+static void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt);
 
 int main(int argc,char **argv){
     Navigate2D nav; //main map class obj
