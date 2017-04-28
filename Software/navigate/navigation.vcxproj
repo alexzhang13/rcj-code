@@ -14,21 +14,25 @@
     <ClCompile Include="cell.cpp" />
     <ClCompile Include="floormap.cpp" />
     <ClCompile Include="greedy_dijkstra.cpp" />
+    <ClCompile Include="linefitting.cpp" />
     <ClCompile Include="mazemap.cpp" />
     <ClCompile Include="mazemap_gen.cpp" />
     <ClCompile Include="navigate2D.cpp" />
     <ClCompile Include="navigate_simul.cpp" />
+    <ClCompile Include="textDetect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cell.h" />
     <ClInclude Include="floormap.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="greedy_dijkstra.h" />
+    <ClInclude Include="linefitting.h" />
     <ClInclude Include="mazemap.h" />
     <ClInclude Include="mazemap_gen.h" />
     <ClInclude Include="navigate2D.h" />
     <ClInclude Include="navigate_defs.h" />
     <ClInclude Include="navigate_simul.h" />
+    <ClInclude Include="textDetect.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGUID>{556FA37C-BBB3-F485-9494-C63C5F7E5861}</ProjectGUID>
@@ -78,7 +82,7 @@
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_WIN32_WINNT=0x0501;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Debug";NAVIGATE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(cvpath)\include;..\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(cvpath)\include;..\xml</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_WIN32_WINNT=0x0501;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -97,7 +101,7 @@
       <SubSystem>Console</SubSystem>
       <ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
       <AdditionalLibraryDirectories>$(OutDir);$(cvpath)\x64\vc11\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>tinyxml_d.lib;opencv_core$(cv_ver)d.lib;opencv_features2d$(cv_ver)d.lib;opencv_flann$(cv_ver)d.lib;opencv_highgui$(cv_ver)d.lib;opencv_imgproc$(cv_ver)d.lib;opencv_nonfree$(cv_ver)d.lib;opencv_objdetect$(cv_ver)d.lib;opencv_video$(cv_ver)d.lib;opencv_videostab$(cv_ver)d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>tinyxml_d.lib;opencv_core$(cv_ver)d.lib;opencv_features2d$(cv_ver)d.lib;opencv_imgcodecs$(cv_ver)d.lib;opencv_imgproc$(cv_ver)d.lib;opencv_flann$(cv_ver)d.lib;opencv_highgui$(cv_ver)d.lib;opencv_objdetect$(cv_ver)d.lib;opencv_video$(cv_ver)d.lib;opencv_videostab$(cv_ver)d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -105,7 +109,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(cvpath)\include;..\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(cvpath)\include;..\xml</AdditionalIncludeDirectories>
       <AssemblerListingLocation>Release/</AssemblerListingLocation>
       <CompileAs>CompileAsCpp</CompileAs>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
@@ -136,7 +140,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>tinyxml.lib;opencv_core$(cv_ver)d.lib;opencv_features2d$(cv_ver)d.lib;opencv_flann$(cv_ver)d.lib;opencv_highgui$(cv_ver)d.lib;opencv_nonfree$(cv_ver)d.lib;opencv_imgproc$(cv_ver)d.lib;opencv_objdetect$(cv_ver)d.lib;opencv_video$(cv_ver)d.lib;opencv_videostab$(cv_ver)d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>tinyxml.lib;opencv_core$(cv_ver).lib;opencv_features2d$(cv_ver).lib;opencv_imgcodecs$(cv_ver).lib;opencv_imgproc$(cv_ver).lib;opencv_flann$(cv_ver).lib;opencv_highgui$(cv_ver).lib;opencv_objdetect$(cv_ver).lib;opencv_video$(cv_ver).lib;opencv_videostab$(cv_ver).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OutDir);$(cvpath)\x64\vc11\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
