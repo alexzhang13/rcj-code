@@ -32,12 +32,12 @@ int main(int argc,char **argv){
     //UartTx *uarttx = new UartTx(port);
     Process_T *process_thread = new Process_T(port, myRobot);
 
-    readConfig(fileConfig, xml_name, myRobot); //read config file about threshold calibrations
+    readConfig(fileConfig, myRobot); //read config file about threshold calibrations
 
-    readCurrentMap(in_dir); //check for previous map from mem
+    readCurrentMap(in_dir, xml_name, myRobot); //check for previous map from mem
 
     while(1) {
-        if(myRobot.currState == ARobot::IDLE) {
+        if(myRobot->currState == ARobot::IDLE) {
             Nagivate(myRobot);
         }
         sleep(1); //small gap
@@ -56,7 +56,7 @@ void readConfig(const char* filename, ARobot *robot)
     int ret = fscanf(datafile, "%d %d %d %f %f", &robot->black_thresh, &robot->silver_thresh, &robot->white_thresh, &robot->threshLeft, &robot->threshRight);
 }
 
-void readCurrentMap(const char* filename, const char* xmlname, ARobot *robot);
+void readCurrentMap(const char* filename, const char* xmlname, ARobot *robot)
 {
     MazeCell::NavDir heading = MazeCell::navNorth;
 
@@ -68,7 +68,8 @@ void readCurrentMap(const char* filename, const char* xmlname, ARobot *robot);
     }
 }
 
-void Navigate(const char* filename, const char* xmlname, ARobot *robot) {
+void Navigate(const char* filename, const char* xmlname, ARobot *robot) 
+{
     /*Navigational functions*/
     robot->UpdateCellMap(&robot->sensor_info);
     robot->UpdateNeighborCells();
@@ -83,5 +84,6 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot) {
     nav_rt.navigatePlanning();
     // move on to the next cell
     nav_rt.navigation2D();
+
 
 }
