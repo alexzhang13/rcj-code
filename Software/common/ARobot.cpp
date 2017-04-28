@@ -36,7 +36,7 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info)
         sensor_info->setCheckPt(false);
         sensor_info->setNonMovable(false);
     }
-    if(checkRamp) {
+    if(checkRamp() == true) {
         sensor_info->setStairCell(true);
     } else {sensor_info->setStairCell(false);}
     //check for temperature/victims
@@ -72,7 +72,7 @@ void ARobot::UpdateNeighborCells()
 {
     MazeCell temp_cell;
     size_t sizeRange = rangeDataList.size();
-    bool wallsN = true, 
+    bool wallsN = true;
     bool wallsE = true;
     bool wallsS = true;
     bool wallsW = true; //if valid/usable data
@@ -97,13 +97,13 @@ void ARobot::UpdateNeighborCells()
             break;
     }
     if(wallsN == true) {
-        if(rangeDataList[sizeRange-i].walls.wallN != -1) {
+        if(rangeDataList[sizeRange-1].walls.wallN != -1) {
             for(int i = 1; i <= rangeDataList[sizeRange-i].walls.wallN; i++) {
                 temp_cell.setCellGrid(currTile.x, currTile.y+i);
                 if(i == rangeDataList[sizeRange-i].walls.wallN) { //There is a wall at the reading point/furthest reading
-                    temp_cell->setWallNorth(MazeCell::MWall);
+                    temp_cell.setWallNorth(MazeCell::MWall);
                 } else {
-                    temp_cell->setWallNorth(MazeCell::MOpen);
+                    temp_cell.setWallNorth(MazeCell::MOpen);
                 }
                 temp_cell_list.push_back(temp_cell);
                 temp_cell.reset();
@@ -111,7 +111,7 @@ void ARobot::UpdateNeighborCells()
         } else {
             for(int i = 1; i <= 2; i++) { //open???
                 temp_cell.setCellGrid(currTile.x, currTile.y+i);
-                temp_cell->setWallNorth(MazeCell::MOpen);
+                temp_cell.setWallNorth(MazeCell::MOpen);
                 temp_cell_list.push_back(temp_cell);
                 temp_cell.reset();
             }
@@ -119,13 +119,13 @@ void ARobot::UpdateNeighborCells()
     }
 
     if(wallsE == true) {
-        if(rangeDataList[sizeRange-i].walls.wallE != -1) {
+        if(rangeDataList[sizeRange-1].walls.wallE != -1) {
             for(int i = 1; i <= rangeDataList[sizeRange-i].walls.wallE; i++) {
                 temp_cell.setCellGrid(currTile.x, currTile.y+i);
                 if(i == rangeDataList[sizeRange-i].walls.wallE) { //There is a wall at the reading point/furthest reading
-                    temp_cell->setWallEast(MazeCell::MWall);
+                    temp_cell.setWallEast(MazeCell::MWall);
                 } else {
-                    temp_cell->setWallEast(MazeCell::MOpen);
+                    temp_cell.setWallEast(MazeCell::MOpen);
                 }
                 temp_cell_list.push_back(temp_cell);
                 temp_cell.reset();
@@ -133,7 +133,7 @@ void ARobot::UpdateNeighborCells()
         } else {
             for(int i = 1; i <= 2; i++) { //open???
                 temp_cell.setCellGrid(currTile.x, currTile.y+i);
-                temp_cell->setWallEast(MazeCell::MOpen);
+                temp_cell.setWallEast(MazeCell::MOpen);
                 temp_cell_list.push_back(temp_cell);
                 temp_cell.reset();
             }
@@ -141,13 +141,13 @@ void ARobot::UpdateNeighborCells()
     }
 
     if(wallsS == true) {
-        if(rangeDataList[sizeRange-i].walls.wallS != -1) {
+        if(rangeDataList[sizeRange-1].walls.wallS != -1) {
             for(int i = 1; i <= rangeDataList[sizeRange-i].walls.wallS; i++) {
                 temp_cell.setCellGrid(currTile.x, currTile.y+i);
                 if(i == rangeDataList[sizeRange-i].walls.wallS) { //There is a wall at the reading point/furthest reading
-                    temp_cell->setWallSouth(MazeCell::MWall);
+                    temp_cell.setWallSouth(MazeCell::MWall);
                 } else {
-                    temp_cell->setWallSouth(MazeCell::MOpen);
+                    temp_cell.setWallSouth(MazeCell::MOpen);
                 }
                 temp_cell_list.push_back(temp_cell);
                 temp_cell.reset();
@@ -155,7 +155,7 @@ void ARobot::UpdateNeighborCells()
         } else {
             for(int i = 1; i <= 2; i++) { //open???
                 temp_cell.setCellGrid(currTile.x, currTile.y+i);
-                temp_cell->setWallSouth(MazeCell::MOpen);
+                temp_cell.setWallSouth(MazeCell::MOpen);
                 temp_cell_list.push_back(temp_cell);
                 temp_cell.reset();
             }
@@ -163,13 +163,13 @@ void ARobot::UpdateNeighborCells()
     }
 
     if(wallsW == true) {
-        if(rangeDataList[sizeRange-i].walls.wallW != -1) {
+        if(rangeDataList[sizeRange-1].walls.wallW != -1) {
             for(int i = 1; i <= rangeDataList[sizeRange-i].walls.wallW; i++) {
                 temp_cell.setCellGrid(currTile.x, currTile.y+i);
                 if(i == rangeDataList[sizeRange-i].walls.wallW) { //There is a wall at the reading point/furthest reading
-                    temp_cell->setWallWest(MazeCell::MWall);
+                    temp_cell.setWallWest(MazeCell::MWall);
                 } else {
-                    temp_cell->setWallWest(MazeCell::MOpen);
+                    temp_cell.setWallWest(MazeCell::MOpen);
                 }
                 temp_cell_list.push_back(temp_cell);
                 temp_cell.reset();
@@ -177,7 +177,7 @@ void ARobot::UpdateNeighborCells()
         } else {
             for(int i = 1; i <= 2; i++) { //open???
                 temp_cell.setCellGrid(currTile.x, currTile.y+i);
-                temp_cell->setWallWest(MazeCell::MOpen);
+                temp_cell.setWallWest(MazeCell::MOpen);
                 temp_cell_list.push_back(temp_cell);
                 temp_cell.reset();
             }
@@ -192,7 +192,9 @@ void ARobot::TileTransition(BotOrientation direction)
 
 bool ARobot::checkRamp()
 {
-    //check if pitch has exceeded certain threshold
+    size_t pitch_vals;
+    //if(imuDataList)
+    return false;
 }
 
 void ARobot::checkVictimTemp()
