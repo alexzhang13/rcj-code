@@ -38,7 +38,7 @@ int main(int argc,char **argv){
 
     while(1) {
         if(myRobot->currState == ARobot::IDLE) {
-            Nagivate(in_dir, xml_name, myRobot, nav);
+            Navigate(in_dir, xml_name, myRobot, nav);
         }
         sleep(1); //small gap
     }
@@ -64,7 +64,7 @@ void readCurrentMap(const char* filename, const char* xmlname, ARobot *robot, Na
     nav_rt.getCurTime();
     if(nav_rt.readChkPtMaps(filename, xmlname)!= 0) {
         nav_rt.setHomeCell(home_floor_num, heading);    
-        nav_rt.setCellGrid(robot->currTile.x, robot->currTile.y);
+        //set current robot coords to x, y
     }
 }
 
@@ -77,7 +77,7 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
     nav_rt.detectLocalCells(robot->temp_cell_list);
     nav_rt.updateLocalMap();
     nav_rt.m_navigateMaps.writeXMLMap(filename, xmlname);
-    robot.temp_cell_list.clear();
+    robot->temp_cell_list.clear();
 
     //nav_rt.slam2d(); // will move to another thread
     // what to do next
