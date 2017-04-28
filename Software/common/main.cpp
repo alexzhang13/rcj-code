@@ -16,11 +16,11 @@
 using namespace std;
 
 void readConfig(const char* filename, ARobot *robot);
-void readCurrentMap(const char* filename, const char* xmlname, ARobot *robot);
-void Navigate(const char* filename, const char* xmlname, ARobot *robot);
+void readCurrentMap(const char* filename, const char* xmlname, ARobot *robot, Navigate2D nav_rt);
+void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D nav_rt);
 
 int main(int argc,char **argv){
-    Navigate2D nav_rt; //main map class obj
+    Navigate2D nav; //main map class obj
 
     const char* fileConfig = "./Mem/config.txt";
     const char* in_dir = "C:/projects/StormingRobots2017/Data/map_data";
@@ -34,11 +34,11 @@ int main(int argc,char **argv){
 
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
 
-    readCurrentMap(in_dir, xml_name, myRobot); //check for previous map from mem
+    readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
 
     while(1) {
         if(myRobot->currState == ARobot::IDLE) {
-            Nagivate(myRobot);
+            Nagivate(in_dir, xml_name, myRobot, nav);
         }
         sleep(1); //small gap
     }
@@ -56,7 +56,7 @@ void readConfig(const char* filename, ARobot *robot)
     int ret = fscanf(datafile, "%d %d %d %f %f", &robot->black_thresh, &robot->silver_thresh, &robot->white_thresh, &robot->threshLeft, &robot->threshRight);
 }
 
-void readCurrentMap(const char* filename, const char* xmlname, ARobot *robot)
+void readCurrentMap(const char* filename, const char* xmlname, ARobot *robot, Navigate2D nav_rt)
 {
     MazeCell::NavDir heading = MazeCell::navNorth;
 
@@ -68,7 +68,7 @@ void readCurrentMap(const char* filename, const char* xmlname, ARobot *robot)
     }
 }
 
-void Navigate(const char* filename, const char* xmlname, ARobot *robot) 
+void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D nav_rt) 
 {
     /*Navigational functions*/
     robot->UpdateCellMap(&robot->sensor_info);
@@ -77,7 +77,7 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot)
     nav_rt.detectLocalCells(robot->temp_cell_list);
     nav_rt.updateLocalMap();
     nav_rt.m_navigateMaps.writeXMLMap(filename, xmlname);
-    temp_cell_list.clear();
+    myRobot.temp_cell_list.clear();
 
     //nav_rt.slam2d(); // will move to another thread
     // what to do next
