@@ -113,6 +113,7 @@ int32_t NavigateSimul::configureCurCell()
 	cur_cell->setObstacle(gt_cur_cell->getObstacle());
 	cur_cell->setStairCell(gt_cur_cell->getStairCell());
 	cur_cell->setVictim(gt_cur_cell->getVictim());
+	cur_cell->setVictimDirection(gt_cur_cell->getVictimDirection());
 	cur_cell->setWallNorth(gt_cur_cell->getWallNorth());
 	cur_cell->setWallEast(gt_cur_cell->getWallEast());
 	cur_cell->setWallSouth(gt_cur_cell->getWallSouth());
@@ -231,6 +232,7 @@ int32_t NavigateSimul::detectLocalCells()
 			//acell->setCellType(next_gt_cell->getCellType()); // have not found yet
 			acell->setObstacle(next_gt_cell->getObstacle());
 			acell->setVictim(next_gt_cell->getVictim());
+			acell->setVictimDirection(next_gt_cell->getVictimDirection());
 			acell->setVisitStatus(MazeCell::TobeVisited);
 			acell->setWallSouth(MazeCell::MOpen);
 			acell->setWallNorth(next_gt_cell->getWallNorth());
@@ -262,6 +264,7 @@ int32_t NavigateSimul::detectLocalCells()
 			//acell->setCellType(next_gt_cell->getCellType()); // have not found yet
 			acell->setObstacle(next_gt_cell->getObstacle());
 			acell->setVictim(next_gt_cell->getVictim());
+			acell->setVictimDirection(next_gt_cell->getVictimDirection());
 			acell->setVisitStatus(MazeCell::TobeVisited);
 			acell->setWallWest(MazeCell::MOpen);
 			acell->setWallEast(next_gt_cell->getWallEast());
@@ -293,6 +296,7 @@ int32_t NavigateSimul::detectLocalCells()
 			//acell->setCellType(next_gt_cell->getCellType()); // have not found yet
 			acell->setObstacle(next_gt_cell->getObstacle());
 			acell->setVictim(next_gt_cell->getVictim());
+			acell->setVictimDirection(next_gt_cell->getVictimDirection());
 			acell->setVisitStatus(MazeCell::TobeVisited);
 			acell->setWallNorth(MazeCell::MOpen);
 			acell->setWallSouth(next_gt_cell->getWallSouth());
@@ -324,6 +328,7 @@ int32_t NavigateSimul::detectLocalCells()
 			//acell->setCellType(next_gt_cell->getCellType()); // have not found yet
 			acell->setObstacle(next_gt_cell->getObstacle());
 			acell->setVictim(next_gt_cell->getVictim());
+			acell->setVictimDirection(next_gt_cell->getVictimDirection());
 			acell->setVisitStatus(MazeCell::TobeVisited);
 			acell->setWallEast(MazeCell::MOpen);
 			acell->setWallWest(next_gt_cell->getWallWest());

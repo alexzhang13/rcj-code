@@ -11,8 +11,8 @@
 int main(int argc, char **argv)
 {
 	//int ret = greedy_dikjstra_test();
-	//int ret = mapgen_test();
-	int ret = navigation_simul_test();
+	int ret = mapgen_test();
+	//int ret = navigation_simul_test();
 	//int ret = testMapLoad();
 	return ret;
 }
@@ -161,6 +161,9 @@ int testMapLoad()
 	// configure wall and cell info
 	// find victim or letter on the wall
 	MazeCell sensor_info; // filled in by sensor info
+	MazeCell *cur_cell = nav_rt.getCurrentCell();
+	int x, y;
+	cur_cell->getCellGrid(x,y);
 	nav_rt.configureCurCell(&sensor_info);
 	// in cell operations: dropper, blinking, etc.
 

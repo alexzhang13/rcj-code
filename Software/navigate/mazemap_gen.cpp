@@ -148,6 +148,7 @@ int32_t MazeMapGen::generateSimulateMap(int32_t floor_num)
 	for(i = 0; i < m_floor[floor_num].victims; i++) {
 		MazeCell *cell = m_floormap[floor_num].getCell(rand_list[cnt]);
 		cell->setVictim(true);
+		cell->setVictimDirection(MazeCell::NavDir(rand_list[cnt]%MazeCell::navDirections));
 		cnt++;
 	}
 
