@@ -24,21 +24,28 @@ class ARobot {
  	ARobot(SerialPort *port);
  	~ARobot();
 
+ 	/*Structs*/
+ 	typedef struct {
+ 		int32_t x;
+ 		int32_t y;
+ 	} Map_Coord;
+
  	/*Enums*/
  	enum LightVal {WHITE=0, BLACK=1, SILVER=2};
 	enum BotDir {RIGHT=0, LEFT=1, FRONT=2, BACK=3};
 	enum BotOrientation {NORTH=0, EAST=1, SOUTH=2, WEST=3};
-	enum CurrentState {DROP=0, MOVE=1, TURN=2, LED=3, IDLE=4};
+	enum CurrentState {DROP=0, MOVE=1, TURN=2, LED=3, IDLE=4, RAMP=5};
 
  	/*Writing to Arduino*/
  	void WriteCommand(char* command, int size);
 
  	/*Algorithm <-> Control*/
- 	void UpdateCellMap();
- 	void TileTransition();
+ 	void UpdateCellMap(MazeCell *sensor_info);
+ 	void UpdateNeighborCells();
+ 	void TileTransition(BotOrientation direction);
 
  	/*Ramp*/
- 	void checkRamp();
+ 	bool checkRamp();
 
  	/*Temperature Sensor -> Victim Control*/
  	void checkVictimTemp();
@@ -71,7 +78,7 @@ class ARobot {
 	void ClearRange();
 	void ClearTemp();
 
-	std::vector<MazeCell> maze_cell;
+	std::vector<MazeCell> temp_cell_list;
 
  	std::vector<IMUData> imuDataList;
 	std::vector<RangeData> rangeDataList;
@@ -87,6 +94,9 @@ class ARobot {
 	BotDir currDir; //Turning and Moving directions, local to current pos and next direction
 	CurrentState currState; //Current state of the Robot
 	BotOrientation currOrientation; //Current Direction through Compass System, Global
+	Map_Coord currTile;
+
+	MazeCell sensor_info; //sensor info for current cell
 
 	bool backingBlack; //if the robot is backing up on a black tile
  	int silver_thresh; //Silver Tile Threshold
