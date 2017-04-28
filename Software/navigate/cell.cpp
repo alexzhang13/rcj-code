@@ -31,6 +31,7 @@ void MazeCell::reset()
 	m_celltype.GObstacle = false;
 	m_celltype.GStair = false;
 	m_celltype.GVictim = false;
+	m_celltype.GVictimDirection = NotDecided;
 	m_gridxy.x = 0;
 	m_gridxy.y = 0;
 	m_navstate.localpos.x = 0.0f;
@@ -101,4 +102,17 @@ void MazeCell::setObstacle(bool flag)
 			setWallWest(MOpen);
 #endif
 	}
+}
+
+void MazeCell::setVictimDirection(MazeCell::NavDir vdir)
+{
+	if(getVictimDirection() == NotDecided) {
+		m_celltype.GVictimDirection = vdir;
+	}
+	return;
+}
+
+MazeCell::NavDir MazeCell::getVictimDirection()
+{
+	return m_celltype.GVictimDirection;
 }

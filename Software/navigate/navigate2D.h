@@ -49,6 +49,9 @@ public:
 	//! get current time as a string
 	virtual std::string getCurTime();
 
+	inline MazeCell *getCurrentCell() {return m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(m_cur_cell_index);}
+	inline MazeCell *getCellbyIndex(int32_t indx) {return m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(indx);}
+
 protected:
 	void resetGraphMatrix();
 	void allocateGraphMatrix(int32_t cellsize);

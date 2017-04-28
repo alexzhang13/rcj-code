@@ -314,6 +314,8 @@ int32_t MazeMaps::writeXmlMap(const char* out_dir, const char* name)
 			cellmap->SetAttribute("Obstacle", c->getObstacle());
 		if(c->getVictim())
 			cellmap->SetAttribute("Victim", c->getVictim());
+		if(c->getVictim() && c->getVictimDirection() >=0)
+			cellmap->SetAttribute("VictimDir", c->getVictimDirection());
 		if(c->getNonMovable())
 			cellmap->SetAttribute("NonMovable", c->getNonMovable());
 		if(c->getStairCell())
@@ -367,6 +369,8 @@ int32_t MazeMaps::writeXmlMap(const char* out_dir, const char* name)
 				cellmap->SetAttribute("Obstacle", c->getObstacle());
 			if(c->getVictim())
 				cellmap->SetAttribute("Victim", c->getVictim());
+			if(c->getVictim() && c->getVictimDirection() >=0)
+				cellmap->SetAttribute("VictimDir", c->getVictimDirection());
 			if(c->getNonMovable())
 				cellmap->SetAttribute("NonMovable", c->getNonMovable());
 			if(c->getStairCell())
@@ -401,6 +405,7 @@ int32_t MazeMaps::readXmlMap(const char* out_dir, const char* name)
 	int32_t VisitStatus;
 	int32_t Victim, CheckPt, NonMovable, Obstacle, Stair, Home;
 	int32_t status;
+	MazeCell::NavDir VictimDir;
 
 	for( node = xmldoc.IterateChildren( 0 ); node; node = xmldoc.IterateChildren( node ) )
 	{
@@ -495,7 +500,10 @@ int32_t MazeMaps::readXmlMap(const char* out_dir, const char* name)
 					status = cellElement->QueryIntAttribute("Victim", &Victim);
 					if(status == TIXML_SUCCESS && Victim == 1) {
 						cell->setVictim(Victim > 0);
-						m_floormap[floor_num].getVisitedList()->push_back(cell->getCellNum());
+					}
+					status = cellElement->QueryIntAttribute("VictimDir", (int32_t*)&VictimDir);
+					if(status == TIXML_SUCCESS && VictimDir >=0) {
+						cell->setVictimDirection(VictimDir);
 					}
 					status = cellElement->QueryIntAttribute("CheckPt", &CheckPt);
 					if(status == TIXML_SUCCESS && CheckPt == 1) {

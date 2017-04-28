@@ -57,6 +57,7 @@ public:
 		bool GStair;    // a cell with stair
 		bool GCheckPt;    // silver plate
 		bool GHome;     // starting cell 
+		NavDir GVictimDirection; // direction of the victim to be found
 	} CellType;
 
 	// cell history
@@ -87,6 +88,8 @@ public:
 	void initParams(float cellsize);
 	void setNonMovable(bool flag);
 	void setObstacle(bool flag);
+	void setVictimDirection(NavDir vdir);
+	NavDir getVictimDirection();
 
 	inline void setCellNum(int32_t cellnum) { m_cellNum = cellnum;}
 	inline int32_t getCellNum() { return m_cellNum;}
