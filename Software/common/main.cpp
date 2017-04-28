@@ -16,8 +16,8 @@
 using namespace std;
 
 void readConfig(const char* filename, ARobot *robot);
-void readCurrentMap(const char* filename, const char* xmlname, ARobot *robot, Navigate2D nav_rt);
-void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D nav_rt);
+void readCurrentMap(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt);
+void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt);
 
 int main(int argc,char **argv){
     Navigate2D nav; //main map class obj
@@ -56,7 +56,7 @@ void readConfig(const char* filename, ARobot *robot)
     int ret = fscanf(datafile, "%d %d %d %f %f", &robot->black_thresh, &robot->silver_thresh, &robot->white_thresh, &robot->threshLeft, &robot->threshRight);
 }
 
-void readCurrentMap(const char* filename, const char* xmlname, ARobot *robot, Navigate2D nav_rt)
+void readCurrentMap(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt)
 {
     MazeCell::NavDir heading = MazeCell::navNorth;
 
@@ -68,7 +68,7 @@ void readCurrentMap(const char* filename, const char* xmlname, ARobot *robot, Na
     }
 }
 
-void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D nav_rt) 
+void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt) 
 {
     /*Navigational functions*/
     robot->UpdateCellMap(&robot->sensor_info);
@@ -77,13 +77,12 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
     nav_rt.detectLocalCells(robot->temp_cell_list);
     nav_rt.updateLocalMap();
     nav_rt.m_navigateMaps.writeXMLMap(filename, xmlname);
-    myRobot.temp_cell_list.clear();
+    robot.temp_cell_list.clear();
 
     //nav_rt.slam2d(); // will move to another thread
     // what to do next
     nav_rt.navigatePlanning();
     // move on to the next cell
     nav_rt.navigation2D();
-
 
 }
