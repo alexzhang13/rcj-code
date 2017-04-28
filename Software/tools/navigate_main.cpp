@@ -166,7 +166,6 @@ int testMapLoad()
 	// parse sensor info
 	MazeCell sensor_info; // filled in by sensor info
 	MazeCell *cur_cell = nav_rt.getCurrentCell();
-	int x, y;
 	cur_cell->getCellGrid(x,y);
 	nav_rt.configureCurCell(&sensor_info);
 	// in cell operations: dropper, blinking, etc.

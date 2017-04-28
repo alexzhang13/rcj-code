@@ -51,6 +51,11 @@ public:
 
 	inline MazeCell *getCurrentCell() {return m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(m_cur_cell_index);}
 	inline MazeCell *getCellbyIndex(int32_t indx) {return m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(indx);}
+	inline MazeMaps *getNavigateMaps() { return &m_navigateMaps;}
+	inline int32_t getCurrentFloorIndex() { return m_cur_floor_index; }
+	inline int32_t getCurrentCellIndex() { return m_cur_cell_index; }
+	inline void setCurrentFloorIndex(int32_t indx) { m_cur_floor_index = indx; }
+	inline void setCurrentCellIndex(int32_t indx) { m_cur_cell_index = indx; }
 
 protected:
 	void resetGraphMatrix();
