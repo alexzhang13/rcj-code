@@ -27,10 +27,10 @@ int LightData::parseData()
 int LightData::checkLight()
 {
 	if(data.l_reading < threshold_black) {
-		printf("black");
+		//printf("black");
 		return 1;
 	} else if (data.l_reading > threshold_silver) {
-		printf("silver");
+		//printf("silver");
 		return 2;
 	}
 	return 0;

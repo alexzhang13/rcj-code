@@ -218,19 +218,23 @@ void ARobot::CalcNextTile()
 
 void ARobot::TileTransition(BotOrientation direction, float angle, int32_t dist)
 {
-
+    int turnNext = (int)direction - (int)currOrientation;
+    /*Turning first*/
+    if(turnNext == 3) {turnNext = -1;} //west -> north = turn right 1
+    else if (turnNext == -3) {turnNext = 1;} //north -> west = turn left 1
+    
 }
 
 bool ARobot::checkRamp()
 {
     size_t pitch_vals = imuDataList.size();
     for(int i = 1; i < 5; i++) {
-        if(!(abs(imuDataList[pitch_vals-i].m_pitch) >= 15)) {
+        if(!(abs(imuDataList[pitch_vals-i].m_pitch) <= 15)) { //if not ramp, break (return false)
             return false;
         }
         
     }
-    return true;
+    return true; //ramp is true if past 5 pitches match > 15 degrees
 }
 
 bool ARobot::checkVictimTemp()
