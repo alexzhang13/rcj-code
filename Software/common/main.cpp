@@ -24,11 +24,11 @@ size_t bot_waypts = 0;
 int main(int argc,char **argv){
     Navigate2D nav; //main map class obj
 #ifdef WIN32
-    const char* fileConfig = "./Mem/config.txt";
+    const char* fileConfig = "/Mem/config.txt";
     const char* in_dir = "C:/projects/StormingRobots2017/Data/map_data";
     const char* xml_name = "mazemap_04272017";
 #else
-    const char* fileConfig = "./Mem/config.txt";
+    const char* fileConfig = "/Mem/config.txt";
     const char* in_dir = "/home/alex/projects/rcj-code/Data/map_data";
     const char* xml_name = "mazemap_04272017";
 #endif
