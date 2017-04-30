@@ -393,7 +393,7 @@ void ARobot::ParseRange() {
         if(rangeParseList.front().coord.x_flag == true) {
             currTile.x_map = (currTile.x*300) + rangeParseList.front().coord.x_glob;
         }
-        if(rangeParseList.front().y_flag == true) {
+        if(rangeParseList.front().coord.y_flag == true) {
             currTile.y_map = (currTile.y*300) + rangeParseList.front().coord.y_glob;
         }
         rangeDataList.push_back(rangeParseList.front());
