@@ -18,6 +18,8 @@ using namespace std;
 static void readConfig(const char* filename, ARobot *robot);
 static void readCurrentMap(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt);
 static void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt);
+static int WayPointNav(ARobot *robot, Navigate2D &nav_rt);
+size_t bot_waypts = 0;
 
 int main(int argc,char **argv){
     Navigate2D nav; //main map class obj
@@ -36,10 +38,16 @@ int main(int argc,char **argv){
 
     readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
 
+    sleep(8000); //8 second delay
     while(1) {
-        if(myRobot->currState == ARobot::IDLE) {
+        if(myRobot->currState == ARobot::PLANNING) {
             Navigate(in_dir, xml_name, myRobot, nav);
         }
+        if(myRobot->currState == ARobot::WAYPTNAV) {
+            WayPointNav(myRobot, nav);
+        }
+
+
         sleep(1); //small gap
     }
 
@@ -84,5 +92,21 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
     nav_rt.navigatePlanning();
     // move on to the next cell
     nav_rt.navigation2D();
+    if(nav_rt.m_next_cell.size() >= 2) {
+        robot.waypts = nav_rt.m_next_cell.waypts; //waypts
+    } else {
+        robot.currState = ARobot::DONE;
+    }
+    
+    //nav_rt->getCellbyIndex(nav_rt.m_next_cell.waypts.begin()).getCellGrid(&robot.currTile.x_tovisit, &robot.currTile.y_tovisit);
+}
 
+int WayPointNav(ARobot *robot, Navigate2D &nav_rt)
+{
+    bot_waypts = robot.waypts.size();
+    if(bot_waypts < 2) {
+        return -1;
+    } 
+    nav_rt->getCellbyIndex(robot.waypts[bot_waypts-1]).getCellGrid(&robot.currTile.x_tovisit, &robot.currTile.y_tovisit)
+    robot.CalcNextTile();
 }

@@ -12,7 +12,8 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     backingBlack = false;
     currTileLight = WHITE;
     currDir = FRONT; 
-    currState = IDLE;
+    victimDir = MazeCell::NotDecided;
+    currState = PLANNING;
     currTile.x = 0;
     currTile.y = 0;
 }
@@ -39,7 +40,12 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info)
     if(checkRamp() == true) {
         sensor_info->setStairCell(true);
     } else {sensor_info->setStairCell(false);}
-    //check for temperature/victims
+    if(checkVictimTemp() == true) {
+        //sensor_info->setVictim(true);
+        //sensor_info->setVictimDirection(victimDir);
+    } else {
+        sensor_info->setVictim(false);
+    }
 
     /*WALL DATA*/
     if(rangeDataList.end()->walls.wallN > 0) {
@@ -185,6 +191,13 @@ void ARobot::UpdateNeighborCells()
     }
 }
 
+void ARobot::CalcNextTile()
+{
+    int next_x = currTile.x_tovisit*300 - x_map; //next tile coords
+    int next_y = currTile.y_tovisit*300 - y_map; //next tile coords
+    
+}
+
 void ARobot::TileTransition(BotOrientation direction)
 {
 
@@ -192,14 +205,23 @@ void ARobot::TileTransition(BotOrientation direction)
 
 bool ARobot::checkRamp()
 {
-    size_t pitch_vals;
-    //if(imuDataList)
-    return false;
+    size_t pitch_vals = imuDataList.size();
+    for(int i = 1; i < 5; i++) {
+        if(!(imuDataList[sizeRange-i].m_pitch >= 15)) {
+            return false;
+        }
+        
+    }
+    return true;
 }
 
-void ARobot::checkVictimTemp()
+bool ARobot::checkVictimTemp()
 {
+    size_t temp_vals = tempDataList.size();
+    if(tempDataList.end().checkTemp() == 1) { //left sensor activated
 
+    }
+    return true;
 }
 
 void ARobot::setTempThresh(float left, float right)
@@ -350,6 +372,12 @@ void ARobot::ParseRange() {
     {
         rangeParseList.front().parseData();
         rangeParseList.front().getPosition();
+        if(rangeParseList.coord.x_flag == true) {
+            currTile.x_map = (currTile.x*300) + rangeParseList.coord.x_glob;
+        }
+        if(rangeParseList.coord.y_flag == true) {
+            currTile.y_map = (currTile.y*300) + rangeParseList.coord.y_glob;
+        }
         rangeDataList.push_back(rangeParseList.front());
         rangeParseList.pop();
     }

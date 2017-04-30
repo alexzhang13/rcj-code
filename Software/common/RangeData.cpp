@@ -11,6 +11,10 @@ RangeData::RangeData(ARobot *robot) :myRobot(robot)
 	walls.wallE = 0;
 	walls.wallS = 0;
 	walls.wallW = 0;
+	coord.x = 0; 
+	coord.y = 0; //default center (0,0)
+	coord.x_flag = true; 
+	coord.y_flag = true; //assume readings are true at first
 }
 
 RangeData::~RangeData()
@@ -83,15 +87,13 @@ int RangeData::getPosition()
 	walls.wallS = (int)temp_range[(2+data.dir)%4]/300;
 	walls.wallW = (int)temp_range[(3+data.dir)%4]/300;
 
-	coord.x = 0; coord.y = 0; //default center (0,0)
-	coord.x_flag = true; coord.y_flag = true; //assume readings are true at first
-
 	for(int i = 0; i < 4; i++) {
 		if((data.dir + i) % 2 == 1) { //x coords
 			if(distance[(i+data.dir)%4] != 301) {
 				coord.x += distance[(i+data.dir)%4];
 				if(distance[(i+data.dir)%4] != coord.x){ //If you already went through more than one iteration, now you want to divide by 2
 					coord.x /= 2;
+					coord.x_glob = coord.x + 15; //real coord output
 				}
 			} else {
 				++x_count;
@@ -104,6 +106,7 @@ int RangeData::getPosition()
 				coord.y += distance[(i+data.dir)%4];
 				if(distance[(i+data.dir)%4] != coord.y){ //If you already went through more than one iteration, now you want to divide by 2
 					coord.y /= 2;
+					coord.y_glob = coord.y + 15; //real coord output
 				}
 			} else {
 				++y_count;
@@ -113,7 +116,6 @@ int RangeData::getPosition()
 			}
 		}
 	}
-
 
 	return 0;
 }

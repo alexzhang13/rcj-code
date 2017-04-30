@@ -27,6 +27,8 @@ public:
 	typedef struct {
 		float x;
 		float y;
+		float x_glob; //from (0, 0) -> (300, 300)
+		float y_glob; //from (0, 0) -> (300, 300)
 		bool x_flag; //if valid
 		bool y_flag; //if valid point
 	}Range_Coord;
