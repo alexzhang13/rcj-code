@@ -56,7 +56,7 @@ public:
 	inline int32_t getCurrentCellIndex() { return m_cur_cell_index; }
 	inline void setCurrentFloorIndex(int32_t indx) { m_cur_floor_index = indx; }
 	inline void setCurrentCellIndex(int32_t indx) { m_cur_cell_index = indx; }
-
+	inline GreedyDijkstra::DistInfo *getNextCell() { return &m_next_cell;}
 protected:
 	void resetGraphMatrix();
 	void allocateGraphMatrix(int32_t cellsize);
