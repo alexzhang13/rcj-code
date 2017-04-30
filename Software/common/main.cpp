@@ -98,10 +98,10 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
     nav_rt.navigatePlanning();
     // move on to the next cell
     nav_rt.navigation2D();
-    if(nav_rt.getNextCell()->size() >= 2) {
-        robot.waypts = nav_rt.getNextCell()->waypts; //waypts
+    if(nav_rt.getNextCell()->waypts.size() >= 2) {
+        robot->waypts = nav_rt.getNextCell()->waypts; //waypts
     } else {
-        robot.currState = ARobot::DONE;
+        robot->currState = ARobot::DONE;
     }
     
     //nav_rt->getCellbyIndex(nav_rt.m_next_cell.waypts.begin()).getCellGrid(&robot.currTile.x_tovisit, &robot.currTile.y_tovisit);
@@ -109,12 +109,12 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
 
 int WayPointNav(ARobot *robot, Navigate2D &nav_rt)
 {
-    bot_waypts = robot.waypts.size();
+    bot_waypts = robot->waypts.size();
     if(bot_waypts < 2) {
-        bot_waypts.pop_back();
-        robot.currState = ARobot::PLANNING;
+        robot->waypts.pop_back();
+        robot->currState = ARobot::PLANNING;
         return -1;
     } 
-    nav_rt->getCellbyIndex(robot.waypts[bot_waypts-1]).getCellGrid(&robot.currTile.x_tovisit, &robot.currTile.y_tovisit)
-    robot.CalcNextTile();
+    nav_rt.getCellbyIndex(robot->waypts[bot_waypts-1])->getCellGrid(robot.currTile.x_tovisit, robot.currTile.y_tovisit);
+    robot->CalcNextTile();
 }
