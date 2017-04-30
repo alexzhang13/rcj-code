@@ -105,6 +105,8 @@ int WayPointNav(ARobot *robot, Navigate2D &nav_rt)
 {
     bot_waypts = robot.waypts.size();
     if(bot_waypts < 2) {
+        bot_waypts.pop_back();
+        robot.currState = ARobot::PLANNING;
         return -1;
     } 
     nav_rt->getCellbyIndex(robot.waypts[bot_waypts-1]).getCellGrid(&robot.currTile.x_tovisit, &robot.currTile.y_tovisit)

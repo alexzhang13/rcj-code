@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include "ARobot.h"
+#include <math.h>
 
 using namespace std;
 
@@ -193,21 +194,38 @@ void ARobot::UpdateNeighborCells()
 
 void ARobot::CalcNextTile()
 {
-    int next_x = currTile.x_tovisit*300 - x_map; //next tile coords
-    int next_y = currTile.y_tovisit*300 - y_map; //next tile coords
-    
+    BotOrientation nextDir;
+    int next_x = currTile.x_tovisit*300 - currTile.x_map; //next tile coords
+    int next_y = currTile.y_tovisit*300 - currTile.y_map; //next tile coords
+    int32_t dist = (int32_t)sqrt(next_x*next_x + next_y*next_y); //pythagorean
+    float angle; //offset angle
+    if(currTile.x_tovisit - currTile.x > 0) { //east
+        nextDir = EAST;
+        angle = -atan(next_y/next_x)*180.0f/3.1415926535; //angle to right, should be pos
+    } else if (currTile.x_tovisit - currTile.x < 0) { //west
+        nextDir = WEST;
+        angle = -atan(next_y/next_x)*180.0f/3.1415926535; //angle to left, should be neg
+    } else if (currTile.y_tovisit - currTile.y > 0) { //north
+        nextDir = NORTH;
+        angle = atan(next_x/next_y)*180.0f/3.1415926535; //angle to left, should be neg
+    } else if (currTile.y_tovisit - currTile.y < 0) { //south
+        nextDir = SOUTH;
+        angle = -atan(next_x/next_y)*180.0f/3.1415926535; //angle to left, should be neg
+    }
+    TileTransition(nextDir, angle, dist);
+
 }
 
-void ARobot::TileTransition(BotOrientation direction)
+void ARobot::TileTransition(BotOrientation direction, float angle, int32_t dist)
 {
-
+    
 }
 
 bool ARobot::checkRamp()
 {
     size_t pitch_vals = imuDataList.size();
     for(int i = 1; i < 5; i++) {
-        if(!(imuDataList[sizeRange-i].m_pitch >= 15)) {
+        if(!(abs(imuDataList[pitch_vals-i].m_pitch) >= 15)) {
             return false;
         }
         
@@ -218,9 +236,9 @@ bool ARobot::checkRamp()
 bool ARobot::checkVictimTemp()
 {
     size_t temp_vals = tempDataList.size();
-    if(tempDataList.end().checkTemp() == 1) { //left sensor activated
+    //if(tempDataList[temp_vals-1].checkTemp() == 1) { //left sensor activated
 
-    }
+    //}
     return true;
 }
 
@@ -372,11 +390,11 @@ void ARobot::ParseRange() {
     {
         rangeParseList.front().parseData();
         rangeParseList.front().getPosition();
-        if(rangeParseList.coord.x_flag == true) {
-            currTile.x_map = (currTile.x*300) + rangeParseList.coord.x_glob;
+        if(rangeParseList.front()->coord.x_flag == true) {
+            currTile.x_map = (currTile.x*300) + rangeParseList.front()->x_glob;
         }
-        if(rangeParseList.coord.y_flag == true) {
-            currTile.y_map = (currTile.y*300) + rangeParseList.coord.y_glob;
+        if(rangeParseList.front()->y_flag == true) {
+            currTile.y_map = (currTile.y*300) + rangeParseList.front()->y_glob;
         }
         rangeDataList.push_back(rangeParseList.front());
         rangeParseList.pop();
