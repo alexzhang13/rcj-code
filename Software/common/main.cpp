@@ -23,10 +23,15 @@ size_t bot_waypts = 0;
 
 int main(int argc,char **argv){
     Navigate2D nav; //main map class obj
-
+#ifdef WIN32
     const char* fileConfig = "./Mem/config.txt";
     const char* in_dir = "C:/projects/StormingRobots2017/Data/map_data";
     const char* xml_name = "mazemap_04272017";
+#else
+    const char* fileConfig = "./Mem/config.txt";
+    const char* in_dir = "/home/alex/projects/rcj-code/Data/map_data";
+    const char* xml_name = "mazemap_04272017";
+#endif
 
     SerialPort *port = new SerialPort("/dev/ttyAMA0",115200);
     ARobot *myRobot = new ARobot(port);
@@ -84,7 +89,7 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
     nav_rt.configureCurCell(&robot->sensor_info);
     nav_rt.detectLocalCells(robot->temp_cell_list);
     nav_rt.updateLocalMap();
-    nav_rt.m_navigateMaps.writeXMLMap(filename, xmlname);
+    nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
     robot->temp_cell_list.clear();
 
     //nav_rt.slam2d(); // will move to another thread
