@@ -218,7 +218,7 @@ void ARobot::CalcNextTile()
 
 void ARobot::TileTransition(BotOrientation direction, float angle, int32_t dist)
 {
-    
+
 }
 
 bool ARobot::checkRamp()
@@ -390,11 +390,11 @@ void ARobot::ParseRange() {
     {
         rangeParseList.front().parseData();
         rangeParseList.front().getPosition();
-        if(rangeParseList.front()->coord.x_flag == true) {
-            currTile.x_map = (currTile.x*300) + rangeParseList.front()->x_glob;
+        if(rangeParseList.front().coord.x_flag == true) {
+            currTile.x_map = (currTile.x*300) + rangeParseList.front().coord.x_glob;
         }
-        if(rangeParseList.front()->y_flag == true) {
-            currTile.y_map = (currTile.y*300) + rangeParseList.front()->y_glob;
+        if(rangeParseList.front().y_flag == true) {
+            currTile.y_map = (currTile.y*300) + rangeParseList.front().coord.y_glob;
         }
         rangeDataList.push_back(rangeParseList.front());
         rangeParseList.pop();
