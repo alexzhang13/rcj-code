@@ -38,11 +38,11 @@ int main(int argc,char **argv){
     UartRx *uartrx = new UartRx(port, myRobot);
     //UartTx *uarttx = new UartTx(port);
     Process_T *process_thread = new Process_T(port, myRobot);
-
-    /*readConfig(fileConfig, myRobot); //read config file about threshold calibrations
-
+    printf("step1");
+    readConfig(fileConfig, myRobot); //read config file about threshold calibrations
+    printf("step2");
     readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
-
+    printf("step3");
     sleep(8000); //8 second delay
     while(1) {
         if(myRobot->currState == ARobot::PLANNING) {
@@ -51,10 +51,13 @@ int main(int argc,char **argv){
         if(myRobot->currState == ARobot::WAYPTNAV) {
             WayPointNav(myRobot, nav);
         }
+        if(myRobot->currState == ARobot::TURN) {
+            StopTurn(currDir);
+        }
 
 
         sleep(1); //small gap
-    }*/
+    }
     while(1) {sleep(1);}
 
     return 0;
