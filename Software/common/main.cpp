@@ -55,6 +55,7 @@ int main(int argc,char **argv){
 
         sleep(1); //small gap
     }*/
+    while(1) {sleep(1);}
 
     return 0;
 }
