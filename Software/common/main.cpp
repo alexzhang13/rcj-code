@@ -84,7 +84,7 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
     nav_rt.configureCurCell(&robot->sensor_info);
     nav_rt.detectLocalCells(robot->temp_cell_list);
     nav_rt.updateLocalMap();
-    nav_rt.m_navigateMaps.writeXMLMap(filename, xmlname);
+    nav_rt.getNavigateMaps()->writeXMLMap(filename, xmlname);
     robot->temp_cell_list.clear();
 
     //nav_rt.slam2d(); // will move to another thread
@@ -92,8 +92,8 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
     nav_rt.navigatePlanning();
     // move on to the next cell
     nav_rt.navigation2D();
-    if(nav_rt.m_next_cell.size() >= 2) {
-        robot.waypts = nav_rt.m_next_cell.waypts; //waypts
+    if(nav_rt.getNextCell()->size() >= 2) {
+        robot.waypts = nav_rt.getNextCell()->waypts; //waypts
     } else {
         robot.currState = ARobot::DONE;
     }
