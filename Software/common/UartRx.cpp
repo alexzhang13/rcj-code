@@ -35,6 +35,7 @@ void UartRx::run(void){
              	break;
         	} else {
             	printf("Error in parsing");
+            	printf(buf[i]);
            	 	break;
         	}
     	}
