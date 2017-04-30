@@ -33,11 +33,7 @@ void UartRx::run(void){
             } else if (buf[i] == 'd') {
               	myRobot->currState = ARobot::IDLE; //IDLE
              	break;
-        	} else {
-            	printf("Error in parsing");
-            	printf("%c", buf[i]);
-           	 	break;
-        	}
+        	} else {}
     	}
         	sleep(1);
     }
