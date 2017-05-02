@@ -33,12 +33,15 @@ int main(int argc,char **argv){
     const char* xml_name = "mazemap_04272017";
 #endif
 
+	printf("step 1\n");
     SerialPort *port = new SerialPort("/dev/ttyAMA0",115200);
+	if(port == NULL)
+		printf(" Serial port open failed\n");
     ARobot *myRobot = new ARobot(port);
     UartRx *uartrx = new UartRx(port, myRobot);
-    //UartTx *uarttx = new UartTx(port);
+	printf("step 2\n");
     Process_T *process_thread = new Process_T(port, myRobot);
-
+	printf("step 3\n");
     /*readConfig(fileConfig, myRobot); //read config file about threshold calibrations
 
     readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
@@ -55,7 +58,12 @@ int main(int argc,char **argv){
 
         sleep(1); //small gap
     }*/
-    while(1) {sleep(1);}
+	int32_t c = 0;
+    while(1) {
+		printf("test %d \n", c);
+		c++;	
+		sleep(1);
+	}
 
     return 0;
 }

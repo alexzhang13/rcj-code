@@ -35,8 +35,9 @@ void UartRx::run(void){
              	break;
         	} else {}
     	}
-        	sleep(1);
+	sleep(0.001);
     }
+	return;
 }
 
 void UartRx::storeIMU(char* buf) {

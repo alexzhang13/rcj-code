@@ -381,11 +381,15 @@ void ARobot::StopTurn(BotDir dir)
 
 void ARobot::ParseIMU()
 {
+	if(imuParseList.size() ==0)
+		return;
+
     for(int i = 0; i < imuParseList.size(); i++)
     {
         imuParseList.front().parseData();
         imuParseList.front().runFilter();
-        imuDataList.push_back(imuParseList.front());
+		IMUData data = imuParseList.front();
+        imuDataList.push_back(data);
         imuParseList.pop();
     }
 }
@@ -426,7 +430,8 @@ void ARobot::ClearIMU()
 {
     mlen_imu = imuDataList.size();
     while(mlen_imu > 200) {
-        imuDataList.erase(imuDataList.begin(), imuDataList.begin() + mlen_imu - 200);
+        imuDataList.erase(imuDataList.begin());
+        mlen_imu--;
     }
 }
 
@@ -434,7 +439,8 @@ void ARobot::ClearRange()
 {
     mlen_range = rangeDataList.size();
     while(mlen_range > 200) {
-        rangeDataList.erase(rangeDataList.begin(), rangeDataList.begin() + mlen_range - 200);
+        rangeDataList.erase(rangeDataList.begin());
+        mlen_range--;
     }
 }
 
@@ -442,6 +448,7 @@ void ARobot::ClearTemp()
 {
     mlen_temp = tempDataList.size();
     while(mlen_temp > 200) {
-        tempDataList.erase(tempDataList.begin(), tempDataList.begin() + mlen_temp - 200);
+        tempDataList.erase(tempDataList.begin());
+        mlen_temp--;
     }
 }
