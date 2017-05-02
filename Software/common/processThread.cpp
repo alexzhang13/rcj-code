@@ -12,7 +12,7 @@ void Process_T::run(void){
            myRobot->ClearIMU();
 		   processed_status = true;
         }
-#if 0
+
         while(myRobot->rangeParseList.size() > 0) {
            myRobot->ParseRange();
            myRobot->ClearRange();
@@ -29,7 +29,7 @@ void Process_T::run(void){
            processed_status = true;
            //Inside CheckTileLight() there is a Clear Light-esque function so it's not necessary here
         }
-#endif
+
         if(!processed_status)
 			sleep(0.01);
     }
