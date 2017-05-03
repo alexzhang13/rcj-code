@@ -24,23 +24,24 @@ size_t bot_waypts = 0;
 int main(int argc,char **argv){
     Navigate2D nav; //main map class obj
 #ifdef WIN32
-    const char* fileConfig = "/Mem/config.txt";
+    const char* fileConfig = "C:/projects/StormingRobots2017/Data/Mem/config.txt";
     const char* in_dir = "C:/projects/StormingRobots2017/Data/map_data";
-    const char* xml_name = "mazemap_04272017";
+    const char* xml_name = "mazemap";
 #else
-    const char* fileConfig = "/Mem/config.txt";
+    const char* fileConfig = "/home/alex/projects/rcj-code/Software/common/Mem/config.txt";
     const char* in_dir = "/home/alex/projects/rcj-code/Data/map_data";
-    const char* xml_name = "mazemap_04272017";
+    const char* xml_name = "mazemap";
 #endif
 
     SerialPort *port = new SerialPort("/dev/ttyAMA0",115200);
 	if(port == NULL)
 		printf(" Serial port open failed\n");
+	printf(".Start robot navigatoin\n");
     ARobot *myRobot = new ARobot(port);
     UartRx *uartrx = new UartRx(port, myRobot);
     Process_T *process_thread = new Process_T(port, myRobot);
-
-    /*readConfig(fileConfig, myRobot); //read config file about threshold calibrations
+    readConfig(fileConfig, myRobot); //read config file about threshold calibrations
+    /*
     readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     printf("step3");
     sleep(8000); //8 second delay
@@ -72,6 +73,10 @@ void readConfig(const char* filename, ARobot *robot)
         return;
 
     datafile = fopen(filename, "r");
+    if(datafile == NULL) {
+		printf("%s is not available\n", filename);
+      	return;
+	}
     int ret = fscanf(datafile, "%d %d %d %f %f", &robot->black_thresh, &robot->silver_thresh, &robot->white_thresh, &robot->threshLeft, &robot->threshRight);
 }
 

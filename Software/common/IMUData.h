@@ -36,7 +36,7 @@ public:
 private:
 	IMU_DataType data;
 	Madgwick madgwick;
-	char* command; //stored command
+	char m_command[128]; //stored command
 };
 
 #endif // !_IMU_DATA_H_

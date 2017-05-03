@@ -1,9 +1,11 @@
 #include "IMUData.h"
 #include "MadgwickAHRS.h"
-
+#include <stdio.h>
+#include <string.h>
 
 IMUData::IMUData()
 {
+	memset(m_command,'\0', 128);
 	//m_data.clear();
 }
 
@@ -13,11 +15,12 @@ IMUData::~IMUData()
 }
 
 int IMUData::storeCommand(char* buf) {
-	command = buf;
+	memcpy(m_command, buf, 64);
 }
+
 int IMUData::parseData()
 {
-	sscanf(command, "%d %c %f %f %f %f %f %f", &data.tstamp, &data.id, &data.ax, &data.ay, &data.az, &data.gx, &data.gy, &data.gz);
+	sscanf(m_command, "%d %c %f %f %f %f %f %f", &data.tstamp, &data.id, &data.ax, &data.ay, &data.az, &data.gx, &data.gy, &data.gz);
 	data.az *= -1; //inverted
 	return 0;
 }

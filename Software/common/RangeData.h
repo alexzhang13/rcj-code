@@ -57,7 +57,7 @@ private:
 	uint8_t x_count; //count if the lasers don't see anything
 	uint8_t y_count;
 	float distance[4];
-	char* command; //stored command
+	char m_command[128]; //stored command
 	float temp_range[4]; //temporary number
 	int temp_dist; //temporary number
 };

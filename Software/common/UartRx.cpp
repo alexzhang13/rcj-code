@@ -4,38 +4,36 @@
 #include "TempData.h"
 #include "LightData.h"
 #include "RangeData.h"
+#include <stdio.h>
+#include <string.h>
 
-void UartRx::run(void){     
+void UartRx::run(void){   
+	int32_t ts;
+	char c;
     while(1) {
-    	for(int i = 0; i < 64; i++) {
-    	    buf[i] = ' ';
-   		}
-    	mPort->fgets(buf,64);
-    	for(int i = 0; i < 64; i++) {
-        	if(buf[i] == 'i') { //check if it's IMU
-            	storeIMU(buf);
-            	break;
-        	} else if (buf[i] == 'r') {
-             	storeRange(buf);
-             	break;
-         	} else if (buf[i] == 't') {
-             	storeTemp(buf);
-              	break;
-        	} else if (buf[i] == 'l') {
-             	storeLight(buf);
-             	break;
-        	} else if (buf[i] == 'm') {
-              	myRobot->currState = ARobot::IDLE; //IDLE
-             	break;
-            } else if (buf[i] == 'l') {
-              	myRobot->currState = ARobot::IDLE; //IDLE
-             	break;
-            } else if (buf[i] == 'd') {
-              	myRobot->currState = ARobot::IDLE; //IDLE
-             	break;
-        	} else {}
-    	}
-	sleep(0.001);
+		memset(mBuf,'\0', 128);
+    	char *retval = mPort->fgets(mBuf,64);
+		if( retval == NULL) {
+			sleep(0.001);
+			continue;
+        }
+	
+		sscanf(mBuf, "%i %c", &ts, &c); 
+        if(c == 'i') { //check if it's IMU
+            storeIMU(mBuf);
+        } else if (c == 'r') {
+            storeRange(mBuf);
+        } else if (c == 't') {
+            storeTemp(mBuf);
+       	} else if (c == 'l') {
+            storeLight(mBuf);
+       	} else if (c == 'm') {
+            myRobot->currState = ARobot::IDLE; //IDLE
+        } else if (c == 'l') {
+            myRobot->currState = ARobot::IDLE; //IDLE
+        } else if (c == 'd') {
+            myRobot->currState = ARobot::IDLE; //IDLE
+       	} else {}
     }
 	return;
 }

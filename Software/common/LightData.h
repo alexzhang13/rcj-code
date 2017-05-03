@@ -25,7 +25,7 @@ public:
 	int checkLight();
 
 private:
-	char* command;
+	char m_command[128];
 	Light_DataType data;
 	int threshold_black;
 	int threshold_silver;

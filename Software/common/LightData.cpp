@@ -1,9 +1,10 @@
 #include "LightData.h"
-
+#include <stdio.h>
+#include <string.h>
 
 LightData::LightData()
 {
-	
+	memset(m_command,'\0', 128);
 }
 
 LightData::~LightData()
@@ -12,7 +13,7 @@ LightData::~LightData()
 }
 
 int LightData::storeCommand(char* buf, int thresh_black, int thresh_silver, int thresh_white) {
-	command = buf;
+	memcpy(m_command, buf, 64);
 	threshold_black = thresh_black;
 	threshold_silver = thresh_silver;
 	threshold_white = thresh_white;
@@ -20,7 +21,7 @@ int LightData::storeCommand(char* buf, int thresh_black, int thresh_silver, int 
 
 int LightData::parseData()
 {
-	sscanf(command, "%d %c %f", &data.tstamp, &data.id, &data.l_reading);
+	sscanf(m_command, "%d %c %f", &data.tstamp, &data.id, &data.l_reading);
 	return 0;
 }
 

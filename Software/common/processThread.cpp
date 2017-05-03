@@ -2,12 +2,10 @@
 #include <unistd.h> // for sleep
 
 void Process_T::run(void){  
-	bool processed_status = false;   
+	bool processed_status;   
     while(1) {
-
+		processed_status = false; 
         while(myRobot->imuParseList.size() > 0) {
-		   printf("imu parse list size = %d\n", myRobot->imuParseList.size());
-           printf("imu data list size = %d\n", myRobot->imuDataList.size());
     	   myRobot->ParseIMU();
            myRobot->ClearIMU();
 		   processed_status = true;
@@ -31,7 +29,7 @@ void Process_T::run(void){
         }
 
         if(!processed_status)
-			sleep(0.01);
+			sleep(0.001);
     }
 	return;
 }

@@ -1,10 +1,12 @@
 #include "RangeData.h"
 #include "IMUData.h"
 #include <math.h>
-
+#include <stdio.h>
+#include <string.h>
 
 RangeData::RangeData(ARobot *robot) :myRobot(robot)
 {
+	memset(m_command,'\0', 128);
 	x_count = 0;
 	y_count = 0;
 	walls.wallN = 0;
@@ -23,12 +25,12 @@ RangeData::~RangeData()
 }
 
 int RangeData::storeCommand(char* buf) {
-	command = buf;
+	memcpy(m_command, buf, 64);
 }
 
 int RangeData::parseData()
 {
-	sscanf(command, "%d %c %f %f %f %f", &data.tstamp, &data.id, &data.laserL_a, &data.laserS_a, &data.laserL_b, &data.laserS_b);
+	sscanf(m_command, "%d %c %f %f %f %f", &data.tstamp, &data.id, &data.laserL_a, &data.laserS_a, &data.laserL_b, &data.laserS_b);
 	return 0;
 }
 
