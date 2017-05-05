@@ -3,9 +3,12 @@
 #include <stdio.h>
 #include <string.h>
 
+static Madgwick madgwick;
+
 IMUData::IMUData()
 {
 	memset(m_command,'\0', 128);
+	//madgwick.begin(float sampleFrequency);
 	//m_data.clear();
 }
 
