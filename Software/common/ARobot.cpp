@@ -338,6 +338,7 @@ void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
 }
 void ARobot::TurnDistance(int degrees, BotDir dir)
 {
+    printf("lol");
     initialYaw = imuDataList.end()->m_yaw;
     char* command;
     if(dir == RIGHT) {
