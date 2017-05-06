@@ -36,7 +36,7 @@ int main(int argc,char **argv){
     SerialPort *port = new SerialPort("/dev/ttyAMA0",115200);
 	if(port == NULL)
 		printf(" Serial port open failed\n");
-	printf(".Start robot navigatoin\n");
+	printf(".Start robot navigation\n");
     ARobot *myRobot = new ARobot(port);
     UartRx *uartrx = new UartRx(port, myRobot);
     Process_T *process_thread = new Process_T(port, myRobot);
@@ -56,8 +56,8 @@ int main(int argc,char **argv){
             StopTurn(currDir);
         }
     }*/
-    sleep(3);
-    myRobot->TurnDistance(90, ARobot::RIGHT);
+    //sleep(3);
+    //myRobot->TurnDistance(90, ARobot::RIGHT);
 	int32_t c = 0;
     while(1) {
 		printf("test %d \n", c);
