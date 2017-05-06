@@ -341,17 +341,16 @@ void ARobot::TurnDistance(int degrees, BotDir dir)
     initialYaw = imuDataList.end()->m_yaw;
     char* command;
     if(dir == RIGHT) {
-        //sprintf(command, "%c %c %d", 'm', 'd', distance_mm);
+        sprintf(command, "%c %c", 'm', 'd');
         toTurn = initialYaw + degrees;
         currDir = RIGHT;
-        sprintf(command, "%c %c", 'm', 'd');
     } else {
-        //sprintf(command, "%c %c %d", 'm', 'e', distance_mm);
+        sprintf(command, "%c %c", 'm', 'e');
         toTurn = initialYaw - degrees;
         currDir = LEFT;
-        sprintf(command, "%c %c", 'm', 'e');
     }
     currState = TURN;
+    printf("test");
     WriteCommand(command, sizeof(command));
 }
 
@@ -365,7 +364,7 @@ void ARobot::StopTurn(BotDir dir)
         if(currYaw >= toTurn) {
             char* command;
             sprintf(command, "%c %c", 'm', 'c');
-            currState = TURN;
+            currState = IDLE;
             WriteCommand(command, sizeof(command));
         }
     } else if(dir == LEFT) {
@@ -375,7 +374,7 @@ void ARobot::StopTurn(BotDir dir)
         if(currYaw <= toTurn) {
             char* command;
             sprintf(command, "%c %c", 'm', 'c');
-            currState = TURN;
+            currState = IDLE;
             WriteCommand(command, sizeof(command));
         }
     }
