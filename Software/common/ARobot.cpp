@@ -307,7 +307,7 @@ void ARobot::LEDLight(int time)
 {
     char* i_command;
     int i_length = snprintf(NULL, 0, "%c %c %d", 'd', 'b', time) + 1;
-    i_command = malloc(i_length);
+    i_command = (char*)malloc(i_length);
     
     snprintf(i_command, i_length, "%c %c %d", 'd', 'b', time);
     WriteCommand(i_command, i_length);
@@ -318,7 +318,7 @@ void ARobot::Drop()
 {
     char* i_command;
     int i_length = snprintf(NULL, 0, "%c %c", 'd', 'a') + 1;
-    i_command = malloc(i_length);
+    i_command = (char*)malloc(i_length);
 
     snprintf(i_command, i_length, "%c %c", 'd', 'a');
     WriteCommand(i_command, i_length);
@@ -328,7 +328,7 @@ void ARobot::Drop()
 void ARobot::SetSpeed(int left_speed, int right_speed) {
     char* i_command;
     int i_length = snprintf(NULL, 0, "%c %c %d %d", 'm', 'f', left_speed, right_speed) + 1;
-    i_command = malloc(i_length);
+    i_command = (char*)malloc(i_length);
 
     snprintf(i_command, i_length, "%c %c %d %d", 'm', 'f', left_speed, right_speed);
     WriteCommand(i_command, i_length);
@@ -338,7 +338,7 @@ void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
 {
     char* i_command;
     int i_length = snprintf(NULL, 0, "%c %c %d", 'm', 'a', distance_mm) + 1;
-    i_command = malloc(i_length);
+    i_command = (char*)malloc(i_length);
 
     if(dir == FRONT) {
         snprintf(i_command, i_length, "%c %c %d", 'm', 'a', distance_mm);
@@ -352,7 +352,7 @@ void ARobot::TurnDistance(int degrees, BotDir dir)
 {
     size_t imu_list = imuDataList.size();
     int i_length = snprintf(NULL, 0, "%c %c", 'm', 'd') + 1;
-    char* i_command = malloc(i_length);
+    char* i_command = (char*)malloc(i_length);
     initialYaw = imuDataList[imu_list-1].m_yaw;
     
     if(dir == RIGHT) {
@@ -380,7 +380,7 @@ void ARobot::StopTurn(BotDir dir)
         if(currYaw >= toTurn) {
             char* i_command;
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
-            i_command = malloc(i_length);
+            i_command = (char*)malloc(i_length);
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
             currState = IDLE;
             WriteCommand(i_command, i_length);
@@ -392,7 +392,7 @@ void ARobot::StopTurn(BotDir dir)
         if(currYaw <= toTurn) {
             char* i_command;
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
-            i_command = malloc(i_length);
+            i_command = (char*)malloc(i_length);
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
             currState = IDLE;
             WriteCommand(i_command, i_length);
