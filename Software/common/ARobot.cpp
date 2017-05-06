@@ -308,7 +308,7 @@ void ARobot::LEDLight(int time)
     char* i_command;
     int i_length = snprintf(NULL, 0, "%c %c %d", 'd', 'b', time) + 1;
     i_command = (char*)malloc(i_length);
-    
+
     snprintf(i_command, i_length, "%c %c %d", 'd', 'b', time);
     WriteCommand(i_command, i_length);
     currState = LED;
@@ -357,7 +357,6 @@ void ARobot::TurnDistance(int degrees, BotDir dir)
     
     if(dir == RIGHT) {
         snprintf(i_command, i_length, "%c %c", 'm', 'd');
-        printf("1");
         toTurn = initialYaw + degrees;
         currDir = RIGHT;
     } else {
@@ -366,7 +365,6 @@ void ARobot::TurnDistance(int degrees, BotDir dir)
         currDir = LEFT;
     }
     currState = TURN;
-    printf("test");
     WriteCommand(i_command, i_length);
 }
 
