@@ -389,6 +389,9 @@ static int imu_pt_func(struct pt *pt, int interval) { //125 hz = 8ms
          imu_queue = " ";
       } else if (func == 'b') {
         isCalibrating = true;  
+        gx_drift = 0;
+        gy_drift = 0;
+        gz_drift = 0;
         imu_queue = " ";   
       } else {
         Serial.println("i e");
@@ -574,7 +577,7 @@ void getDistanceReading()
 }
 
 void calibrateIMU() {
-  if(g_iter > 29) {
+  if(g_iter > 39) {
     gx_drift /= g_iter;
     gy_drift /= g_iter;
     gz_drift /= g_iter;
