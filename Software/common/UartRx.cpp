@@ -9,7 +9,7 @@
 
 void UartRx::run(void){   
 	int32_t ts;
-	char c;
+	char c, m;
     while(1) {
 		memset(mBuf,'\0', 128);
     	char *retval = mPort->fgets(mBuf,64);
@@ -28,7 +28,7 @@ void UartRx::run(void){
        	} else if (c == 'l') {
             storeLight(mBuf);
        	} else if (c == 'm') {
-            myRobot->currState = ARobot::IDLE; //IDLE
+            //myRobot->currState = ARobot::IDLE; //IDLE
         } else if (c == 'l') {
             myRobot->currState = ARobot::IDLE; //IDLE
         } else if (c == 'd') {
