@@ -51,11 +51,11 @@ public:
 	}
 	float getPitch() {
 		if (!anglesComputed) computeAngles();
-		return pitch * 57.29578f + 180.0f;
+		return pitch * 57.29578f;
 	}
 	float getYaw() {
 		if (!anglesComputed) computeAngles();
-		return yaw * 57.29578f + 110.0f;
+		return yaw * 57.29578f;
 	}
 	float getRollRadians() {
 		if (!anglesComputed) computeAngles();
