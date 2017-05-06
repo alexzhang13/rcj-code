@@ -219,6 +219,7 @@ void ARobot::CalcNextTile()
 void ARobot::TileTransition(BotOrientation direction, float angle, int32_t dist)
 {
     int turnNext = (int)direction - (int)currOrientation;
+    
     /*Turning first*/
     if(turnNext == 3) {turnNext = -1;} //west -> north = turn right 1
     else if (turnNext == -3) {turnNext = 1;} //north -> west = turn left 1
@@ -356,7 +357,7 @@ void ARobot::StopTurn(BotDir dir)
 {
     float currYaw = imuDataList.end()->m_yaw;
     if(dir == RIGHT) {
-        if(initialYaw >= 0.0f && currYaw < 0.0f) { //if robot crosses over from 180 to -180, direction switches
+        if(initialYaw >= 180.0f && currYaw < 180.0f) { //if robot crosses over from 180 to -180, direction switches
             currYaw += 360; //range fixing
         }
         if(currYaw >= toTurn) {
@@ -366,7 +367,7 @@ void ARobot::StopTurn(BotDir dir)
             WriteCommand(command, sizeof(command) / sizeof(command[0]));
         }
     } else if(dir == LEFT) {
-        if(initialYaw <= 0.0f && currYaw > 0.0f) { //if robot crosses over from -180 to 180, direction switches
+        if(initialYaw <= 180.0f && currYaw > 180.0f) { //if robot crosses over from -180 to 180, direction switches
             currYaw -= 360; //range fixing
         }
         if(currYaw <= toTurn) {
@@ -381,15 +382,11 @@ void ARobot::StopTurn(BotDir dir)
 
 void ARobot::ParseIMU()
 {
-	if(imuParseList.size() ==0)
-		return;
-
     for(int i = 0; i < imuParseList.size(); i++)
     {
         imuParseList.front().parseData();
         imuParseList.front().runFilter();
-		IMUData data = imuParseList.front();
-        imuDataList.push_back(data);
+        imuDataList.push_back(imuParseList.front());
         imuParseList.pop();
     }
 }
@@ -430,8 +427,7 @@ void ARobot::ClearIMU()
 {
     mlen_imu = imuDataList.size();
     while(mlen_imu > 200) {
-        imuDataList.erase(imuDataList.begin());
-        mlen_imu--;
+        imuDataList.erase(imuDataList.begin(), imuDataList.begin() + mlen_imu - 200);
     }
 }
 
@@ -439,8 +435,7 @@ void ARobot::ClearRange()
 {
     mlen_range = rangeDataList.size();
     while(mlen_range > 200) {
-        rangeDataList.erase(rangeDataList.begin());
-        mlen_range--;
+        rangeDataList.erase(rangeDataList.begin(), rangeDataList.begin() + mlen_range - 200);
     }
 }
 
@@ -448,7 +443,6 @@ void ARobot::ClearTemp()
 {
     mlen_temp = tempDataList.size();
     while(mlen_temp > 200) {
-        tempDataList.erase(tempDataList.begin());
-        mlen_temp--;
+        tempDataList.erase(tempDataList.begin(), tempDataList.begin() + mlen_temp - 200);
     }
 }
