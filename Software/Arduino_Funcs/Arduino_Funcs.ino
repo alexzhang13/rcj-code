@@ -18,9 +18,13 @@
 #define PHOTOCELL 0
 
 /*IMU*/
-#define    MPU9250_ADDRESS            0x68
-#define    GYRO_FULL_SCALE_250_DPS    0x00  
-#define    ACC_FULL_SCALE_2_G        0x00  
+#define MPU9250_ADDRESS            0x68
+#define GYRO_FULL_SCALE_250_DPS    0x00  
+#define ACC_FULL_SCALE_2_G        0x00  
+
+#define SMPLRT_DIV        0x19
+#define CONFIG            0x1A
+#define FIFO_EN           0x23
 
 #include <Wire.h>
 #include <SoftwareSerial.h>
@@ -59,9 +63,7 @@ String distance_queue; //Queue for distance commands
 String imu_queue; //Queue for IMU commands
 
 int16_t gx_drift, gy_drift, gz_drift; //gyro drift values
-int16_t gx_arr[10] = {0}; //10 values of gyro_x when not moving
-int16_t gy_arr[10] = {0}; //10 values of gyro_y when not moving
-int16_t gz_arr[10] = {0}; //10 values of gyro_z when not moving
+bool isCalibrating = false;
 int g_iter = 0; //current gyro iteration
 
 bool motorWait = false; //wait for motor thread
@@ -116,9 +118,9 @@ void setup() {
   delay(50); //delay
   laserB_s.init(); //init laser object, look for it
   laserB_s.configureDefault(); //laser config
-  laserB_s.writeReg(VL6180X::SYSRANGE__MAX_CONVERGENCE_TIME, 35);
-  laserB_s.setTimeout(500); //in case you can't find the laser object, timeout for this long
-  laserB_s.writeReg16Bit(VL6180X::SYSALS__INTEGRATION_PERIOD, 50);
+  laserB_s.writeReg(VL6180X::SYSRANGE__MAX_CONVERGENCE_TIME, 36);
+  laserB_s.setTimeout(5); //in case you can't find the laser object, timeout for this long
+  laserB_s.writeReg16Bit(VL6180X::SYSALS__INTEGRATION_PERIOD, 52);
   laserB_s.stopContinuous();
   delay(300);
   laserB_s.startRangeContinuous(30);
@@ -128,7 +130,7 @@ void setup() {
   digitalWrite(GPIO_PINL1, HIGH); //begin writing to XSHUT of first laser
   delay(50); //delay
   laserA_l.init(); //init laser object, look for it
-  laserA_l.setTimeout(500); //in case you can't find the laser object, timeout for this long
+  laserA_l.setTimeout(5); //in case you can't find the laser object, timeout for this long
   laserA_l.stopContinuous();
   delay(300);
   laserA_l.startContinuous(30);
@@ -138,7 +140,7 @@ void setup() {
   digitalWrite(GPIO_PINL2, HIGH); //begin writing to XSHUT of first laser
   delay(50); //delay
   laserB_l.init(); //init laser object, look for it
-  laserB_l.setTimeout(500); //in case you can't find the laser object, timeout for this long
+  laserB_l.setTimeout(5); //in case you can't find the laser object, timeout for this long
   laserB_l.stopContinuous();
   delay(300);
   laserB_l.startContinuous(30);
@@ -149,9 +151,9 @@ void setup() {
   delay(50); //delay
   laserA_s.init(); //init laser object, look for it
   laserA_s.configureDefault(); //laser config
-  laserA_s.writeReg(VL6180X::SYSRANGE__MAX_CONVERGENCE_TIME, 35);
-  laserA_s.setTimeout(500); //in case you can't find the laser object, timeout for this long
-  laserB_s.writeReg16Bit(VL6180X::SYSALS__INTEGRATION_PERIOD, 50);
+  laserA_s.writeReg(VL6180X::SYSRANGE__MAX_CONVERGENCE_TIME, 36);
+  laserA_s.setTimeout(5); //in case you can't find the laser object, timeout for this long
+  laserB_s.writeReg16Bit(VL6180X::SYSALS__INTEGRATION_PERIOD, 52);
   laserA_s.setAddress(0x25);
   laserA_s.stopContinuous();
   delay(300);
@@ -159,22 +161,25 @@ void setup() {
   delay(100); //delay
   
   /*INITIALIZE MPU9250 AND REQUEST BYTES*/
+  I2CwriteByte(MPU9250_ADDRESS, CONFIG, 0x03);
+  I2CwriteByte(MPU9250_ADDRESS, SMPLRT_DIV, 0x18);
+  I2CwriteByte(MPU9250_ADDRESS, FIFO_EN, 0x00);
+  delay(50);
   // Configure gyroscope range
   I2CwriteByte(MPU9250_ADDRESS,27,GYRO_FULL_SCALE_250_DPS);
   delay(50);
   // Configure accelerometers range
   I2CwriteByte(MPU9250_ADDRESS,28,ACC_FULL_SCALE_2_G);
   delay(50);
-  // Set by pass mode for the magnetometers
-  I2CwriteByte(MPU9250_ADDRESS,0x37,0x02);
-  delay(50);
 
   /*START SENSORS*/
   mount_laser.attach(SERVO_MOUNT);   //Attach pin 10 to be for the laser mount
   mount_laser.write(0);
+  mount_laser.detach();
   delay(500);
   dropper.attach(SERVO_DROPPER);    //Attach pin 9 to be for the dropper
   dropper.write(60);
+  dropper.detach();
   delay(500);
   
   /*INITIALIZE MOTORS*/
@@ -382,13 +387,18 @@ static int imu_pt_func(struct pt *pt, int interval) { //125 hz = 8ms
             imuSwitch = true;
          }
          imu_queue = " ";
+      } else if (func == 'b') {
+        isCalibrating = true;  
+        imu_queue = " ";   
       } else {
         Serial.println("i e");
         imu_queue = " ";
       }
     } 
-    if(imuSwitch == true) {
-        getIMU();
+    if(isCalibrating == true) {
+       calibrateIMU();
+    } else if(imuSwitch == true) {
+       getIMU();
     }
     PT_WAIT_UNTIL(pt, millis() - timestamp > interval);
     timestamp = millis(); // take a new timestamp
@@ -509,6 +519,7 @@ void Mount_Sweep()
 {
   String reading = "";
     // scan from 0 to 180 degrees
+  mount_laser.attach(SERVO_MOUNT);
   for(int angle = 0; angle < 180; angle++)  
   {         
     mount_laser.write(angle);     
@@ -522,10 +533,13 @@ void Mount_Sweep()
       Serial.println(reading);
       reading = "";  
     }        
+    if(angle == 90) {
+      delay(500);
+    }
     delay(8);                   
   } 
 
-  delay(100);
+  delay(500);
   // now scan back from 180 to 0 degrees
   for(int angle = 180; angle > 0; angle--)    
   {                                
@@ -539,9 +553,13 @@ void Mount_Sweep()
       reading += " "; reading += laserB_s.readRangeContinuousMillimeters(); //laser 3 val (mm)
       Serial.println(reading);
       reading = "";  
-    }               
+    }     
+    if(angle == 90) {
+      delay(500);
+    }          
     delay(8);       
   } 
+  mount_laser.detach();
 }
 
 void getDistanceReading()
@@ -555,10 +573,43 @@ void getDistanceReading()
   Serial.println(reading);     
 }
 
+void calibrateIMU() {
+  if(g_iter > 29) {
+    gx_drift /= g_iter;
+    gy_drift /= g_iter;
+    gz_drift /= g_iter;
+    g_iter = 0;
+    isCalibrating = false;
+    return;
+  }
+  uint8_t Buf[14]; 
+  uint8_t ST1;
+  
+  //Accelerometer and Gyroscope
+  I2Cread(MPU9250_ADDRESS,0x3B,14,Buf);
+  
+  // Accelerometer
+  int16_t ax=Buf[0]<<8 | Buf[1];
+  int16_t ay=Buf[2]<<8 | Buf[3];
+  int16_t az=Buf[4]<<8 | Buf[5];
+ 
+  // Gyroscope
+  int16_t gx=Buf[8]<<8 | Buf[9];
+  int16_t gy=Buf[10]<<8 | Buf[11];
+  int16_t gz=Buf[12]<<8 | Buf[13];
+
+  //check and remove drift
+  gx_drift += gx; 
+  gy_drift += gy; 
+  gz_drift += gz;
+    
+  //increase iteration count
+  ++g_iter;
+}
+
 void getIMU()
 {
   uint8_t Buf[14];
-  uint8_t Mag[7];  
   uint8_t ST1;
   String reading = "";
   
@@ -576,33 +627,7 @@ void getIMU()
   int16_t gx=Buf[8]<<8 | Buf[9];
   int16_t gy=Buf[10]<<8 | Buf[11];
   int16_t gz=Buf[12]<<8 | Buf[13];
-
-  //check and remove drift
-  if(isMoving == false) {
-    //Cycle 0-9 iterations in array and average for drift
-    gx_arr[g_iter%10] = gx; 
-    gy_arr[g_iter%10] = gy; 
-    gz_arr[g_iter%10] = gz;
-
-    //Take avgs for each gyro value
-    gx_drift = (gx_arr[0]+gx_arr[1]+gx_arr[2]+gx_arr[3]+gx_arr[4]+gx_arr[5]+gx_arr[6]+gx_arr[7]+gx_arr[8]+gx_arr[9]); 
-    gy_drift = (gy_arr[0]+gy_arr[1]+gy_arr[2]+gy_arr[3]+gy_arr[4]+gy_arr[5]+gy_arr[6]+gy_arr[7]+gy_arr[8]+gy_arr[9]); 
-    gz_drift = (gz_arr[0]+gz_arr[1]+gz_arr[2]+gz_arr[3]+gz_arr[4]+gz_arr[5]+gz_arr[6]+gz_arr[7]+gz_arr[8]+gz_arr[9]);   
-
-    //First 10 iterations
-    if(g_iter < 10) {
-      gx_drift /= g_iter;
-      gy_drift /= g_iter;
-      gz_drift /= g_iter;
-    } else {
-      gx_drift /= 10;
-      gy_drift /= 10;
-      gz_drift /= 10;
-    }
-
-    //increase iteration count
-    ++g_iter;
-  }
+  
   //Apply drift
   gx -= gx_drift; gy -= gy_drift; gz -= gz_drift;
   
@@ -617,6 +642,7 @@ void getIMU()
 void drop() //drop a kit
 {
   int angle = 60;
+  dropper.attach(SERVO_DROPPER);    //Attach pin 9 to be for the dropper
   for(angle = 60; angle > 0; angle--)  
   {                                  
     dropper.write(angle);               
@@ -636,6 +662,7 @@ void drop() //drop a kit
     dropper.write(angle);           
     delay(5);       
   } 
+  dropper.detach();    //Attach pin 9 to be for the dropper
   delay(500);
   Serial.println("d d");
 }
