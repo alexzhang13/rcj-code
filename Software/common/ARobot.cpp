@@ -402,7 +402,7 @@ void ARobot::StopTurn(BotDir dir)
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
             currState = IDLE;
             WriteCommand(i_command, i_length);
-            return
+            return;
         }
     }
     
