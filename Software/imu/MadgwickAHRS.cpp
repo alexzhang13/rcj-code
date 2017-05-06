@@ -238,7 +238,7 @@ float Madgwick::invSqrt(float x) {
 	y = y * (1.5f - (halfx * y * y));
 	y = y * (1.5f - (halfx * y * y));
 	#else
-	y = 1.0f/sqrt(x);
+	float y = 1.0f/sqrt(x);
 
 	#endif
 	return y;
