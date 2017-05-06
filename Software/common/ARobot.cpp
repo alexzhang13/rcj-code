@@ -24,9 +24,9 @@ ARobot::~ARobot()
 
 }
 
-void ARobot::WriteCommand(char* command, int size)
+void ARobot::WriteCommand(char* i_command, int size)
 {
-    mPort->write(command, size);
+    mPort->write(i_command, size);
 }
 
 void ARobot::UpdateCellMap(MazeCell *sensor_info)
@@ -305,56 +305,69 @@ void ARobot::checkLightTile()
 
 void ARobot::LEDLight(int time)
 {
-    char* command;
-    sprintf(command, "%c %c %d", 'd', 'b', time);
-    WriteCommand(command, sizeof(command));
+    char* i_command;
+    int i_length = snprintf(NULL, 0, "%c %c %d", 'd', 'b', time) + 1;
+    i_command = malloc(i_length);
+    
+    snprintf(i_command, i_length, "%c %c %d", 'd', 'b', time);
+    WriteCommand(i_command, i_length);
     currState = LED;
 }
 
 void ARobot::Drop()
 {
-    char* command;
-    sprintf(command, "%c %c", 'd', 'a');
-    WriteCommand(command, sizeof(command));
+    char* i_command;
+    int i_length = snprintf(NULL, 0, "%c %c", 'd', 'a') + 1;
+    i_command = malloc(i_length);
+
+    snprintf(i_command, i_length, "%c %c", 'd', 'a');
+    WriteCommand(i_command, i_length);
     currState = DROP;
 }
 
 void ARobot::SetSpeed(int left_speed, int right_speed) {
-    char* command;
-    sprintf(command, "%c %c %d %d", 'm', 'f', left_speed, right_speed);
-    WriteCommand(command, sizeof(command));
+    char* i_command;
+    int i_length = snprintf(NULL, 0, "%c %c %d %d", 'm', 'f', left_speed, right_speed) + 1;
+    i_command = malloc(i_length);
+
+    snprintf(i_command, i_length, "%c %c %d %d", 'm', 'f', left_speed, right_speed);
+    WriteCommand(i_command, i_length);
 }
 
 void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
 {
-    char* command;
+    char* i_command;
+    int i_length = snprintf(NULL, 0, "%c %c %d", 'm', 'a', distance_mm) + 1;
+    i_command = malloc(i_length);
+
     if(dir == FRONT) {
-        sprintf(command, "%c %c %d", 'm', 'a', distance_mm);
+        snprintf(i_command, i_length, "%c %c %d", 'm', 'a', distance_mm);
     } else {
-        sprintf(command, "%c %c %d", 'm', 'b', distance_mm);
+        snprintf(i_command, i_length, "%c %c %d", 'm', 'b', distance_mm);
     }
     currState = MOVE;
-    WriteCommand(command, sizeof(command));
+    WriteCommand(i_command, i_length);
 }
 void ARobot::TurnDistance(int degrees, BotDir dir)
 {
     size_t imu_list = imuDataList.size();
+    int i_length = snprintf(NULL, 0, "%c %c", 'm', 'd') + 1;
+    char* i_command = malloc(i_length);
     initialYaw = imuDataList[imu_list-1].m_yaw;
-    char* command;
+    
     if(dir == RIGHT) {
-        printf("lol");
-        sprintf(command, "%c %c", 'm', 'd');
+        snprintf(i_command, i_length, "%c %c", 'm', 'd');
         printf("1");
         toTurn = initialYaw + degrees;
         currDir = RIGHT;
     } else {
-        sprintf(command, "%c %c", 'm', 'e');
+        snprintf(i_command, i_length, "%c %c", 'm', 'e');
         toTurn = initialYaw - degrees;
         currDir = LEFT;
     }
     currState = TURN;
     printf("test");
-    WriteCommand(command, sizeof(command));
+    WriteCommand(i_command, i_length);
 }
 
 void ARobot::StopTurn(BotDir dir)
@@ -365,20 +378,24 @@ void ARobot::StopTurn(BotDir dir)
             currYaw += 360; //range fixing
         }
         if(currYaw >= toTurn) {
-            char* command;
-            sprintf(command, "%c %c", 'm', 'c');
+            char* i_command;
+            int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
+            i_command = malloc(i_length);
+            snprintf(i_command, i_length, "%c %c", 'm', 'c');
             currState = IDLE;
-            WriteCommand(command, sizeof(command));
+            WriteCommand(i_command, i_length);
         }
     } else if(dir == LEFT) {
         if(initialYaw <= 180.0f && currYaw > 180.0f) { //if robot crosses over from -180 to 180, direction switches
             currYaw -= 360; //range fixing
         }
         if(currYaw <= toTurn) {
-            char* command;
-            sprintf(command, "%c %c", 'm', 'c');
+            char* i_command;
+            int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
+            i_command = malloc(i_length);
+            snprintf(i_command, i_length, "%c %c", 'm', 'c');
             currState = IDLE;
-            WriteCommand(command, sizeof(command));
+            WriteCommand(i_command, i_length);
         }
     }
     
