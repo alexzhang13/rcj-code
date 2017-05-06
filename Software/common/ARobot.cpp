@@ -307,7 +307,7 @@ void ARobot::LEDLight(int time)
 {
     char* command;
     sprintf(command, "%c %c %d", 'd', 'b', time);
-    WriteCommand(command, sizeof(command) / sizeof(command[0]));
+    WriteCommand(command, sizeof(command));
     currState = LED;
 }
 
@@ -315,14 +315,14 @@ void ARobot::Drop()
 {
     char* command;
     sprintf(command, "%c %c", 'd', 'a');
-    WriteCommand(command, sizeof(command) / sizeof(command[0]));
+    WriteCommand(command, sizeof(command));
     currState = DROP;
 }
 
 void ARobot::SetSpeed(int left_speed, int right_speed) {
     char* command;
     sprintf(command, "%c %c %d %d", 'm', 'f', left_speed, right_speed);
-    WriteCommand(command, sizeof(command) / sizeof(command[0]));
+    WriteCommand(command, sizeof(command));
 }
 
 void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
@@ -334,7 +334,7 @@ void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
         sprintf(command, "%c %c %d", 'm', 'b', distance_mm);
     }
     currState = MOVE;
-    WriteCommand(command, sizeof(command) / sizeof(command[0]));
+    WriteCommand(command, sizeof(command));
 }
 void ARobot::TurnDistance(int degrees, BotDir dir)
 {
@@ -344,13 +344,15 @@ void ARobot::TurnDistance(int degrees, BotDir dir)
         //sprintf(command, "%c %c %d", 'm', 'd', distance_mm);
         toTurn = initialYaw + degrees;
         currDir = RIGHT;
+        sprintf(command, "%c %c", 'm', 'd');
     } else {
         //sprintf(command, "%c %c %d", 'm', 'e', distance_mm);
         toTurn = initialYaw - degrees;
         currDir = LEFT;
+        sprintf(command, "%c %c", 'm', 'e');
     }
     currState = TURN;
-    WriteCommand(command, sizeof(command) / sizeof(command[0]));
+    WriteCommand(command, sizeof(command));
 }
 
 void ARobot::StopTurn(BotDir dir)
@@ -364,7 +366,7 @@ void ARobot::StopTurn(BotDir dir)
             char* command;
             sprintf(command, "%c %c", 'm', 'c');
             currState = TURN;
-            WriteCommand(command, sizeof(command) / sizeof(command[0]));
+            WriteCommand(command, sizeof(command));
         }
     } else if(dir == LEFT) {
         if(initialYaw <= 180.0f && currYaw > 180.0f) { //if robot crosses over from -180 to 180, direction switches
@@ -374,7 +376,7 @@ void ARobot::StopTurn(BotDir dir)
             char* command;
             sprintf(command, "%c %c", 'm', 'c');
             currState = TURN;
-            WriteCommand(command, sizeof(command) / sizeof(command[0]));
+            WriteCommand(command, sizeof(command));
         }
     }
     
