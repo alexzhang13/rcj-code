@@ -474,3 +474,11 @@ void ARobot::ClearTemp()
         tempDataList.erase(tempDataList.begin(), tempDataList.begin() + mlen_temp - 200);
     }
 }
+
+void ARobot::ClearLight()
+{
+    mlen_light = lightDataList.size();
+    while(mlen_light > 200) {
+        lightDataList.erase(lightDataList.begin(), lightDataList.begin() + mlen_light - 200);
+    }
+}

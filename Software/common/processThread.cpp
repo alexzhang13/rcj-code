@@ -24,6 +24,7 @@ void Process_T::run(void){
         }
         while(myRobot->lightParseList.size() > 0) {
            myRobot->ParseLight();
+           myRobot->ClearLight();
            processed_status = true;
            //Inside CheckTileLight() there is a Clear Light-esque function so it's not necessary here
         }
