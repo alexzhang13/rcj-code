@@ -75,6 +75,7 @@ bool imuSwitch = true; //false meaning turn off
 bool distanceSwitch = true; //false meaning turn off
 bool motorSwitch = true; //false meaning turn off
 bool isMoving = false; //if the robot is running
+bool isTurning = false; //if the robot is turning
 int speed_left = 60; //the speed used to control the other motor (Which is imbalanced)
 float distance_mm = 0;
 volatile long int leftEncoder = 0; //left encoder
@@ -274,13 +275,14 @@ static int dcmotor_pt_func(struct pt *pt, int interval) { //50 hz = 20ms
       } else if (func == 'c') {
          Motor_Stop();
          isMoving = false;
+         isTurning = false;
          motor_queue = " ";
       } else if (func == 'd') {
-         isMoving = true;
+         isTurning = true;
          Motor_TurnRight();
          motor_queue = " ";
       } else if (func == 'e') {
-         isMoving = true;
+         isTurning = true;
          Motor_TurnLeft();
          motor_queue = " ";
       } else if (func == 'f'){
@@ -298,7 +300,7 @@ static int dcmotor_pt_func(struct pt *pt, int interval) { //50 hz = 20ms
          motor_queue = " ";
       }
     }
-    if(isMoving == true) {
+    if(isMoving == true && isTurning == false) {
          Motor_Encoder();
     }
     
@@ -516,6 +518,7 @@ void Motor_Encoder()
   }
   reading += millis(); reading += " m ";
   reading += left_mm; reading += " "; reading += right_mm;
+  //Serial.println(reading);
 }
 
 void Mount_Sweep()
