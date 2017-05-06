@@ -37,7 +37,7 @@ class ARobot {
  	/*Enums*/
  	enum LightVal {WHITE=0, BLACK=1, SILVER=2};
 	enum BotDir {RIGHT=0, LEFT=1, FRONT=2, BACK=3};
-	enum BotOrientation {NORTH=0, EAST=1, SOUTH=2, WEST=-1};
+	enum BotOrientation {NORTH=0, EAST=1, SOUTH=2, WEST=3};
 	enum CurrentState {DROP=0, MOVE=1, TURN=2, LED=3, IDLE=4, RAMP=5, PLANNING=6, WAYPTNAV=7, DONE=8};
 
  	/*Writing to Arduino*/
@@ -82,6 +82,7 @@ class ARobot {
 	void ClearIMU();
 	void ClearRange();
 	void ClearTemp();
+	void ClearLight();
 
 	std::vector<MazeCell> temp_cell_list;
 	std::vector<int32_t> waypts; //current waypoint list
