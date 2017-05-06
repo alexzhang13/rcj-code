@@ -25,7 +25,7 @@
 //-------------------------------------------------------------------------------------------
 // Definitions
 
-#define sampleFreqDef   38.5f          // sample frequency in Hz
+#define sampleFreqDef   40.0f          // sample frequency in Hz
 #define betaDef         0.1f            // 2 * proportional gain
 
 
