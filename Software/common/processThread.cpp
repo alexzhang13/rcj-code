@@ -28,7 +28,6 @@ void Process_T::run(void){
            processed_status = true;
            //Inside CheckTileLight() there is a Clear Light-esque function so it's not necessary here
         }
-        printf("test");
         if(!processed_status)
 			sleep(0.001);
     }
