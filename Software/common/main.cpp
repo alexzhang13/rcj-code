@@ -69,6 +69,7 @@ int main(int argc,char **argv){
         if(myRobot->currState == ARobot::TURN) {
             myRobot->StopTurn(myRobot->currDir);
         } else if(myRobot->currState == ARobot::IDLE && cnt == 0) {
+            printf("test");
             myRobot->TurnDistance(90, ARobot::LEFT);
             cnt++;
         }
