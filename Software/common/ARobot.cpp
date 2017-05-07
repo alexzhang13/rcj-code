@@ -378,7 +378,7 @@ void ARobot::StopTurn(BotDir dir)
             currYaw -= 360; //range fixing
         }
         if(currYaw+8.0 <= toTurn) {
-            printf("%f\n", initialYaw);
+            printf("%f %f\n", initialYaw, currentYaw);
             char* i_command;
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
             i_command = (char*)malloc(i_length);
