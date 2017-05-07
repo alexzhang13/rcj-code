@@ -65,7 +65,6 @@ int main(int argc,char **argv){
     while(1) {
 		//printf("test %d \n", c);
 		//c++;	
-        printf("worked ");
         if(myRobot->currState == ARobot::TURN) {
             myRobot->StopTurn(myRobot->currDir);
         }
