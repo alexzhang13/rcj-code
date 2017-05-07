@@ -419,6 +419,9 @@ void ARobot::ParseIMU()
     }
 }
 void ARobot::ParseRange() {
+if(rangeParseList.size() <1)
+return;
+
     for(int i = 0; i < rangeParseList.size(); i++)
     {
         rangeParseList.front().parseData();
@@ -429,6 +432,7 @@ void ARobot::ParseRange() {
         if(rangeParseList.front().coord.y_flag == true) {
             currTile.y_map = (currTile.y*300) + rangeParseList.front().coord.y_glob;
         }
+
         rangeDataList.push_back(rangeParseList.front());
         rangeParseList.pop();
     }
@@ -455,7 +459,8 @@ void ARobot::ClearIMU()
 {
     mlen_imu = imuDataList.size();
     while(mlen_imu > 200) {
-        imuDataList.erase(imuDataList.begin(), imuDataList.begin() + mlen_imu - 200);
+        imuDataList.erase(imuDataList.begin());
+	mlen_imu--;
     }
 }
 
@@ -463,7 +468,8 @@ void ARobot::ClearRange()
 {
     mlen_range = rangeDataList.size();
     while(mlen_range > 200) {
-        rangeDataList.erase(rangeDataList.begin(), rangeDataList.begin() + mlen_range - 200);
+        rangeDataList.erase(rangeDataList.begin());
+	mlen_range--;
     }
 }
 
@@ -471,7 +477,8 @@ void ARobot::ClearTemp()
 {
     mlen_temp = tempDataList.size();
     while(mlen_temp > 200) {
-        tempDataList.erase(tempDataList.begin(), tempDataList.begin() + mlen_temp - 200);
+        tempDataList.erase(tempDataList.begin());
+	mlen_temp--;
     }
 }
 
@@ -479,6 +486,7 @@ void ARobot::ClearLight()
 {
     mlen_light = lightDataList.size();
     while(mlen_light > 200) {
-        lightDataList.erase(lightDataList.begin(), lightDataList.begin() + mlen_light - 200);
+        lightDataList.erase(lightDataList.begin());
+	mlen_light--;
     }
 }
