@@ -22,7 +22,7 @@
 // Variable declaration
 class Madgwick {
 private:
-	static float invSqrt(float x);
+	static double invSqrt(double x);
 	float beta;				// algorithm gain
 	float q0;
 	float q1;

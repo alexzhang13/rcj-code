@@ -171,7 +171,7 @@ void Madgwick::updateIMU(float gx, float gy, float gz, float ax, float ay, float
 	if (!((ax == 0.0f) && (ay == 0.0f) && (az == 0.0f))) {
 
 		// Normalise accelerometer measurement
-		recipNorm = invSqrt(ax * ax + ay * ay + az * az);
+		recipNorm = (float)invSqrt(ax * ax + ay * ay + az * az);
 		ax *= recipNorm;
 		ay *= recipNorm;
 		az *= recipNorm;
@@ -196,7 +196,7 @@ void Madgwick::updateIMU(float gx, float gy, float gz, float ax, float ay, float
 		s1 = _4q1 * q3q3 - _2q3 * ax + 4.0f * q0q0 * q1 - _2q0 * ay - _4q1 + _8q1 * q1q1 + _8q1 * q2q2 + _4q1 * az;
 		s2 = 4.0f * q0q0 * q2 + _2q0 * ax + _4q2 * q3q3 - _2q3 * ay - _4q2 + _8q2 * q1q1 + _8q2 * q2q2 + _4q2 * az;
 		s3 = 4.0f * q1q1 * q3 - _2q1 * ax + 4.0f * q2q2 * q3 - _2q2 * ay;
-		recipNorm = invSqrt(s0 * s0 + s1 * s1 + s2 * s2 + s3 * s3); // normalise step magnitude
+		recipNorm = (float)invSqrt(s0 * s0 + s1 * s1 + s2 * s2 + s3 * s3); // normalise step magnitude
 		s0 *= recipNorm;
 		s1 *= recipNorm;
 		s2 *= recipNorm;
@@ -216,7 +216,7 @@ void Madgwick::updateIMU(float gx, float gy, float gz, float ax, float ay, float
 	q3 += qDot4 * invSampleFreq;
 
 	// Normalise quaternion
-	recipNorm = invSqrt(q0 * q0 + q1 * q1 + q2 * q2 + q3 * q3);
+	recipNorm = (float)invSqrt(q0 * q0 + q1 * q1 + q2 * q2 + q3 * q3);
 	q0 *= recipNorm;
 	q1 *= recipNorm;
 	q2 *= recipNorm;
@@ -228,7 +228,7 @@ void Madgwick::updateIMU(float gx, float gy, float gz, float ax, float ay, float
 // Fast inverse square-root
 // See: http://en.wikipedia.org/wiki/Fast_inverse_square_root
 
-float Madgwick::invSqrt(float x) {
+double Madgwick::invSqrt(double x) {
 	#if 0
 	float halfx = 0.5f * x;
 	float y = x;
@@ -238,7 +238,8 @@ float Madgwick::invSqrt(float x) {
 	y = y * (1.5f - (halfx * y * y));
 	y = y * (1.5f - (halfx * y * y));
 	#else
-	float y = 1.0f/sqrt(x);
+
+	double y = 1.0/(double)sqrt(x);
 
 	#endif
 	return y;
@@ -251,9 +252,6 @@ void Madgwick::computeAngles()
 	roll = atan2f(q0*q1 + q2*q3, 0.5f - q1*q1 - q2*q2);
 	pitch = asinf(-2.0f * (q1*q3 - q0*q2));
 	yaw = atan2f(q1*q2 + q0*q3, 0.5f - q2*q2 - q3*q3);
-
-	if(roll < 0.0f)
-		roll += 2*PI;
 
 	if(pitch < 0.0f)
 		pitch += 2*PI;
