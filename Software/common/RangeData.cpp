@@ -110,7 +110,7 @@ int RangeData::getPosition()
 				coord.y += distance[(i+data.dir)%4];
 				if(distance[(i+data.dir)%4] != coord.y){ //If you already went through more than one iteration, now you want to divide by 2
 					coord.y /= 2;
-					coord.y_glob = coord.y + 150/0f; //real coord output
+					coord.y_glob = coord.y + 150.0f; //real coord output
 				}
 			} else {
 				++y_count;
