@@ -36,11 +36,11 @@ int RangeData::parseData()
 
 int RangeData::getPosition()
 {	
-	if(myRobot->imuDataList.end()->m_yaw <= 45.0 && myRobot->imuDataList.end()->m_yaw >= -45.0) { //north
+	if(myRobot->imuDataList.end()->m_yaw <= 45.0 && myRobot->imuDataList.end()->m_yaw >= 315.0) { //north
 		data.dir = 0;
-	} else if (myRobot->imuDataList.end()->m_yaw <= -45.0 && myRobot->imuDataList.end()->m_yaw >= -135.0) { //east
+	} else if (myRobot->imuDataList.end()->m_yaw <= 135.0 && myRobot->imuDataList.end()->m_yaw >= 45.0) { //east
 		data.dir = 1;
-	} else if (myRobot->imuDataList.end()->m_yaw <= -135.0 && myRobot->imuDataList.end()->m_yaw >= 135.0) { //south
+	} else if (myRobot->imuDataList.end()->m_yaw <= 225.0 && myRobot->imuDataList.end()->m_yaw >= 135.0) { //south
 		data.dir = 2;
 	} else { //west
 		data.dir = 3;
