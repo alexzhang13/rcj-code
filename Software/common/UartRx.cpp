@@ -58,6 +58,6 @@ void UartRx::storeTemp(char* buf) {
 
 void UartRx::storeLight(char* buf) {
     LightData curr_light;
-    curr_light.storeCommand(buf, myRobot->black_thresh, myRobot->silver_thresh, myRobot->white_thresh);
+    curr_light.storeCommand(buf, myRobot->black_thresh, myRobot->silver_thresh);
     myRobot->lightParseList.push(curr_light); //push light data
 }

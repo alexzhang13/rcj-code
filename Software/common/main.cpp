@@ -90,7 +90,7 @@ void readConfig(const char* filename, ARobot *robot)
 		printf("%s is not available\n", filename);
       	return;
 	}
-    int ret = fscanf(datafile, "%d %d %d %f %f", &robot->black_thresh, &robot->silver_thresh, &robot->white_thresh, &robot->threshLeft, &robot->threshRight);
+    int ret = fscanf(datafile, "%d %d %f %f", &robot->black_thresh, &robot->silver_thresh, &robot->threshLeft, &robot->threshRight);
 }
 
 void readCurrentMap(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt)

@@ -109,7 +109,6 @@ class ARobot {
 	bool backingBlack; //if the robot is backing up on a black tile
  	int silver_thresh; //Silver Tile Threshold
  	int black_thresh; //Black Tile Threshold
- 	int white_thresh; //White Tile Threshold
  	float threshLeft; //Left Temperature Threshold
  	float threshRight; //Right Temperature Threshold
 
