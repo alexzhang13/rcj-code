@@ -68,8 +68,7 @@ int main(int argc,char **argv){
 		//c++;	
         if(myRobot->currState == ARobot::TURN) {
             myRobot->StopTurn(myRobot->currDir);
-        }
-        if(myRobot->currState == ARobot::IDLE && cnt != 1) {
+        } else if(myRobot->currState == ARobot::IDLE && cnt == 0) {
             myRobot->TurnDistance(90, ARobot::LEFT);
             cnt++;
         }
