@@ -63,12 +63,11 @@ int main(int argc,char **argv){
     myRobot->TurnDistance(90, ARobot::RIGHT);
 	int32_t c = 0;
     while(1) {
-		printf("test %d \n", c);
-		c++;	
+		//printf("test %d \n", c);
+		//c++;	
         if(myRobot->currState == ARobot::TURN) {
             myRobot->StopTurn(myRobot->currDir);
         }
-		sleep(1);
 	}
 
     return 0;
