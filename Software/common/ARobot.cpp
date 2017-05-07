@@ -365,7 +365,7 @@ void ARobot::TurnDistance(int degrees, BotDir dir)
         currDir = LEFT;
     }
     currState = TURN;
-    printf(toTurn);
+    printf("%f", "toTurn");
     WriteCommand(i_command, i_length);
 }
 
@@ -377,7 +377,7 @@ void ARobot::StopTurn(BotDir dir)
             currYaw += 360; //range fixing
             printf("turn");
         }
-        printf(currYaw);
+        printf("%f", "currYaw");
         if(currYaw >= toTurn) {
             printf("turn done");
             char* i_command;
