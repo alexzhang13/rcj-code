@@ -360,6 +360,7 @@ void ARobot::TurnDistance(int degrees, BotDir dir)
         toTurn = initialYaw - degrees;
         currDir = RIGHT;
     } else {
+        printf("test123123");
         snprintf(i_command, i_length, "%c %c", 'm', 'd');
         toTurn = initialYaw + degrees;
         currDir = LEFT;
