@@ -59,8 +59,8 @@ int main(int argc,char **argv){
             StopTurn(currDir);
         }
     }*/
-    sleep(10);
-    myRobot->TurnDistance(90, ARobot::RIGHT);
+    //sleep(10);
+    //myRobot->TurnDistance(90, ARobot::RIGHT);
 	int32_t c = 0;
     while(1) {
 		//printf("test %d \n", c);
