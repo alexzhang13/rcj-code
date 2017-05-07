@@ -68,7 +68,7 @@ int main(int argc,char **argv){
         if(myRobot->currState == ARobot::TURN) {
             myRobot->StopTurn(myRobot->currDir);
         }
-        delay(0.05);
+        sleep(0.05);
 	}
 
     return 0;
