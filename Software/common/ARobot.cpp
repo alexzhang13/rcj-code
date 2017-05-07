@@ -377,7 +377,6 @@ void ARobot::StopTurn(BotDir dir)
         if(initialYaw >= 270.0f && currYaw < 90.0f) { //if robot crosses over from 180 to -180, direction switches
             currYaw += 360; //range fixing
         }
-        printf("%f\n", currYaw);
         if(currYaw >= toTurn) {
             printf("%f\n", initialYaw);
             char* i_command;
