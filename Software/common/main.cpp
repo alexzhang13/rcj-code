@@ -59,7 +59,7 @@ int main(int argc,char **argv){
             StopTurn(currDir);
         }
     }*/
-    sleep(10);
+    sleep(25);
     myRobot->TurnDistance(90, ARobot::RIGHT);
 	int32_t c = 0;
     while(1) {
