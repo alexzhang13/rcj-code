@@ -84,7 +84,7 @@ int RangeData::getPosition()
 	distance[(2+data.dir)%4] -= 15.0f; //for south and west it is regularly just subtracting 15 
 	distance[(3+data.dir)%4] -= 15.0f;
 
-	//printf("%f %f %f %f\n", distance[(0+data.dir)%4], distance[(1+data.dir)%4], distance[(2+data.dir)%4], distance[(3+data.dir)%4]);
+	printf("%f %f %f %f\n", distance[(0+data.dir)%4], distance[(1+data.dir)%4], distance[(2+data.dir)%4], distance[(3+data.dir)%4]);
 
 	walls.wallN = (int)temp_range[(0+data.dir)%4]/300;
 	walls.wallE = (int)temp_range[(1+data.dir)%4]/300;
@@ -121,6 +121,6 @@ int RangeData::getPosition()
 		}
 	}
 
-	//printf("%f %f\n", coord.x, coord.y);
+	printf("%f %f\n", coord.x, coord.y);
 	return 0;
 }
