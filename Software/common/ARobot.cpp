@@ -357,11 +357,11 @@ void ARobot::TurnDistance(int degrees, BotDir dir)
     
     if(dir == RIGHT) {
         snprintf(i_command, i_length, "%c %c", 'm', 'e');
-        toTurn = initialYaw + degrees;
+        toTurn = initialYaw - degrees;
         currDir = RIGHT;
     } else {
         snprintf(i_command, i_length, "%c %c", 'm', 'd');
-        toTurn = initialYaw - degrees;
+        toTurn = initialYaw + degrees;
         currDir = LEFT;
     }
     currState = TURN;
@@ -374,10 +374,10 @@ void ARobot::StopTurn(BotDir dir)
     size_t imu_list = imuDataList.size();
     float currYaw = imuDataList[imu_list-1].m_yaw;
     if(dir == RIGHT) {
-        if(initialYaw >= 270.0f && currYaw < 90.0f) { //if robot crosses over from 180 to -180, direction switches
-            currYaw += 360; //range fixing
+        if(initialYaw <= 90.0f && currYaw > 270.0f) { //if robot crosses over from 180 to -180, direction switches
+            currYaw -= 360; //range fixing
         }
-        if(currYaw >= toTurn) {
+        if(currYaw+8.0 <= toTurn) {
             printf("%f\n", initialYaw);
             char* i_command;
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
@@ -388,10 +388,10 @@ void ARobot::StopTurn(BotDir dir)
             return;
         }
     } else if(dir == LEFT) {
-        if(initialYaw <= 90.0f && currYaw > 270.0f) { //if robot crosses over from -180 to 180, direction switches
-            currYaw -= 360; //range fixing
+        if(initialYaw >= 270.0f && currYaw < 90.0f) { //if robot crosses over from -180 to 180, direction switches
+            currYaw += 360; //range fixing
         }
-        if(currYaw <= toTurn) {
+        if(currYaw-8.0 >= toTurn) {
             char* i_command;
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
             i_command = (char*)malloc(i_length);
