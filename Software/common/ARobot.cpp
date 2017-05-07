@@ -372,7 +372,7 @@ void ARobot::TurnDistance(int degrees, BotDir dir)
 void ARobot::StopTurn(BotDir dir)
 {
     size_t imu_list = imuDataList.size();
-    float currYaw = imuDataList.end()->m_yaw;
+    float currYaw = imuDataList[imu_list-10].m_yaw;
     printf("%f\n", currYaw);
     if(dir == RIGHT) {
         if(initialYaw >= 180.0f && currYaw < 180.0f) { //if robot crosses over from 180 to -180, direction switches
