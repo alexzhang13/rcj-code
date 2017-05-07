@@ -20,6 +20,7 @@ static void readCurrentMap(const char* filename, const char* xmlname, ARobot *ro
 static void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt);
 static int WayPointNav(ARobot *robot, Navigate2D &nav_rt);
 size_t bot_waypts = 0;
+int cnt = 0;
 
 int main(int argc,char **argv){
     Navigate2D nav; //main map class obj
@@ -67,6 +68,10 @@ int main(int argc,char **argv){
 		//c++;	
         if(myRobot->currState == ARobot::TURN) {
             myRobot->StopTurn(myRobot->currDir);
+        }
+        if(myRobot->currState == ARobot::IDLE && cnt != 1) {
+            myRobot->TurnDistance(90, ARobot::LEFT);
+            cnt++;
         }
         sleep(0.1);
 	}
