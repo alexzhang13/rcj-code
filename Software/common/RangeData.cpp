@@ -47,32 +47,32 @@ int RangeData::getPosition()
 	}
 	if(data.laserL_a <= 1200) { //check if reading is valid LONG FRONT
 		temp_range[0] = (data.laserL_a+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180);
-		temp_dist = (int)temp_range[0]%300;
-		distance[0] = temp_range[0] -= temp_dist*300;
+		temp_dist = (int)temp_range[0]/300;
+		distance[0] = temp_range[0] - temp_dist*300;
 	} else {
 		distance[0] = 316.0f; //impossible number for distance[0], as it's %300
 		temp_range[0] = -300;
 	} 
 	if(data.laserL_b != 1200) { //check if reading is valid LONG BACK
 		temp_range[2] = (data.laserL_b+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180);
-		temp_dist = (int)temp_range[2]%300;
-		distance[2] = temp_range[2] -= temp_dist*300;
+		temp_dist = (int)temp_range[2]/300;
+		distance[2] = temp_range[2] - temp_dist*300;
 	} else {
 		distance[2] = 316.0f; //impossible number for distance[2], as it's %300
 		temp_range[2] = -300;
 	}
 	if(data.laserS_a != 255) { //check if reading is valid SHORT RIGHT
 		temp_range[1] = (data.laserS_a+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180); //30 - x - 15 = 15 - x 
-		temp_dist = (int)temp_range[1]%300;
-		distance[1] = temp_range[1] -= temp_dist*300;
+		temp_dist = (int)temp_range[1]/300;
+		distance[1] = temp_range[1] - temp_dist*300;
 	} else {
 		distance[1] = 316.0f;
 		temp_range[1] = -300;
 	}
 	if(data.laserS_b != 255) { //check if reading is valid SHORT LEFT
 		temp_range[3] = (data.laserS_b+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180); //x - 15
-		temp_dist = (int)temp_range[3]%300;
-		distance[3] = temp_range[3] -= temp_dist*300;
+		temp_dist = (int)temp_range[3]/300;
+		distance[3] = temp_range[3] - temp_dist*300;
 	} else {
 		distance[3] = 316.0f;
 		temp_range[3] = -300;
@@ -84,7 +84,7 @@ int RangeData::getPosition()
 	distance[(2+data.dir)%4] -= 15.0f; //for south and west it is regularly just subtracting 15 
 	distance[(3+data.dir)%4] -= 15.0f;
 
-	printf("%f %f %f %f\n", distance[(0+data.dir)%4], distance[(1+data.dir)%4], distance[(2+data.dir)%4], distance[(3+data.dir)%4]);
+	//printf("%f %f %f %f\n", distance[(0+data.dir)%4], distance[(1+data.dir)%4], distance[(2+data.dir)%4], distance[(3+data.dir)%4]);
 
 	walls.wallN = (int)temp_range[(0+data.dir)%4]/300;
 	walls.wallE = (int)temp_range[(1+data.dir)%4]/300;
@@ -121,6 +121,6 @@ int RangeData::getPosition()
 		}
 	}
 
-	printf("%f %f\n", coord.x, coord.y);
+	//printf("%f %f\n", coord.x, coord.y);
 	return 0;
 }
