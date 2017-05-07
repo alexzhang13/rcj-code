@@ -27,6 +27,7 @@ int LightData::parseData()
 
 int LightData::checkLight()
 {
+	printf("%f\n", data.l_reading);
 	if(data.l_reading < threshold_black) {
 		//printf("black");
 		return 1;
