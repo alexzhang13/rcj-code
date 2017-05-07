@@ -24,7 +24,7 @@ int IMUData::storeCommand(char* buf) {
 int IMUData::parseData()
 {
 	sscanf(m_command, "%d %c %f %f %f %f %f %f", &data.tstamp, &data.id, &data.ax, &data.ay, &data.az, &data.gx, &data.gy, &data.gz);
-	data.az *= -1; //inverted
+	//data.az *= -1; //inverted
 	return 0;
 }
 
