@@ -457,7 +457,7 @@ void ARobot::ClearIMU()
     mlen_imu = imuDataList.size();
     while(mlen_imu > 200) {
         imuDataList.erase(imuDataList.begin());
-	mlen_imu--;
+	    mlen_imu--;
     }
 }
 
@@ -466,7 +466,7 @@ void ARobot::ClearRange()
     mlen_range = rangeDataList.size();
     while(mlen_range > 200) {
         rangeDataList.erase(rangeDataList.begin());
-	mlen_range--;
+	    mlen_range--;
     }
 }
 
@@ -475,7 +475,7 @@ void ARobot::ClearTemp()
     mlen_temp = tempDataList.size();
     while(mlen_temp > 200) {
         tempDataList.erase(tempDataList.begin());
-	mlen_temp--;
+	    mlen_temp--;
     }
 }
 
@@ -484,6 +484,6 @@ void ARobot::ClearLight()
     mlen_light = lightDataList.size();
     while(mlen_light > 200) {
         lightDataList.erase(lightDataList.begin());
-	mlen_light--;
+	    mlen_light--;
     }
 }
