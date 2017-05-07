@@ -392,6 +392,7 @@ void ARobot::StopTurn(BotDir dir)
         }
         if(currYaw+17.5 >= toTurn) {
             char* i_command;
+            printf("done");
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
             i_command = (char*)malloc(i_length);
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
