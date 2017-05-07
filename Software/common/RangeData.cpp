@@ -79,10 +79,12 @@ int RangeData::getPosition()
 	}
 
 	/*Convert Readings into Cartersian Coordinates where (0,0) is the center of the cell*/
-	distance[(0+data.dir)%4] = 15 - distance[(0+data.dir)%4]; //depending on the rotational orientation, to get the center as (15, 15)
-	distance[(1+data.dir)%4] = 15 - distance[(1+data.dir)%4]; //we have to use the same reference, thus making north and east (15 - distance) for the coordinate, it's normally 30 - distance, but because of -15, it becomes 15 - distance 
-	distance[(2+data.dir)%4] -= 15; //for south and west it is regularly just subtracting 15 
-	distance[(3+data.dir)%4] -= 15;
+	distance[(0+data.dir)%4] = 15.0f - distance[(0+data.dir)%4]; //depending on the rotational orientation, to get the center as (15, 15)
+	distance[(1+data.dir)%4] = 15.0f - distance[(1+data.dir)%4]; //we have to use the same reference, thus making north and east (15 - distance) for the coordinate, it's normally 30 - distance, but because of -15, it becomes 15 - distance 
+	distance[(2+data.dir)%4] -= 15.0f; //for south and west it is regularly just subtracting 15 
+	distance[(3+data.dir)%4] -= 15.0f;
+
+	printf("%f %f %f %f\n", distance[(0+data.dir)%4], distance[(1+data.dir)%4], distance[(2+data.dir)%4], distance[(3+data.dir)%4]);
 
 	walls.wallN = (int)temp_range[(0+data.dir)%4]/300;
 	walls.wallE = (int)temp_range[(1+data.dir)%4]/300;
@@ -95,7 +97,7 @@ int RangeData::getPosition()
 				coord.x += distance[(i+data.dir)%4];
 				if(distance[(i+data.dir)%4] != coord.x){ //If you already went through more than one iteration, now you want to divide by 2
 					coord.x /= 2;
-					coord.x_glob = coord.x + 15; //real coord output
+					coord.x_glob = coord.x + 15.0f; //real coord output
 				}
 			} else {
 				++x_count;
@@ -119,6 +121,6 @@ int RangeData::getPosition()
 		}
 	}
 
-	printf("%f %f\n", coord.x_glob, coord.y_glob);
+	printf("%f %f\n", coord.x, coord.y);
 	return 0;
 }
