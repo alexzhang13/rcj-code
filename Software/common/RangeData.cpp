@@ -119,5 +119,6 @@ int RangeData::getPosition()
 		}
 	}
 
+	printf("%f %f\n", x_glob, y_glob)
 	return 0;
 }
