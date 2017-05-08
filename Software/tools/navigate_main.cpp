@@ -80,7 +80,7 @@ int mapgen_test()
 	const float walls = 0.2f;
 	int32_t home_floor_num = 0;
 	int32_t floors = 2;
-	const char* out_dir = "C:/projects/StormingRobots2017/Data/map_data";
+	const char* out_dir = "C:/projects/StormingRobots2017/Data/map_data/";
 	const char* xmlname = "mazemap";
 	const char* xmlname_new = "mazemap_new";
 	// generate floor maps
@@ -113,7 +113,7 @@ int mapgen_test()
 int navigation_simul_test()
 {
 	int32_t i;
-	const char* in_dir = "C:/projects/StormingRobots2017/Data/map_data";
+	const char* in_dir = "C:/projects/StormingRobots2017/Data/map_data/";
 	const char* xmlname = "mazemap";
 	int32_t home_floor_num = 0;
 	MazeCell::NavDir heading = MazeCell::navNorth;
@@ -148,7 +148,7 @@ int navigation_simul_test()
 int testMapLoad()
 {
 	int32_t i;
-	const char* in_dir = "C:/projects/StormingRobots2017/Data/map_data";
+	const char* in_dir = "C:/projects/StormingRobots2017/Data/map_data/";
 	const char* xmlname = "mazemap_04272017";
 	int32_t home_floor_num = 0;
 	MazeCell::NavDir heading = MazeCell::navNorth;
