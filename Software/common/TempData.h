@@ -29,7 +29,7 @@ private:
 	TMP_DataType data;
 	float thresholdL;
 	float thresholdR;
-	char* command;
+	char m_command[128];
 };
 
 #endif // !_TEMP_DATA_H_

@@ -27,6 +27,8 @@ public:
 	typedef struct {
 		float x;
 		float y;
+		float x_glob; //from (0, 0) -> (300, 300)
+		float y_glob; //from (0, 0) -> (300, 300)
 		bool x_flag; //if valid
 		bool y_flag; //if valid point
 	}Range_Coord;
@@ -55,7 +57,7 @@ private:
 	uint8_t x_count; //count if the lasers don't see anything
 	uint8_t y_count;
 	float distance[4];
-	char* command; //stored command
+	char m_command[128]; //stored command
 	float temp_range[4]; //temporary number
 	int temp_dist; //temporary number
 };

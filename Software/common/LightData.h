@@ -20,16 +20,15 @@ public:
 	LightData();
 	~LightData();
 
-	int storeCommand(char* buf, int thresh_black, int thresh_silver, int thresh_white);
+	int storeCommand(char* buf, int thresh_black, int thresh_silver);
 	int parseData();
 	int checkLight();
 
 private:
-	char* command;
+	char m_command[128];
 	Light_DataType data;
 	int threshold_black;
 	int threshold_silver;
-	int threshold_white;
 };
 
 #endif // !_TEMP_DATA_H_

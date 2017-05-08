@@ -23,6 +23,6 @@ class UartRx : public Thread {
     SerialPort *mPort;
     ARobot *myRobot;
  private:
- 	char buf[64];
+ 	char mBuf[128];
 };
 #endif // _UartRx_h_

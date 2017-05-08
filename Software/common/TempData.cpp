@@ -1,9 +1,10 @@
 #include "TempData.h"
-
+#include <stdio.h>
+#include <string.h>
 
 TempData::TempData()
 {
-	
+	memset(m_command,'\0', 128);
 }
 
 TempData::~TempData()
@@ -12,14 +13,14 @@ TempData::~TempData()
 }
 
 int TempData::storeCommand(char* buf, float threshLeft, float threshRight) {
-	command = buf;
+	memcpy(m_command, buf, 64);
 	thresholdL = threshLeft;
 	thresholdR = threshRight;
 }
 
 int TempData::parseData()
 {
-	sscanf(command, "%d %c %f %f", &data.tstamp, &data.id, &data.tmpR, &data.tmpL);
+	sscanf(m_command, "%d %c %f %f", &data.tstamp, &data.id, &data.tmpR, &data.tmpL);
 	return 0;
 }
 

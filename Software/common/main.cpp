@@ -18,30 +18,63 @@ using namespace std;
 static void readConfig(const char* filename, ARobot *robot);
 static void readCurrentMap(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt);
 static void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt);
+static int WayPointNav(ARobot *robot, Navigate2D &nav_rt);
+size_t bot_waypts = 0;
 
 int main(int argc,char **argv){
     Navigate2D nav; //main map class obj
-
-    const char* fileConfig = "./Mem/config.txt";
+#ifdef WIN32
+    const char* fileConfig = "C:/projects/StormingRobots2017/Data/Mem/config.txt";
     const char* in_dir = "C:/projects/StormingRobots2017/Data/map_data";
-    const char* xml_name = "mazemap_04272017";
+    const char* xml_name = "mazemap";
+#else
+    const char* fileConfig = "/home/alex/projects/rcj-code/Software/common/Mem/config.txt";
+    const char* in_dir = "/home/alex/projects/rcj-code/Data/map_data";
+    const char* xml_name = "mazemap";
+#endif
 
     SerialPort *port = new SerialPort("/dev/ttyAMA0",115200);
+	if(port == NULL)
+		printf(" Serial port open failed\n");
+	printf(".Start robot navigation\n");
     ARobot *myRobot = new ARobot(port);
+    printf("Fault 1 Passed\n");
     UartRx *uartrx = new UartRx(port, myRobot);
-    //UartTx *uarttx = new UartTx(port);
+    printf("Fault 2 Passed\n");
     Process_T *process_thread = new Process_T(port, myRobot);
-
+    printf("Fault 3 Passed\n");
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
-
+    /*
     readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
-
+    printf("step3");
+    sleep(8000); //8 second delay
     while(1) {
-        if(myRobot->currState == ARobot::IDLE) {
+        if(myRobot->currState == ARobot::PLANNING) {
             Navigate(in_dir, xml_name, myRobot, nav);
         }
-        sleep(1); //small gap
-    }
+        if(myRobot->currState == ARobot::WAYPTNAV) {
+            WayPointNav(myRobot, nav);
+        }
+        if(myRobot->currState == ARobot::TURN) {
+            StopTurn(currDir);
+        }
+    }*/
+    sleep(3);
+    myRobot->TurnDistance(90, ARobot::RIGHT);
+	int32_t c = 0;
+    int cnt = 0;
+    while(1) {
+		//printf("test %d \n", c);
+		//c++;	
+        if(myRobot->currState == ARobot::TURN) {
+            myRobot->StopTurn(myRobot->currDir);
+        } else if(myRobot->currState == ARobot::IDLE && cnt == 0) {
+            sleep(3);
+            myRobot->TurnDistance(90, ARobot::LEFT);
+            cnt++;
+        }
+        sleep(0.1);
+	}
 
     return 0;
 }
@@ -53,7 +86,11 @@ void readConfig(const char* filename, ARobot *robot)
         return;
 
     datafile = fopen(filename, "r");
-    int ret = fscanf(datafile, "%d %d %d %f %f", &robot->black_thresh, &robot->silver_thresh, &robot->white_thresh, &robot->threshLeft, &robot->threshRight);
+    if(datafile == NULL) {
+		printf("%s is not available\n", filename);
+      	return;
+	}
+    int ret = fscanf(datafile, "%d %d %f %f", &robot->black_thresh, &robot->silver_thresh, &robot->threshLeft, &robot->threshRight);
 }
 
 void readCurrentMap(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt)
@@ -76,7 +113,8 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
     nav_rt.configureCurCell(&robot->sensor_info);
     nav_rt.detectLocalCells(robot->temp_cell_list);
     nav_rt.updateLocalMap();
-    nav_rt.m_navigateMaps.writeXMLMap(filename, xmlname);
+    nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
+
     robot->temp_cell_list.clear();
 
     //nav_rt.slam2d(); // will move to another thread
@@ -84,5 +122,23 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
     nav_rt.navigatePlanning();
     // move on to the next cell
     nav_rt.navigation2D();
+    if(nav_rt.getNextCell()->waypts.size() >= 2) {
+        robot->waypts = nav_rt.getNextCell()->waypts; //waypts
+    } else {
+        robot->currState = ARobot::DONE;
+    }
+    
+    //nav_rt->getCellbyIndex(nav_rt.m_next_cell.waypts.begin()).getCellGrid(&robot.currTile.x_tovisit, &robot.currTile.y_tovisit);
+}
 
+int WayPointNav(ARobot *robot, Navigate2D &nav_rt)
+{
+    bot_waypts = robot->waypts.size();
+    if(bot_waypts < 2) {
+        robot->waypts.pop_back();
+        robot->currState = ARobot::PLANNING;
+        return -1;
+    } 
+    nav_rt.getCellbyIndex(robot->waypts[bot_waypts-1])->getCellGrid(robot->currTile.x_tovisit, robot->currTile.y_tovisit);
+    robot->CalcNextTile();
 }
