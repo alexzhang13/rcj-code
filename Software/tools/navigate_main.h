@@ -24,6 +24,8 @@ extern "C" {
 
 	int textDetectTest();
 
+	int lineFitTest();
+
 #ifdef __cplusplus
 }
 #endif

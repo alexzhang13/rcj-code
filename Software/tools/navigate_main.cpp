@@ -5,15 +5,16 @@
 #include <mazemap_gen.h>
 #include <navigate_simul.h>
 #include <navigate2D.h>
-
+#include <linefitting.h>
 
 // simulation
 int main(int argc, char **argv)
 {
 	//int ret = greedy_dikjstra_test();
-	int ret = mapgen_test();
+	//int ret = mapgen_test();
 	//int ret = navigation_simul_test();
 	//int ret = testMapLoad();
+	int ret = lineFitTest();
 	return ret;
 }
 
@@ -194,6 +195,19 @@ int testMapLoad()
 
 
 
+
+	return 0;
+}
+
+int lineFitTest()
+{
+	const char* filename = "D:/users/family/alex/rcj-code/Data/laser_data/laser_mount_data4.txt";
+	LineFitAlgo lfa;
+	int32_t num_half_samples = 60;
+	int32_t angl_step = 3;
+
+	lfa.update(num_half_samples, angl_step);
+	lfa.readDataFile(filename);
 
 	return 0;
 }
