@@ -18,6 +18,7 @@
 
 static std::string getCurDate()
 {
+	std::string cur_date;
 #ifdef WIN32
 	SYSTEMTIME  system_time;
 	GetLocalTime(&system_time);
@@ -29,7 +30,7 @@ static std::string getCurDate()
 	// current date/time based on current system
 	time_t ttNow = time(0);
 	struct tm * now = localtime( & ttNow );
-   cur_date = std::to_string(now->tm_year + 1900) + std::to_string(now->tm_mon + 1) + std::to_string(now->tm_mday);
+   cur_date = std::to_string(now->tm_year + 1900) + std::to_string(now->tm_mon + 1) + 		std::to_string(now->tm_mday);
 #endif
 	return cur_date;	
 }
@@ -60,7 +61,7 @@ void UartRx::run(void){
 			sleep(0.001);
 			continue;
         }
-	
+		runLogFile();
 		sscanf(mBuf, "%i %c", &ts, &c); 
         if(c == 'i') { //check if it's IMU
             storeIMU(mBuf);
@@ -113,33 +114,34 @@ bool UartRx::setLogFile(const char *filedir, const char* logname)
 	
 	std::string cur_date = getCurDate();
 	mLogName = std::string(filedir) + "/" + std::string(logname) + "_" + cur_date;
-	
+printf("log file name = %s\n", mLogName.c_str());	
 	return true;
 }
 
 bool UartRx::runLogFile()
 {
+	int32_t b = 100000;
 	if(mLogName.empty())
 		return false;
-	
-	mNum = mCnt/1000000;
-	res = mCnt%1000000;
+
+	mNum = mCnt/b;
+	int32_t res = mCnt%b;
 	
 	if(!mpFile) {
 		std::string filename = mLogName + "_" + std::to_string(mNum) + ".txt";
-		mpFile = fopen(filename, "a+");
+		mpFile = fopen(filename.c_str(), "a+");
 		if(mpFile == NULL)
 			return false;
-		fprintf(mpFile, "%s\n\n", getCurDate.c_str());	
+		fprintf(mpFile, "%s\n\n", getCurDate().c_str());	
 	}
 	else if(mCnt > 0 && res == 0) {
-		fclose(mpDile);
-        mpDile = NULL;
+		fclose(mpFile);
+        mpFile = NULL;
 		std::string filename = mLogName + "_" + std::to_string(mNum) + ".txt";
-		mpFile = fopen(filename, "a+");
+		mpFile = fopen(filename.c_str(), "a+");
 		if(mpFile == NULL)
 			return false;		
-		fprintf(mpFile, "\n%s\n\n", getCurDate.c_str());	
+		fprintf(mpFile, "\n%s\n\n", getCurDate().c_str());	
 	}
 	
 	fprintf(mpFile, "%s\n", mBuf);	

@@ -25,14 +25,14 @@ int main(int argc,char **argv){
     Navigate2D nav; //main map class obj
 #ifdef WIN32
     const char* fileConfig = "C:/projects/StormingRobots2017/Data/Mem/config.txt";
-    const char* in_dir = "C:/projects/StormingRobots2017/Data/map_data";
-	const char* rt_logname = "rcj_log";
-    const char* xml_name = "mazemap";
+    const char* in_dir = "C:/projects/StormingRobots2017/Data";
+	const char* rt_logname = "realtime/rcj_log";
+    const char* xml_name = "map_data/mazemap";
 #else
     const char* fileConfig = "/home/alex/projects/rcj-code/Software/common/Mem/config.txt";
-    const char* in_dir = "/home/alex/projects/rcj-code/Data/map_data";
-	const char* rt_logname = "rcj_log";
-    const char* xml_name = "mazemap";
+    const char* in_dir = "/home/alex/projects/rcj-code/Data";
+	const char* rt_logname = "realtime/rcj_log";
+    const char* xml_name = "map_data/mazemap";
 #endif
 
     SerialPort *port = new SerialPort("/dev/ttyAMA0",115200);
