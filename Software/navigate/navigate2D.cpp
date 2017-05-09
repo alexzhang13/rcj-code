@@ -53,6 +53,14 @@ int32_t Navigate2D::readChkPtMaps(const char* out_dir, const char* filename)
 	return 0;
 }
 
+//! write the current map config file
+bool Navigate2D::writeMapFile(const char* out_dir, const char* filename)
+{
+	m_navigateMaps.writeXmlMap(out_dir, filename);
+
+	return true;
+}
+
 //! set home cell if no map is loaded about the home cell
 int32_t Navigate2D::setHomeCell(int32_t floor_num, MazeCell::NavDir heading)
 {

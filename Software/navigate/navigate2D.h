@@ -46,6 +46,9 @@ public:
 	//! displat current local map with way points
 	virtual bool displayRouteMap();
 
+	//! write the current map config file
+	virtual bool writeMapFile(const char* out_dir, const char* filename);
+
 	//! get current time as a string
 	virtual std::string getCurTime();
 
