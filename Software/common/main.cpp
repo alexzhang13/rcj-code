@@ -17,6 +17,7 @@ using namespace std;
 
 static void readConfig(const char* filename, ARobot *robot);
 static void readCurrentMap(const char* filedir, const char* xmlname, ARobot *robot, Navigate2D &nav_rt);
+static void writeCurrentMap(const char* filedir, const char* xmlname, ARobot *robot, Navigate2D &nav_rt);
 static void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt);
 static int WayPointNav(ARobot *robot, Navigate2D &nav_rt);
 size_t bot_waypts = 0;
@@ -108,6 +109,15 @@ void readCurrentMap(const char* filedir, const char* xmlname, ARobot *robot, Nav
         nav_rt.setHomeCell(home_floor_num, heading);    
         //set current robot coords to x, y
     }
+	return;
+}
+
+void writeCurrentMap(const char* filedir, const char* xmlname, ARobot *robot, Navigate2D &nav_rt)
+{
+    std::string t = nav_rt.getCurTime();
+	std::string newfile = std::string(xmlname) + "_" + t;
+    nav_rt.writeMapFile(filedir, xmlname);
+	return;
 }
 
 void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt) 
