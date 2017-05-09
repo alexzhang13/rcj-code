@@ -22,7 +22,7 @@ NavigateSimul::~NavigateSimul()
 // read in ground truth maps
 int32_t NavigateSimul::readChkPtMaps(const char* out_dir, const char* filename)
 {
-	m_map_file = std::string(out_dir) + std::string(filename) + ".xml";
+	m_map_file = std::string(out_dir) + "/" + std::string(filename) + ".xml";
 	if(m_gt_maps.readXmlMap(out_dir, filename) != 0)
 		return -1;
 
