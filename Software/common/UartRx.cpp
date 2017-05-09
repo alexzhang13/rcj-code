@@ -7,6 +7,49 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef WIN32
+#include <windows.h>
+#include <sys/utime.h>
+#include <sstream>
+#include <ctime>
+#else
+#include <ctime>
+#endif
+
+static std::string getCurDate()
+{
+#ifdef WIN32
+	SYSTEMTIME  system_time;
+	GetLocalTime(&system_time);
+	cur_date = std::to_string(system_time.wYear) + "_" +
+		std::to_string(system_time.wMonth) + "_" +
+		std::to_string(system_time.wDay);
+#else
+	std::stringstream currentDateTime;
+	// current date/time based on current system
+	time_t ttNow = time(0);
+	struct tm * now = localtime( & ttNow );
+   cur_date = std::to_string(now->tm_year + 1900) + std::to_string(now->tm_mon + 1) + std::to_string(now->tm_mday);
+#endif
+	return cur_date;	
+}
+
+UartRx::UartRx(SerialPort *port, ARobot *robot) :mPort(port), myRobot(robot)
+{ 
+	mCnt = 0;
+	mNum = 0;
+	mLogName.clear();
+	mpFile = NULL;
+}
+	
+UartRx::~UartRx()
+{
+	mLogName.clear();
+	if(mpFile)
+		fclose(mpFile);
+	mpFile = NULL;
+}
+
 void UartRx::run(void){   
 	int32_t ts;
 	char c, m;
@@ -34,6 +77,7 @@ void UartRx::run(void){
         } else if (c == 'd') {
             myRobot->currState = ARobot::IDLE; //IDLE
        	} else {}
+		mCnt++;
     }
 	return;
 }
@@ -60,4 +104,45 @@ void UartRx::storeLight(char* buf) {
     LightData curr_light;
     curr_light.storeCommand(buf, myRobot->black_thresh, myRobot->silver_thresh);
     myRobot->lightParseList.push(curr_light); //push light data
+}
+
+bool UartRx::setLogFile(const char *filedir, const char* logname)
+{
+	if(filedir == NULL || logname == NULL)
+		return false;
+	
+	std::string cur_date = getCurDate();
+	mLogName = std::string(filedir) + "/" + std::string(logname) + "_" + cur_date;
+	
+	return true;
+}
+
+bool UartRx::runLogFile()
+{
+	if(mLogName.empty())
+		return false;
+	
+	mNum = mCnt/1000000;
+	res = mCnt%1000000;
+	
+	if(!mpFile) {
+		std::string filename = mLogName + "_" + std::to_string(mNum) + ".txt";
+		mpFile = fopen(filename, "a+");
+		if(mpFile == NULL)
+			return false;
+		fprintf(mpFile, "%s\n\n", getCurDate.c_str());	
+	}
+	else if(mCnt > 0 && res == 0) {
+		fclose(mpDile);
+        mpDile = NULL;
+		std::string filename = mLogName + "_" + std::to_string(mNum) + ".txt";
+		mpFile = fopen(filename, "a+");
+		if(mpFile == NULL)
+			return false;		
+		fprintf(mpFile, "\n%s\n\n", getCurDate.c_str());	
+	}
+	
+	fprintf(mpFile, "%s\n", mBuf);	
+	
+	return true;
 }

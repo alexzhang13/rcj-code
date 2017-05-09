@@ -26,10 +26,12 @@ int main(int argc,char **argv){
 #ifdef WIN32
     const char* fileConfig = "C:/projects/StormingRobots2017/Data/Mem/config.txt";
     const char* in_dir = "C:/projects/StormingRobots2017/Data/map_data";
+	const char* rt_logname = "rcj_log";
     const char* xml_name = "mazemap";
 #else
     const char* fileConfig = "/home/alex/projects/rcj-code/Software/common/Mem/config.txt";
     const char* in_dir = "/home/alex/projects/rcj-code/Data/map_data";
+	const char* rt_logname = "rcj_log";
     const char* xml_name = "mazemap";
 #endif
 
@@ -40,6 +42,7 @@ int main(int argc,char **argv){
     ARobot *myRobot = new ARobot(port);
     printf("Fault 1 Passed\n");
     UartRx *uartrx = new UartRx(port, myRobot);
+	uartrx->setLogFile(in_dir, rt_logname);
     printf("Fault 2 Passed\n");
     Process_T *process_thread = new Process_T(port, myRobot);
     printf("Fault 3 Passed\n");
@@ -91,6 +94,7 @@ void readConfig(const char* filename, ARobot *robot)
       	return;
 	}
     int ret = fscanf(datafile, "%d %d %f %f", &robot->black_thresh, &robot->silver_thresh, &robot->threshLeft, &robot->threshRight);
+	fclose(datafile);
 }
 
 void readCurrentMap(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt)
