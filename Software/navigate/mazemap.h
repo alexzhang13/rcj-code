@@ -41,6 +41,7 @@ public:
 
 
 	inline MazeFloorMap *getFloorMap(int32_t floor_num) { return &m_floormap[floor_num]; }
+	inline FloorMapStatus *getFloopStatus(int32_t floor_num) { return &m_floor[floor_num];}
 	inline int32_t getNumOfFloors() { return m_floors;}
 	inline int32_t getHomeFloorNum() { return m_home_floor;}
 	inline int32_t getHomeCellIndex() { return m_home_cell_index;}

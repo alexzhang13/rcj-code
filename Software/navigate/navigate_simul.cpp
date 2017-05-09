@@ -353,7 +353,10 @@ int32_t NavigateSimul::updateLocalMap()
 	// update the group lists for each floor
 	m_navigateMaps.getFloorMap(m_cur_floor_index)->connectCells();
 	m_navigateMaps.getFloorMap(m_cur_floor_index)->updateCellArray();
-
+	m_navigateMaps.getFloopStatus(0)->grid_w = m_navigateMaps.getFloorMap(0)->getGridHsize();
+	m_navigateMaps.getFloopStatus(0)->grid_h = m_navigateMaps.getFloorMap(0)->getGridVsize();
+	m_navigateMaps.getFloopStatus(1)->grid_w = m_navigateMaps.getFloorMap(1)->getGridHsize();
+	m_navigateMaps.getFloopStatus(1)->grid_h = m_navigateMaps.getFloorMap(1)->getGridVsize();
 	return 0;
 }
 
