@@ -32,7 +32,7 @@ Navigate2D::~Navigate2D()
 // read in maps at the latest check point
 int32_t Navigate2D::readChkPtMaps(const char* out_dir, const char* filename)
 {
-	m_map_file = std::string(out_dir) + std::string(filename) + ".xml";
+	m_map_file = std::string(out_dir) + "/" + std::string(filename) + ".xml";
 	if(m_navigateMaps.readXmlMap(out_dir, filename) != 0) {
 		printf("Not able to load any map from %s/%s\n", out_dir, filename);
 		// nothing found, need to build up the map from scratch
