@@ -115,6 +115,7 @@ int navigation_simul_test()
 	int32_t i;
 	const char* in_dir = "C:/projects/StormingRobots2017/Data/map_data";
 	const char* xmlname = "mazemap";
+	const char* xmlname_u = "updated_mazemap";
 	int32_t home_floor_num = 0;
 	MazeCell::NavDir heading = MazeCell::navNorth;
 
@@ -133,6 +134,7 @@ int navigation_simul_test()
 		nav_simul.updateLocalMap();
 		//nav_simul.collectInfo(); // find victim or letter on the wall
 		nav_simul.navigatePlanning();
+		nav_simul.writeMapFile(in_dir, xmlname_u);
 		nav_simul.navigation2D();
 		// go to the next cell
 		// on the way, if see black plate or obstacle,
