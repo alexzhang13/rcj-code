@@ -16,7 +16,7 @@
 using namespace std;
 
 static void readConfig(const char* filename, ARobot *robot);
-static void readCurrentMap(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt);
+static void readCurrentMap(const char* filedir, const char* xmlname, ARobot *robot, Navigate2D &nav_rt);
 static void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt);
 static int WayPointNav(ARobot *robot, Navigate2D &nav_rt);
 size_t bot_waypts = 0;
@@ -97,13 +97,14 @@ void readConfig(const char* filename, ARobot *robot)
 	fclose(datafile);
 }
 
-void readCurrentMap(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt)
+void readCurrentMap(const char* filedir, const char* xmlname, ARobot *robot, Navigate2D &nav_rt)
 {
     MazeCell::NavDir heading = MazeCell::navNorth;
 
     int32_t home_floor_num = 0;
-    nav_rt.getCurTime();
-    if(nav_rt.readChkPtMaps(filename, xmlname)!= 0) {
+    std::string t = nav_rt.getCurTime();
+	std::string newfile = std::string(xmlname) + "_" + t;
+    if(nav_rt.readChkPtMaps(filedir, xmlname)!= 0) {
         nav_rt.setHomeCell(home_floor_num, heading);    
         //set current robot coords to x, y
     }
