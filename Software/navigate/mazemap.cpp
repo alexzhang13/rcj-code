@@ -246,7 +246,7 @@ int32_t MazeMaps::writeXmlMap(const char* out_dir, const char* name)
 {
 	int32_t i, indx, ix, iy;
 	float cx, cy;
-	std::string xmlname = std::string(out_dir) + std::string(name) + ".xml";
+	std::string xmlname = std::string(out_dir) + "/" + std::string(name) + ".xml";
 	
 	TiXmlDocument xmlmap_doc;
 	TiXmlDeclaration * decl = new TiXmlDeclaration( "1.0", "", "" );
@@ -328,7 +328,7 @@ int32_t MazeMaps::writeXmlMap(const char* out_dir, const char* name)
 		floor1->LinkEndChild(floorinfo_1);
 		floorinfo_1->SetAttribute("width", m_floor[1].grid_w);
 		floorinfo_1->SetAttribute("height", m_floor[1].grid_h);
-		floorinfo_1->SetDoubleAttribute("cellsize", (double)m_floormap[1].getCell(0)->getCellWidth());
+		floorinfo_1->SetDoubleAttribute("cellsize", (double)m_floormap[0].getCell(0)->getCellWidth());
 	if(m_floormap[1].getHomeCell())
 		floorinfo_1->SetAttribute("home", m_floormap[1].getHomeCell()->getCellNum());
 	else
@@ -385,7 +385,7 @@ int32_t MazeMaps::writeXmlMap(const char* out_dir, const char* name)
 int32_t MazeMaps::readXmlMap(const char* out_dir, const char* name)
 {
 	TiXmlDocument xmldoc;
-	std::string xmlname = std::string(out_dir) + std::string(name) + ".xml";
+	std::string xmlname = std::string(out_dir) + "/" + std::string(name) + ".xml";
 	bool loadOkay = xmldoc.LoadFile(xmlname.c_str());
 	if(!loadOkay) 
 		return -1;
