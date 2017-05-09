@@ -12,9 +12,9 @@ int main(int argc, char **argv)
 {
 	//int ret = greedy_dikjstra_test();
 	//int ret = mapgen_test();
-	//int ret = navigation_simul_test();
+	int ret = navigation_simul_test();
 	//int ret = testMapLoad();
-	int ret = lineFitTest();
+	//int ret = lineFitTest();
 	return ret;
 }
 
@@ -113,7 +113,7 @@ int mapgen_test()
 int navigation_simul_test()
 {
 	int32_t i;
-	const char* in_dir = "C:/projects/StormingRobots2017/Data/map_data/";
+	const char* in_dir = "C:/projects/StormingRobots2017/Data/map_data";
 	const char* xmlname = "mazemap";
 	int32_t home_floor_num = 0;
 	MazeCell::NavDir heading = MazeCell::navNorth;
@@ -148,7 +148,7 @@ int navigation_simul_test()
 int testMapLoad()
 {
 	int32_t i;
-	const char* in_dir = "C:/projects/StormingRobots2017/Data/map_data/";
+	const char* in_dir = "C:/projects/StormingRobots2017/Data/map_data";
 	const char* xmlname = "mazemap_04272017";
 	int32_t home_floor_num = 0;
 	MazeCell::NavDir heading = MazeCell::navNorth;
