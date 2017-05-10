@@ -54,7 +54,7 @@ int main(int argc,char **argv){
     sleep(1); //8 second delay
     myRobot->TurnDistance(90, ARobot::RIGHT);
     while(1) {
-        switch(myRobot->currState)
+        switch(myRobot->currState) {
             case 0: //Planning
                 Navigate(in_dir, xml_name, myRobot, nav);
                 break;
@@ -67,7 +67,7 @@ int main(int argc,char **argv){
             case 3: //Idle
                 if(myRobot->toMove){
                     myRobot->MoveDistance(myRobot->dist_temp, ARobot::FRONT);
-                    toMove = false;
+                    myRobot->toMove = false;
                 }
             case 4: //Ramp
                 /*Put stuff here*/
@@ -87,6 +87,7 @@ int main(int argc,char **argv){
             default:
                 /*Put stuff here*/
                 break;
+        }
     }
     /*sleep(3);
     myRobot->TurnDistance(90, ARobot::RIGHT);
