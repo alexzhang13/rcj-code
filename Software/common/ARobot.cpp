@@ -306,7 +306,7 @@ void ARobot::checkLightTile()
         if(backingBlack == false) {
             backingBlack = true;
             MoveDistance(160, BACK); //move back 16 cm
-            UpdateCellMap(sensor_info, true);
+            UpdateCellMap(&sensor_info, backingBlack);
         }
     } else {
         currTileLight = WHITE;

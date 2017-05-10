@@ -59,7 +59,7 @@ class ARobot {
  	float getRightVictimTemp();
 
  	/*Light Sensor -> Tile Control*/
- 	void setLightThresh(uint16_t black, uint16_t silver);
+ 	void setLightThresh(int black, int silver);
  	void checkLightTile();
  	int getBlackThresh();
  	int getSilverThresh(); 	

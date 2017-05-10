@@ -50,8 +50,9 @@ int main(int argc,char **argv){
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     
     //readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
-    printf("step3");
+
     sleep(1); //8 second delay
+    myRobot->TurnDistance(90, ARobot::RIGHT);
     while(1) {
         switch(myRobot->currState == ARobot::PLANNING)
             case ARobot::PLANNING:
@@ -61,7 +62,7 @@ int main(int argc,char **argv){
                 WayPointNav(myRobot, nav);
                 break;
             case ARobot::TURN:
-                StopTurn(currDir);
+                StopTurn(myRobot->currDir);
                 break;
             case ARobot::IDLE:
                 if(toMove){
