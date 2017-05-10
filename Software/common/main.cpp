@@ -48,22 +48,46 @@ int main(int argc,char **argv){
     Process_T *process_thread = new Process_T(port, myRobot);
     printf("Fault 3 Passed\n");
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
-    /*
-    readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
+    
+    //readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     printf("step3");
-    sleep(8000); //8 second delay
+    sleep(1); //8 second delay
     while(1) {
-        if(myRobot->currState == ARobot::PLANNING) {
-            Navigate(in_dir, xml_name, myRobot, nav);
-        }
-        if(myRobot->currState == ARobot::WAYPTNAV) {
-            WayPointNav(myRobot, nav);
-        }
-        if(myRobot->currState == ARobot::TURN) {
-            StopTurn(currDir);
-        }
-    }*/
-    sleep(3);
+        switch(myRobot->currState == ARobot::PLANNING)
+            case ARobot::PLANNING:
+                Navigate(in_dir, xml_name, myRobot, nav);
+                break;
+            case ARobot::WAYPTNAV: 
+                WayPointNav(myRobot, nav);
+                break;
+            case ARobot::TURN:
+                StopTurn(currDir);
+                break;
+            case ARobot::IDLE:
+                if(toMove){
+                    MoveDistance(myRobot->dist_temp, ARobot::FRONT);
+                    toMove = false;
+                }
+            case ARobot::RAMP:
+                /*Put stuff here*/
+                break;
+            case ARobot::MOVE:
+                /*Put stuff here*/
+                break;
+            case ARobot::DROP:
+                /*Put stuff here*/
+                break;
+            case ARobot::LED:
+                /*Put stuff here*/
+                break;
+            case ARobot::DONE:
+                /*Put stuff here*/
+                break;
+            default:
+                /*Put stuff here*/
+                break;
+    }
+    /*sleep(3);
     myRobot->TurnDistance(90, ARobot::RIGHT);
 	int32_t c = 0;
     int cnt = 0;
@@ -78,13 +102,15 @@ int main(int argc,char **argv){
             cnt++;
         }
         sleep(0.1);
-	}
+	}*/
 
     return 0;
 }
 
 void readConfig(const char* filename, ARobot *robot)
 {
+    int black_thresh, silver_thresh;
+    float threshLeft, threshRight;
     FILE *datafile;
     if (filename == NULL)
         return;
@@ -94,7 +120,9 @@ void readConfig(const char* filename, ARobot *robot)
 		printf("%s is not available\n", filename);
       	return;
 	}
-    int ret = fscanf(datafile, "%d %d %f %f", &robot->black_thresh, &robot->silver_thresh, &robot->threshLeft, &robot->threshRight);
+    int ret = fscanf(datafile, "%d %d %f %f", &black_thresh, &silver_thresh, &threshLeft, &threshRight);
+    robot->setTempThresh(threshLeft, threshRight);
+    robot->setLightThresh(black_thresh, silver_thresh);
 	fclose(datafile);
 }
 
@@ -123,7 +151,7 @@ void writeCurrentMap(const char* filedir, const char* xmlname, ARobot *robot, Na
 void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt) 
 {
     /*Navigational functions*/
-    robot->UpdateCellMap(&robot->sensor_info);
+    robot->UpdateCellMap(&robot->sensor_info, false); //false = not black
     robot->UpdateNeighborCells();
     nav_rt.configureCurCell(&robot->sensor_info);
     nav_rt.detectLocalCells(robot->temp_cell_list);
@@ -141,8 +169,10 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
         robot->waypts = nav_rt.getNextCell()->waypts; //waypts
     } else {
         robot->currState = ARobot::DONE;
+        return;
     }
-    
+    robot->currState = ARobot::WAYPTNAV;
+    return;
     //nav_rt->getCellbyIndex(nav_rt.m_next_cell.waypts.begin()).getCellGrid(&robot.currTile.x_tovisit, &robot.currTile.y_tovisit);
 }
 

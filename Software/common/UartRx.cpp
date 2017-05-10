@@ -73,8 +73,6 @@ void UartRx::run(void){
             storeLight(mBuf);
        	} else if (c == 'm') {
             //myRobot->currState = ARobot::IDLE; //IDLE
-        } else if (c == 'l') {
-            myRobot->currState = ARobot::IDLE; //IDLE
         } else if (c == 'd') {
             myRobot->currState = ARobot::IDLE; //IDLE
        	} else {}
@@ -97,13 +95,13 @@ void UartRx::storeRange(char* buf) {
 
 void UartRx::storeTemp(char* buf) {
     TempData curr_temp;
-    curr_temp.storeCommand(buf, myRobot->threshLeft, myRobot->threshRight);
+    curr_temp.storeCommand(buf, myRobot->getLeftVictimTemp(), myRobot->getRightVictimTemp());
     myRobot->tempParseList.push(curr_temp); //push temp data
 }
 
 void UartRx::storeLight(char* buf) {
     LightData curr_light;
-    curr_light.storeCommand(buf, myRobot->black_thresh, myRobot->silver_thresh);
+    curr_light.storeCommand(buf, myRobot->getBlackThresh(), myRobot->getSilverThresh());
     myRobot->lightParseList.push(curr_light); //push light data
 }
 

@@ -44,7 +44,7 @@ class ARobot {
  	void WriteCommand(char* command, int size);
 
  	/*Algorithm <-> Control*/
- 	void UpdateCellMap(MazeCell *sensor_info);
+ 	void UpdateCellMap(MazeCell *sensor_info, bool backing_black);
  	void UpdateNeighborCells();
  	void TileTransition(BotOrientation direction, float angle, int32_t dist);
  	void CalcNextTile();
@@ -106,16 +106,18 @@ class ARobot {
 
 	MazeCell sensor_info; //sensor info for current cell
 
+	bool toMove; //true means the robot still has to move after turning
 	bool backingBlack; //if the robot is backing up on a black tile
- 	int silver_thresh; //Silver Tile Threshold
- 	int black_thresh; //Black Tile Threshold
- 	float threshLeft; //Left Temperature Threshold
- 	float threshRight; //Right Temperature Threshold
+	int dist_temp; //store temporary distance to travel
 
  protected:
  	SerialPort *mPort;
 
  private:
+ 	float threshLeft; //Left Temperature Threshold
+ 	float threshRight; //Right Temperature Threshold
+ 	int silver_thresh; //Silver Tile Threshold
+ 	int black_thresh; //Black Tile Threshold
  	float initialYaw;
  	float toTurn;
  	size_t mlen_light;

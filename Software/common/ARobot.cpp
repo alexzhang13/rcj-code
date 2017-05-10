@@ -17,6 +17,7 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     currState = PLANNING;
     currTile.x = 0;
     currTile.y = 0;
+    toMove = false;
 }
 
 ARobot::~ARobot() 
@@ -29,49 +30,54 @@ void ARobot::WriteCommand(char* i_command, int size)
     mPort->write(i_command, size);
 }
 
-void ARobot::UpdateCellMap(MazeCell *sensor_info)
+void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
 {
-    if(currTileLight == SILVER) {
-        sensor_info->setCheckPt(true);
-        sensor_info->setNonMovable(false);
-    } else { //black is a different case *WHITE
-        sensor_info->setCheckPt(false);
-        sensor_info->setNonMovable(false);
-    }
-    if(checkRamp() == true) {
-        sensor_info->setStairCell(true);
-    } else {sensor_info->setStairCell(false);}
-    if(checkVictimTemp() == true) {
-        //sensor_info->setVictim(true);
-        //sensor_info->setVictimDirection(victimDir);
+    if(black_flag) {
+        if(currTileLight == SILVER) {
+            sensor_info->setCheckPt(true);
+            sensor_info->setNonMovable(false);
+        } else { //black is a different case *WHITE
+            sensor_info->setCheckPt(false);
+            sensor_info->setNonMovable(false);
+        }
+        if(checkRamp()) {
+            sensor_info->setStairCell(true);
+        } else {sensor_info->setStairCell(false);}
+        if(checkVictimTemp()) {
+            //sensor_info->setVictim(true);
+            //sensor_info->setVictimDirection(victimDir);
+            sensor_info->setVictim(false);
+        } else {
+            sensor_info->setVictim(false);
+        }
+
+        /*WALL DATA*/
+        if(rangeDataList.end()->walls.wallN == 0) {
+            sensor_info->setWallNorth(MazeCell::MWall);
+        } else {
+             sensor_info->setWallNorth(MazeCell::MOpen);
+        }
+
+        if(rangeDataList.end()->walls.wallE == 0) {
+            sensor_info->setWallEast(MazeCell::MWall); 
+        } else {
+            sensor_info->setWallEast(MazeCell::MOpen);
+        }
+
+        if(rangeDataList.end()->walls.wallS == 0) {
+            sensor_info->setWallSouth(MazeCell::MWall);
+        } else {
+            sensor_info->setWallSouth(MazeCell::MOpen);
+        } 
+
+        if(rangeDataList.end()->walls.wallW == 0) {
+            sensor_info->setWallWest(MazeCell::MWall);
+        } else {
+            sensor_info->setWallWest(MazeCell::MOpen);
+        } 
     } else {
-        sensor_info->setVictim(false);
+
     }
-
-    /*WALL DATA*/
-    if(rangeDataList.end()->walls.wallN > 0) {
-        sensor_info->setWallNorth(MazeCell::MOpen);
-    } else if(rangeDataList.end()->walls.wallN == 0) {
-        sensor_info->setWallNorth(MazeCell::MWall); 
-    } else {sensor_info->setWallNorth(MazeCell::MUnknown);} //rare and not usual case
-
-    if(rangeDataList.end()->walls.wallE > 0) {
-        sensor_info->setWallEast(MazeCell::MOpen);
-    } else if(rangeDataList.end()->walls.wallE == 0) {
-        sensor_info->setWallEast(MazeCell::MWall); 
-    } else {sensor_info->setWallEast(MazeCell::MUnknown);} //rare and not usual case
-
-    if(rangeDataList.end()->walls.wallS > 0) {
-        sensor_info->setWallSouth(MazeCell::MOpen);
-    } else if(rangeDataList.end()->walls.wallS == 0) {
-        sensor_info->setWallSouth(MazeCell::MWall); 
-    } else {sensor_info->setWallSouth(MazeCell::MUnknown);} //rare and not usual case
-
-    if(rangeDataList.end()->walls.wallW > 0) {
-        sensor_info->setWallWest(MazeCell::MOpen);
-    } else if(rangeDataList.end()->walls.wallW == 0) {
-        sensor_info->setWallWest(MazeCell::MWall); 
-    } else {sensor_info->setWallWest(MazeCell::MUnknown);} //rare and not usual case
 
 }
 
@@ -201,16 +207,16 @@ void ARobot::CalcNextTile()
     float angle; //offset angle
     if(currTile.x_tovisit - currTile.x > 0) { //east
         nextDir = EAST;
-        angle = -atan(next_y/next_x)*180.0f/3.1415926535; //angle to right, should be pos
+        angle = atan(next_y/next_x)*180.0f/3.1415926535; //angle to left, should be pos
     } else if (currTile.x_tovisit - currTile.x < 0) { //west
         nextDir = WEST;
-        angle = -atan(next_y/next_x)*180.0f/3.1415926535; //angle to left, should be neg
+        angle = atan(next_y/next_x)*180.0f/3.1415926535; //angle to left, should be pos
     } else if (currTile.y_tovisit - currTile.y > 0) { //north
         nextDir = NORTH;
-        angle = atan(next_x/next_y)*180.0f/3.1415926535; //angle to left, should be neg
+        angle = -atan(next_x/next_y)*180.0f/3.1415926535; //angle to right, should be neg
     } else if (currTile.y_tovisit - currTile.y < 0) { //south
         nextDir = SOUTH;
-        angle = -atan(next_x/next_y)*180.0f/3.1415926535; //angle to left, should be neg
+        angle = -atan(next_x/next_y)*180.0f/3.1415926535; //angle to right, should be neg
     }
     TileTransition(nextDir, angle, dist);
 
@@ -219,11 +225,19 @@ void ARobot::CalcNextTile()
 void ARobot::TileTransition(BotOrientation direction, float angle, int32_t dist)
 {
     int turnNext = (int)direction - (int)currOrientation;
+    int toTurn = turnNext*90+(int)angle; //turning distance
     
     /*Turning first*/
     if(turnNext == 3) {turnNext = -1;} //west -> north = turn right 1
     else if (turnNext == -3) {turnNext = 1;} //north -> west = turn left 1
-    
+    if(toTurn > 10) { //ignore smaller angles
+        TurnDistance(abs(toTurn), (toTurn > 0) ? LEFT : RIGHT); //left is positive
+        dist_temp = dist;
+        toMove = true;
+        return;
+    }
+    MoveDistance(dist, FRONT);
+    return;
 }
 
 bool ARobot::checkRamp()
@@ -263,7 +277,7 @@ float ARobot::getRightVictimTemp()
     return threshRight;
 }
 
-void ARobot::setLightThresh(uint16_t black, uint16_t silver)
+void ARobot::setLightThresh(int black, int silver)
 {
     black_thresh = black;
     silver_thresh = silver;
@@ -292,7 +306,7 @@ void ARobot::checkLightTile()
         if(backingBlack == false) {
             backingBlack = true;
             MoveDistance(160, BACK); //move back 16 cm
-            //update map
+            UpdateCellMap(sensor_info, true);
         }
     } else {
         currTileLight = WHITE;
@@ -377,27 +391,27 @@ void ARobot::StopTurn(BotDir dir)
         if(initialYaw <= 90.0f && currYaw > 270.0f) { //if robot crosses over from 180 to -180, direction switches
             currYaw -= 360; //range fixing
         }
-        if(currYaw-17.5 <= toTurn) {
+        if(currYaw-10.0 <= toTurn) {
             char* i_command;
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
             i_command = (char*)malloc(i_length);
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
-            currState = IDLE;
             WriteCommand(i_command, i_length);
+            currState = IDLE;           
             return;
         }
     } else if(dir == LEFT) {
         if(initialYaw >= 270.0f && currYaw < 90.0f) { //if robot crosses over from -180 to 180, direction switches
             currYaw += 360; //range fixing
         }
-        if(currYaw+17.5 >= toTurn) {
+        if(currYaw+10.0 >= toTurn) {
             char* i_command;
             printf("done");
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
             i_command = (char*)malloc(i_length);
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
-            currState = IDLE;
             WriteCommand(i_command, i_length);
+            currState = IDLE;
             return;
         }
     }
