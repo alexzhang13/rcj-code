@@ -55,33 +55,33 @@ int main(int argc,char **argv){
     myRobot->TurnDistance(90, ARobot::RIGHT);
     while(1) {
         switch(myRobot->currState)
-            case ARobot::PLANNING:
+            case 0: //Planning
                 Navigate(in_dir, xml_name, myRobot, nav);
                 break;
-            case ARobot::WAYPTNAV: 
+            case 1: //WayPtNav
                 WayPointNav(myRobot, nav);
                 break;
-            case ARobot::TURN:
+            case 2: //Turn
                 myRobot->StopTurn(myRobot->currDir);
                 break;
-            case ARobot::IDLE:
-                if(toMove){
+            case 3: //Idle
+                if(myRobot->toMove){
                     myRobot->MoveDistance(myRobot->dist_temp, ARobot::FRONT);
                     toMove = false;
                 }
-            case ARobot::RAMP:
+            case 4: //Ramp
                 /*Put stuff here*/
                 break;
-            case ARobot::MOVE:
+            case 5: //Move
                 /*Put stuff here*/
                 break;
-            case ARobot::DROP:
+            case 6: //Drop
                 /*Put stuff here*/
                 break;
-            case ARobot::LED:
+            case 7: //LED
                 /*Put stuff here*/
                 break;
-            case ARobot::DONE:
+            case 8: //DONE
                 /*Put stuff here*/
                 break;
             default:
