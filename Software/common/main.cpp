@@ -48,14 +48,14 @@ int main(int argc,char **argv){
     printf("Fault 2 Passed\n");
     Process_T *process_thread = new Process_T(port, myRobot);
     printf("Fault 3 Passed\n");
-    //readConfig(fileConfig, myRobot); //read config file about threshold calibrations
+    readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     
     //readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
 
     sleep(3); //gather data in 3 secs
     //myRobot->TurnDistance(90, ARobot::RIGHT);
     while(1) {
-        printf("1");
+        /**printf("1");
         curr_state = myRobot->currState;
         switch(curr_state) {
             case 0: //Planning
@@ -75,19 +75,19 @@ int main(int argc,char **argv){
                 break;
             case 4: //Ramp
                 /*Put stuff here*/
-                break;
-            case 5: //Move
+              //  break;
+            //case 5: //Move
                 /*Put stuff here*/
-                break;
-            case 6: //Drop
+              //  break;
+            //case 6: //Drop
                 /*Put stuff here*/
-                break;
-            case 7: //LED
+              //  break;
+            //case 7: //LED
                 /*Put stuff here*/
-                break;
-            case 8: //DONE
+              //  break;
+            //case 8: //DONE
                 /*Put stuff here*/
-                break;
+            /*    break;
             case 9: //Data collection
                 //spin laser
                 sleep(3);
@@ -95,8 +95,8 @@ int main(int argc,char **argv){
                 break;
             default:
                 /*Put stuff here*/
-                break;
-        }
+            //    break;
+        //}
         sleep(0.01);
     }
     /*sleep(3);
