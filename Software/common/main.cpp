@@ -55,6 +55,7 @@ int main(int argc,char **argv){
     //myRobot->TurnDistance(90, ARobot::RIGHT);
     while(1) {
         switch(myRobot->currState) {
+            printf("1");
             case 0: //Planning
                 Navigate(in_dir, xml_name, myRobot, nav);
                 break;
