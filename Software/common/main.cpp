@@ -51,8 +51,8 @@ int main(int argc,char **argv){
     
     //readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
 
-    sleep(1); //8 second delay
-    myRobot->TurnDistance(90, ARobot::RIGHT);
+    sleep(3); //gather data in 3 secs
+    //myRobot->TurnDistance(90, ARobot::RIGHT);
     while(1) {
         switch(myRobot->currState) {
             case 0: //Planning
@@ -69,6 +69,7 @@ int main(int argc,char **argv){
                     myRobot->MoveDistance(myRobot->dist_temp, ARobot::FRONT);
                     myRobot->toMove = false;
                 }
+                break;
             case 4: //Ramp
                 /*Put stuff here*/
                 break;
@@ -84,10 +85,16 @@ int main(int argc,char **argv){
             case 8: //DONE
                 /*Put stuff here*/
                 break;
+            case 9: //Data collection
+                //spin laser
+                sleep(3);
+                myRobot->currState = ARobot::PLANNING;
+                break;
             default:
                 /*Put stuff here*/
                 break;
         }
+        sleep(0.01);
     }
     /*sleep(3);
     myRobot->TurnDistance(90, ARobot::RIGHT);
@@ -166,7 +173,7 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
     // what to do next
     nav_rt.navigatePlanning();
     // move on to the next cell
-    nav_rt.navigation2D();
+    //nav_rt.navigation2D();
     if(nav_rt.getNextCell()->waypts.size() >= 2) {
         robot->waypts = nav_rt.getNextCell()->waypts; //waypts
     } else {

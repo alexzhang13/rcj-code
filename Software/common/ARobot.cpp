@@ -201,8 +201,8 @@ void ARobot::UpdateNeighborCells()
 void ARobot::CalcNextTile()
 {
     BotOrientation nextDir;
-    int next_x = currTile.x_tovisit*300 - currTile.x_map; //next tile coords
-    int next_y = currTile.y_tovisit*300 - currTile.y_map; //next tile coords
+    int next_x = (currTile.x_tovisit*300-150) - currTile.x_map; //next tile coords
+    int next_y = (currTile.y_tovisit*300-150) - currTile.y_map; //next tile coords
     int32_t dist = (int32_t)sqrt(next_x*next_x + next_y*next_y); //pythagorean
     float angle; //offset angle
     if(currTile.x_tovisit - currTile.x > 0) { //east
@@ -391,7 +391,7 @@ void ARobot::StopTurn(BotDir dir)
         if(initialYaw <= 90.0f && currYaw > 270.0f) { //if robot crosses over from 180 to -180, direction switches
             currYaw -= 360; //range fixing
         }
-        if(currYaw-10.0 <= toTurn) {
+        if(currYaw-15.0 <= toTurn) {
             char* i_command;
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
             i_command = (char*)malloc(i_length);
@@ -404,7 +404,7 @@ void ARobot::StopTurn(BotDir dir)
         if(initialYaw >= 270.0f && currYaw < 90.0f) { //if robot crosses over from -180 to 180, direction switches
             currYaw += 360; //range fixing
         }
-        if(currYaw+10.0 >= toTurn) {
+        if(currYaw+15.0 >= toTurn) {
             char* i_command;
             printf("done");
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;

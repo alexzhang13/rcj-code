@@ -38,7 +38,7 @@ class ARobot {
  	enum LightVal {WHITE=0, BLACK=1, SILVER=2};
 	enum BotDir {RIGHT=0, LEFT=1, FRONT=2, BACK=3};
 	enum BotOrientation {NORTH=0, EAST=1, SOUTH=2, WEST=3};
-	enum CurrentState {PLANNING=0, WAYPTNAV=1, TURN=2, IDLE=3, RAMP=4, MOVE=5, DROP=6, LED=7, DONE=8};
+	enum CurrentState {PLANNING=0, WAYPTNAV=1, TURN=2, IDLE=3, RAMP=4, MOVE=5, DROP=6, LED=7, DONE=8, DATA=9};
 
  	/*Writing to Arduino*/
  	void WriteCommand(char* command, int size);
