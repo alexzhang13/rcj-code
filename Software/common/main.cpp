@@ -36,7 +36,6 @@ int main(int argc,char **argv){
     const char* xml_name = "map_data/mazemap";
 #endif
 
-    ARobot::CurrentState curr_state;
     SerialPort *port = new SerialPort("/dev/ttyAMA0",115200);
 	if(port == NULL)
 		printf(" Serial port open failed\n");
@@ -55,13 +54,12 @@ int main(int argc,char **argv){
     sleep(3); //gather data in 3 secs
     //myRobot->TurnDistance(90, ARobot::RIGHT);
     while(1) {
-        printf("1");
-        curr_state = myRobot->currState;
-        switch(curr_state) {
-            /*case 0: //Planning
-                Navigate(in_dir, xml_name, myRobot, nav);
+        switch(myRobot->currState) {
+            case 0: //Planning
+                //Navigate(in_dir, xml_name, myRobot, nav);
+            printf("worked!");
                 break;
-            case 1: //WayPtNav
+            /*case 1: //WayPtNav
                 WayPointNav(myRobot, nav);
                 break;
             case 2: //Turn
