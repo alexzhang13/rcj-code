@@ -72,7 +72,7 @@ void UartRx::run(void){
        	} else if (c == 'l') {
             storeLight(mBuf);
        	} else if (c == 'm') {
-            //myRobot->currState = ARobot::IDLE; //IDLE
+            myRobot->currState = ARobot::DATA; //IDLE
         } else if (c == 'd') {
             myRobot->currState = ARobot::IDLE; //IDLE
        	} else {}
