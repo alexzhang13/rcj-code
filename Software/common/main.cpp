@@ -48,7 +48,7 @@ int main(int argc,char **argv){
     printf("Fault 2 Passed\n");
     Process_T *process_thread = new Process_T(port, myRobot);
     printf("Fault 3 Passed\n");
-    readConfig(fileConfig, myRobot); //read config file about threshold calibrations
+    //readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     
     //readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
 
