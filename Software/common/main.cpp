@@ -49,7 +49,7 @@ int main(int argc,char **argv){
     printf("Fault 3 Passed\n");
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     
-    //readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
+    readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
 
     sleep(3); //gather data in 3 secs
     //myRobot->TurnDistance(90, ARobot::RIGHT);
@@ -58,7 +58,7 @@ int main(int argc,char **argv){
             case 0: //Planning
                 Navigate(in_dir, xml_name, myRobot, nav);
                 break;
-            /*case 1: //WayPtNav
+            case 1: //WayPtNav
                 WayPointNav(myRobot, nav);
                 break;
             case 2: //Turn
@@ -72,24 +72,24 @@ int main(int argc,char **argv){
                 break;
             case 4: //Ramp
                 /*Put stuff here*/
-              //  break;
-            //case 5: //Move
+                break;
+            case 5: //Move
                 /*Put stuff here*/
-              //  break;
-            //case 6: //Drop
+                break;
+            case 6: //Drop
                 /*Put stuff here*/
-              //  break;
-            //case 7: //LED
+                break;
+            case 7: //LED
                 /*Put stuff here*/
-              //  break;
-            //case 8: //DONE
+                break;
+            case 8: //DONE
                 /*Put stuff here*/
-            /*    break;
+                break;
             case 9: //Data collection
                 //spin laser
                 sleep(3);
                 myRobot->currState = ARobot::PLANNING;
-                break;*/
+                break;
             default:
                 /*Put stuff here*/
                 break;
@@ -142,7 +142,8 @@ void readCurrentMap(const char* filedir, const char* xmlname, ARobot *robot, Nav
     int32_t home_floor_num = 0;
     std::string t = nav_rt.getCurTime();
 	std::string newfile = std::string(xmlname) + "_" + t;
-    if(nav_rt.readChkPtMaps(filedir, xmlname)!= 0) {
+    if(nav_rt.readChkPtMaps(filedir, newfile)!= 0) {
+	printf("call_home\n");
         nav_rt.setHomeCell(home_floor_num, heading);    
         //set current robot coords to x, y
     }
@@ -167,15 +168,15 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
     printf("3");
     nav_rt.configureCurCell(&robot->sensor_info);
     printf("4");
-    nav_rt.detectLocalCells(robot->temp_cell_list);
+    //nav_rt.detectLocalCells(robot->temp_cell_list);
     printf("5");
-    nav_rt.updateLocalMap();
+    //nav_rt.updateLocalMap();
     printf("6");
-    nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
+    //nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
     printf("7");
 
     robot->temp_cell_list.clear();
-    printf("8");
+    //printf("8");
 
     //nav_rt.slam2d(); // will move to another thread
     // what to do next
