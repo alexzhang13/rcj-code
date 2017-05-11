@@ -160,22 +160,14 @@ void writeCurrentMap(const char* filedir, const char* xmlname, ARobot *robot, Na
 void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt) 
 {
     /*Navigational functions*/
-    printf("1");
     robot->UpdateCellMap(&robot->sensor_info, false); //false = not black
-    printf("2");
     robot->UpdateNeighborCells();
-    printf("3");
     nav_rt.configureCurCell(&robot->sensor_info);
-    printf("4");
     nav_rt.detectLocalCells(robot->temp_cell_list);
-    printf("5");
     nav_rt.updateLocalMap();
-    printf("6");
     nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
-    printf("7");
 
     robot->temp_cell_list.clear();
-    printf("8");
 
     //nav_rt.slam2d(); // will move to another thread
     // what to do next
