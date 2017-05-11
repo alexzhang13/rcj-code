@@ -165,14 +165,10 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
     robot->UpdateNeighborCells();
     nav_rt.configureCurCell(&robot->sensor_info);
     nav_rt.detectLocalCells(robot->temp_cell_list);
-    printf("5");
     nav_rt.updateLocalMap();
-    printf("6");
     nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
-    printf("7");
 
     robot->temp_cell_list.clear();
-    //printf("8");
 
     //nav_rt.slam2d(); // will move to another thread
     // what to do next
