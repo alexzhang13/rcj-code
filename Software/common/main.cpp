@@ -55,10 +55,10 @@ int main(int argc,char **argv){
     sleep(3); //gather data in 3 secs
     //myRobot->TurnDistance(90, ARobot::RIGHT);
     while(1) {
-        /**printf("1");
+        printf("1");
         curr_state = myRobot->currState;
         switch(curr_state) {
-            case 0: //Planning
+            /*case 0: //Planning
                 Navigate(in_dir, xml_name, myRobot, nav);
                 break;
             case 1: //WayPtNav
@@ -92,11 +92,11 @@ int main(int argc,char **argv){
                 //spin laser
                 sleep(3);
                 myRobot->currState = ARobot::PLANNING;
-                break;
+                break;*/
             default:
                 /*Put stuff here*/
-            //    break;
-        //}
+                break;
+        }
         sleep(0.01);
     }
     /*sleep(3);
