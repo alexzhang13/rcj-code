@@ -300,6 +300,9 @@ static int dcmotor_pt_func(struct pt *pt, int interval) { //50 hz = 20ms
       } else if (func == 'g') {
          resetEncoder();
          motor_queue = " ";
+      } else if (func == 'h') {
+         Turn_Small(motor_queue.toInt());
+         motor_queue = " ";
       } else {
          Serial.println("ERROR: FUNCTION IN MOTOR QUEUE HAS INVALID FUNCTION CALL (LETTER INVALID)");
          motor_queue = " ";
@@ -307,6 +310,8 @@ static int dcmotor_pt_func(struct pt *pt, int interval) { //50 hz = 20ms
     }
     if(isMoving == true && isTurning == false) {
          Motor_Encoder();
+    } else if (isTurning == true) {
+         Motor_Turn();
     }
     
     PT_WAIT_UNTIL(pt, millis() - timestamp > interval);
@@ -517,11 +522,13 @@ void Motor_setSpeed(int left_speed, int right_speed)
 
 void Motor_Encoder()
 {
-  if(abs(left_mm) >= distance_mm) {
-    Serial.println("m d");
-    motor_queue = "c";
-  }
   String reading = "";
+  if(abs(left_mm) >= distance_mm) {
+    motor_queue = "c";
+    reading += millis(); reading += "m d";
+    Serial.println(reading);
+    return;
+  }
   if(abs(leftEncoder) < abs(rightEncoder)){
     motorRight->setSpeed(speed_left); //corecting
   } else {
@@ -530,6 +537,37 @@ void Motor_Encoder()
   reading += millis(); reading += " m ";
   reading += left_mm; reading += " "; reading += right_mm;
   //Serial.println(reading);
+}
+
+void Motor_Turn() //Turning encoders
+{
+   if(abs(leftEncoder) < abs(rightEncoder)){
+    motorRight->setSpeed(speed_left); //corecting
+  } else {
+    motorRight->setSpeed(speed_left+15); //take 
+  }
+}
+
+void Turn_Small(int dir) {
+  isTurning = true;
+  if(dir == 0) { //turn left
+    motorRight->setSpeed(120);
+    motorLeft->setSpeed(100);
+    Motor_TurnLeft();
+    delay(1000);
+    Motor_Stop();
+    motorRight->setSpeed(right_spd);
+    motorLeft->setSpeed(left_spd);
+  } else { //turn right
+    motorRight->setSpeed(120);
+    motorLeft->setSpeed(100);
+    Motor_TurnRight();
+    delay(1000);
+    Motor_Stop();
+    motorRight->setSpeed(right_spd);
+    motorLeft->setSpeed(left_spd);
+  }
+  isTurning = false;
 }
 
 void Mount_Sweep()
@@ -542,7 +580,7 @@ void Mount_Sweep()
     mount_laser.write(angle);     
     if(angle % 5 == 0)
     {       
-      reading += millis(); reading += (" r "); reading += angle; //add timestamp, laser label, angle
+      reading += millis(); reading += (" y "); reading += angle; //add timestamp, laser label, angle
       reading += " "; reading += laserA_l.readRangeContinuousMillimeters(); //laser 2 val (mm)
       reading += " "; reading += laserA_s.readRangeContinuousMillimeters(); //laser 1 val (mm)
       reading += " "; reading += laserB_l.readRangeContinuousMillimeters(); //laser 4 val (mm)
@@ -558,12 +596,12 @@ void Mount_Sweep()
 
   delay(500);
   // now scan back from 180 to 0 degrees
-  for(int angle = 180; angle > 0; angle--)    
+  for(int angle = 180; angle >= 0; angle--)    
   {                                
     mount_laser.write(angle);  
     if(angle % 5 == 0)
     { 
-      reading += millis(); reading += (" r "); reading += angle; //add timestamp, laser label, angle
+      reading += millis(); reading += (" y "); reading += angle; //add timestamp, laser label, angle
       reading += " "; reading += laserA_l.readRangeContinuousMillimeters(); //laser 2 val (mm)
       reading += " "; reading += laserA_s.readRangeContinuousMillimeters(); //laser 1 val (mm)
       reading += " "; reading += laserB_l.readRangeContinuousMillimeters(); //laser 4 val (mm)
