@@ -56,8 +56,7 @@ int main(int argc,char **argv){
     while(1) {
         switch(myRobot->currState) {
             case 0: //Planning
-                //Navigate(in_dir, xml_name, myRobot, nav);
-            printf("worked!");
+                Navigate(in_dir, xml_name, myRobot, nav);
                 break;
             /*case 1: //WayPtNav
                 WayPointNav(myRobot, nav);
