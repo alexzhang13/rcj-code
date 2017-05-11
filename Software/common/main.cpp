@@ -142,7 +142,7 @@ void readCurrentMap(const char* filedir, const char* xmlname, ARobot *robot, Nav
     int32_t home_floor_num = 0;
     std::string t = nav_rt.getCurTime();
 	std::string newfile = std::string(xmlname) + "_" + t;
-    if(nav_rt.readChkPtMaps(filedir, newfile)!= 0) {
+    if(nav_rt.readChkPtMaps(filedir, newfile.c_str())!= 0) {
 	printf("call_home\n");
         nav_rt.setHomeCell(home_floor_num, heading);    
         //set current robot coords to x, y
@@ -161,18 +161,14 @@ void writeCurrentMap(const char* filedir, const char* xmlname, ARobot *robot, Na
 void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt) 
 {
     /*Navigational functions*/
-    printf("1");
     robot->UpdateCellMap(&robot->sensor_info, false); //false = not black
-    printf("2");
     robot->UpdateNeighborCells();
-    printf("3");
     nav_rt.configureCurCell(&robot->sensor_info);
-    printf("4");
-    //nav_rt.detectLocalCells(robot->temp_cell_list);
+    nav_rt.detectLocalCells(robot->temp_cell_list);
     printf("5");
-    //nav_rt.updateLocalMap();
+    nav_rt.updateLocalMap();
     printf("6");
-    //nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
+    nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
     printf("7");
 
     robot->temp_cell_list.clear();

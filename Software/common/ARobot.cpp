@@ -218,6 +218,7 @@ void ARobot::CalcNextTile()
         nextDir = SOUTH;
         angle = -atan(next_x/next_y)*180.0f/3.1415926535; //angle to right, should be neg
     }
+    printf("%s %d %d", "test", next_x, next_y);
     TileTransition(nextDir, angle, dist);
 
 }
@@ -231,6 +232,7 @@ void ARobot::TileTransition(BotOrientation direction, float angle, int32_t dist)
     if(turnNext == 3) {turnNext = -1;} //west -> north = turn right 1
     else if (turnNext == -3) {turnNext = 1;} //north -> west = turn left 1
     if(toTurn > 10) { //ignore smaller angles
+	printf("%d", toTurn);
         TurnDistance(abs(toTurn), (toTurn > 0) ? LEFT : RIGHT); //left is positive
         dist_temp = dist;
         toMove = true;

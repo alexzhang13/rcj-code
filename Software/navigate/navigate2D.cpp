@@ -104,8 +104,11 @@ int32_t Navigate2D::configureCurCell(MazeCell *sensor_info)
 {
 	int32_t i;
 	MazeCell *cur_cell = m_navigateMaps.getFloorMap(m_cur_floor_index)->getCurrentCell();
-
+printf("step 1\n");
+if(cur_cell == NULL)
+printf("empty cur cell\n");
 	cur_cell->setCheckPt(sensor_info->getCheckPt());
+printf("step 1a\n");
 	cur_cell->setNonMovable(sensor_info->getNonMovable());
 	cur_cell->setObstacle(sensor_info->getObstacle());
 	cur_cell->setStairCell(sensor_info->getStairCell());
@@ -116,7 +119,7 @@ int32_t Navigate2D::configureCurCell(MazeCell *sensor_info)
 	cur_cell->setWallSouth(sensor_info->getWallSouth());
 	cur_cell->setWallWest(sensor_info->getWallWest());
 	cur_cell->setVisitStatus(MazeCell::Visited);
-
+printf("step 2\n");
 	if(cur_cell->getStairCell())
 		m_navigateMaps.getFloorMap(m_cur_floor_index)->setStairCell(cur_cell);
 
@@ -128,7 +131,7 @@ int32_t Navigate2D::configureCurCell(MazeCell *sensor_info)
 	}
 	if(!matched)
 		(*vlist).push_back(cur_cell->getCellNum());
-
+printf("step n\3");
 	std::vector<int32_t> *tbvlist = m_navigateMaps.getFloorMap(m_cur_floor_index)->getToBeVisitedList();
 	matched = false;
 	int32_t j;
@@ -139,6 +142,7 @@ int32_t Navigate2D::configureCurCell(MazeCell *sensor_info)
 			break;
 		}
 	}
+printf("step 4\n");
 	if(matched)
 		(*tbvlist).erase((*tbvlist).begin() + j);
 
@@ -190,6 +194,7 @@ int32_t Navigate2D::configureCurCell(MazeCell *sensor_info)
 		if(m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellW_num) != NULL)
 			m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellW_num)->setWallEast(cur_cell->getWallWest());
 	}
+printf("step 5\n");
 	return 0;
 }
 
