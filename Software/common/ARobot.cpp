@@ -34,6 +34,7 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
 {
     if(black_flag) {
         if(currTileLight == SILVER) {
+            LEDLight(5000);
             sensor_info->setCheckPt(true);
             sensor_info->setNonMovable(false);
         } else { //black is a different case *WHITE
@@ -231,13 +232,13 @@ void ARobot::TileTransition(BotOrientation direction, float angle, int32_t dist)
     /*Turning first*/
     if(turnNext == 3) {turnNext = -1;} //west -> north = turn right 1
     else if (turnNext == -3) {turnNext = 1;} //north -> west = turn left 1
-    if(toTurn > 10) { //ignore smaller angles
+    if(toTurn > 2) { //ignore smaller angles
         printf("%d", toTurn);
         TurnDistance(abs(toTurn), (toTurn > 0) ? RIGHT : LEFT); //left is positive for IMU
         dist_temp = dist;
         toMove = true;
         return;
-    } else if (toTurn > 3) {}//turn small
+    }
     MoveDistance(dist, FRONT);
     return;
 }
@@ -393,7 +394,7 @@ void ARobot::StopTurn(BotDir dir)
         if(initialYaw <= 90.0f && currYaw > 270.0f) { //if robot crosses over from 180 to -180, direction switches
             currYaw -= 360; //range fixing
         }
-        if(currYaw-15.0 <= toTurn) {
+        if(currYaw <= toTurn) {
             char* i_command;
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
             i_command = (char*)malloc(i_length);
@@ -406,7 +407,7 @@ void ARobot::StopTurn(BotDir dir)
         if(initialYaw >= 270.0f && currYaw < 90.0f) { //if robot crosses over from -180 to 180, direction switches
             currYaw += 360; //range fixing
         }
-        if(currYaw+15.0 >= toTurn) {
+        if(currYaw >= toTurn) {
             char* i_command;
             printf("done");
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
