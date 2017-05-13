@@ -49,8 +49,8 @@ int main(int argc,char **argv){
     printf("Fault 3 Passed\n");
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     
-    readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
-
+    //readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
+    myRobot->TurnDistance(90, ARobot::RIGHT);
     sleep(3); //gather data in 3 secs
     while(1) {
         switch(myRobot->currState) {
@@ -85,7 +85,7 @@ int main(int argc,char **argv){
                 break;
             case 8: //DONE
                 sleep(1);
-		printf("DONE!");
+		        printf("DONE!");
                 break;
             case 9: //Data collection
                 //spin laser
