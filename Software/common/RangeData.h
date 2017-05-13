@@ -16,7 +16,7 @@ public:
 	typedef struct {
 		uint32_t tstamp; //timestamp
 		char id; //always comes out as r for range
-		uint16_t angle; //0 unless robot is turning
+		int angle; //0 unless robot is turning
 		float laserL_a; //reading from the long laser facing forward
 		float laserL_b; //reading from the long laser facing backwards
 		float laserS_a; //reading from the short laser facing right

@@ -52,7 +52,6 @@ int main(int argc,char **argv){
     readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
 
     sleep(3); //gather data in 3 secs
-    //myRobot->TurnDistance(90, ARobot::RIGHT);
     while(1) {
         switch(myRobot->currState) {
             case 0: //Planning
@@ -66,6 +65,8 @@ int main(int argc,char **argv){
                 break;
             case 3: //Idle
                 if(myRobot->toMove){
+		    sleep(2);
+		    printf("%s, %d\n", "Distance: ", myRobot->dist_temp);
                     myRobot->MoveDistance(myRobot->dist_temp, ARobot::FRONT);
                     myRobot->toMove = false;
                 }
@@ -83,12 +84,13 @@ int main(int argc,char **argv){
                 /*Put stuff here*/
                 break;
             case 8: //DONE
-                /*Put stuff here*/
+                sleep(1);
+		printf("DONE!");
                 break;
             case 9: //Data collection
                 //spin laser
                 sleep(3);
-                myRobot->currState = ARobot::PLANNING;
+                myRobot->currState = ARobot::WAYPTNAV;
                 break;
             default:
                 /*Put stuff here*/
@@ -161,9 +163,15 @@ void writeCurrentMap(const char* filedir, const char* xmlname, ARobot *robot, Na
 void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt) 
 {
     /*Navigational functions*/
+    robot->sensor_info.reset(); //reset temp object
     robot->UpdateCellMap(&robot->sensor_info, false); //false = not black
     robot->UpdateNeighborCells();
     nav_rt.configureCurCell(&robot->sensor_info);
+for(int i = 0; i < robot->temp_cell_list.size(); i++) {
+int x, y;
+robot->temp_cell_list[i].getCellGrid(x, y);
+	printf("%d, i=%d, j=%d\n", i, x, y);
+}
     nav_rt.detectLocalCells(robot->temp_cell_list);
     nav_rt.updateLocalMap();
     nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
@@ -189,11 +197,19 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
 int WayPointNav(ARobot *robot, Navigate2D &nav_rt)
 {
     bot_waypts = robot->waypts.size();
+    if(bot_waypts > 1)
+	robot->waypts.pop_back();
+	nav_rt.getNavigateMaps()->getFloorMap(nav_rt.getCurrentFloorIndex())->setCurCellIndex(robot->waypts[bot_waypts-1]);
+	nav_rt.getCellbyIndex(robot->waypts[bot_waypts-1])->getCellGrid(robot->currTile.x, robot->currTile.y);
     if(bot_waypts < 2) {
         robot->waypts.pop_back();
+	printf("new waypt");
         robot->currState = ARobot::PLANNING;
         return -1;
-    } 
-    nav_rt.getCellbyIndex(robot->waypts[bot_waypts-1])->getCellGrid(robot->currTile.x_tovisit, robot->currTile.y_tovisit);
+    }
+    
+    nav_rt.getCellbyIndex(robot->waypts[bot_waypts-2])->getCellGrid(robot->currTile.x_tovisit, robot->currTile.y_tovisit);
     robot->CalcNextTile();
 }
+
+
