@@ -231,6 +231,7 @@ void ARobot::TileTransition(BotOrientation direction, float angle, int32_t dist)
     if(turnNext == 3) {turnNext = -1;} //west -> north = turn right 1
     else if (turnNext == -3) {turnNext = 1;} //north -> west = turn left 1
     if(toTurn > 10) { //ignore smaller angles
+        printf(toTurn);
         TurnDistance(abs(toTurn), (toTurn > 0) ? LEFT : RIGHT); //left is positive
         dist_temp = dist;
         toMove = true;
