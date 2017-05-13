@@ -232,13 +232,8 @@ void ARobot::TileTransition(BotOrientation direction, float angle, int32_t dist)
     if(turnNext == 3) {turnNext = -1;} //west -> north = turn right 1
     else if (turnNext == -3) {turnNext = 1;} //north -> west = turn left 1
     if(toTurn > 10) { //ignore smaller angles
-<<<<<<< HEAD
-        printf(toTurn);
-        TurnDistance(abs(toTurn), (toTurn > 0) ? LEFT : RIGHT); //left is positive
-=======
-    printf("%d", toTurn);
+        printf("%d", toTurn);
         TurnDistance(abs(toTurn), (toTurn > 0) ? RIGHT : LEFT); //left is positive for IMU
->>>>>>> eae60272233770055fb783458c43ae2880941c9e
         dist_temp = dist;
         toMove = true;
         return;

@@ -65,8 +65,8 @@ int main(int argc,char **argv){
                 break;
             case 3: //Idle
                 if(myRobot->toMove){
-		    sleep(2);
-		    printf("%s, %d\n", "Distance: ", myRobot->dist_temp);
+		            sleep(2);
+		            printf("%s, %d\n", "Distance: ", myRobot->dist_temp);
                     myRobot->MoveDistance(myRobot->dist_temp, ARobot::FRONT);
                     myRobot->toMove = false;
                 }

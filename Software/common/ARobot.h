@@ -107,6 +107,7 @@ class ARobot {
 	MazeCell sensor_info; //sensor info for current cell
 
 	bool toMove; //true means the robot still has to move after turning
+	bool isDrop; //true if is dropping
 	bool backingBlack; //if the robot is backing up on a black tile
 	int dist_temp; //store temporary distance to travel
 
