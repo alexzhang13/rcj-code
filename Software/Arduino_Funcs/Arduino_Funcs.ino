@@ -122,31 +122,31 @@ void setup() {
   laserB_s.init(); //init laser object, look for it
   laserB_s.configureDefault(); //laser config
   laserB_s.writeReg(VL6180X::SYSRANGE__MAX_CONVERGENCE_TIME, 36);
-  laserB_s.setTimeout(5); //in case you can't find the laser object, timeout for this long
+  laserB_s.setTimeout(0); //in case you can't find the laser object, timeout for this long
   laserB_s.writeReg16Bit(VL6180X::SYSALS__INTEGRATION_PERIOD, 52);
   laserB_s.stopContinuous();
   delay(300);
-  laserB_s.startRangeContinuous(30);
+  laserB_s.startRangeContinuous();
   laserB_s.setAddress(0x26);
   delay(100); //delay
 
   digitalWrite(GPIO_PINL1, HIGH); //begin writing to XSHUT of first laser
   delay(50); //delay
   laserA_l.init(); //init laser object, look for it
-  laserA_l.setTimeout(5); //in case you can't find the laser object, timeout for this long
+  laserA_l.setTimeout(0); //in case you can't find the laser object, timeout for this long
   laserA_l.stopContinuous();
   delay(300);
-  laserA_l.startContinuous(30);
+  laserA_l.startContinuous();
   laserA_l.setAddress(0x27);
   delay(100); //delay
 
   digitalWrite(GPIO_PINL2, HIGH); //begin writing to XSHUT of first laser
   delay(50); //delay
   laserB_l.init(); //init laser object, look for it
-  laserB_l.setTimeout(5); //in case you can't find the laser object, timeout for this long
+  laserB_l.setTimeout(0); //in case you can't find the laser object, timeout for this long
   laserB_l.stopContinuous();
   delay(300);
-  laserB_l.startContinuous(30);
+  laserB_l.startContinuous();
   laserB_l.setAddress(0x28);
   delay(100); //delay
 
@@ -155,12 +155,12 @@ void setup() {
   laserA_s.init(); //init laser object, look for it
   laserA_s.configureDefault(); //laser config
   laserA_s.writeReg(VL6180X::SYSRANGE__MAX_CONVERGENCE_TIME, 36);
-  laserA_s.setTimeout(5); //in case you can't find the laser object, timeout for this long
+  laserA_s.setTimeout(0); //in case you can't find the laser object, timeout for this long
   laserB_s.writeReg16Bit(VL6180X::SYSALS__INTEGRATION_PERIOD, 52);
   laserA_s.setAddress(0x25);
   laserA_s.stopContinuous();
   delay(300);
-  laserA_s.startRangeContinuous(30);
+  laserA_s.startRangeContinuous();
   delay(100); //delay
   
   /*INITIALIZE MPU9250 AND REQUEST BYTES*/
