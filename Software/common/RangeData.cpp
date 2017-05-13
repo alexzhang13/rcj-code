@@ -30,46 +30,50 @@ int RangeData::storeCommand(char* buf) {
 
 int RangeData::parseData()
 {
-	sscanf(m_command, "%d %c %f %f %f %f", &data.tstamp, &data.id, &data.laserL_a, &data.laserS_a, &data.laserL_b, &data.laserS_b);
+	sscanf(m_command, "%d %c %d %f %f %f %f", &data.tstamp, &data.id, &data.angle, &data.laserL_a, &data.laserS_a, &data.laserL_b, &data.laserS_b);
 	return 0;
 }
 
 int RangeData::getPosition()
 {	
-	if(myRobot->imuDataList.end()->m_yaw <= 45.0 && myRobot->imuDataList.end()->m_yaw >= 315.0) { //north
+	if(myRobot->imuDataList.end()->m_yaw <= 45.0 || myRobot->imuDataList.end()->m_yaw >= 315.0) { //north
 		data.dir = 0;
-	} else if (myRobot->imuDataList.end()->m_yaw <= 135.0 && myRobot->imuDataList.end()->m_yaw >= 45.0) { //east
+		printf("north\n");
+	} else if (myRobot->imuDataList.end()->m_yaw <= 135.0 && myRobot->imuDataList.end()->m_yaw >= 45.0) { //west
 		data.dir = 1;
+		printf("west\n");
 	} else if (myRobot->imuDataList.end()->m_yaw <= 225.0 && myRobot->imuDataList.end()->m_yaw >= 135.0) { //south
 		data.dir = 2;
-	} else { //west
+		printf("south\n");
+	} else { //east
 		data.dir = 3;
+		printf("east\n");
 	}
 	if(data.laserL_a <= 1200) { //check if reading is valid LONG FRONT
-		temp_range[0] = (data.laserL_a+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180);
+		temp_range[0] = (data.laserL_a-18.0) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180);
 		temp_dist = (int)temp_range[0]/300;
 		distance[0] = temp_range[0] - temp_dist*300;
 	} else {
 		distance[0] = 316.0f; //impossible number for distance[0], as it's %300
 		temp_range[0] = -300;
 	} 
-	if(data.laserL_b != 1200) { //check if reading is valid LONG BACK
-		temp_range[2] = (data.laserL_b+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180);
+	if(data.laserL_b <= 1200) { //check if reading is valid LONG BACK
+		temp_range[2] = (data.laserL_b+59.25) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180);
 		temp_dist = (int)temp_range[2]/300;
 		distance[2] = temp_range[2] - temp_dist*300;
 	} else {
 		distance[2] = 316.0f; //impossible number for distance[2], as it's %300
 		temp_range[2] = -300;
 	}
-	if(data.laserS_a != 255) { //check if reading is valid SHORT RIGHT
-		temp_range[1] = (data.laserS_a+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180); //30 - x - 15 = 15 - x 
+	if(data.laserS_a <= 210) { //check if reading is valid SHORT RIGHT
+		temp_range[1] = (data.laserS_a+13.75) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180); //30 - x - 15 = 15 - x 
 		temp_dist = (int)temp_range[1]/300;
 		distance[1] = temp_range[1] - temp_dist*300;
 	} else {
 		distance[1] = 316.0f;
 		temp_range[1] = -300;
 	}
-	if(data.laserS_b != 255) { //check if reading is valid SHORT LEFT
+	if(data.laserS_b <= 210) { //check if reading is valid SHORT LEFT
 		temp_range[3] = (data.laserS_b+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180); //x - 15
 		temp_dist = (int)temp_range[3]/300;
 		distance[3] = temp_range[3] - temp_dist*300;
@@ -121,7 +125,7 @@ int RangeData::getPosition()
 		}
 	}
 
-	//printf("%f %f\n", coord.x, coord.y);
-	//printf("%s N:%d E:%d S:%d W:%d\n", "Walls:", walls.wallN, walls.wallE, walls.wallS, walls.wallW);
+	printf("x: %f, y: %f\n", coord.x_glob, coord.y_glob);
+	printf("%s N:%d E:%d S:%d W:%d\n", "Walls:", walls.wallN, walls.wallE, walls.wallS, walls.wallW);
 	return 0;
 }
