@@ -38,16 +38,16 @@ int RangeData::getPosition()
 {	
 	if(myRobot->imuDataList.end()->m_yaw <= 45.0 || myRobot->imuDataList.end()->m_yaw >= 315.0) { //north
 		data.dir = 0;
-		printf("north\n");
+		//printf("north\n");
 	} else if (myRobot->imuDataList.end()->m_yaw <= 135.0 && myRobot->imuDataList.end()->m_yaw >= 45.0) { //west
 		data.dir = 1;
-		printf("west\n");
+		//printf("west\n");
 	} else if (myRobot->imuDataList.end()->m_yaw <= 225.0 && myRobot->imuDataList.end()->m_yaw >= 135.0) { //south
 		data.dir = 2;
-		printf("south\n");
+		//printf("south\n");
 	} else { //east
 		data.dir = 3;
-		printf("east\n");
+		//printf("east\n");
 	}
 	if(data.laserL_a <= 1200) { //check if reading is valid LONG FRONT
 		temp_range[0] = (data.laserL_a-18.0) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180);

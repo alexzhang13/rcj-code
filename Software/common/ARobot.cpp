@@ -391,6 +391,9 @@ void ARobot::StopTurn(BotDir dir)
     size_t imu_list = imuDataList.size();
     float currYaw = imuDataList[imu_list-1].m_yaw;
     if(dir == RIGHT) {
+        if(initialYaw >= 355.0f && currYaw <= 5.0f) { //this is a special case where the initial is around 360, but then switches to around 0, making it done immediately
+            currYaw += 360;
+        }
         if(initialYaw <= 160.0f && currYaw > 200.0f) { //if robot crosses over from 180 to -180, direction switches
             currYaw -= 360; //range fixing
         }
@@ -405,6 +408,9 @@ void ARobot::StopTurn(BotDir dir)
             return;
         }
     } else if(dir == LEFT) {
+        if(initialYaw <= 5.0f && currYaw >= 355.0f) {
+            currYaw -= 360;
+        }
         if(initialYaw >= 200.0f && currYaw < 160.0f) { //if robot crosses over from -180 to 180, direction switches
             currYaw += 360; //range fixing
         }
