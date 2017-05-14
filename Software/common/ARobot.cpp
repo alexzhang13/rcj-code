@@ -468,9 +468,6 @@ void ARobot::ParseIMU()
     }
 }
 void ARobot::ParseRange() {
-if(rangeParseList.size() <1)
-return;
-
     for(int i = 0; i < rangeParseList.size(); i++)
     {
         rangeParseList.front().parseData();
