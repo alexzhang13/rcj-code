@@ -130,7 +130,7 @@ int RangeData::getPosition()
 		}
 	}
 
-	//printf("x: %f, y: %f\n", coord.x_glob, coord.y_glob);
-	//printf("%s N:%d E:%d S:%d W:%d\n", "Walls:", walls.wallN, walls.wallE, walls.wallS, walls.wallW);
+	printf("x: %f, y: %f\n", coord.x_glob, coord.y_glob);
+	printf("%s N:%d E:%d S:%d W:%d\n", "Walls:", walls.wallN, walls.wallE, walls.wallS, walls.wallW);
 	return 0;
 }
