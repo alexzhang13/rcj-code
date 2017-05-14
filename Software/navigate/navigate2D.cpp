@@ -208,7 +208,6 @@ printf("step 8\n");
 int32_t Navigate2D::detectLocalCells(std::vector<MazeCell> next_cell_list)
 {
 	int32_t i0, j0, i1, j1, i2, j2, i, j, grid_w, grid_h;
-	int32_t cindx;
 	MazeCell *cur_cell = m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(m_cur_cell_index);
 	MazeCell::NavDir ndir = cur_cell->getNavDirection();
 	cur_cell->getCellGrid(i0,j0);

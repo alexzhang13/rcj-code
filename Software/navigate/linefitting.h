@@ -7,6 +7,8 @@
 #include <stdint.h>
 #include <opencv2/opencv.hpp>
 #include "navigate_defs.h"
+#include "cell.h"
+#include "floormap.h"
 
 #define BUF_LF_SIZE 360
 
@@ -30,6 +32,27 @@ public:
 		Pt2D pt[4];
 	} AdjustPt2D;
 
+	typedef struct {
+		MazeCell::NavDir direction;
+		float global_angle;
+		MazeCell::Position_2D pos;
+		MazeCell::xyCoord xypos;
+		MazeCell cur_cell;
+		std::vector<MazeCell> local_cell_list;
+	} DetectedCells;
+
+	typedef struct {
+		float k;
+		float intercept;
+		float local_angle;
+		int32_t side; //0: upward, 1: right, 2: downward, 3: left //0: left, 1:right, 2: upward, 3: downward
+		float distance;
+	} LineDescript;
+
+	typedef struct {
+		LineDescript aline;
+		std::vector<cv::Point2f> pts;
+	} FittedLine;
 
 	// constructor
 	LineFitAlgo();
@@ -42,13 +65,13 @@ public:
 	bool parseData(TimeDist *datalist);
 	bool readDataFile(const char *filename);
 	bool convert2Vec();
-	bool filterImage();
-	bool edgeDetection();
 	bool lineFit();
-	bool polygonFit();
+	bool updateCellConfigs();
 
 	void printoutData();
 	void displayPoints();
+
+	void setRobotStatus(MazeCell::NavDir direction, MazeCell::Position_2D pos);
 
 	inline void setlineDetectTol(double tor) { mEpsilon = tor; }
 	inline double getLineDetectTol(void) { return mEpsilon;}
@@ -56,9 +79,12 @@ public:
 	inline void setValidLinePts(int32_t num) { mLineThresh = num;}
 	inline int32_t getValidLinePts(void) { return mLineThresh;}
 
+	inline DetectedCells *getDetectedCells() { return &mDetectedCells;}
+
 protected:
 
 	void resetData();
+	void setWallProp(MazeCell &cell, int32_t *wall_status);
 private:
 	cv::Mat mImage;
 	TimeDist mTimeDist_rr[BUF_LF_SIZE];
@@ -66,19 +92,21 @@ private:
 	AdjustPt2D mPts[BUF_LF_SIZE];
 	std::vector<cv::Point2f> mAvgPts;
 	std::vector<cv::Point2f> mLines;
-	std::map<int32_t, std::vector<cv::Point2f>> mFittedLines;
+	std::map<int32_t, FittedLine> mFittedLines;
 	int32_t mShortThresh;
 	int32_t mLongThresh;
 	int32_t mAngleSep;
 	int32_t mHalf_samples;
 	int32_t m_SampleCnt;
-	int32_t m_cur_angle;
+	int32_t m_scan_angle;
 	double mDistOffset;
 	double mAngleOffset;
 	int32_t mXmin, mYmin;
 	int32_t mXmax, mYmax;
 	double mEpsilon;
 	int32_t mLineThresh;
+	float mAngleThresh;
+	DetectedCells mDetectedCells;
 };
 
 ///////////////////////////////////////////////////////////////////////
