@@ -72,10 +72,10 @@ int main(int argc,char **argv){
                 } 
                 break;
             case 4: //Ramp
-                while(myRobot->checkRamp()) {    
+                /*while(myRobot->checkRamp()) {    
                     sleep(0.1);
                 }
-                myRobot->StopMove();
+                myRobot->StopMove();*/
                 break;
             case 5: //Move
                 /*Put stuff here*/
@@ -97,7 +97,8 @@ int main(int argc,char **argv){
             case 9: //Data collection
                 //spin laser
                 sleep(3);
-                if(myRobot->checkRamp()) { //is ramp
+                myRobot->currState = ARobot::WAYPTNAV;
+                /*if(myRobot->checkRamp()) { //is ramp
                     myRobot->MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
                     break;
                 }
@@ -126,7 +127,7 @@ int main(int argc,char **argv){
                     default:
                         myRobot->currState = ARobot::WAYPTNAV;
                         break;
-                }
+                }*/
                 break;
             default:
                 /*Put stuff here*/
