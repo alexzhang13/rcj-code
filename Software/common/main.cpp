@@ -49,9 +49,9 @@ int main(int argc,char **argv){
     printf("Fault 3 Passed\n");
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     
-    //readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
+    readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     sleep(3); //gather data in 3 secs
-    myRobot->TurnDistance(90, ARobot::RIGHT);
+    //myRobot->TurnDistance(90, ARobot::RIGHT);
     while(1) {
         switch(myRobot->currState) {
             case 0: //Planning
