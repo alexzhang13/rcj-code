@@ -75,6 +75,7 @@ void UartRx::run(void){
         	storeScan(mBuf);
        	} else if (c == 'm') {
             myRobot->currState = ARobot::DATA; //IDLE
+	    printf("motor done\n");
         } else if (c == 'd') {
             myRobot->currState = ARobot::IDLE; //IDLE
        	} else {}

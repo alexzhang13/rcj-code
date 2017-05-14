@@ -291,7 +291,7 @@ int32_t MazeMaps::writeXmlMap(const char* out_dir, const char* name)
 	for(i = 0; i < m_floormap[0].getCellSize(); i++) {
 		MazeCell *c =  m_floormap[0].getCell(i);
 		indx = c->getCellNum();
-		printf("cell = %d\n", indx);
+		//printf("cell = %d\n", indx);
 		c->getCellGrid(ix,iy);
 		c->getCenterXY(cx,cy);
 		TiXmlElement* cellmap = new TiXmlElement("cell");
