@@ -49,9 +49,9 @@ int main(int argc,char **argv){
     printf("Fault 3 Passed\n");
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     
-    readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
+    //readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     sleep(3); //gather data in 3 secs
-    //myRobot->TurnDistance(90, ARobot::RIGHT);
+    myRobot->TurnDistance(90, ARobot::RIGHT);
     while(1) {
         switch(myRobot->currState) {
             case 0: //Planning
@@ -203,11 +203,11 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
     robot->UpdateCellMap(&robot->sensor_info, false); //false = not black
     robot->UpdateNeighborCells();
     nav_rt.configureCurCell(&robot->sensor_info);
-for(int i = 0; i < robot->temp_cell_list.size(); i++) {
-int x, y;
-robot->temp_cell_list[i].getCellGrid(x, y);
-	printf("%d, i=%d, j=%d\n", i, x, y);
-}
+    for(int i = 0; i < robot->temp_cell_list.size(); i++) {
+        int x, y;
+        robot->temp_cell_list[i].getCellGrid(x, y);
+	    printf("%d, i=%d, j=%d\n", i, x, y);
+    }
     nav_rt.detectLocalCells(robot->temp_cell_list);
     nav_rt.updateLocalMap();
     nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
