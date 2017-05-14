@@ -261,6 +261,8 @@ bool ARobot::checkRamp()
     for(int i = 1; i < 5; i++) {
         if(!(abs(imuDataList[pitch_vals-i].m_pitch) <= 15)) { //if not ramp, break (return false)
             return false;
+        } else if (!(abs(imuDataList[pitch_vals-i].m_pitch) >= 345)) {
+            return false;
         }
         
     }
