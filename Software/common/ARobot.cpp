@@ -207,6 +207,7 @@ void ARobot::UpdateNeighborCells()
             }
         }
     }
+    printf("%d\n", temp_cell_list.size());
 }
 
 void ARobot::CalcNextTile()
