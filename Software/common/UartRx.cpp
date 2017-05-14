@@ -107,7 +107,7 @@ void UartRx::storeLight(char* buf) {
     myRobot->lightParseList.push(curr_light); //push light data
 }
 
-void UartRX::storeScan(char* buf) {
+void UartRx::storeScan(char* buf) {
 	RangeData curr_range(myRobot);
 	curr_range.storeCommand(buf);
 	myRobot->scanParseList.push(curr_range);
