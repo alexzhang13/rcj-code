@@ -229,7 +229,7 @@ void ARobot::CalcNextTile()
         nextDir = SOUTH;
         angle = -atan(next_x/next_y)*180.0f/3.1415926535; //angle to right, should be neg
     }
-    printf("%s %d %d %d %d\n", "test", currTile.x_map, currTile.y_map, currTile.x_tovisit, currTile.y_tovisit);
+    //printf("%s %d %d %d %d\n", "test", currTile.x_map, currTile.y_map, currTile.x_tovisit, currTile.y_tovisit);
     TileTransition(nextDir, angle, dist);
 
 }
@@ -249,6 +249,7 @@ void ARobot::TileTransition(BotOrientation direction, float angle, int32_t dist)
         toMove = true;
         return;
     }
+    printf("%d\n", dist);
     MoveDistance(dist, FRONT);
     return;
 }
@@ -371,8 +372,9 @@ void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
     } else {
         snprintf(i_command, i_length, "%c %c %d", 'm', 'b', distance_mm);
     }
-    if(!currState == RAMP) {
+    if(!(currState == RAMP)) {
         currState = MOVE;
+	printf("move\n");
     }
     WriteCommand(i_command, i_length);
 }
