@@ -457,10 +457,11 @@ void ARobot::ParseIMU()
 {
     for(int i = 0; i < imuParseList.size(); i++)
     {
+        int prev_tstamp = imuDataList.end().getTStamp();
         if(imuDataList.size() <= 0) {
             imuParseList.front().parseData(-1); //special initial case
         } else {
-            imuParseList.front().parseData(imuDataList.end().getTStamp);
+            imuParseList.front().parseData(prev_tstamp);
         }
         imuParseList.front().runFilter();
         imuDataList.push_back(imuParseList.front());
