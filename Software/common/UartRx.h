@@ -19,7 +19,7 @@ class UartRx : public Thread {
 	void storeRange(char* buf);
 	void storeTemp(char* buf);
 	void storeLight(char* buf);
-    void storeScan(char* buf)
+    void storeScan(char* buf);
     virtual void run(void);
 	
 	bool setLogFile(const char* filedir, const char *filename);

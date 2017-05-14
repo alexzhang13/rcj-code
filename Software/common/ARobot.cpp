@@ -45,11 +45,11 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
         } else {sensor_info->setStairCell(false);}
         if(victimRight) {
             sensor_info->setVictim(true);
-            sensor_info->setVictimDirection(((int)currOrientation + 1)%4);
+            sensor_info->setVictimDirection(MazeCell::NavDir(((int)currOrientation + 1)%4));
             victimRight = false;
         } else if (victimLeft){
             sensor_info->setVictim(true);
-            sensor_info->setVictimDirection(((int)currOrientation + 3)%4);
+            sensor_info->setVictimDirection(MazeCell::NavDir(((int)currOrientation + 3)%4));
             victimLeft = false;
         } else {
             sensor_info->setVictim(false);
@@ -454,6 +454,9 @@ void ARobot::ParseIMU()
     for(int i = 0; i < imuParseList.size(); i++)
     {
         imuParseList.front().parseData();
+        if(imuDataList.size() > 0) {
+            imuParseList.front().madgwick.set(((float)imuParseList.front().data.tstamp-(float)imuDataList.end().data.tstamp)/1000); //take current in parsing timestamp minus data list most updated (previous) and get difference
+        }
         imuParseList.front().runFilter();
         imuDataList.push_back(imuParseList.front());
         imuParseList.pop();
