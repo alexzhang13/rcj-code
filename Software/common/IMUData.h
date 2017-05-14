@@ -31,7 +31,7 @@ public:
 
 	int storeCommand(char* buf);
 	int getTStamp();
-	int parseData();
+	int parseData(int prev_TStamp);
 	int runFilter();
 
 private:
