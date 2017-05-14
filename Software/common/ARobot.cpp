@@ -255,13 +255,13 @@ bool ARobot::checkRamp()
     return true; //ramp is true if past 5 pitches match > 15 degrees
 }
 
-bool ARobot::checkVictimTemp()
+int ARobot::checkVictimTemp()
 {
     size_t temp_vals = tempDataList.size();
     //if(tempDataList[temp_vals-1].checkTemp() == 1) { //left sensor activated
 
     //}
-    return true;
+    return 0;
 }
 
 void ARobot::setTempThresh(float left, float right)
@@ -475,6 +475,12 @@ void ARobot::ParseLight() {
     lightParseList.pop();
 }
 
+void ARobot::ParseScan() {
+    scanParseList.front().getScan();
+    scanDataList.push_back(scanParseList.front());
+    scanParseList.pop();
+}
+
 void ARobot::ClearIMU()
 {
     mlen_imu = imuDataList.size();
@@ -509,4 +515,9 @@ void ARobot::ClearLight()
         lightDataList.erase(lightDataList.begin());
         mlen_light--;
     }
+}
+
+void ARobot::ClearScan()
+{
+    scanDataList.clear();
 }

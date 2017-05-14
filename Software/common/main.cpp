@@ -65,11 +65,11 @@ int main(int argc,char **argv){
                 break;
             case 3: //Idle
                 if(myRobot->toMove){
-		            sleep(2);
+		            sleep(1.5);
 		            printf("%s, %d\n", "Distance: ", myRobot->dist_temp);
                     myRobot->MoveDistance(myRobot->dist_temp, ARobot::FRONT);
                     myRobot->toMove = false;
-                }
+                } 
                 break;
             case 4: //Ramp
                 /*Put stuff here*/
@@ -78,7 +78,7 @@ int main(int argc,char **argv){
                 /*Put stuff here*/
                 break;
             case 6: //Drop
-                /*Put stuff here*/
+                if()
                 break;
             case 7: //LED
                 /*Put stuff here*/
@@ -90,7 +90,13 @@ int main(int argc,char **argv){
             case 9: //Data collection
                 //spin laser
                 sleep(3);
+                myRobot->checkVictimTemp();
+                myRobot->checkLightTile();
+                if(myRobot->currTileLight == ARobot::SILVER) {
+                    LEDLight(5000);
+                }
                 myRobot->currState = ARobot::WAYPTNAV;
+
                 break;
             default:
                 /*Put stuff here*/

@@ -34,6 +34,11 @@ int RangeData::parseData()
 	return 0;
 }
 
+int getScan() {
+	sscanf(m_command, "%d %c %d %f %f %f %f", &scan.tstamp, &scan.id, &scan.angle, &scan.readingN, &scan.readingE, &scan.readingS, &scan.readingW);
+	return 0;
+}
+
 int RangeData::getPosition()
 {	
 	if(myRobot->imuDataList.end()->m_yaw <= 45.0 || myRobot->imuDataList.end()->m_yaw >= 315.0) { //north
