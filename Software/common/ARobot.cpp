@@ -17,7 +17,11 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     currState = PLANNING;
     currTile.x = 0;
     currTile.y = 0;
+    dropCnt = 0; //dropping counter
     toMove = false;
+    victimRight = false; //true if is dropping to the right
+    victimLeft = false;
+    backingBlack = false; //if the robot is backing up on a black tile
 }
 
 ARobot::~ARobot() 
