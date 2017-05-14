@@ -53,7 +53,7 @@ class ARobot {
  	bool checkRamp();
 
  	/*Temperature Sensor -> Victim Control*/
- 	bool checkVictimTemp();
+ 	int checkVictimTemp();
  	void setTempThresh(float left, float right);
  	float getLeftVictimTemp();
  	float getRightVictimTemp();
@@ -71,6 +71,7 @@ class ARobot {
  	/*DC Motor Control*/
  	void SetSpeed(int left_speed, int right_speed);
  	void MoveDistance(int distance_mm, BotDir forward);
+ 	void StopMove();
  	void TurnDistance(int degrees, BotDir right);
  	void StopTurn(BotDir right);
 
@@ -79,10 +80,12 @@ class ARobot {
  	void ParseRange();
  	void ParseTemp();
  	void ParseLight();
+ 	void ParseScan();
 	void ClearIMU();
 	void ClearRange();
 	void ClearTemp();
 	void ClearLight();
+	void ClearScan();
 
 	std::vector<MazeCell> temp_cell_list;
 	std::vector<int32_t> waypts; //current waypoint list
@@ -91,11 +94,13 @@ class ARobot {
 	std::vector<RangeData> rangeDataList;
 	std::vector<TempData> tempDataList;
 	std::vector<LightData> lightDataList;
+	std::vector<RangeData> scanDataList;
 
 	std::queue<IMUData> imuParseList;
 	std::queue<RangeData> rangeParseList;
 	std::queue<TempData> tempParseList;
 	std::queue<LightData> lightParseList;
+	std::queue<RangeData> scanParseList;
 
 	LightVal currTileLight; //Current Tile's Light Status
 	BotDir currDir; //Turning and Moving directions, local to current pos and next direction
@@ -106,7 +111,10 @@ class ARobot {
 
 	MazeCell sensor_info; //sensor info for current cell
 
+	uint8_t dropCnt; //dropping counter
 	bool toMove; //true means the robot still has to move after turning
+	bool victimRight; //true if is dropping to the right
+	bool victimLeft;
 	bool backingBlack; //if the robot is backing up on a black tile
 	int dist_temp; //store temporary distance to travel
 

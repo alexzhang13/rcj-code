@@ -43,10 +43,14 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
         if(checkRamp()) {
             sensor_info->setStairCell(true);
         } else {sensor_info->setStairCell(false);}
-        if(checkVictimTemp()) {
-            //sensor_info->setVictim(true);
-            //sensor_info->setVictimDirection(victimDir);
-            sensor_info->setVictim(false);
+        if(victimRight) {
+            sensor_info->setVictim(true);
+            sensor_info->setVictimDirection(((int)currOrientation + 1)%4);
+            victimRight = false;
+        } else if (victimLeft){
+            sensor_info->setVictim(true);
+            sensor_info->setVictimDirection(((int)currOrientation + 3)%4);
+            victimLeft = false;
         } else {
             sensor_info->setVictim(false);
         }
@@ -76,7 +80,10 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
             sensor_info->setWallWest(MazeCell::MOpen);
         } 
     } else {
-
+        sensor_info->setNonMovable(true);
+        sensor_info->setCheckPt(false);
+        sensor_info->setVictim(false);
+        sensor_info->setStairCell(false);
     }
 
 }
@@ -89,22 +96,22 @@ void ARobot::UpdateNeighborCells()
     bool wallsE = true;
     bool wallsS = true;
     bool wallsW = true; //if valid/usable data
-    for(int i = 1; i < 6; i++) {
+    for(int i = 1; i < 4; i++) {
         if(rangeDataList[sizeRange-i].walls.wallN != rangeDataList[sizeRange-1-i].walls.wallN)
             wallsN = false;
             break;
     }
-    for(int i = 1; i < 6; i++) {
+    for(int i = 1; i < 4; i++) {
         if(rangeDataList[sizeRange-i].walls.wallE != rangeDataList[sizeRange-1-i].walls.wallE)
             wallsE = false;
             break;
     }
-    for(int i = 1; i < 6; i++) {
+    for(int i = 1; i < 4; i++) {
         if(rangeDataList[sizeRange-i].walls.wallS != rangeDataList[sizeRange-1-i].walls.wallS)
             wallsS = false;
             break;
     }
-    for(int i = 1; i < 6; i++) {
+    for(int i = 1; i < 4; i++) {
         if(rangeDataList[sizeRange-i].walls.wallW != rangeDataList[sizeRange-1-i].walls.wallW)
             wallsW = false;
             break;
@@ -134,7 +141,7 @@ void ARobot::UpdateNeighborCells()
     if(wallsE == true) {
         if(rangeDataList[sizeRange-1].walls.wallE != -1) {
             for(int i = 1; i <= rangeDataList[sizeRange-i].walls.wallE; i++) {
-                temp_cell.setCellGrid(currTile.x, currTile.y+i);
+                temp_cell.setCellGrid(currTile.x+i, currTile.y);
                 if(i == rangeDataList[sizeRange-i].walls.wallE) { //There is a wall at the reading point/furthest reading
                     temp_cell.setWallEast(MazeCell::MWall);
                 } else {
@@ -144,8 +151,8 @@ void ARobot::UpdateNeighborCells()
                 temp_cell.reset();
             }
         } else {
-            for(int i = 1; i <= 2; i++) { //open???
-                temp_cell.setCellGrid(currTile.x, currTile.y+i);
+            for(int i = 1; i <= 1; i++) { //open???
+                temp_cell.setCellGrid(currTile.x+i, currTile.y);
                 temp_cell.setWallEast(MazeCell::MOpen);
                 temp_cell_list.push_back(temp_cell);
                 temp_cell.reset();
@@ -156,7 +163,7 @@ void ARobot::UpdateNeighborCells()
     if(wallsS == true) {
         if(rangeDataList[sizeRange-1].walls.wallS != -1) {
             for(int i = 1; i <= rangeDataList[sizeRange-i].walls.wallS; i++) {
-                temp_cell.setCellGrid(currTile.x, currTile.y+i);
+                temp_cell.setCellGrid(currTile.x, currTile.y-i);
                 if(i == rangeDataList[sizeRange-i].walls.wallS) { //There is a wall at the reading point/furthest reading
                     temp_cell.setWallSouth(MazeCell::MWall);
                 } else {
@@ -167,7 +174,7 @@ void ARobot::UpdateNeighborCells()
             }
         } else {
             for(int i = 1; i <= 2; i++) { //open???
-                temp_cell.setCellGrid(currTile.x, currTile.y+i);
+                temp_cell.setCellGrid(currTile.x, currTile.y-i);
                 temp_cell.setWallSouth(MazeCell::MOpen);
                 temp_cell_list.push_back(temp_cell);
                 temp_cell.reset();
@@ -178,7 +185,7 @@ void ARobot::UpdateNeighborCells()
     if(wallsW == true) {
         if(rangeDataList[sizeRange-1].walls.wallW != -1) {
             for(int i = 1; i <= rangeDataList[sizeRange-i].walls.wallW; i++) {
-                temp_cell.setCellGrid(currTile.x, currTile.y+i);
+                temp_cell.setCellGrid(currTile.x-i, currTile.y);
                 if(i == rangeDataList[sizeRange-i].walls.wallW) { //There is a wall at the reading point/furthest reading
                     temp_cell.setWallWest(MazeCell::MWall);
                 } else {
@@ -188,8 +195,8 @@ void ARobot::UpdateNeighborCells()
                 temp_cell.reset();
             }
         } else {
-            for(int i = 1; i <= 2; i++) { //open???
-                temp_cell.setCellGrid(currTile.x, currTile.y+i);
+            for(int i = 1; i < 2; i++) { //open???
+                temp_cell.setCellGrid(currTile.x-i, currTile.y);
                 temp_cell.setWallWest(MazeCell::MOpen);
                 temp_cell_list.push_back(temp_cell);
                 temp_cell.reset();
@@ -201,8 +208,8 @@ void ARobot::UpdateNeighborCells()
 void ARobot::CalcNextTile()
 {
     BotOrientation nextDir;
-    int next_x = (currTile.x_tovisit*300-150) - currTile.x_map; //next tile coords
-    int next_y = (currTile.y_tovisit*300-150) - currTile.y_map; //next tile coords
+    int next_x = (currTile.x_tovisit*300+150) - currTile.x_map; //next tile coords
+    int next_y = (currTile.y_tovisit*300+150) - currTile.y_map; //next tile coords
     int32_t dist = (int32_t)sqrt(next_x*next_x + next_y*next_y); //pythagorean
     float angle; //offset angle
     if(currTile.x_tovisit - currTile.x > 0) { //east
@@ -218,7 +225,7 @@ void ARobot::CalcNextTile()
         nextDir = SOUTH;
         angle = -atan(next_x/next_y)*180.0f/3.1415926535; //angle to right, should be neg
     }
-    printf("%s %d %d", "test", next_x, next_y);
+    printf("%s %d %d %d %d\n", "test", currTile.x_map, currTile.y_map, currTile.x_tovisit, currTile.y_tovisit);
     TileTransition(nextDir, angle, dist);
 
 }
@@ -231,9 +238,9 @@ void ARobot::TileTransition(BotOrientation direction, float angle, int32_t dist)
     /*Turning first*/
     if(turnNext == 3) {turnNext = -1;} //west -> north = turn right 1
     else if (turnNext == -3) {turnNext = 1;} //north -> west = turn left 1
-    if(toTurn > 10) { //ignore smaller angles
-	printf("%d", toTurn);
-        TurnDistance(abs(toTurn), (toTurn > 0) ? LEFT : RIGHT); //left is positive
+    if(toTurn > 2) { //ignore smaller angles
+        printf("%d", toTurn);
+        TurnDistance(abs(toTurn), (toTurn > 0) ? RIGHT : LEFT); //left is positive for IMU
         dist_temp = dist;
         toMove = true;
         return;
@@ -254,13 +261,13 @@ bool ARobot::checkRamp()
     return true; //ramp is true if past 5 pitches match > 15 degrees
 }
 
-bool ARobot::checkVictimTemp()
+int ARobot::checkVictimTemp()
 {
     size_t temp_vals = tempDataList.size();
     //if(tempDataList[temp_vals-1].checkTemp() == 1) { //left sensor activated
 
     //}
-    return true;
+    return 0;
 }
 
 void ARobot::setTempThresh(float left, float right)
@@ -338,7 +345,6 @@ void ARobot::Drop()
 
     snprintf(i_command, i_length, "%c %c", 'd', 'a');
     WriteCommand(i_command, i_length);
-    currState = DROP;
 }
 
 void ARobot::SetSpeed(int left_speed, int right_speed) {
@@ -361,7 +367,9 @@ void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
     } else {
         snprintf(i_command, i_length, "%c %c %d", 'm', 'b', distance_mm);
     }
-    currState = MOVE;
+    if(!currState == RAMP) {
+        currState = MOVE;
+    }
     WriteCommand(i_command, i_length);
 }
 void ARobot::TurnDistance(int degrees, BotDir dir)
@@ -385,35 +393,56 @@ void ARobot::TurnDistance(int degrees, BotDir dir)
     WriteCommand(i_command, i_length);
 }
 
+void ARobot::StopMove() {
+    int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
+    char* i_command = (char*)malloc(i_length);
+    WriteCommand(i_command, i_length);
+}
+
 void ARobot::StopTurn(BotDir dir)
 {
     size_t imu_list = imuDataList.size();
     float currYaw = imuDataList[imu_list-1].m_yaw;
     if(dir == RIGHT) {
-        if(initialYaw <= 90.0f && currYaw > 270.0f) { //if robot crosses over from 180 to -180, direction switches
+        if(initialYaw >= 355.0f && currYaw <= 5.0f) { //this is a special case where the initial is around 360, but then switches to around 0, making it done immediately
+            currYaw += 360;
+        }
+        if(initialYaw <= 160.0f && currYaw > 200.0f) { //if robot crosses over from 180 to -180, direction switches
             currYaw -= 360; //range fixing
         }
-        if(currYaw-15.0 <= toTurn) {
+        if(currYaw+3 <= toTurn) {
             char* i_command;
+            printf("done!");
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
             i_command = (char*)malloc(i_length);
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
             WriteCommand(i_command, i_length);
-            currState = IDLE;           
+            if(victimLeft || victimRight) {
+                currState = DROP;
+            } else {
+                currState = IDLE; 
+            }          
             return;
         }
     } else if(dir == LEFT) {
-        if(initialYaw >= 270.0f && currYaw < 90.0f) { //if robot crosses over from -180 to 180, direction switches
+        if(initialYaw <= 5.0f && currYaw >= 355.0f) {
+            currYaw -= 360;
+        }
+        if(initialYaw >= 200.0f && currYaw < 160.0f) { //if robot crosses over from -180 to 180, direction switches
             currYaw += 360; //range fixing
         }
-        if(currYaw+15.0 >= toTurn) {
+        if(currYaw-3 >= toTurn) {
             char* i_command;
             printf("done");
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
             i_command = (char*)malloc(i_length);
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
             WriteCommand(i_command, i_length);
-            currState = IDLE;
+            if(victimLeft || victimRight) {
+                currState = DROP;
+            } else {
+                currState = IDLE;
+            }
             return;
         }
     }
@@ -467,12 +496,18 @@ void ARobot::ParseLight() {
     lightParseList.pop();
 }
 
+void ARobot::ParseScan() {
+    scanParseList.front().getScan();
+    scanDataList.push_back(scanParseList.front());
+    scanParseList.pop();
+}
+
 void ARobot::ClearIMU()
 {
     mlen_imu = imuDataList.size();
     while(mlen_imu > 200) {
         imuDataList.erase(imuDataList.begin());
-	    mlen_imu--;
+        mlen_imu--;
     }
 }
 
@@ -481,7 +516,7 @@ void ARobot::ClearRange()
     mlen_range = rangeDataList.size();
     while(mlen_range > 200) {
         rangeDataList.erase(rangeDataList.begin());
-	    mlen_range--;
+        mlen_range--;
     }
 }
 
@@ -490,7 +525,7 @@ void ARobot::ClearTemp()
     mlen_temp = tempDataList.size();
     while(mlen_temp > 200) {
         tempDataList.erase(tempDataList.begin());
-	    mlen_temp--;
+        mlen_temp--;
     }
 }
 
@@ -499,6 +534,11 @@ void ARobot::ClearLight()
     mlen_light = lightDataList.size();
     while(mlen_light > 200) {
         lightDataList.erase(lightDataList.begin());
-	    mlen_light--;
+        mlen_light--;
     }
+}
+
+void ARobot::ClearScan()
+{
+    scanDataList.clear();
 }

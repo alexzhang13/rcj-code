@@ -145,9 +145,10 @@ printf("step n\3");
 printf("step 4\n");
 	if(matched)
 		(*tbvlist).erase((*tbvlist).begin() + j);
-
+printf("step 5\n");
 	if(cur_cell->getStairCell()) 
 	{
+printf("step 6b\n");
 		if(m_cur_floor_index ==0) {
 			int32_t temp_floor = 1;
 			// this floor has not be explored
@@ -160,6 +161,7 @@ printf("step 4\n");
 					m_cur_floor_index = m_home_floor_num;
 				m_cur_cell_index = m_navigateMaps.getFloorMap(m_cur_floor_index)->getStairCell()->getCellNum();
 			}
+printf("step 7b\n");
 		}
 		else {
 			int32_t temp_floor = 0;
@@ -174,18 +176,22 @@ printf("step 4\n");
 				m_cur_cell_index = m_navigateMaps.getFloorMap(m_cur_floor_index)->getStairCell()->getCellNum();
 			}
 		}
-		
+printf("step 7c\n");
 	}
 	else {
+printf("step 6a\n");
 		// update neighbor cell walls
+
 		int32_t cellN_num = cur_cell->getNeighborCellNorth();
+printf("current cellN = %d\n", cellN_num);
 		if(m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellN_num) != NULL)
 			m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellN_num)->setWallSouth(cur_cell->getWallNorth());
 
 		int32_t cellE_num = cur_cell->getNeighborCellEast();
+printf("current cellE = %d\n", cellE_num);
 		if(m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellE_num) != NULL)
 			m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellE_num)->setWallWest(cur_cell->getWallEast());
-
+printf("step 7a\n");
 		int32_t cellS_num = cur_cell->getNeighborCellSouth();
 		if(m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellS_num) != NULL)
 			m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellS_num)->setWallNorth(cur_cell->getWallSouth());
@@ -194,7 +200,7 @@ printf("step 4\n");
 		if(m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellW_num) != NULL)
 			m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(cellW_num)->setWallEast(cur_cell->getWallWest());
 	}
-printf("step 5\n");
+printf("step 8\n");
 	return 0;
 }
 

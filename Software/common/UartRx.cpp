@@ -71,6 +71,8 @@ void UartRx::run(void){
             storeTemp(mBuf);
        	} else if (c == 'l') {
             storeLight(mBuf);
+        } else if (c == 'y') {
+        	storeScan(mBuf);
        	} else if (c == 'm') {
             myRobot->currState = ARobot::DATA; //IDLE
         } else if (c == 'd') {
@@ -103,6 +105,12 @@ void UartRx::storeLight(char* buf) {
     LightData curr_light;
     curr_light.storeCommand(buf, myRobot->getBlackThresh(), myRobot->getSilverThresh());
     myRobot->lightParseList.push(curr_light); //push light data
+}
+
+void UartRX::storeScan(char* buf) {
+	RangeData curr_range(myRobot);
+	curr_range.storeCommand(buf);
+	myRobot->scanParseList.push(curr_range);
 }
 
 bool UartRx::setLogFile(const char *filedir, const char* logname)
