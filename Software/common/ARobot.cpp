@@ -470,6 +470,7 @@ void ARobot::ParseIMU()
 void ARobot::ParseRange() {
     for(int i = 0; i < rangeParseList.size(); i++)
     {
+        printf("test");
         rangeParseList.front().parseData();
         rangeParseList.front().getPosition();
         if(rangeParseList.front().coord.x_flag == true) {
