@@ -112,6 +112,7 @@ void setup() {
 
   /*START UP SERIAL AND I2C WIRE*/
   Serial.begin(115200);
+  Serial.setTimeout(50);
   Wire.begin();
   AFMS.begin();  // create with the default frequency 1.6KHz
   TWBR = ((F_CPU/400000l) - 16) / 2; //change i2c clock speed to 400k
@@ -478,6 +479,8 @@ void sortCommands(String command)
 void Motor_Forward(int distance) //Function for moving forward a certain distance
 {
   distance_mm = distance;
+  motorRight->setSpeed(right_spd);
+  motorLeft->setSpeed(left_spd);
   motorRight->run(BACKWARD); //INVERTED
   motorLeft->run(BACKWARD);
 }
@@ -485,6 +488,8 @@ void Motor_Forward(int distance) //Function for moving forward a certain distanc
 void Motor_Backward(int distance)
 {
   distance_mm = distance;
+  motorRight->setSpeed(right_spd);
+  motorLeft->setSpeed(left_spd);
   motorRight->run(FORWARD);    //Direction is inverted
   motorLeft->run(FORWARD);
 }
@@ -498,16 +503,16 @@ void Motor_Stop()
 
 void Motor_TurnRight() //Makes a x degree turn to the right
 {
-  motorRight->setSpeed(right_spd);
-  motorLeft->setSpeed(left_spd);
+  motorRight->setSpeed(right_spd+15);
+  motorLeft->setSpeed(left_spd+15);
   motorRight->run(BACKWARD);
   motorLeft->run(FORWARD);
 }
 
 void Motor_TurnLeft() //Makes a x degree turn to the left
 {
-  motorRight->setSpeed(right_spd);
-  motorLeft->setSpeed(left_spd);
+  motorRight->setSpeed(right_spd+15);
+  motorLeft->setSpeed(left_spd+15);
   motorRight->run(FORWARD);
   motorLeft->run(BACKWARD);
 }
@@ -542,9 +547,9 @@ void Motor_Encoder()
 void Motor_Turn() //Turning encoders
 {
    if(abs(leftEncoder) < abs(rightEncoder)){
-    motorRight->setSpeed(speed_left); //corecting
+    motorRight->setSpeed(speed_left+15); //corecting
   } else {
-    motorRight->setSpeed(speed_left+15); //take 
+    motorRight->setSpeed(speed_left+30); //take 
   }
 }
 
