@@ -198,22 +198,25 @@ void writeCurrentMap(const char* filedir, const char* xmlname, ARobot *robot, Na
 
 void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt) 
 {
+static int cnt = 0;
     /*Navigational functions*/
     robot->sensor_info.reset(); //reset temp object
     robot->UpdateCellMap(&robot->sensor_info, false); //false = not black
     robot->UpdateNeighborCells();
     nav_rt.configureCurCell(&robot->sensor_info);
+if(cnt %30 == 0) {
     for(int i = 0; i < robot->temp_cell_list.size(); i++) {
         int x, y;
         robot->temp_cell_list[i].getCellGrid(x, y);
 	    printf("%d, i=%d, j=%d\n", i, x, y);
     }
+}
     nav_rt.detectLocalCells(robot->temp_cell_list);
     nav_rt.updateLocalMap();
     nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
 
     robot->temp_cell_list.clear();
-
+cnt++;
     //nav_rt.slam2d(); // will move to another thread
     // what to do next
     nav_rt.navigatePlanning();
@@ -239,7 +242,6 @@ int WayPointNav(ARobot *robot, Navigate2D &nav_rt)
 	nav_rt.getCellbyIndex(robot->waypts[bot_waypts-1])->getCellGrid(robot->currTile.x, robot->currTile.y);
     if(bot_waypts < 2) {
         robot->waypts.pop_back();
-	printf("new waypt");
         robot->currState = ARobot::PLANNING;
         return -1;
     }
