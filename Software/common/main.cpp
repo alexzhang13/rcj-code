@@ -49,7 +49,7 @@ int main(int argc,char **argv){
     printf("Fault 3 Passed\n");
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     
-    //readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
+    readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     sleep(3); //gather data in 3 secs
     //myRobot->TurnDistance(90, ARobot::RIGHT);
     while(1) {
@@ -72,10 +72,10 @@ int main(int argc,char **argv){
                 } 
                 break;
             case 4: //Ramp
-                /*while(myRobot->checkRamp()) {    
+                while(myRobot->checkRamp()) {    
                     sleep(0.1);
                 }
-                myRobot->StopMove();*/
+                myRobot->StopMove();
                 break;
             case 5: //Move
                 /*Put stuff here*/
@@ -97,8 +97,7 @@ int main(int argc,char **argv){
             case 9: //Data collection
                 //spin laser
                 sleep(3);
-                myRobot->currState = ARobot::WAYPTNAV;
-                /*if(myRobot->checkRamp()) { //is ramp
+                if(myRobot->checkRamp()) { //is ramp
                     myRobot->MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
                     break;
                 }
@@ -127,7 +126,7 @@ int main(int argc,char **argv){
                     default:
                         myRobot->currState = ARobot::WAYPTNAV;
                         break;
-                }*/
+                }
                 break;
             default:
                 /*Put stuff here*/
@@ -182,7 +181,7 @@ void readCurrentMap(const char* filedir, const char* xmlname, ARobot *robot, Nav
     std::string t = nav_rt.getCurTime();
 	std::string newfile = std::string(xmlname) + "_" + t;
     if(nav_rt.readChkPtMaps(filedir, newfile.c_str())!= 0) {
-	printf("call_home\n");
+	    printf("call_home\n");
         nav_rt.setHomeCell(home_floor_num, heading);    
         //set current robot coords to x, y
     }
