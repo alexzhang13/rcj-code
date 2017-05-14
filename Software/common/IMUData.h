@@ -30,10 +30,12 @@ public:
 	~IMUData();
 
 	int storeCommand(char* buf);
+	int getTStamp();
 	int parseData();
 	int runFilter();
 
 private:
+	int prev_tstamp;
 	IMU_DataType data;
 	char m_command[128]; //stored command
 };

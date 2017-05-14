@@ -453,9 +453,10 @@ void ARobot::ParseIMU()
 {
     for(int i = 0; i < imuParseList.size(); i++)
     {
-        imuParseList.front().parseData();
-        if(imuDataList.size() > 0) {
-            imuParseList.front().madgwick.set(((float)imuParseList.front().data.tstamp-(float)imuDataList.end().data.tstamp)/1000); //take current in parsing timestamp minus data list most updated (previous) and get difference
+        if(imuDataList.size() <= 0) {
+            imuParseList.front().parseData(-1); //special initial case
+        } else {
+            imuParseList.front().parseData(imuDataList.front().getTStamp());
         }
         imuParseList.front().runFilter();
         imuDataList.push_back(imuParseList.front());
