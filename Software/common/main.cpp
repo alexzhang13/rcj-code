@@ -98,13 +98,13 @@ int main(int argc,char **argv){
                 //spin laser
                 sleep(3);
                 if(myRobot->checkRamp()) { //is ramp
-                    MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
+                    myRobot->MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
                     break;
                 }
 
                 myRobot->checkLightTile();
                 if(myRobot->currTileLight == ARobot::SILVER) {
-                    LEDLight(5000);
+                    myRobot->LEDLight(5000);
                     //save state
                 }
                 switch(myRobot->checkVictimTemp()) {

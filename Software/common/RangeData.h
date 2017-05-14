@@ -44,10 +44,10 @@ public:
 		uint32_t tstamp; //timestamp
 		char id;
 		int16_t angle;
-		int32_t readingN;
-		int32_t readingE;
-		int32_t readingS;
-		int32_t readingW;
+		float readingN;
+		float readingE;
+		float readingS;
+		float readingW;
 	}Scan_DataType;
 
 	RangeData(ARobot *robot);
