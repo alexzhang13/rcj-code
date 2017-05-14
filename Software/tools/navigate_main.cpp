@@ -12,9 +12,9 @@ int main(int argc, char **argv)
 {
 	//int ret = greedy_dikjstra_test();
 	//int ret = mapgen_test();
-	int ret = navigation_simul_test();
+	//int ret = navigation_simul_test();
 	//int ret = testMapLoad();
-	//int ret = lineFitTest();
+	int ret = lineFitTest();
 	return ret;
 }
 
