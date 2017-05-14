@@ -29,17 +29,17 @@ int IMUData::parseData(int prev_TStamp)
 	return 0;
 }
 
-int IMUData::getTStamp(){
+int IMUData::getTStamp() {
 	return data.tstamp;
 }
 
 int IMUData::runFilter()
 {
-	if(prev_tstamp != -1) {
+	/*if(prev_tstamp != -1) {
         madgwick.set((float)data.tstamp-(float)prev_tstamp/1000); //take current in parsing timestamp minus data list most updated (previous) and get difference
     } else {
-    	madgwick.set(0.024);
-    }
+    	madgwick.set(0.026);
+    }*/
 	madgwick.updateIMU(data.gx/131, data.gy/131, data.gz/131, data.ax/16384, data.ay/16384, data.az/16384);
 	m_pitch = madgwick.getRoll(); //inverted
 	m_roll = madgwick.getPitch(); //inverted
