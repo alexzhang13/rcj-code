@@ -34,7 +34,6 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
 {
     if(black_flag) {
         if(currTileLight == SILVER) {
-            LEDLight(5000);
             sensor_info->setCheckPt(true);
             sensor_info->setNonMovable(false);
         } else { //black is a different case *WHITE
@@ -44,10 +43,14 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
         if(checkRamp()) {
             sensor_info->setStairCell(true);
         } else {sensor_info->setStairCell(false);}
-        if(checkVictimTemp()) {
-            //sensor_info->setVictim(true);
-            //sensor_info->setVictimDirection(victimDir);
-            sensor_info->setVictim(false);
+        if(victimRight) {
+            sensor_info->setVictim(true);
+            sensor_info->setVictimDirection(((int)currOrientation + 1)%4);
+            victimRight = false;
+        } else if (victimLeft){
+            sensor_info->setVictim(true);
+            sensor_info->setVictimDirection(((int)currOrientation + 3)%4);
+            victimLeft = false;
         } else {
             sensor_info->setVictim(false);
         }
@@ -77,7 +80,10 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
             sensor_info->setWallWest(MazeCell::MOpen);
         } 
     } else {
-
+        sensor_info->setNonMovable(true);
+        sensor_info->setCheckPt(false);
+        sensor_info->setVictim(false);
+        sensor_info->setStairCell(false);
     }
 
 }
@@ -339,7 +345,6 @@ void ARobot::Drop()
 
     snprintf(i_command, i_length, "%c %c", 'd', 'a');
     WriteCommand(i_command, i_length);
-    currState = DROP;
 }
 
 void ARobot::SetSpeed(int left_speed, int right_speed) {
@@ -362,7 +367,9 @@ void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
     } else {
         snprintf(i_command, i_length, "%c %c %d", 'm', 'b', distance_mm);
     }
-    currState = MOVE;
+    if(!currState == RAMP) {
+        currState = MOVE;
+    }
     WriteCommand(i_command, i_length);
 }
 void ARobot::TurnDistance(int degrees, BotDir dir)
@@ -386,6 +393,12 @@ void ARobot::TurnDistance(int degrees, BotDir dir)
     WriteCommand(i_command, i_length);
 }
 
+void ARobot::StopMove() {
+    int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
+    char* i_command = (char*)malloc(i_length);
+    WriteCommand(i_command, i_length);
+}
+
 void ARobot::StopTurn(BotDir dir)
 {
     size_t imu_list = imuDataList.size();
@@ -404,7 +417,11 @@ void ARobot::StopTurn(BotDir dir)
             i_command = (char*)malloc(i_length);
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
             WriteCommand(i_command, i_length);
-            currState = IDLE;           
+            if(victimLeft || victimRight) {
+                currState = DROP;
+            } else {
+                currState = IDLE; 
+            }          
             return;
         }
     } else if(dir == LEFT) {
@@ -421,7 +438,11 @@ void ARobot::StopTurn(BotDir dir)
             i_command = (char*)malloc(i_length);
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
             WriteCommand(i_command, i_length);
-            currState = IDLE;
+            if(victimLeft || victimRight) {
+                currState = DROP;
+            } else {
+                currState = IDLE;
+            }
             return;
         }
     }

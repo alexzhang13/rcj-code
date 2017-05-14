@@ -71,6 +71,7 @@ class ARobot {
  	/*DC Motor Control*/
  	void SetSpeed(int left_speed, int right_speed);
  	void MoveDistance(int distance_mm, BotDir forward);
+ 	void StopMove();
  	void TurnDistance(int degrees, BotDir right);
  	void StopTurn(BotDir right);
 
@@ -110,9 +111,10 @@ class ARobot {
 
 	MazeCell sensor_info; //sensor info for current cell
 
+	uint8_t dropCnt; //dropping counter
 	bool toMove; //true means the robot still has to move after turning
-	bool toDropRight; //true if is dropping to the right
-	bool toDropLeft;
+	bool victimRight; //true if is dropping to the right
+	bool victimLeft;
 	bool backingBlack; //if the robot is backing up on a black tile
 	int dist_temp; //store temporary distance to travel
 

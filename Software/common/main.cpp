@@ -49,9 +49,9 @@ int main(int argc,char **argv){
     printf("Fault 3 Passed\n");
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     
-    //readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
+    readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     sleep(3); //gather data in 3 secs
-    myRobot->TurnDistance(90, ARobot::RIGHT);
+    //myRobot->TurnDistance(90, ARobot::RIGHT);
     while(1) {
         switch(myRobot->currState) {
             case 0: //Planning
@@ -72,13 +72,20 @@ int main(int argc,char **argv){
                 } 
                 break;
             case 4: //Ramp
-                /*Put stuff here*/
+                while(myRobot->checkRamp()) {    
+                    sleep(0.1);
+                }
+                myRobot->StopMove();
                 break;
             case 5: //Move
                 /*Put stuff here*/
                 break;
             case 6: //Drop
-                if()
+                for(int i = 0; i < myRobot->dropCnt; i++) {
+                    myRobot->Drop();
+                    sleep(2);
+                }
+                myRobot->currState = ARobot::WAYPTNAV;
                 break;
             case 7: //LED
                 /*Put stuff here*/
@@ -90,13 +97,36 @@ int main(int argc,char **argv){
             case 9: //Data collection
                 //spin laser
                 sleep(3);
-                myRobot->checkVictimTemp();
+                if(myRobot->checkRamp()) { //is ramp
+                    MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
+                    break;
+                }
+
                 myRobot->checkLightTile();
                 if(myRobot->currTileLight == ARobot::SILVER) {
                     LEDLight(5000);
+                    //save state
                 }
-                myRobot->currState = ARobot::WAYPTNAV;
-
+                switch(myRobot->checkVictimTemp()) {
+                    case 0:
+                        myRobot->currState = ARobot::WAYPTNAV;
+                        break;
+                    case 1: //drop or go back to calculating
+                        myRobot->victimRight = true;
+                        myRobot->TurnDistance(90, ARobot::LEFT); //turn left to drop from back onto right side
+                        myRobot->dropCnt = 1;
+                        //myRobot->currState = ARobot::Drop; --> Done in StopTurn();
+                        break;
+                    case 2:
+                        myRobot->victimLeft = true;
+                        myRobot->TurnDistance(90, ARobot::RIGHT); //turn right to drop from back onto left side
+                        myRobot->dropCnt = 1;
+                        //myRobot->currState = ARobot::Drop;
+                        break;
+                    default:
+                        myRobot->currState = ARobot::WAYPTNAV;
+                        break;
+                }
                 break;
             default:
                 /*Put stuff here*/
