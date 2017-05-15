@@ -12,10 +12,8 @@ TempData::~TempData()
 	
 }
 
-int TempData::storeCommand(char* buf, float threshLeft, float threshRight) {
+int TempData::storeCommand(char* buf) {
 	memcpy(m_command, buf, 64);
-	thresholdL = threshLeft;
-	thresholdR = threshRight;
 }
 
 int TempData::parseData()
@@ -24,13 +22,12 @@ int TempData::parseData()
 	return 0;
 }
 
-int TempData::checkTemp()
+int TempData::getRightTemp()
 {
-	if(data.tmpL > thresholdL) {
-		return 1;
-	}
-	if (data.tmpR > thresholdR) {
-		return 2;
-	}
-	return 0;
+	return data.tmpR;
+}
+
+int TempData::getLeftTemp()
+{
+	return data.tmpL;
 }

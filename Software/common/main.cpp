@@ -92,7 +92,7 @@ int main(int argc,char **argv){
                 }
                 myRobot->currState = ARobot::WAYPTNAV;
                 break;
-            case 7: //BLACK
+            case 7: //BLACKBACK
                 sleep(1);
                 myRobot->backingBlack = false;
                 //updateCellMap called in Robot.cpp when initially seeing black
@@ -209,7 +209,7 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
 {
 static int cnt = 0;
     /*Navigational functions*/
-    robot->sensor_info.reset(); //reset temp object
+    robot->sensor_info->reset(); //reset temp object
     robot->UpdateCellMap(&robot->sensor_info, false); //false = not black
     robot->UpdateNeighborCells();
     nav_rt.configureCurCell(&robot->sensor_info);

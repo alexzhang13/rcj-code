@@ -83,8 +83,8 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
             sensor_info->setWallWest(MazeCell::MOpen);
         } 
     } else {
-        sensor_info.reset();
-        sensor_info.setCellGrid(currTile.x_tovisit, currTile.y_tovisit);
+        sensor_info->reset();
+        sensor_info->setCellGrid(currTile.x_tovisit, currTile.y_tovisit);
         sensor_info->setNonMovable(true);
         sensor_info->setCheckPt(false);
         sensor_info->setVictim(false);
@@ -270,10 +270,21 @@ bool ARobot::checkRamp()
 
 int ARobot::checkVictimTemp()
 {
-    size_t temp_vals = tempDataList.size();
-    //if(tempDataList[temp_vals-1].checkTemp() == 1) { //left sensor activated
-
-    //}
+    size_t temp_vals = tempDataList.size(); //get average values
+    float temp_avg = 0;
+    for(int i = 1; i < 5; i++) { //left threshold
+        temp_avg += tempDataList[temp_vals-i].getLeftTemp();
+    }
+    if(temp_avg/5.0f > threshLeft) {
+        return 2;
+    }
+    temp_avg = 0; //reset
+    for(int i = 1; i < 5; i++) { //right threshold
+        temp_avg += tempDataList[temp_vals-i].getRightTemp();
+    }
+    if(temp_avg/5.0f > threshRight) {
+        return 1;
+    }
     return 0;
 }
 
@@ -340,7 +351,6 @@ void ARobot::LEDLight(int time)
 
     snprintf(i_command, i_length, "%c %c %d", 'd', 'b', time);
     WriteCommand(i_command, i_length);
-    currState = LED;
 }
 
 void ARobot::Drop()
@@ -395,7 +405,7 @@ void ARobot::TurnDistance(int degrees, BotDir dir)
         currDir = LEFT;
     }
     currState = TURN;
-    printf("Initial Yaw: %f Degrees: %f ToTurn: %f\n", initialYaw, degrees, toTurn);
+    printf("Initial Yaw: %f Degrees: %f ToTurn: %d\n", initialYaw, degrees, toTurn);
     WriteCommand(i_command, i_length);
 }
 
@@ -491,7 +501,6 @@ void ARobot::ParseTemp() {
     for(int i = 0; i < tempParseList.size(); i++)
     {
         tempParseList.front().parseData();
-        tempParseList.front().checkTemp();
         tempDataList.push_back(tempParseList.front());
         tempParseList.pop();
     }

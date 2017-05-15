@@ -101,7 +101,7 @@ void UartRx::storeRange(char* buf) {
 
 void UartRx::storeTemp(char* buf) {
     TempData curr_temp;
-    curr_temp.storeCommand(buf, myRobot->getLeftVictimTemp(), myRobot->getRightVictimTemp());
+    curr_temp.storeCommand(buf);
     myRobot->tempParseList.push(curr_temp); //push temp data
 }
 
