@@ -59,7 +59,7 @@ int RangeData::getPosition()
 		temp_dist = (int)temp_range[0]/300;
 		distance[0] = temp_range[0] - temp_dist*300;
 	} else {
-		distance[0] = 316.0f; //impossible number for distance[0], as it's %300
+		distance[0] = 451.0f; //impossible number for distance[0], as it's %300
 		temp_range[0] = -300;
 	} 
 	if(data.laserL_b <= 1200) { //check if reading is valid LONG BACK
@@ -67,7 +67,7 @@ int RangeData::getPosition()
 		temp_dist = (int)temp_range[2]/300;
 		distance[2] = temp_range[2] - temp_dist*300;
 	} else {
-		distance[2] = 316.0f; //impossible number for distance[2], as it's %300
+		distance[2] = 451.0f; //impossible number for distance[2], as it's %300
 		temp_range[2] = -300;
 	}
 	if(data.laserS_a <= 210) { //check if reading is valid SHORT RIGHT
@@ -75,7 +75,7 @@ int RangeData::getPosition()
 		temp_dist = (int)temp_range[1]/300;
 		distance[1] = temp_range[1] - temp_dist*300;
 	} else {
-		distance[1] = 316.0f;
+		distance[1] = 451.0f;
 		temp_range[1] = -300;
 	}
 	if(data.laserS_b <= 210) { //check if reading is valid SHORT LEFT
@@ -83,7 +83,7 @@ int RangeData::getPosition()
 		temp_dist = (int)temp_range[3]/300;
 		distance[3] = temp_range[3] - temp_dist*300;
 	} else {
-		distance[3] = 316.0f;
+		distance[3] = 451.0f;
 		temp_range[3] = -300;
 	}
 
@@ -102,7 +102,7 @@ int RangeData::getPosition()
 
 	for(int i = 0; i < 4; i++) {
 		if((data.dir + i) % 2 == 1) { //x coords
-			if(distance[(i+data.dir)%4] != 301) {
+			if(abs(distance[(i+data.dir)%4]) != 301) {
 				coord.x += distance[(i+data.dir)%4];
 				if(distance[(i+data.dir)%4] != coord.x){ //If you already went through more than one iteration, now you want to divide by 2
 					coord.x /= 2;
@@ -115,7 +115,7 @@ int RangeData::getPosition()
 				}
 			}
 		} else { //y coords
-			if(distance[(i+data.dir)%4] != 301) {
+			if(abs(distance[(i+data.dir)%4]) != 301) {
 				coord.y += distance[(i+data.dir)%4];
 				if(distance[(i+data.dir)%4] != coord.y){ //If you already went through more than one iteration, now you want to divide by 2
 					coord.y /= 2;
