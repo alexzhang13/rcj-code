@@ -405,7 +405,7 @@ void ARobot::TurnDistance(int degrees, BotDir dir)
         currDir = LEFT;
     }
     currState = TURN;
-    printf("Initial Yaw: %f Degrees: %f ToTurn: %d\n", initialYaw, degrees, toTurn);
+    printf("Initial Yaw: %f Degrees: %d ToTurn: %f\n", initialYaw, degrees, toTurn);
     WriteCommand(i_command, i_length);
 }
 
