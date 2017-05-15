@@ -85,10 +85,19 @@ int main(int argc,char **argv){
                     myRobot->Drop();
                     sleep(2);
                 }
+                if(myRobot->victimRight) {
+                    myRobot->TurnDistance(90, ARobot::RIGHT); //turn back to right
+                } else if (myRobot->victimLeft) {
+                    myRobot->TurnDistance(90, ARobot::LEFT); //turn back to left
+                }
                 myRobot->currState = ARobot::WAYPTNAV;
                 break;
-            case 7: //LED
-                /*Put stuff here*/
+            case 7: //BLACK
+                sleep(1);
+                myRobot->backingBlack = false;
+                //updateCellMap called in Robot.cpp when initially seeing black
+                nav_rt.configureCurCell(&robot->sensor_info);
+                myRobot->currState = ARobot::PLANNING;
                 break;
             case 8: //DONE
                 sleep(1);

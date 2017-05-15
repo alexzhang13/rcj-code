@@ -83,10 +83,13 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
             sensor_info->setWallWest(MazeCell::MOpen);
         } 
     } else {
+        sensor_info.reset();
+        sensor_info.setCellGrid(currTile.x_tovisit, currTile.y_tovisit);
         sensor_info->setNonMovable(true);
         sensor_info->setCheckPt(false);
         sensor_info->setVictim(false);
         sensor_info->setStairCell(false);
+        sensor_info->setVisitStatus(MazeCell::Visited);
     }
 
 }
@@ -240,7 +243,7 @@ void ARobot::TileTransition(BotOrientation direction, float angle, int32_t dist)
     /*Turning first*/
     if(turnNext == 3) {turnNext = -1;} //west -> north = turn right 1
     else if (turnNext == -3) {turnNext = 1;} //north -> west = turn left 1
-    if(toTurn > 2) { //ignore smaller angles
+    if(abs(toTurn) > 2) { //ignore smaller angles
         printf("%d", toTurn);
         TurnDistance(abs(toTurn), (toTurn > 0) ? RIGHT : LEFT); //left is positive for IMU
         dist_temp = dist;
@@ -323,7 +326,6 @@ void ARobot::checkLightTile()
         }
     } else {
         currTileLight = WHITE;
-        backingBlack = false; //reset
     }
     if(mlen_light > 200) 
         lightDataList.erase(lightDataList.begin(), lightDataList.begin() + mlen_light - 200);
