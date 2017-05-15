@@ -21,7 +21,6 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     toMove = false;
     victimRight = false; //true if is dropping to the right
     victimLeft = false;
-    backingBlack = false; //if the robot is backing up on a black tile
 }
 
 ARobot::~ARobot() 
@@ -480,7 +479,7 @@ void ARobot::ParseRange() {
             currTile.y_map = (currTile.y*300) + rangeParseList.front().coord.y_glob;
         }
 
-        printf("x: %d y: %d", currTile.x_map, currTile.y_map);
+        printf("x: %d y: %d\n", currTile.x_map, currTile.y_map);
         rangeDataList.push_back(rangeParseList.front());
         rangeParseList.pop();
     }
