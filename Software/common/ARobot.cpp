@@ -319,7 +319,7 @@ void ARobot::checkLightTile()
         currTileLight = BLACK;
         if(backingBlack == false) {
             backingBlack = true;
-            MoveDistance(160, BACK); //move back 16 cm
+            MoveDistance(175, BACK); //move back 16 cm
             UpdateCellMap(&sensor_info, backingBlack);
         }
     } else {
@@ -480,6 +480,7 @@ void ARobot::ParseRange() {
             currTile.y_map = (currTile.y*300) + rangeParseList.front().coord.y_glob;
         }
 
+        printf("x: %d y: %d", currTile.x_map, currTile.y_map);
         rangeDataList.push_back(rangeParseList.front());
         rangeParseList.pop();
     }
