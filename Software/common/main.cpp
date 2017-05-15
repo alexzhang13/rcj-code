@@ -96,7 +96,7 @@ int main(int argc,char **argv){
                 sleep(1);
                 myRobot->backingBlack = false;
                 //updateCellMap called in Robot.cpp when initially seeing black
-                nav.configureCurCell(myRobot->sensor_info);
+                nav.configureCurCell(myRobot.sensor_info);
                 myRobot->currState = ARobot::PLANNING;
                 break;
             case 8: //DONE
