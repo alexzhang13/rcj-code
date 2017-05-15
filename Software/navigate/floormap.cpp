@@ -347,6 +347,9 @@ int32_t MazeFloorMap::updateCellArray()
 	int32_t max_i = -100*(m_grid_wsize + m_grid_hsize);
 	int32_t max_j = max_i;
 	int32_t cells_nums = getCellSize();
+	if(cells_nums == 0)
+		return 0;
+
 	float cell_width = getCell(0)->getCellWidth();
 
 	for(i = 0; i < cells_nums; i++) {
@@ -412,6 +415,9 @@ int32_t MazeFloorMap::updateCellArray()
 
 	setMapHsize((float)m_grid_wsize * cell_width);
 	setMapVsize((float)m_grid_hsize * cell_width);
+
+	// set current cell index to the checkpoint index
+	m_cur_cell_index = m_latest_checkpt_index;
 
 	return m_grid_wsize*m_grid_hsize;
 }
