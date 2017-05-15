@@ -444,7 +444,7 @@ int32_t MazeMaps::readXmlMap(const char* out_dir, const char* name)
 					cellElement->QueryIntAttribute("home", &homecell);
 					cellElement->QueryIntAttribute("stair", &staircell);
 					cellElement->QueryIntAttribute("checkpt", &checkptcell);
-					if(homecell > 0) {
+					if(homecell >= 0) {
 						m_floormap[floor_num].setHomeCellFlag(true);
 						m_floormap[floor_num].setHomeCellNum(homecell);
 					}
@@ -453,6 +453,7 @@ int32_t MazeMaps::readXmlMap(const char* out_dir, const char* name)
 					}
 					if(checkptcell > 0) {
 						m_floormap[floor_num].setLatestChkPtCellIndex(checkptcell);
+						m_cur_cell_index = checkptcell;
 					}
 
 					m_floormap[floor_num].resetMap();
@@ -509,6 +510,10 @@ int32_t MazeMaps::readXmlMap(const char* out_dir, const char* name)
 					if(status == TIXML_SUCCESS && CheckPt == 1) {
 						cell->setCheckPt(CheckPt > 0);
 						m_floormap[floor_num].getCheckPtList()->push_back(cell->getCellNum());
+						if(id == m_cur_cell_index) {
+							m_floormap[floor_num].setCurCellIndex(id);
+							m_floormap[floor_num].setLatestChkPtCellIndex(id);
+						}
 					}
 					status = cellElement->QueryIntAttribute("NonMovable", &NonMovable);
 					if(status == TIXML_SUCCESS && NonMovable == 1)
@@ -521,10 +526,12 @@ int32_t MazeMaps::readXmlMap(const char* out_dir, const char* name)
 						cell->setStairCell(Stair > 0);
 						m_floormap[floor_num].setStairCell(cell);
 					}
-					status = cellElement->QueryIntAttribute("Home", &Home);
+					status = cellElement->QueryIntAttribute("HomeCell", &Home);
 					if(status == TIXML_SUCCESS && Home == 1) {
 						cell->setHomeCell(Home > 0);
 						m_floormap[floor_num].setHomeCell(cell);
+						m_floormap[floor_num].setHomeCellFlag(true);
+						m_floormap[floor_num].setHomeCellNum(id);
 					}
 					Victim = CheckPt = NonMovable = Obstacle = Stair = Home = 0;
 					cell->enableCellValid(true);
