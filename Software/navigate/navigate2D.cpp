@@ -73,6 +73,8 @@ int32_t Navigate2D::setHomeCell(int32_t floor_num, MazeCell::NavDir heading)
 	homecell->setNavDirection(heading);
 	m_home_cell_index = homecell->getCellNum();
 	m_cur_cell_index = m_home_cell_index;
+	m_navigateMaps.getFloorMap(m_cur_floor_index)->setCurCellIndex(m_cur_cell_index);
+	m_navigateMaps.getFloorMap(m_cur_floor_index)->setLatestChkPtCellIndex(m_cur_cell_index);
 	return 0;
 }
 
@@ -191,7 +193,7 @@ int32_t Navigate2D::configureCurCell(MazeCell *sensor_info)
 }
 
 //! from sensor detection
-int32_t Navigate2D::detectLocalCells(std::vector<MazeCell> next_cell_list)
+int32_t Navigate2D::detectLocalCells(std::vector<MazeCell> &next_cell_list)
 {
 	int32_t i0, j0, i1, j1, i2, j2, i, j, grid_w, grid_h;
 	MazeCell *cur_cell = m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(m_cur_cell_index);
