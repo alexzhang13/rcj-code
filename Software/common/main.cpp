@@ -96,7 +96,7 @@ int main(int argc,char **argv){
                 sleep(1);
                 myRobot->backingBlack = false;
                 //updateCellMap called in Robot.cpp when initially seeing black
-                nav_rt.configureCurCell(&robot->sensor_info);
+                nav.configureCurCell(myRobot->sensor_info);
                 myRobot->currState = ARobot::PLANNING;
                 break;
             case 8: //DONE
@@ -209,7 +209,7 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
 {
 static int cnt = 0;
     /*Navigational functions*/
-    robot->sensor_info->reset(); //reset temp object
+    robot->sensor_info.reset(); //reset temp object
     robot->UpdateCellMap(&robot->sensor_info, false); //false = not black
     robot->UpdateNeighborCells();
     nav_rt.configureCurCell(&robot->sensor_info);
@@ -246,9 +246,9 @@ int WayPointNav(ARobot *robot, Navigate2D &nav_rt)
 {
     bot_waypts = robot->waypts.size();
     if(bot_waypts > 1)
-	robot->waypts.pop_back();
-	nav_rt.getNavigateMaps()->getFloorMap(nav_rt.getCurrentFloorIndex())->setCurCellIndex(robot->waypts[bot_waypts-1]);
-	nav_rt.getCellbyIndex(robot->waypts[bot_waypts-1])->getCellGrid(robot->currTile.x, robot->currTile.y);
+	   robot->waypts.pop_back();
+	   nav_rt.getNavigateMaps()->getFloorMap(nav_rt.getCurrentFloorIndex())->setCurCellIndex(robot->waypts[bot_waypts-1]);
+	   nav_rt.getCellbyIndex(robot->waypts[bot_waypts-1])->getCellGrid(robot->currTile.x, robot->currTile.y);
     if(bot_waypts < 2) {
         robot->waypts.pop_back();
         robot->currState = ARobot::PLANNING;
