@@ -371,7 +371,7 @@ void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
     } else {
         snprintf(i_command, i_length, "%c %c %d", 'm', 'b', distance_mm);
     }
-    if(!currState == RAMP) {
+    if(!(currState == RAMP)) {
         currState = MOVE;
     }
     WriteCommand(i_command, i_length);
