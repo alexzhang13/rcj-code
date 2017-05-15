@@ -416,8 +416,5 @@ int32_t MazeFloorMap::updateCellArray()
 	setMapHsize((float)m_grid_wsize * cell_width);
 	setMapVsize((float)m_grid_hsize * cell_width);
 
-	// set current cell index to the checkpoint index
-	m_cur_cell_index = m_latest_checkpt_index;
-
 	return m_grid_wsize*m_grid_hsize;
 }

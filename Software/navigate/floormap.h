@@ -39,12 +39,12 @@ public:
 	inline bool isHomeCell() { return m_is_home;}
 	inline void setHomeCellFlag(bool flag) {m_is_home = flag;}
 	inline int32_t getHomeCellNum() { return m_home_cell_index;}
-	inline void setHomeCellNum(int32_t num) { m_home_cell_index = num;}
+	inline void setHomeCellNum(int32_t num) { m_home_cell_index = num; if(m_cell_list.size() > 0)  m_home_cell = &m_cell_list[num];}
 	inline void setHomeCell(MazeCell *cell) { m_home_cell = cell;} 
 	inline MazeCell *getHomeCell() { return m_home_cell;}
 	inline MazeCell *getCurrentCell() { return m_cur_cell;}
 	inline int32_t getCurCellIndex() { return m_cur_cell_index;}
-	inline void setCurCellIndex(int32_t indx) { m_cur_cell_index = indx; m_cur_cell = &m_cell_list[indx];}
+	inline void setCurCellIndex(int32_t indx) { m_cur_cell_index = indx; if(m_cell_list.size() > 0)  m_cur_cell = &m_cell_list[indx];}
 	inline MazeCell* getStairCell() { return m_stair_cell;}
 	inline void setStairCell(MazeCell *cell) { m_stair_cell = cell;} 
 
@@ -66,9 +66,9 @@ public:
 	inline int32_t getGridHsize(void) { return m_grid_wsize;}
 	inline int32_t getGridVsize(void) { return m_grid_hsize;}
 
-	inline void setStairCellIndex(int32_t indx) { m_stair_cell_index = indx;}
+	inline void setStairCellIndex(int32_t indx) { m_stair_cell_index = indx;  if(m_cell_list.size() > 0) m_stair_cell = &m_cell_list[indx];}
 	inline int32_t getStairCellIndex() { return m_stair_cell_index;}
-	inline void setLatestChkPtCellIndex(int32_t indx) { m_latest_checkpt_index = indx;}
+	inline void setLatestChkPtCellIndex(int32_t indx) { m_latest_checkpt_index = indx; if(m_cell_list.size() > 0)  m_latest_checkpt_cell = &m_cell_list[indx];}
 	inline int32_t getLatestChkPtCellIndex() { return m_latest_checkpt_index;}
 
 
