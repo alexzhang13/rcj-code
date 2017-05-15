@@ -1,3 +1,0 @@
-/home/alex/projects/rcj-code/Software/build/CMakeFiles/edit_cache.dir
-/home/alex/projects/rcj-code/Software/build/CMakeFiles/rebuild_cache.dir
-/home/alex/projects/rcj-code/Software/build/CMakeFiles/robot.dir

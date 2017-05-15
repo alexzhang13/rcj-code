@@ -29,7 +29,7 @@ public:
 	virtual int32_t configureCurCell(MazeCell *sensor_info);
 
 	//! detect local cells from sensor measures
-	virtual int32_t detectLocalCells(std::vector<MazeCell> next_cell_list);
+	virtual int32_t detectLocalCells(std::vector<MazeCell> &next_cell_list);
 
 	//! update local map based on parsed sensor data
 	virtual int32_t updateLocalMap(); 

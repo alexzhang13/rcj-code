@@ -65,7 +65,7 @@ int32_t MazeMaps::displayPhysicalMap(int32_t floor_num, std::vector<GreedyDijkst
 		MazeCell *c =  m_floormap[floor_num].getCell(i);
 		indx = c->getCellNum();
 		c->getCellGrid(x,y);
-		printf("%d (%d %d), %d %d %d %d %d\n", indx, x, y, c->getVisitStatus(), c->getWallNorth(), c->getWallEast(), c->getWallSouth(), c->getWallWest());
+		//printf("%d (%d %d), %d %d %d %d %d\n", indx, x, y, c->getVisitStatus(), c->getWallNorth(), c->getWallEast(), c->getWallSouth(), c->getWallWest());
 		fillRectangle(m_disp_img[floor_num], floor_num, c);
 		drawRectangle(m_disp_img[floor_num], floor_num, c);
 	}
@@ -433,7 +433,7 @@ int32_t MazeMaps::readXmlMap(const char* out_dir, const char* name)
 			for( cellnode = floorMapElement->IterateChildren( 0 ); cellnode; cellnode = floorMapElement->IterateChildren( cellnode ) )
 			{
 				int32_t homecell,staircell, checkptcell;
-				printf("%s\n", cellnode->Value()); // floorinfo and cell
+				//printf("%s\n", cellnode->Value()); // floorinfo and cell
 				cellElement = cellnode->ToElement();
 				if(strcmp(cellnode->Value(), "floorinfo") == 0) {
 					cellElement->QueryIntAttribute("width", &m_floor[floor_num].grid_w);
@@ -444,7 +444,7 @@ int32_t MazeMaps::readXmlMap(const char* out_dir, const char* name)
 					cellElement->QueryIntAttribute("home", &homecell);
 					cellElement->QueryIntAttribute("stair", &staircell);
 					cellElement->QueryIntAttribute("checkpt", &checkptcell);
-					if(homecell > 0) {
+					if(homecell >= 0) {
 						m_floormap[floor_num].setHomeCellFlag(true);
 						m_floormap[floor_num].setHomeCellNum(homecell);
 					}
@@ -453,6 +453,7 @@ int32_t MazeMaps::readXmlMap(const char* out_dir, const char* name)
 					}
 					if(checkptcell > 0) {
 						m_floormap[floor_num].setLatestChkPtCellIndex(checkptcell);
+						m_cur_cell_index = checkptcell;
 					}
 
 					m_floormap[floor_num].resetMap();
@@ -464,7 +465,7 @@ int32_t MazeMaps::readXmlMap(const char* out_dir, const char* name)
 				}
 				else if(strcmp(cellnode->Value(), "cell") == 0) {
 					cellElement->QueryIntAttribute("id", &id);
-					printf("%d\n", id);
+					//printf("%d\n", id);
 					MazeCell *cell = m_floormap[floor_num].getCell(id);
 					cell->setCellWidth(cellsize);
 					cellElement->QueryIntAttribute("i", &i);
@@ -509,6 +510,10 @@ int32_t MazeMaps::readXmlMap(const char* out_dir, const char* name)
 					if(status == TIXML_SUCCESS && CheckPt == 1) {
 						cell->setCheckPt(CheckPt > 0);
 						m_floormap[floor_num].getCheckPtList()->push_back(cell->getCellNum());
+						if(id == m_cur_cell_index) {
+							m_floormap[floor_num].setCurCellIndex(id);
+							m_floormap[floor_num].setLatestChkPtCellIndex(id);
+						}
 					}
 					status = cellElement->QueryIntAttribute("NonMovable", &NonMovable);
 					if(status == TIXML_SUCCESS && NonMovable == 1)
@@ -521,10 +526,12 @@ int32_t MazeMaps::readXmlMap(const char* out_dir, const char* name)
 						cell->setStairCell(Stair > 0);
 						m_floormap[floor_num].setStairCell(cell);
 					}
-					status = cellElement->QueryIntAttribute("Home", &Home);
+					status = cellElement->QueryIntAttribute("HomeCell", &Home);
 					if(status == TIXML_SUCCESS && Home == 1) {
 						cell->setHomeCell(Home > 0);
 						m_floormap[floor_num].setHomeCell(cell);
+						m_floormap[floor_num].setHomeCellFlag(true);
+						m_floormap[floor_num].setHomeCellNum(id);
 					}
 					Victim = CheckPt = NonMovable = Obstacle = Stair = Home = 0;
 					cell->enableCellValid(true);

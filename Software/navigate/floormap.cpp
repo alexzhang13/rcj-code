@@ -347,6 +347,9 @@ int32_t MazeFloorMap::updateCellArray()
 	int32_t max_i = -100*(m_grid_wsize + m_grid_hsize);
 	int32_t max_j = max_i;
 	int32_t cells_nums = getCellSize();
+	if(cells_nums == 0)
+		return 0;
+
 	float cell_width = getCell(0)->getCellWidth();
 
 	for(i = 0; i < cells_nums; i++) {
