@@ -65,7 +65,7 @@ int32_t MazeMaps::displayPhysicalMap(int32_t floor_num, std::vector<GreedyDijkst
 		MazeCell *c =  m_floormap[floor_num].getCell(i);
 		indx = c->getCellNum();
 		c->getCellGrid(x,y);
-		printf("%d (%d %d), %d %d %d %d %d\n", indx, x, y, c->getVisitStatus(), c->getWallNorth(), c->getWallEast(), c->getWallSouth(), c->getWallWest());
+		//printf("%d (%d %d), %d %d %d %d %d\n", indx, x, y, c->getVisitStatus(), c->getWallNorth(), c->getWallEast(), c->getWallSouth(), c->getWallWest());
 		fillRectangle(m_disp_img[floor_num], floor_num, c);
 		drawRectangle(m_disp_img[floor_num], floor_num, c);
 	}
@@ -433,7 +433,7 @@ int32_t MazeMaps::readXmlMap(const char* out_dir, const char* name)
 			for( cellnode = floorMapElement->IterateChildren( 0 ); cellnode; cellnode = floorMapElement->IterateChildren( cellnode ) )
 			{
 				int32_t homecell,staircell, checkptcell;
-				printf("%s\n", cellnode->Value()); // floorinfo and cell
+				//printf("%s\n", cellnode->Value()); // floorinfo and cell
 				cellElement = cellnode->ToElement();
 				if(strcmp(cellnode->Value(), "floorinfo") == 0) {
 					cellElement->QueryIntAttribute("width", &m_floor[floor_num].grid_w);
@@ -465,7 +465,7 @@ int32_t MazeMaps::readXmlMap(const char* out_dir, const char* name)
 				}
 				else if(strcmp(cellnode->Value(), "cell") == 0) {
 					cellElement->QueryIntAttribute("id", &id);
-					printf("%d\n", id);
+					//printf("%d\n", id);
 					MazeCell *cell = m_floormap[floor_num].getCell(id);
 					cell->setCellWidth(cellsize);
 					cellElement->QueryIntAttribute("i", &i);

@@ -45,9 +45,14 @@ public:
 	inline int32_t getNumOfFloors() { return m_floors;}
 	inline int32_t getHomeFloorNum() { return m_home_floor;}
 	inline int32_t getHomeCellIndex() { return m_home_cell_index;}
-	inline int32_t getFloorNums() { return m_floors;}
+
+
 	inline int32_t getCurFloorNum() { return m_cur_floor;}
+	inline void setCurFloorNum(int32_t num) { m_cur_floor = num;}
+
 	inline int32_t getCurCellIndex() { return m_cur_cell_index;}
+	inline void setCurCellIndex(int32_t indx) {m_cur_cell_index = indx;}
+
 
 	inline std::vector<GreedyDijkstra::DistInfo> *getTracedRoute(int32_t floor_num) { return &m_route_trace[floor_num];}
 
