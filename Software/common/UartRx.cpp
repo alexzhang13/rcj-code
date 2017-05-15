@@ -76,7 +76,7 @@ void UartRx::run(void){
        	} else if (c == 'm') {
             myRobot->currState = ARobot::DATA; //IDLE
             if(myRobot->backingBlack) {
-            	myRobot->currState = ARobot::BLACK;
+            	myRobot->currState = ARobot::BLACKBACK;
             }
 	    printf("motor done\n");
         } else if (c == 'd') {
