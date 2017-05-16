@@ -278,7 +278,7 @@ bool ARobot::checkRamp()
 
 int ARobot::checkVictimTemp()
 {
-    size_t temp_vals = tempDataList.size(); //get average values
+    /*size_t temp_vals = tempDataList.size(); //get average values
     float temp_avg = 0;
     for(int i = 1; i < 5; i++) { //left threshold
         temp_avg += tempDataList[temp_vals-i].getLeftTemp();
@@ -292,7 +292,7 @@ int ARobot::checkVictimTemp()
     }
     if(temp_avg/4.0f > threshRight) {
         return 1;
-    }
+    }*/
     return 0;
 }
 
