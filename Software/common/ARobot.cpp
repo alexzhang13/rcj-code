@@ -255,7 +255,12 @@ void ARobot::TileTransition(BotOrientation direction, float angle, int32_t dist)
 }
 
 void ARobot::SpinLaser() {
-    
+    char* i_command;
+    int i_length = snprintf(NULL, 0, "%c %c", 'r', 'a') + 1;
+    i_command = (char*)malloc(i_length);
+
+    snprintf(i_command, i_length, "%c %c", 'r', 'a');
+    WriteCommand(i_command, i_length);
 }
 bool ARobot::checkRamp()
 {
