@@ -441,7 +441,7 @@ void ARobot::StopTurn(BotDir dir)
             i_command = (char*)malloc(i_length);
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
             WriteCommand(i_command, i_length);
-            if(victimLeft || victimRight) {
+            if((victimLeft && dropCnt != 0) || (victimRight && dropCnt != 0)) {
                 currState = DROP;
             } else {
                 currState = IDLE; 

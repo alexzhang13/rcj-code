@@ -68,7 +68,9 @@ int main(int argc,char **argv){
 		            printf("%s, %d\n", "Distance: ", myRobot->dist_temp);
                     myRobot->MoveDistance(myRobot->dist_temp, ARobot::FRONT);
                     myRobot->toMove = false;
-                } 
+                } else {
+                    myRobot->currState = ARobot::WAYPTNAV;
+                }
                 break;
             case 4: //Ramp
                 while(myRobot->checkRamp()) {    
@@ -89,7 +91,6 @@ int main(int argc,char **argv){
                 } else if (myRobot->victimLeft) {
                     myRobot->TurnDistance(90, ARobot::LEFT); //turn back to left
                 }
-                myRobot->currState = ARobot::WAYPTNAV;
                 break;
             case 7: //BLACKBACK
                 sleep(1);
