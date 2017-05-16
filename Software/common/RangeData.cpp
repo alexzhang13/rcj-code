@@ -109,8 +109,8 @@ int RangeData::getPosition()
 				coord.x += distance[(i+data.dir)%4];
 				if(distance[(i+data.dir)%4] != coord.x){ //If you already went through more than one iteration, now you want to divide by 2
 					coord.x /= 2;
-					coord.x_glob = coord.x + 150.0f; //real coord output
 				}
+				coord.x_glob = coord.x + 150.0f; //real coord output
 			} else {
 				++x_count;
 				if(x_count >= 2) {
@@ -122,8 +122,8 @@ int RangeData::getPosition()
 				coord.y += distance[(i+data.dir)%4];
 				if(distance[(i+data.dir)%4] != coord.y){ //If you already went through more than one iteration, now you want to divide by 2
 					coord.y /= 2;
-					coord.y_glob = coord.y + 150.0f; //real coord output
 				}
+				coord.y_glob = coord.y + 150.0f; //real coord output
 			} else {
 				++y_count;
 				if(y_count >= 2) {
