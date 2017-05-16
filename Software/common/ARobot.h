@@ -52,6 +52,9 @@ class ARobot {
  	/*Ramp*/
  	bool checkRamp();
 
+ 	/*Laser*/
+ 	void SpinLaser();
+
  	/*Temperature Sensor -> Victim Control*/
  	int checkVictimTemp();
  	void setTempThresh(float left, float right);
