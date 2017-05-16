@@ -45,13 +45,13 @@ int RangeData::getPosition()
 		data.dir = 0;
 		//printf("north\n");
 	} else if (myRobot->imuDataList.end()->m_yaw <= 135.0 && myRobot->imuDataList.end()->m_yaw >= 45.0) { //west
-		data.dir = 1;
+		data.dir = 3;
 		//printf("west\n");
 	} else if (myRobot->imuDataList.end()->m_yaw <= 225.0 && myRobot->imuDataList.end()->m_yaw >= 135.0) { //south
 		data.dir = 2;
 		//printf("south\n");
 	} else { //east
-		data.dir = 3;
+		data.dir = 1;
 		//printf("east\n");
 	}
 	if(data.laserL_a <= 1200) { //check if reading is valid LONG FRONT
@@ -70,7 +70,7 @@ int RangeData::getPosition()
 		distance[2] = 451.0f; //impossible number for distance[2], as it's %300
 		temp_range[2] = -300;
 	}
-	if(data.laserS_a <= 210) { //check if reading is valid SHORT RIGHT
+	if(data.laserS_a <= 225) { //check if reading is valid SHORT RIGHT
 		temp_range[1] = (data.laserS_a+13.75) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180); //30 - x - 15 = 15 - x 
 		temp_dist = (int)temp_range[1]/300;
 		distance[1] = temp_range[1] - temp_dist*300;
@@ -78,7 +78,7 @@ int RangeData::getPosition()
 		distance[1] = 451.0f;
 		temp_range[1] = -300;
 	}
-	if(data.laserS_b <= 210) { //check if reading is valid SHORT LEFT
+	if(data.laserS_b <= 225) { //check if reading is valid SHORT LEFT
 		temp_range[3] = (data.laserS_b+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180); //x - 15
 		temp_dist = (int)temp_range[3]/300;
 		distance[3] = temp_range[3] - temp_dist*300;
