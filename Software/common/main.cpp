@@ -54,7 +54,7 @@ int main(int argc,char **argv){
     //myRobot->SpinLaser();
     sleep(3); //time for laser
     while(1) {
-        if(cnt%100 == 0) {
+        if(cnt%10000 == 0) {
             printf("State: %d\n", (int)myRobot->currState);
         }
         switch(myRobot->currState) {
