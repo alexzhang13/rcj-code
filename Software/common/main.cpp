@@ -50,8 +50,8 @@ int main(int argc,char **argv){
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     
     readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
-    myRobot->SpinLaser();
-        sleep(8.5); //time for laser
+    //myRobot->SpinLaser();
+    sleep(3); //time for laser
     while(1) {
         switch(myRobot->currState) {
             case 0: //Planning
