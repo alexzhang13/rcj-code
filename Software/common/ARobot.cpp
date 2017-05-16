@@ -283,14 +283,14 @@ int ARobot::checkVictimTemp()
     for(int i = 1; i < 5; i++) { //left threshold
         temp_avg += tempDataList[temp_vals-i].getLeftTemp();
     }
-    if(temp_avg/5.0f > threshLeft) {
+    if(temp_avg/4.0f > threshLeft) {
         return 2;
     }
     temp_avg = 0; //reset
     for(int i = 1; i < 5; i++) { //right threshold
         temp_avg += tempDataList[temp_vals-i].getRightTemp();
     }
-    if(temp_avg/5.0f > threshRight) {
+    if(temp_avg/4.0f > threshRight) {
         return 1;
     }
     return 0;
@@ -434,7 +434,7 @@ void ARobot::StopTurn(BotDir dir)
         if(initialYaw <= 175.0f && currYaw > 185.0f) { //if robot crosses over from 180 to -180, direction switches
             currYaw -= 360; //range fixing
         }
-        if(currYaw+3 <= toTurn) {
+        if(currYaw-5 <= toTurn) {
             char* i_command;
             printf("done!");
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
@@ -455,7 +455,7 @@ void ARobot::StopTurn(BotDir dir)
         if(initialYaw >= 185.0f && currYaw < 175.0f) { //if robot crosses over from -180 to 180, direction switches
             currYaw += 360; //range fixing
         }
-        if(currYaw-3 >= toTurn) {
+        if(currYaw+5 >= toTurn) {
             char* i_command;
             printf("done");
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;

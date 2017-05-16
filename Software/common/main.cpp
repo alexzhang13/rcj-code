@@ -90,6 +90,9 @@ int main(int argc,char **argv){
                     myRobot->TurnDistance(90, ARobot::RIGHT); //turn back to right
                 } else if (myRobot->victimLeft) {
                     myRobot->TurnDistance(90, ARobot::LEFT); //turn back to left
+                } else {
+                    printf("state");
+                    myRobot->currState = WAYPTNAV;
                 }
                 break;
             case 7: //BLACKBACK
@@ -118,6 +121,7 @@ int main(int argc,char **argv){
                     //save state
                 }
                 switch(myRobot->checkVictimTemp()) {
+                    printf("%d", myRobot->checKVictimTemp());
                     case 0:
                         myRobot->currState = ARobot::WAYPTNAV;
                         break;
