@@ -14,7 +14,7 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     currTileLight = WHITE;
     currDir = FRONT; 
     victimDir = MazeCell::NotDecided;
-    currState = PLANNING;
+    currState = DATA;
     currTile.x = 0;
     currTile.y = 0;
     dropCnt = 0; //dropping counter
@@ -254,6 +254,9 @@ void ARobot::TileTransition(BotOrientation direction, float angle, int32_t dist)
     return;
 }
 
+void ARobot::SpinLaser() {
+    
+}
 bool ARobot::checkRamp()
 {
     size_t pitch_vals = imuDataList.size();

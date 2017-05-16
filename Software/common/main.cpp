@@ -50,7 +50,6 @@ int main(int argc,char **argv){
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     
     readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
-    sleep(3); //gather data in 3 secs
     //myRobot->TurnDistance(90, ARobot::RIGHT);
     while(1) {
         switch(myRobot->currState) {
@@ -104,8 +103,9 @@ int main(int argc,char **argv){
 		        printf("DONE!");
                 break;
             case 9: //Data collection
-                //spin laser
-                sleep(3);
+                myRobot->SpinLaser();
+                sleep(8.5); //time for laser
+
                 if(myRobot->checkRamp()) { //is ramp
                     myRobot->MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
                     break;
