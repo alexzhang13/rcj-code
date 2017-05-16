@@ -433,7 +433,7 @@ void ARobot::StopTurn(BotDir dir)
         }else if(initialYaw <= 175.0f && currYaw > 185.0f) { //if robot crosses over from 180 to -180, direction switches
             currYaw -= 360; //range fixing
         }
-        if(currYaw-5 <= toTurn) {
+        if(currYaw-2 <= toTurn) {
             char* i_command;
             printf("done!");
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
@@ -453,7 +453,7 @@ void ARobot::StopTurn(BotDir dir)
         } else if(initialYaw >= 185.0f && currYaw < 175.0f) { //if robot crosses over from -180 to 180, direction switches
             currYaw += 360; //range fixing
         }
-        if(currYaw+5 >= toTurn) {
+        if(currYaw+2 >= toTurn) {
             char* i_command;
             printf("done");
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
@@ -497,7 +497,7 @@ void ARobot::ParseRange() {
             currTile.y_map = (currTile.y*300) + rangeParseList.front().coord.y_glob;
         }
 
-        printf("x: %d y: %d\n", currTile.x_map, currTile.y_map);
+        printf("x: %d y: %d x_map: %d y_map: %d\n", currTile.x, currTile.y, currTile.x_map, currTile.y_map);
         rangeDataList.push_back(rangeParseList.front());
         rangeParseList.pop();
     }
