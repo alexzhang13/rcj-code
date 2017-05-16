@@ -20,6 +20,7 @@ static void readCurrentMap(const char* filedir, const char* xmlname, ARobot *rob
 static void writeCurrentMap(const char* filedir, const char* xmlname, ARobot *robot, Navigate2D &nav_rt);
 static void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt);
 static int WayPointNav(ARobot *robot, Navigate2D &nav_rt);
+int cnt = 0;
 size_t bot_waypts = 0;
 
 int main(int argc,char **argv){
@@ -53,7 +54,9 @@ int main(int argc,char **argv){
     //myRobot->SpinLaser();
     sleep(3); //time for laser
     while(1) {
-        printf("State: %d", (int)myRobot->currState);
+        if(cnt%100 == 0) {
+            printf("State: %d\n", (int)myRobot->currState);
+        }
         switch(myRobot->currState) {
             case 0: //Planning
                 printf("test_nav");
@@ -150,6 +153,7 @@ int main(int argc,char **argv){
                 /*Put stuff here*/
                 break;
         }
+        cnt++;
         sleep(0.01);
     }
     /*sleep(3);
