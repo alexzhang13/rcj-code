@@ -125,6 +125,7 @@ int main(int argc,char **argv){
                 myRobot->checkLightTile();
                 if(myRobot->currTileLight == ARobot::SILVER) {
                     myRobot->LEDLight(5000);
+                    sleep(5);
                     //save state
                 }
                 switch(myRobot->checkVictimTemp()) {
