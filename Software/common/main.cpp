@@ -53,6 +53,7 @@ int main(int argc,char **argv){
     //myRobot->SpinLaser();
     sleep(3); //time for laser
     while(1) {
+        printf("State: %d", (int)myRobot->currState);
         switch(myRobot->currState) {
             case 0: //Planning
                 printf("test_nav");

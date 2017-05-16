@@ -244,7 +244,7 @@ void ARobot::TileTransition(BotOrientation direction, float angle, int32_t dist)
     if(turnNext == 3) {turnNext = -1;} //west -> north = turn right 1
     else if (turnNext == -3) {turnNext = 1;} //north -> west = turn left 1
     if(abs(toTurn) > 2) { //ignore smaller angles
-        printf("%d", toTurn);
+        printf("To Turn: %d\n", toTurn);
         TurnDistance(abs(toTurn), (toTurn > 0) ? RIGHT : LEFT); //left is positive for IMU
         dist_temp = dist;
         toMove = true;
@@ -278,7 +278,7 @@ bool ARobot::checkRamp()
 
 int ARobot::checkVictimTemp()
 {
-    /*size_t temp_vals = tempDataList.size(); //get average values
+    size_t temp_vals = tempDataList.size(); //get average values
     float temp_avg = 0;
     for(int i = 1; i < 5; i++) { //left threshold
         temp_avg += tempDataList[temp_vals-i].getLeftTemp();
@@ -292,7 +292,7 @@ int ARobot::checkVictimTemp()
     }
     if(temp_avg/4.0f > threshRight) {
         return 1;
-    }*/
+    }
     return 0;
 }
 
