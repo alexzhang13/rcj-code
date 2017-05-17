@@ -231,8 +231,8 @@ void ARobot::CalcNextTile()
         nextDir = SOUTH;
         angle = -atan((float)next_x/(float)next_y)*180.0f/3.1415926535f; //angle to right, should be neg
     }
-    printf("Next_X: %d, Next_Y: %d, Dist: %d, Angle Dif: %f", next_x, next_y, dist, angle);
-    printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f/n", currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
+    printf("Next_X: %d, Next_Y: %d, Dist: %d, Angle Dif: %f\n", next_x, next_y, dist, angle);
+    printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f\n", currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
     TileTransition(nextDir, angle, dist);
 
 }
@@ -246,7 +246,6 @@ void ARobot::TileTransition(BotOrientation direction, float angle, int32_t dist)
     if(turnNext == 3) {turnNext = -1;} //west -> north = turn right 1
     else if (turnNext == -3) {turnNext = 1;} //north -> west = turn left 1
     if(abs(toTurn) > 2) { //ignore smaller angles
-        printf("To Turn: %d\n", toTurn);
         TurnDistance(abs(toTurn), (toTurn > 0) ? RIGHT : LEFT); //left is positive for IMU
         dist_temp = dist;
         toMove = true;
@@ -439,7 +438,6 @@ void ARobot::StopTurn(BotDir dir)
         }
         if(currYaw <= toTurn) {
             char* i_command;
-            printf("done!");
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
             i_command = (char*)malloc(i_length);
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
