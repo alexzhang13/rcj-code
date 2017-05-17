@@ -268,6 +268,7 @@ int WayPointNav(ARobot *robot, Navigate2D &nav_rt)
         robot->currState = ARobot::PLANNING;
         return -1;
     }
+    printf("test");
     nav_rt.getCellbyIndex(robot->waypts[bot_waypts-2])->getCellGrid(robot->currTile.x_tovisit, robot->currTile.y_tovisit);
     for(int i = 0; i < bot_waypts; i++) {
         nav_rt.getCellbyIndex(robot->waypts[bot_waypts-i])->getCellGrid(x, y);
