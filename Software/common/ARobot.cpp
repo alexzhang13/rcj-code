@@ -43,7 +43,7 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
             sensor_info->setCheckPt(false);
             sensor_info->setNonMovable(false);
         }
-        if(checkRamp()) {
+        if(CheckRamp()) {
             sensor_info->setStairCell(true);
         } else {sensor_info->setStairCell(false);}
         if(victimRight) {
@@ -264,7 +264,7 @@ void ARobot::SpinLaser() {
     snprintf(i_command, i_length, "%c %c", 'r', 'a');
     WriteCommand(i_command, i_length);
 }
-bool ARobot::checkRamp()
+bool ARobot::CheckRamp()
 {
     size_t pitch_vals = imuDataList.size();
     for(int i = 1; i < 5; i++) {
@@ -278,7 +278,7 @@ bool ARobot::checkRamp()
     return true; //ramp is true if past 5 pitches match > 15 degrees
 }
 
-int ARobot::checkVictimTemp()
+int ARobot::CheckVictimTemp()
 {
     size_t temp_vals = tempDataList.size(); //get average values
     float temp_avg = 0;
@@ -330,7 +330,7 @@ int ARobot::getSilverThresh()
     return silver_thresh;
 }
 
-void ARobot::checkLightTile()
+void ARobot::CheckLightTile()
 {
     mlen_light = lightDataList.size();
     if(mlen_light < 3)
@@ -472,6 +472,11 @@ void ARobot::StopTurn(BotDir dir)
         }
     }
     
+}
+
+void ARobot::CalibrateIMU()
+{
+
 }
 
 void ARobot::ParseIMU()

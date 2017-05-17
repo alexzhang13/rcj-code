@@ -120,37 +120,41 @@ int main(int argc,char **argv){
                 myRobot->SpinLaser();
                 sleep(8.5); //time for laser
 
-                if(myRobot->checkRamp()) { //is ramp
+                if(myRobot->CheckRamp()) { //is ramp
                     myRobot->MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
                     break;
                 }
 
-                myRobot->checkLightTile();
+                myRobot->CheckLightTile();
                 if(myRobot->currTileLight == ARobot::SILVER) {
                     myRobot->LEDLight(5000);
                     sleep(5);
                     //save state
                 }
-                switch(myRobot->checkVictimTemp()) {
-                    printf("%d", myRobot->checkVictimTemp());
-                    case 0:
+                if(!nav.getCellbyIndex(myRobot->waypts[bot_waypts-1])->getVictim()) { //get currCell 
+                    switch(myRobot->CheckVictimTemp()) {
+                        printf("%d", myRobot->CheckVictimTemp());
+                        case 0:
+                            myRobot->currState = ARobot::WAYPTNAV;
+                            break;
+                        case 1: //drop or go back to calculating
+                            myRobot->victimRight = true;
+                            myRobot->TurnDistance(90, ARobot::LEFT); //turn left to drop from back onto right side
+                            myRobot->dropCnt = 1;
+                            //myRobot->currState = ARobot::Drop; --> Done in StopTurn();
+                            break;
+                        case 2:
+                            myRobot->victimLeft = true;
+                            myRobot->TurnDistance(90, ARobot::RIGHT); //turn right to drop from back onto left side
+                            myRobot->dropCnt = 1;
+                            //myRobot->currState = ARobot::Drop;
+                            break;
+                        default:
                         myRobot->currState = ARobot::WAYPTNAV;
-                        break;
-                    case 1: //drop or go back to calculating
-                        myRobot->victimRight = true;
-                        myRobot->TurnDistance(90, ARobot::LEFT); //turn left to drop from back onto right side
-                        myRobot->dropCnt = 1;
-                        //myRobot->currState = ARobot::Drop; --> Done in StopTurn();
-                        break;
-                    case 2:
-                        myRobot->victimLeft = true;
-                        myRobot->TurnDistance(90, ARobot::RIGHT); //turn right to drop from back onto left side
-                        myRobot->dropCnt = 1;
-                        //myRobot->currState = ARobot::Drop;
-                        break;
-                    default:
-                        myRobot->currState = ARobot::WAYPTNAV;
-                        break;
+                            break;
+                    }
+                } else {
+                    myRobot->currState = ARobot::WAYPTNAV;
                 }
                 break;
             default:
@@ -224,25 +228,16 @@ void writeCurrentMap(const char* filedir, const char* xmlname, ARobot *robot, Na
 
 void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt) 
 {
-static int cnt = 0;
     /*Navigational functions*/
     robot->sensor_info.reset(); //reset temp object
     robot->UpdateCellMap(&robot->sensor_info, false); //false = not black
     robot->UpdateNeighborCells();
     nav_rt.configureCurCell(&robot->sensor_info);
-if(cnt %30 == 0) {
-    for(int i = 0; i < robot->temp_cell_list.size(); i++) {
-        int x, y;
-        robot->temp_cell_list[i].getCellGrid(x, y);
-	    printf("%d, i=%d, j=%d\n", i, x, y);
-    }
-}
     nav_rt.detectLocalCells(robot->temp_cell_list);
     nav_rt.updateLocalMap();
     nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
 
     robot->temp_cell_list.clear();
-cnt++;
     //nav_rt.slam2d(); // will move to another thread
     // what to do next
     nav_rt.navigatePlanning();

@@ -49,21 +49,24 @@ class ARobot {
  	void TileTransition(BotOrientation direction, float angle, int32_t dist);
  	void CalcNextTile();
 
+ 	/*IMU*/
+ 	void CalibrateIMU();
+
  	/*Ramp*/
- 	bool checkRamp();
+ 	bool CheckRamp();
 
  	/*Laser*/
  	void SpinLaser();
 
  	/*Temperature Sensor -> Victim Control*/
- 	int checkVictimTemp();
+ 	int CheckVictimTemp();
  	void setTempThresh(float left, float right);
  	float getLeftVictimTemp();
  	float getRightVictimTemp();
 
  	/*Light Sensor -> Tile Control*/
  	void setLightThresh(int black, int silver);
- 	void checkLightTile();
+ 	void CheckLightTile();
  	int getBlackThresh();
  	int getSilverThresh(); 	
 
