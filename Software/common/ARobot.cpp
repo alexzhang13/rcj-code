@@ -151,12 +151,10 @@ void ARobot::UpdateNeighborCells()
                 temp_cell.reset();
             }
         } else {
-            for(int i = 0; i < 1; i++) { //open???
-                temp_cell.setCellGrid(currTile.x+i, currTile.y);
+                temp_cell.setCellGrid(currTile.x, currTile.y);
                 temp_cell.setWallEast(MazeCell::MOpen);
                 temp_cell_list.push_back(temp_cell);
                 temp_cell.reset();
-            }
         }
     }
 
@@ -189,12 +187,10 @@ void ARobot::UpdateNeighborCells()
                 temp_cell.reset();
             }
         } else {
-            for(int i = 0; i < 1; i++) { //open???
-                temp_cell.setCellGrid(currTile.x-i, currTile.y);
+                temp_cell.setCellGrid(currTile.x, currTile.y);
                 temp_cell.setWallWest(MazeCell::MOpen);
                 temp_cell_list.push_back(temp_cell);
                 temp_cell.reset();
-            }
         }
     }
 }
@@ -219,8 +215,8 @@ void ARobot::CalcNextTile()
         nextDir = SOUTH;
         angle = -atan((float)next_x/(float)next_y)*180.0f/3.1415926535f; //angle to right, should be neg
     }
-    printf("Next_X: %d, Next_Y: %d, Dist: %d, Angle Dif: %f\n", next_x, next_y, dist, angle);
-    printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f\n", currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
+    //printf("Next_X: %d, Next_Y: %d, Dist: %d, Angle Dif: %f\n", next_x, next_y, dist, angle);
+    //printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f\n", currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
     TileTransition(nextDir, angle, dist);
 
 }
@@ -490,11 +486,11 @@ void ARobot::ParseRange() {
         rangeParseList.front().getPosition();
         if(rangeParseList.front().coord.x_flag == true) {
             currTile.x_map = (currTile.x*300.0f) + rangeParseList.front().coord.x_glob;
-            printf("X Coord: %f\n", rangeParseList.front().coord.x_glob);
+            //rintf("X Coord: %f\n", rangeParseList.front().coord.x_glob);
         }
         if(rangeParseList.front().coord.y_flag == true) {
             currTile.y_map = (currTile.y*300.0f) + rangeParseList.front().coord.y_glob;
-            printf("Y Coord: %f Y Glob: %f\n", rangeParseList.front().coord.y_glob, currTile.y_map);
+            //printf("Y Coord: %f Y Glob: %f\n", rangeParseList.front().coord.y_glob, currTile.y_map);
         }
 
         //printf("x: %d y: %d x_map: %d y_map: %d\n", currTile.x, currTile.y, currTile.x_map, currTile.y_map);
