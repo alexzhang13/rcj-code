@@ -492,7 +492,7 @@ void ARobot::ParseRange() {
         rangeParseList.front().getPosition();
         if(rangeParseList.front().coord.x_flag == true) {
             currTile.x_map = (currTile.x*300) + rangeParseList.front().coord.x_glob;
-            printf("X Coord: %d\n", rangeParseList.front().coord.x_glob);
+            printf("X Coord: %f\n", rangeParseList.front().coord.x_glob);
         }
         if(rangeParseList.front().coord.y_flag == true) {
             currTile.y_map = (currTile.y*300) + rangeParseList.front().coord.y_glob;
