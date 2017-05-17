@@ -80,7 +80,7 @@ int main(int argc,char **argv){
                 }
                 break;
             case 4: //Ramp
-                while(myRobot->checkRamp()) {    
+                while(myRobot->CheckRamp()) {    
                     sleep(0.1);
                 }
                 myRobot->StopMove();
@@ -114,6 +114,8 @@ int main(int argc,char **argv){
 		        printf("DONE!");
                 break;
             case 9: //Data collection
+                myRobot->CalibrateIMU();
+                sleep(1);
                 bot_waypts = myRobot->waypts.size();
                 nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-1]);
                 nav.getCellbyIndex(myRobot->waypts[bot_waypts-1])->getCellGrid(myRobot->currTile.x, myRobot->currTile.y);
