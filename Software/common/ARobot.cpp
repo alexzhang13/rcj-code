@@ -383,7 +383,7 @@ void ARobot::SetSpeed(int left_speed, int right_speed) {
 
 void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
 {
-    printf("Distance: %d\n", distance_mm)
+    printf("Distance: %d\n", distance_mm);
     char* i_command;
     int i_length = snprintf(NULL, 0, "%c %c %d", 'm', 'a', distance_mm) + 1;
     i_command = (char*)malloc(i_length);
