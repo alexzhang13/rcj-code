@@ -53,7 +53,6 @@ int main(int argc,char **argv){
     
     readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     //myRobot->SpinLaser();
-    sleep(3); //time for laser
     while(1) {
         if(cnt%10000 == 0) {
             printf("State: %d\n", (int)myRobot->currState);
@@ -97,7 +96,6 @@ int main(int argc,char **argv){
                 } else if (myRobot->victimLeft) {
                     myRobot->TurnDistance(90, ARobot::LEFT); //turn back to left
                 } else {
-                    printf("state");
                     myRobot->currState = ARobot::WAYPTNAV;
                 }
                 break;
@@ -259,7 +257,6 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
 int WayPointNav(ARobot *robot, Navigate2D &nav_rt)
 {
     int x = 0; int y = 0;
-    printf("test");
     bot_waypts = robot->waypts.size();
     if(bot_waypts > 1 && first_iter == true) //remove where u went
 	   robot->waypts.pop_back();
