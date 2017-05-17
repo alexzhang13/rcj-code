@@ -114,7 +114,7 @@ int main(int argc,char **argv){
 		        printf("DONE!");
                 break;
             case 9: //Data collection
-                bot_waypts = robot->waypts.size();
+                bot_waypts = myRobot->waypts.size();
                 nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-1]);
                 nav.getCellbyIndex(myRobot->waypts[bot_waypts-1])->getCellGrid(myRobot->currTile.x, myRobot->currTile.y);
                 myRobot->SpinLaser();
