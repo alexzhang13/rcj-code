@@ -232,6 +232,7 @@ void ARobot::CalcNextTile()
         angle = -atan((float)next_x/(float)next_y)*180.0f/3.1415926535f; //angle to right, should be neg
     }
     printf("Next_X: %d, Next_Y: %d, Dist: %d, Angle Dif: %f", next_x, next_y, dist, angle);
+    printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f/n", currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
     TileTransition(nextDir, angle, dist);
 
 }
