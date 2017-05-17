@@ -214,8 +214,8 @@ void ARobot::UpdateNeighborCells()
 void ARobot::CalcNextTile()
 {
     BotOrientation nextDir;
-    int next_x = (currTile.x_tovisit*300+150) - currTile.x_map; //next tile coords
-    int next_y = (currTile.y_tovisit*300+150) - currTile.y_map; //next tile coords
+    int next_x = (currTile.x_tovisit*300+150) - (int)currTile.x_map; //next tile coords
+    int next_y = (currTile.y_tovisit*300+150) - (int)currTile.y_map; //next tile coords
     int32_t dist = (int32_t)sqrt(next_x*next_x + next_y*next_y); //pythagorean
     float angle; //offset angle
     if(currTile.x_tovisit - currTile.x > 0) { //east
@@ -231,6 +231,7 @@ void ARobot::CalcNextTile()
         nextDir = SOUTH;
         angle = -atan(next_x/next_y)*180.0f/3.1415926535; //angle to right, should be neg
     }
+    printf("Next_X: %d, Next_Y: %d, Dist: %d, Angle Dif: %f", next_x, next_y, dist, angle);
     TileTransition(nextDir, angle, dist);
 
 }
@@ -382,6 +383,7 @@ void ARobot::SetSpeed(int left_speed, int right_speed) {
 
 void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
 {
+    printf("Distance: %d\n", distance_mm)
     char* i_command;
     int i_length = snprintf(NULL, 0, "%c %c %d", 'm', 'a', distance_mm) + 1;
     i_command = (char*)malloc(i_length);
@@ -491,11 +493,11 @@ void ARobot::ParseRange() {
         rangeParseList.front().parseData();
         rangeParseList.front().getPosition();
         if(rangeParseList.front().coord.x_flag == true) {
-            currTile.x_map = (currTile.x*300) + rangeParseList.front().coord.x_glob;
+            currTile.x_map = (currTile.x*300.0f) + rangeParseList.front().coord.x_glob;
             printf("X Coord: %f\n", rangeParseList.front().coord.x_glob);
         }
         if(rangeParseList.front().coord.y_flag == true) {
-            currTile.y_map = (currTile.y*300) + rangeParseList.front().coord.y_glob;
+            currTile.y_map = (currTile.y*300.0f) + rangeParseList.front().coord.y_glob;
         }
 
         //printf("x: %d y: %d x_map: %d y_map: %d\n", currTile.x, currTile.y, currTile.x_map, currTile.y_map);

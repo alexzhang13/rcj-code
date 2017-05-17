@@ -30,8 +30,8 @@ class ARobot {
  		int32_t y; //cell coord
  		int32_t x_tovisit; //x cell about to go to
  		int32_t y_tovisit; //y cell about to go to
- 		int32_t x_map; //map coord in mm
- 		int32_t y_map; //map coord in mm
+ 		float x_map; //map coord in mm
+ 		float y_map; //map coord in mm
  	} Map_Coord;
 
  	/*Enums*/
