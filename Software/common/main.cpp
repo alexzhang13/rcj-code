@@ -114,6 +114,8 @@ int main(int argc,char **argv){
 		        printf("DONE!");
                 break;
             case 9: //Data collection
+                nav.getNavigateMaps()->getFloorMap(nav_rt.getCurrentFloorIndex())->setCurCellIndex(robot->waypts[bot_waypts-1]);
+                nav.getCellbyIndex(robot->waypts[bot_waypts-1])->getCellGrid(robot->currTile.x, robot->currTile.y);
                 myRobot->SpinLaser();
                 sleep(8.5); //time for laser
 
@@ -259,20 +261,14 @@ cnt++;
 int WayPointNav(ARobot *robot, Navigate2D &nav_rt)
 {
     bot_waypts = robot->waypts.size();
-    if(bot_waypts > 1)
+    if(bot_waypts > 1) //remove where u went
 	   robot->waypts.pop_back();
-	   nav_rt.getNavigateMaps()->getFloorMap(nav_rt.getCurrentFloorIndex())->setCurCellIndex(robot->waypts[bot_waypts-1]);
-	   nav_rt.getCellbyIndex(robot->waypts[bot_waypts-1])->getCellGrid(robot->currTile.x, robot->currTile.y);
     if(bot_waypts < 2) {
         robot->waypts.pop_back();
         robot->currState = ARobot::PLANNING;
         return -1;
     }
-    
-    robot->currTile.x = robot->currTile.x_tovisit;
-    robot->currTile.y = robot->currTile.y_tovisit;
     nav_rt.getCellbyIndex(robot->waypts[bot_waypts-2])->getCellGrid(robot->currTile.x_tovisit, robot->currTile.y_tovisit);
-    robot->ParseRange(); //let the pi gather data and update pos
     robot->CalcNextTile();
 }
 
