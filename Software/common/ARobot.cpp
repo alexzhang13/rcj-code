@@ -499,7 +499,7 @@ void ARobot::ParseRange() {
         }
         if(rangeParseList.front().coord.y_flag == true) {
             currTile.y_map = (currTile.y*300.0f) + rangeParseList.front().coord.y_glob;
-            printf("Y Coord: %f\n", rangeParseList.front().coord.y_glob);
+            printf("Y Coord: %f Y Glob: %f\n", rangeParseList.front().coord.y_glob, currTile.y_map);
         }
 
         //printf("x: %d y: %d x_map: %d y_map: %d\n", currTile.x, currTile.y, currTile.x_map, currTile.y_map);
