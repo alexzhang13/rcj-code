@@ -151,10 +151,12 @@ void ARobot::UpdateNeighborCells()
                 temp_cell.reset();
             }
         } else {
-                temp_cell.setCellGrid(currTile.x, currTile.y);
+            for(int i = 0; i < 1; i++) { //open???
+                temp_cell.setCellGrid(currTile.x+i, currTile.y);
                 temp_cell.setWallEast(MazeCell::MOpen);
                 temp_cell_list.push_back(temp_cell);
                 temp_cell.reset();
+            }
         }
     }
 
@@ -187,10 +189,12 @@ void ARobot::UpdateNeighborCells()
                 temp_cell.reset();
             }
         } else {
-                temp_cell.setCellGrid(currTile.x, currTile.y);
+            for(int i = 0; i < 1; i++) { //open???
+                temp_cell.setCellGrid(currTile.x-i, currTile.y);
                 temp_cell.setWallWest(MazeCell::MOpen);
                 temp_cell_list.push_back(temp_cell);
                 temp_cell.reset();
+            }
         }
     }
 }
@@ -486,7 +490,7 @@ void ARobot::ParseRange() {
         rangeParseList.front().getPosition();
         if(rangeParseList.front().coord.x_flag == true) {
             currTile.x_map = (currTile.x*300.0f) + rangeParseList.front().coord.x_glob;
-            //rintf("X Coord: %f\n", rangeParseList.front().coord.x_glob);
+            //printf("X Coord: %f\n", rangeParseList.front().coord.x_glob);
         }
         if(rangeParseList.front().coord.y_flag == true) {
             currTile.y_map = (currTile.y*300.0f) + rangeParseList.front().coord.y_glob;
