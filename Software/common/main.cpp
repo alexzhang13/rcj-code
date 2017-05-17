@@ -59,11 +59,9 @@ int main(int argc,char **argv){
         }
         switch(myRobot->currState) {
             case 0: //Planning
-                printf("test_nav");
                 Navigate(in_dir, xml_name, myRobot, nav);
                 break;
             case 1: //WayPtNav
-                printf("test_waypt");
                 WayPointNav(myRobot, nav);
                 break;
             case 2: //Turn
