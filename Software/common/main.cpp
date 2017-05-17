@@ -22,6 +22,7 @@ static void Navigate(const char* filename, const char* xmlname, ARobot *robot, N
 static int WayPointNav(ARobot *robot, Navigate2D &nav_rt);
 int cnt = 0;
 size_t bot_waypts = 0;
+bool first_iter = true;
 
 int main(int argc,char **argv){
     Navigate2D nav; //main map class obj
@@ -249,6 +250,7 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
         robot->currState = ARobot::DONE;
         return;
     }
+    first_iter = true;
     robot->currState = ARobot::WAYPTNAV;
     return;
     //nav_rt->getCellbyIndex(nav_rt.m_next_cell.waypts.begin()).getCellGrid(&robot.currTile.x_tovisit, &robot.currTile.y_tovisit);
@@ -256,16 +258,23 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
 
 int WayPointNav(ARobot *robot, Navigate2D &nav_rt)
 {
+    int x = 0; int y = 0;
     bot_waypts = robot->waypts.size();
-    if(bot_waypts > 1) //remove where u went
+    if(bot_waypts > 1 && first_iter == true) //remove where u went
 	   robot->waypts.pop_back();
+        first_iter = false;
     if(bot_waypts < 2) {
         robot->waypts.pop_back();
         robot->currState = ARobot::PLANNING;
         return -1;
     }
     nav_rt.getCellbyIndex(robot->waypts[bot_waypts-2])->getCellGrid(robot->currTile.x_tovisit, robot->currTile.y_tovisit);
-    robot->CalcNextTile();
+    for(int i = 0; i < bot_waypts; i++) {
+        nav_rt.getCellbyIndex(robot->waypts[bot_waypts-i])->getCellGrid(x, y);
+        printf("Coords -> x: %d, y: %d\n", x, y);
+    }
+    sleep(10);
+    //robot->CalcNextTile();
 }
 
 
