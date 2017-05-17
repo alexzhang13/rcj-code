@@ -272,7 +272,7 @@ int WayPointNav(ARobot *robot, Navigate2D &nav_rt)
     robot->currTile.x = robot->currTile.x_tovisit;
     robot->currTile.y = robot->currTile.y_tovisit;
     nav_rt.getCellbyIndex(robot->waypts[bot_waypts-2])->getCellGrid(robot->currTile.x_tovisit, robot->currTile.y_tovisit);
-    sleep(0.5); //let the pi gather data and update pos
+    robot->ParseRange(); //let the pi gather data and update pos
     robot->CalcNextTile();
 }
 
