@@ -54,9 +54,7 @@ int main(int argc,char **argv){
     readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     //myRobot->SpinLaser();
     while(1) {
-        if(cnt%10000 == 0) {
-            printf("State: %d\n", (int)myRobot->currState);
-        }
+        printf("State: %d\n", (int)myRobot->currState);
         switch(myRobot->currState) {
             case 0: //Planning
                 Navigate(in_dir, xml_name, myRobot, nav);
