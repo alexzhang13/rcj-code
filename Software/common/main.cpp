@@ -259,6 +259,7 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
 int WayPointNav(ARobot *robot, Navigate2D &nav_rt)
 {
     int x = 0; int y = 0;
+    printf("test");
     bot_waypts = robot->waypts.size();
     if(bot_waypts > 1 && first_iter == true) //remove where u went
 	   robot->waypts.pop_back();
@@ -268,7 +269,6 @@ int WayPointNav(ARobot *robot, Navigate2D &nav_rt)
         robot->currState = ARobot::PLANNING;
         return -1;
     }
-    printf("test");
     nav_rt.getCellbyIndex(robot->waypts[bot_waypts-2])->getCellGrid(robot->currTile.x_tovisit, robot->currTile.y_tovisit);
     for(int i = 0; i < bot_waypts; i++) {
         nav_rt.getCellbyIndex(robot->waypts[bot_waypts-i])->getCellGrid(x, y);
