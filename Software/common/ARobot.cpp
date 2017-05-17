@@ -220,16 +220,16 @@ void ARobot::CalcNextTile()
     float angle; //offset angle
     if(currTile.x_tovisit - currTile.x > 0) { //east
         nextDir = EAST;
-        angle = atan(next_y/next_x)*180.0f/3.1415926535; //angle to left, should be pos
+        angle = atan((float)next_y/(float)next_x)*180.0f/3.1415926535f; //angle to left, should be pos
     } else if (currTile.x_tovisit - currTile.x < 0) { //west
         nextDir = WEST;
-        angle = atan(next_y/next_x)*180.0f/3.1415926535; //angle to left, should be pos
+        angle = atan((float)next_y/(float)next_x)*180.0f/3.1415926535f; //angle to left, should be pos
     } else if (currTile.y_tovisit - currTile.y > 0) { //north
         nextDir = NORTH;
-        angle = -atan(next_x/next_y)*180.0f/3.1415926535; //angle to right, should be neg
+        angle = -atan((float)next_x/(float)next_y)*180.0f/3.1415926535f; //angle to right, should be neg
     } else if (currTile.y_tovisit - currTile.y < 0) { //south
         nextDir = SOUTH;
-        angle = -atan(next_x/next_y)*180.0f/3.1415926535; //angle to right, should be neg
+        angle = -atan((float)next_x/(float)next_y)*180.0f/3.1415926535f; //angle to right, should be neg
     }
     printf("Next_X: %d, Next_Y: %d, Dist: %d, Angle Dif: %f", next_x, next_y, dist, angle);
     TileTransition(nextDir, angle, dist);
