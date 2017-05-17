@@ -135,6 +135,12 @@ void ARobot::UpdateNeighborCells()
                 temp_cell.reset();
             }
         } else {
+            for(int i = 1; i <= 2; i++) { //open???
+                temp_cell.setCellGrid(currTile.x, currTile.y+i);
+                temp_cell.setWallNorth(MazeCell::MOpen);
+                temp_cell_list.push_back(temp_cell);
+                temp_cell.reset();
+            }
         }
     }
 
@@ -151,7 +157,7 @@ void ARobot::UpdateNeighborCells()
                 temp_cell.reset();
             }
         } else {
-            for(int i = 0; i < 1; i++) { //open???
+            for(int i = 1; i <= 1; i++) { //open???
                 temp_cell.setCellGrid(currTile.x+i, currTile.y);
                 temp_cell.setWallEast(MazeCell::MOpen);
                 temp_cell_list.push_back(temp_cell);
@@ -173,6 +179,12 @@ void ARobot::UpdateNeighborCells()
                 temp_cell.reset();
             }
         } else {
+            for(int i = 1; i <= 2; i++) { //open???
+                temp_cell.setCellGrid(currTile.x, currTile.y-i);
+                temp_cell.setWallSouth(MazeCell::MOpen);
+                temp_cell_list.push_back(temp_cell);
+                temp_cell.reset();
+            }
         }
     }
 
@@ -189,7 +201,7 @@ void ARobot::UpdateNeighborCells()
                 temp_cell.reset();
             }
         } else {
-            for(int i = 0; i < 1; i++) { //open???
+            for(int i = 1; i < 2; i++) { //open???
                 temp_cell.setCellGrid(currTile.x-i, currTile.y);
                 temp_cell.setWallWest(MazeCell::MOpen);
                 temp_cell_list.push_back(temp_cell);
