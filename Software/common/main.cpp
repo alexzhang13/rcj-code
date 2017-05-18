@@ -230,7 +230,9 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
     robot->UpdateCellMap(&robot->sensor_info, false); //false = not black
     robot->UpdateNeighborCells();
     nav_rt.configureCurCell(&robot->sensor_info);
+    printf("lol");
     nav_rt.detectLocalCells(robot->temp_cell_list);
+    printf("lol2");
     nav_rt.updateLocalMap();
     nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
 
