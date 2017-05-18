@@ -54,6 +54,7 @@ int main(int argc,char **argv){
     readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     printf("Fault 5 Passed\n");
     //myRobot->SpinLaser();
+    myRobot->CalibrateIMU();
     sleep(3);
     while(1) {
         switch(myRobot->currState) {
