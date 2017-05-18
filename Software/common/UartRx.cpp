@@ -73,6 +73,9 @@ void UartRx::run(void){
             storeLight(mBuf);
         } else if (c == 'y') {
         	storeScan(mBuf);
+        } else if (c == 'z') {
+        	//take picture?
+        }
        	} else if (c == 'm') {
             myRobot->currState = ARobot::DATA; //IDLE
             if(myRobot->backingBlack) {

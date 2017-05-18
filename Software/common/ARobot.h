@@ -34,9 +34,15 @@ class ARobot {
  		float y_map; //map coord in mm
  	} Map_Coord;
 
+ 	typedef struct {
+ 		char letter;
+ 		BotDir dir_victim;
+ 		bool isVictim;
+ 	} Visual_Victim;
+
  	/*Enums*/
  	enum LightVal {WHITE=0, BLACK=1, SILVER=2};
-	enum BotDir {RIGHT=0, LEFT=1, FRONT=2, BACK=3};
+	enum BotDir {FRONT=0, RIGHT=1, BACK=2, LEFT=3};
 	enum BotOrientation {NORTH=0, EAST=1, SOUTH=2, WEST=3};
 	enum CurrentState {PLANNING=0, WAYPTNAV=1, TURN=2, IDLE=3, RAMP=4, MOVE=5, DROP=6, BLACKBACK=7, DONE=8, DATA=9};
 
@@ -63,6 +69,8 @@ class ARobot {
  	void setTempThresh(float left, float right);
  	float getLeftVictimTemp();
  	float getRightVictimTemp();
+ 	void CheckVictimVisual();
+ 	int ProcessImage_Victim(Visual_Victim victim);
 
  	/*Light Sensor -> Tile Control*/
  	void setLightThresh(int black, int silver);
