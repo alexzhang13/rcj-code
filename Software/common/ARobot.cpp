@@ -289,7 +289,7 @@ int ARobot::CheckVictimTemp()
     return 0;
 }
 
-void ARobot::CheckVisualVictim() {
+void ARobot::CheckVictimVisual() {
    
 }
 
