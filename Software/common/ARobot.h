@@ -24,6 +24,12 @@ class ARobot {
  	ARobot(SerialPort *port);
  	~ARobot();
 
+ 	 /*Enums*/
+ 	enum LightVal {WHITE=0, BLACK=1, SILVER=2};
+	enum BotDir {FRONT=0, RIGHT=1, BACK=2, LEFT=3};
+	enum BotOrientation {NORTH=0, EAST=1, SOUTH=2, WEST=3};
+	enum CurrentState {PLANNING=0, WAYPTNAV=1, TURN=2, IDLE=3, RAMP=4, MOVE=5, DROP=6, BLACKBACK=7, DONE=8, DATA=9};
+
  	/*Structs*/
  	typedef struct {
  		int32_t x; //cell coord
@@ -39,12 +45,6 @@ class ARobot {
  		BotDir dir_victim;
  		bool isVictim;
  	} Visual_Victim;
-
- 	/*Enums*/
- 	enum LightVal {WHITE=0, BLACK=1, SILVER=2};
-	enum BotDir {FRONT=0, RIGHT=1, BACK=2, LEFT=3};
-	enum BotOrientation {NORTH=0, EAST=1, SOUTH=2, WEST=3};
-	enum CurrentState {PLANNING=0, WAYPTNAV=1, TURN=2, IDLE=3, RAMP=4, MOVE=5, DROP=6, BLACKBACK=7, DONE=8, DATA=9};
 
  	/*Writing to Arduino*/
  	void WriteCommand(char* command, int size);
