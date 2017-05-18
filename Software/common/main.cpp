@@ -57,9 +57,7 @@ int main(int argc,char **argv){
     while(1) {
         switch(myRobot->currState) {
             case 0: //Planning
-
                 Navigate(in_dir, xml_name, myRobot, nav);
-     
                 break;
             case 1: //WayPtNav
                 WayPointNav(myRobot, nav);
@@ -130,6 +128,9 @@ int main(int argc,char **argv){
                     sleep(5);
                     //save state
                 }
+
+                //check visual victim
+
                 if(!nav.getCellbyIndex(myRobot->waypts[bot_waypts-1])->getVictim()) { //get currCell 
                     switch(myRobot->CheckVictimTemp()) {
                         printf("%d", myRobot->CheckVictimTemp());
@@ -270,7 +271,7 @@ int WayPointNav(ARobot *robot, Navigate2D &nav_rt)
         nav_rt.getCellbyIndex(robot->waypts[bot_waypts-i])->getCellGrid(x, y);
         printf("Coords -> x: %d, y: %d\n", x, y);
     }
-    //robot->CalcNextTile();
+    robot->CalcNextTile();
 }
 
 
