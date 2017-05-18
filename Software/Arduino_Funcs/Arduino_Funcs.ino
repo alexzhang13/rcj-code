@@ -594,11 +594,13 @@ void Mount_Sweep()
       reading = "";  
     }        
     if(angle == 90) {
+      Serial.println("z"); //take a screenshot at this moment (tell pi)
       delay(500);
     }
-    delay(8);                   
+    delay(7);                   
   } 
 
+  Serial.println("z"); //take a screenshot at this moment (tell pi)
   delay(500);
   // now scan back from 180 to 0 degrees
   for(int angle = 180; angle >= 0; angle--)    
@@ -613,11 +615,8 @@ void Mount_Sweep()
       reading += " "; reading += laserB_s.readRangeContinuousMillimeters(); //laser 3 val (mm)
       Serial.println(reading);
       reading = "";  
-    }     
-    if(angle == 90) {
-      delay(500);
-    }          
-    delay(8);       
+    }         
+    delay(7);       
   } 
   mount_laser.detach();
 }
@@ -628,7 +627,7 @@ void getDistanceReading()
   reading += millis(); reading += (" r "); reading += "0"; //add timestamp, laser label, angle = 0
   reading += " "; reading += laserA_l.readRangeContinuousMillimeters(); //laser 2 val (mm)
   reading += " "; reading += laserA_s.readRangeContinuousMillimeters(); //laser 1 val (mm)
-  reading += " "; reading += laserB_l.readRangeContinuousMillimeters(); //laser 4 val (mm)
+  reading += " "; reading += laserB_l.readRangeContinuousMillimeters(); //laser 4 val (mm)m
   reading += " "; reading += laserB_s.readRangeContinuousMillimeters(); //laser 3 val (mm)
   Serial.println(reading);     
 }
