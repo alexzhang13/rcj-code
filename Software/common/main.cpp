@@ -57,6 +57,7 @@ int main(int argc,char **argv){
         printf("State: %d\n", (int)myRobot->currState);
         switch(myRobot->currState) {
             case 0: //Planning
+                printf("lawl?\n");
                 Navigate(in_dir, xml_name, myRobot, nav);
                 break;
             case 1: //WayPtNav
@@ -227,9 +228,7 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
 {
     /*Navigational functions*/
     robot->sensor_info.reset(); //reset temp object
-    printf("error1");
     robot->UpdateCellMap(&robot->sensor_info, false); //false = not black
-    printf("error2");
     robot->UpdateNeighborCells();
     nav_rt.configureCurCell(&robot->sensor_info);
     nav_rt.detectLocalCells(robot->temp_cell_list);
