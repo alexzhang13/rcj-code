@@ -50,14 +50,16 @@ int main(int argc,char **argv){
     Process_T *process_thread = new Process_T(port, myRobot);
     printf("Fault 3 Passed\n");
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
-    
+    printf("Fault 4 Passed\n");
     readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
+    printf("Fault 5 Passed\n");
     //myRobot->SpinLaser();
     while(1) {
         switch(myRobot->currState) {
             case 0: //Planning
-                //Navigate(in_dir, xml_name, myRobot, nav);
-            Navigate("", "", myRobot, nav);
+
+                Navigate(in_dir, xml_name, myRobot, nav);
+     
                 break;
             case 1: //WayPtNav
                 WayPointNav(myRobot, nav);
@@ -233,7 +235,6 @@ void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate
     nav_rt.detectLocalCells(robot->temp_cell_list);
     nav_rt.updateLocalMap();
     nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
-
     robot->temp_cell_list.clear();
     //nav_rt.slam2d(); // will move to another thread
     // what to do next

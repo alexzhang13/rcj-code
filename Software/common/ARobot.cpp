@@ -98,10 +98,14 @@ void ARobot::UpdateNeighborCells()
 {
     MazeCell temp_cell;
     size_t sizeRange = rangeDataList.size();
+    if(sizeRange < 4)
+	return;
+
     bool wallsN = true;
     bool wallsE = true;
     bool wallsS = true;
     bool wallsW = true; //if valid/usable data
+
     for(int i = 1; i < 4; i++) {
         if(rangeDataList[sizeRange-i].walls.wallN != rangeDataList[sizeRange-1-i].walls.wallN)
             wallsN = false;
@@ -122,6 +126,7 @@ void ARobot::UpdateNeighborCells()
             wallsW = false;
             break;
     }
+ 
     if(wallsN == true) {
         if(rangeDataList[sizeRange-1].walls.wallN != -1) {
             for(int i = 1; i <= rangeDataList[sizeRange-i].walls.wallN; i++) {
@@ -173,6 +178,7 @@ void ARobot::UpdateNeighborCells()
             }
         }
     }
+
 
     if(wallsW == true) {
         if(rangeDataList[sizeRange-1].walls.wallW != -1) {
