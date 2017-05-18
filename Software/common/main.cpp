@@ -54,10 +54,9 @@ int main(int argc,char **argv){
     readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     //myRobot->SpinLaser();
     while(1) {
-        printf("State: %d\n", (int)myRobot->currState);
         switch(myRobot->currState) {
             case 0: //Planning
-                //Navigate(in_dir, xml_name, myRobot, nav);
+                Navigate(in_dir, xml_name, myRobot, nav);
                 break;
             case 1: //WayPtNav
                 WayPointNav(myRobot, nav);
@@ -269,7 +268,6 @@ int WayPointNav(ARobot *robot, Navigate2D &nav_rt)
         nav_rt.getCellbyIndex(robot->waypts[bot_waypts-i])->getCellGrid(x, y);
         printf("Coords -> x: %d, y: %d\n", x, y);
     }
-    sleep(10);
     //robot->CalcNextTile();
 }
 
