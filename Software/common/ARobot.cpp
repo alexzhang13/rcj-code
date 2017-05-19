@@ -464,7 +464,7 @@ void ARobot::StopTurn(BotDir dir)
         } else if(initialYaw <= 175.0f && currYaw > 185.0f) { //if robot crosses over from 180 to -180, direction switches
             currYaw -= 360; //range fixing
         }
-        if(currYaw <= toTurn) {
+        if(currYaw+3 <= toTurn) {
             char* i_command;
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
             i_command = (char*)malloc(i_length);
@@ -483,7 +483,7 @@ void ARobot::StopTurn(BotDir dir)
         } else if(initialYaw >= 185.0f && currYaw < 175.0f) { //if robot crosses over from -180 to 180, direction switches
             currYaw += 360; //range fixing
         }
-        if(currYaw >= toTurn) {
+        if(currYaw-3 >= toTurn) {
             char* i_command;
             printf("done");
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;

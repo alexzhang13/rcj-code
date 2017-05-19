@@ -55,7 +55,7 @@ int RangeData::getPosition()
 		//printf("east\n");
 	}
 	if(data.laserL_a <= 1200) { //check if reading is valid LONG FRONT
-		temp_range[0] = (data.laserL_a-18.0) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180);
+		temp_range[0] = (data.laserL_a-30.0) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180); //-18.0
 		temp_dist = (int)temp_range[0]/300;
 		distance[0] = temp_range[0] - temp_dist*300;
 	} else {
@@ -79,7 +79,7 @@ int RangeData::getPosition()
 		temp_range[1] = -300;
 	}
 	if(data.laserS_b <= 250) { //check if reading is valid SHORT LEFT
-		temp_range[3] = (data.laserS_b+29.76) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180); //x - 15
+		temp_range[3] = (data.laserS_b+13.75) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180); //x - 15
 		temp_dist = (int)temp_range[3]/300;
 		distance[3] = temp_range[3] - temp_dist*300;
 	} else {
