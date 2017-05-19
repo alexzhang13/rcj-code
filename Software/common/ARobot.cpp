@@ -36,6 +36,7 @@ void ARobot::WriteCommand(char* i_command, int size)
 void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
 {
     if(!black_flag) {
+        printf("testing\n");
         if(currTileLight == SILVER) {
             sensor_info->setCheckPt(true);
             sensor_info->setNonMovable(false);
@@ -59,6 +60,8 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
         }
 
         /*WALL DATA*/
+        printf("walls\n");
+        printf("Walls: N: %d, E: %d, S: %d, W: %d\n", rangeDataList.end()->walls.wallN, rangeDataList.end()->walls.wallE, rangeDataList.end()->walls.wallS, rangeDataList.end()->walls.wallW)
         if(rangeDataList.end()->walls.wallN == 0) {
             sensor_info->setWallNorth(MazeCell::MWall);
         } else {
