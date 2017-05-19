@@ -81,6 +81,7 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
             sensor_info->setWallWest(MazeCell::MWall);
         } else {
             sensor_info->setWallWest(MazeCell::MOpen);
+            printf("open West!");
         } 
         sensor_info->setVisitStatus(MazeCell::Visited);
     } else {
@@ -443,7 +444,7 @@ void ARobot::StopTurn(BotDir dir)
     float currYaw = imuDataList[imu_list-1].m_yaw;
     if(dir == RIGHT) {
         if(initialYaw <= 5.0f && currYaw >= 200.0f) { //this is a special case where the initial is around 360, but then switches to around 0, making it done immediately
-            currYaw += 360;
+            currYaw -= 360;
         } else if(initialYaw <= 175.0f && currYaw > 185.0f) { //if robot crosses over from 180 to -180, direction switches
             currYaw -= 360; //range fixing
         }
@@ -462,7 +463,7 @@ void ARobot::StopTurn(BotDir dir)
         }
     } else if(dir == LEFT) {
         if(initialYaw >= 355.0f && currYaw <= 200.0f) {
-            currYaw -= 360;
+            currYaw += 360;
         } else if(initialYaw >= 185.0f && currYaw < 175.0f) { //if robot crosses over from -180 to 180, direction switches
             currYaw += 360; //range fixing
         }
