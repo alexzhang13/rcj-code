@@ -41,8 +41,8 @@ int RangeData::getScan() {
 
 int RangeData::getPosition()
 {	
-	size_t imuSize = imuDataList.size();
-	if(myRobot->imuDataList[imuSize-1].m_yaw <= 45.0 || myRobot->[imuSize-1].m_yaw >= 315.0) { //north
+	size_t imuSize = myRobot->imuDataList.size();
+	if(myRobot->imuDataList[imuSize-1].m_yaw <= 45.0 || myRobot->imuDataList[imuSize-1].m_yaw >= 315.0) { //north
 		data.dir = 0;
 		//printf("north\n");
 	} else if (myRobot->imuDataList[imuSize-1].m_yaw <= 135.0 && myRobot->imuDataList[imuSize-1].m_yaw >= 45.0) { //west
