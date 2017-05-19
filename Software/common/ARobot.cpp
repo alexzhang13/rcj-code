@@ -224,6 +224,7 @@ void ARobot::CalcNextTile()
     BotOrientation nextDir;
     int next_x = (currTile.x_tovisit*300+150) - (int)currTile.x_map; //next tile coords
     int next_y = (currTile.y_tovisit*300+150) - (int)currTile.y_map; //next tile coords
+    printf("Next_x: %d, Next_y, %d, ToVisit_X: %d, ToVisit_Y: %d, X: %f, Y: %f\n", next_x, next_y, currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
     int32_t dist = (int32_t)sqrt(next_x*next_x + next_y*next_y); //pythagorean
     float angle; //offset angle
     if(currTile.x_tovisit - currTile.x > 0) { //east
