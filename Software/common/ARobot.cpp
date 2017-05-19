@@ -82,6 +82,7 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
         } else {
             sensor_info->setWallWest(MazeCell::MOpen);
         } 
+        sensor_info->setVisitStatus(MazeCell::Visited);
     } else {
         sensor_info->reset();
         sensor_info->setCellGrid(currTile.x_tovisit, currTile.y_tovisit);
@@ -324,7 +325,7 @@ float ARobot::getRightVictimTemp()
 }
 
 void ARobot::setLightThresh(int black, int silver)
-{
+{F
     black_thresh = black;
     silver_thresh = silver;
 }
