@@ -117,50 +117,52 @@ int main(int argc,char **argv){
                 bot_waypts = myRobot->waypts.size();
                 myRobot->currTile.x = myRobot->currTile.x_tovisit;
                 myRobot->currTile.y = myRobot->currTile.y_tovisit;
-                nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-1]);
+                nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]);
                 //nav.getCellbyIndex(myRobot->waypts[bot_waypts-1])->getCellGrid(myRobot->currTile.x, myRobot->currTile.y);
                 printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
-                myRobot->SpinLaser();
-                sleep(8.5); //time for laser
+                if(first_iter == true) {
+                    myRobot->SpinLaser();
+                    sleep(8.5); //time for laser
 
-                if(myRobot->CheckRamp()) { //is ramp
-                    myRobot->MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
-                    break;
-                }
-
-                myRobot->CheckLightTile();
-                if(myRobot->currTileLight == ARobot::SILVER) {
-                    myRobot->LEDLight(5000);
-                    sleep(5);
-                    //save state
-                }
-
-                //check visual victim
-
-                if(!nav.getCellbyIndex(myRobot->waypts[bot_waypts-1])->getVictim()) { //get currCell 
-                    switch(myRobot->CheckVictimTemp()) {
-                        printf("%d", myRobot->CheckVictimTemp());
-                        case 0:
-                            myRobot->currState = ARobot::WAYPTNAV;
-                            break;
-                        case 1: //drop or go back to calculating
-                            myRobot->victimRight = true;
-                            myRobot->TurnDistance(90, ARobot::LEFT); //turn left to drop from back onto right side
-                            myRobot->dropCnt = 1;
-                            //myRobot->currState = ARobot::Drop; --> Done in StopTurn();
-                            break;
-                        case 2:
-                            myRobot->victimLeft = true;
-                            myRobot->TurnDistance(90, ARobot::RIGHT); //turn right to drop from back onto left side
-                            myRobot->dropCnt = 1;
-                            //myRobot->currState = ARobot::Drop;
-                            break;
-                        default:
-                        myRobot->currState = ARobot::WAYPTNAV;
-                            break;
+                    if(myRobot->CheckRamp()) { //is ramp
+                        myRobot->MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
+                        break;
                     }
-                } else {
-                    myRobot->currState = ARobot::WAYPTNAV;
+
+                    myRobot->CheckLightTile();
+                    if(myRobot->currTileLight == ARobot::SILVER) {
+                        myRobot->LEDLight(5000);
+                        sleep(5);
+                        //save state
+                    }
+
+                    //check visual victim
+
+                    if(!nav.getCellbyIndex(myRobot->waypts[bot_waypts-1])->getVictim()) { //get currCell 
+                        switch(myRobot->CheckVictimTemp()) {
+                            printf("%d", myRobot->CheckVictimTemp());
+                            case 0:
+                                myRobot->currState = ARobot::WAYPTNAV;
+                                break;
+                            case 1: //drop or go back to calculating
+                                myRobot->victimRight = true;
+                                myRobot->TurnDistance(90, ARobot::LEFT); //turn left to drop from back onto right side
+                                myRobot->dropCnt = 1;
+                                //myRobot->currState = ARobot::Drop; --> Done in StopTurn();
+                                break;
+                            case 2:
+                                myRobot->victimLeft = true;
+                                myRobot->TurnDistance(90, ARobot::RIGHT); //turn right to drop from back onto left side
+                                myRobot->dropCnt = 1;
+                                //myRobot->currState = ARobot::Drop;
+                                break;
+                            default:
+                            myRobot->currState = ARobot::WAYPTNAV;
+                                break;
+                        }
+                    } else {
+                        myRobot->currState = ARobot::WAYPTNAV;
+                    }
                 }
                 break;
             default:
