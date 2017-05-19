@@ -1,3 +1,5 @@
+#include "navThread.h"
+
 using namespace std;
 
 void NavThread::run(void){
