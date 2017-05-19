@@ -81,6 +81,7 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
             sensor_info->setWallWest(MazeCell::MWall);
         } else {
             sensor_info->setWallWest(MazeCell::MOpen);
+            printf("open West!");
         } 
         sensor_info->setVisitStatus(MazeCell::Visited);
     } else {
