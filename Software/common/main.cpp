@@ -264,15 +264,15 @@ int WayPointNav(ARobot *robot, Navigate2D &nav_rt)
 {
     int x = 0; int y = 0;
     bot_waypts = robot->waypts.size();
-    if(bot_waypts > 1 && first_iter == false) //remove where u went
+    if(bot_waypts > 1 && first_iter == false) {//remove where u went
 	   robot->waypts.pop_back();
        --bot_waypts;
-    else if(first_iter == true) {
+    } else if(first_iter == true) {
         first_iter = false;
     }
     if(bot_waypts < 2) {
         robot->waypts.pop_back();
-        --bit_waypts;
+        --bot_waypts;
         robot->currState = ARobot::PLANNING;
         return -1;
     }
