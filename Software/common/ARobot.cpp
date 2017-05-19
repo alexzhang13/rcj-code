@@ -62,26 +62,26 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
 
         /*WALL DATA*/
         printf("Walls: N: %d, E: %d, S: %d, W: %d\n", rangeDataList[range_size-1].walls.wallN, rangeDataList[range_size-1].walls.wallE, rangeDataList[range_size-1].walls.wallS, rangeDataList[range_size-1].walls.wallW);
-        if(rangeDataList.end()->walls.wallN == 0) {
+        if(rangeDataList[range_size-1].walls.wallN == 0) {
             sensor_info->setWallNorth(MazeCell::MWall);
         } else {
              sensor_info->setWallNorth(MazeCell::MOpen);
         }
 
-        if(rangeDataList.end()->walls.wallE == 0) {
+        if(rangeDataList[range_size-1].walls.wallE == 0) {
             sensor_info->setWallEast(MazeCell::MWall); 
         } else {
             sensor_info->setWallEast(MazeCell::MOpen);
             printf("open East!\n");
         }
 
-        if(rangeDataList.end()->walls.wallS == 0) {
+        if(rangeDataList[range_size-1].walls.wallS == 0) {
             sensor_info->setWallSouth(MazeCell::MWall);
         } else {
             sensor_info->setWallSouth(MazeCell::MOpen);
         } 
 
-        if(rangeDataList.end()->walls.wallW == 0) {
+        if(rangeDataList[range_size-1].walls.wallW == 0) {
             sensor_info->setWallWest(MazeCell::MWall);
         } else {
             sensor_info->setWallWest(MazeCell::MOpen);
@@ -505,7 +505,7 @@ void ARobot::ParseIMU()
         if(imuDataList.size() <= 0) {
             imuParseList.front().parseData(-1); //special initial case
         } else {
-            imuParseList.front().parseData(imuDataList.end()->getTStamp());
+            imuParseList.front().parseData(imuDataList[imuDataList.size()-1].getTStamp());
         }
         imuParseList.front().runFilter();
         imuDataList.push_back(imuParseList.front());
