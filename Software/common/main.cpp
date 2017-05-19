@@ -57,7 +57,7 @@ int main(int argc,char **argv){
     myRobot->CalibrateIMU();
     sleep(3);
     while(1) {
-        #if 0
+        #if 1
         switch(myRobot->currState) {
             case 0: //Planning
                 Navigate(in_dir, xml_name, myRobot, nav);
