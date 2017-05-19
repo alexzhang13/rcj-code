@@ -117,7 +117,7 @@ int main(int argc,char **argv){
                 bot_waypts = myRobot->waypts.size();
                 myRobot->currTile.x = myRobot->currTile.x_tovisit;
                 myRobot->currTile.y = myRobot->currTile.y_tovisit;
-                //nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-1]);
+                nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-1]);
                 //nav.getCellbyIndex(myRobot->waypts[bot_waypts-1])->getCellGrid(myRobot->currTile.x, myRobot->currTile.y);
                 printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
                 myRobot->SpinLaser();
@@ -264,9 +264,11 @@ int WayPointNav(ARobot *robot, Navigate2D &nav_rt)
 {
     int x = 0; int y = 0;
     bot_waypts = robot->waypts.size();
-    if(bot_waypts > 1 && first_iter == true) //remove where u went
+    if(bot_waypts > 1 && first_iter == false) //remove where u went
 	   robot->waypts.pop_back();
+    else if(first_iter == true) {
         first_iter = false;
+    }
     if(bot_waypts < 2) {
         robot->waypts.pop_back();
         robot->currState = ARobot::PLANNING;
