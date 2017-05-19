@@ -273,7 +273,7 @@ int WayPointNav(ARobot *robot, Navigate2D &nav_rt)
     nav_rt.getCellbyIndex(robot->waypts[bot_waypts-2])->getCellGrid(robot->currTile.x_tovisit, robot->currTile.y_tovisit);
     printf("X_Tovisit: %d, Y_Tovisit: %d", robot->currTile.x_tovisit, robot->currTile.y_tovisit);
     for(int i = 0; i < bot_waypts; i++) {
-        nav_rt.getCellbyIndex(robot->waypts[bot_waypts-i])->getCellGrid(x, y);
+        nav_rt.getCellbyIndex(robot->waypts[bot_waypts-i-1])->getCellGrid(x, y);
         printf("Coords -> coord: %d x: %d, y: %d\n", robot->waypts[bot_waypts-i], x, y);
     }
     robot->CalcNextTile();
