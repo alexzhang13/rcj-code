@@ -56,6 +56,7 @@ int main(int argc,char **argv){
     //myRobot->SpinLaser();
     myRobot->CalibrateIMU();
     sleep(3);
+    #if 0
     while(1) {
         switch(myRobot->currState) {
             case 0: //Planning
@@ -175,6 +176,7 @@ int main(int argc,char **argv){
         cnt++;
         sleep(0.01);
     }
+    #endif
     /*sleep(3);
     myRobot->TurnDistance(90, ARobot::RIGHT);
 	int32_t c = 0;

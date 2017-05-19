@@ -41,13 +41,14 @@ int RangeData::getScan() {
 
 int RangeData::getPosition()
 {	
-	if(myRobot->imuDataList.end()->m_yaw <= 45.0 || myRobot->imuDataList.end()->m_yaw >= 315.0) { //north
+	size_t imuSize = imuDataList.size();
+	if(myRobot->imuDataList[imuSize-1].m_yaw <= 45.0 || myRobot->[imuSize-1].m_yaw >= 315.0) { //north
 		data.dir = 0;
 		//printf("north\n");
-	} else if (myRobot->imuDataList.end()->m_yaw <= 135.0 && myRobot->imuDataList.end()->m_yaw >= 45.0) { //west
+	} else if (myRobot->imuDataList[imuSize-1].m_yaw <= 135.0 && myRobot->imuDataList[imuSize-1].m_yaw >= 45.0) { //west
 		data.dir = 3;
 		//printf("west\n");
-	} else if (myRobot->imuDataList.end()->m_yaw <= 225.0 && myRobot->imuDataList.end()->m_yaw >= 135.0) { //south
+	} else if (myRobot->imuDataList[imuSize-1].m_yaw <= 225.0 && myRobot->imuDataList[imuSize-1].m_yaw >= 135.0) { //south
 		data.dir = 2;
 		//printf("south\n");
 	} else { //east
@@ -55,7 +56,7 @@ int RangeData::getPosition()
 		//printf("east\n");
 	}
 	if(data.laserL_a <= 1200) { //check if reading is valid LONG FRONT
-		temp_range[0] = (data.laserL_a-30.0) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180); //-18.0
+		temp_range[0] = (data.laserL_a-30.0) * cos((3.1415926535*myRobot->imuDataList[imuSize-1].m_yaw)/180); //-18.0
 		temp_dist = (int)temp_range[0]/300;
 		distance[0] = temp_range[0] - temp_dist*300;
 	} else {
@@ -63,7 +64,7 @@ int RangeData::getPosition()
 		temp_range[0] = -300;
 	} 
 	if(data.laserL_b <= 1200) { //check if reading is valid LONG BACK
-		temp_range[2] = (data.laserL_b+59.25) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180);
+		temp_range[2] = (data.laserL_b+59.25) * cos((3.1415926535*myRobot->imuDataList[imuSize-1].m_yaw)/180);
 		temp_dist = (int)temp_range[2]/300;
 		distance[2] = temp_range[2] - temp_dist*300;
 	} else {
@@ -71,7 +72,7 @@ int RangeData::getPosition()
 		temp_range[2] = -300;
 	}
 	if(data.laserS_a <= 250) { //check if reading is valid SHORT RIGHT
-		temp_range[1] = (data.laserS_a+13.75) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180); //30 - x - 15 = 15 - x 
+		temp_range[1] = (data.laserS_a+13.75) * cos((3.1415926535*myRobot->imuDataList[imuSize-1].m_yaw)/180); //30 - x - 15 = 15 - x 
 		temp_dist = (int)temp_range[1]/300;
 		distance[1] = temp_range[1] - temp_dist*300;
 	} else {
@@ -79,7 +80,7 @@ int RangeData::getPosition()
 		temp_range[1] = -300;
 	}
 	if(data.laserS_b <= 250) { //check if reading is valid SHORT LEFT
-		temp_range[3] = (data.laserS_b+13.75) * cos((3.1415926535*myRobot->imuDataList.end()->m_yaw)/180); //x - 15
+		temp_range[3] = (data.laserS_b+13.75) * cos((3.1415926535*myRobot->imuDataList[imuSize-1].m_yaw)/180); //x - 15
 		temp_dist = (int)temp_range[3]/300;
 		distance[3] = temp_range[3] - temp_dist*300;
 	} else {
@@ -93,13 +94,13 @@ int RangeData::getPosition()
 	distance[(2+data.dir)%4] -= 150.0f; //for south and west it is regularly just subtracting 15 
 	distance[(3+data.dir)%4] -= 150.0f;
 
-	//printf("%f %f %f %f\n", temp_range[(0+data.dir)%4], temp_range[(1+data.dir)%4], temp_range[(2+data.dir)%4], temp_range[(3+data.dir)%4]);
+	printf("%f %f %f %f\n", temp_range[(0+data.dir)%4], temp_range[(1+data.dir)%4], temp_range[(2+data.dir)%4], temp_range[(3+data.dir)%4]);
 
 	walls.wallN = (int)temp_range[(0+data.dir)%4]/300;
 	walls.wallE = (int)temp_range[(1+data.dir)%4]/300;
 	walls.wallS = (int)temp_range[(2+data.dir)%4]/300;
 	walls.wallW = (int)temp_range[(3+data.dir)%4]/300;
-	printf("Walls: %d %d %d %d\n", walls.wallN, walls.wallE, walls.wallS, walls.wallW);
+	//printf("Walls: %d %d %d %d\n", walls.wallN, walls.wallE, walls.wallS, walls.wallW);
 
 	for(int i = 0; i < 4; i++) {
 		if((data.dir + i) % 2 == 1) { //x coords
