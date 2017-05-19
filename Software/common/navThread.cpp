@@ -3,18 +3,6 @@
 using namespace std;
 
 void NavThread::run(void){
-    Navigate2D nav; //main map class obj
-#ifdef WIN32
-    const char* fileConfig = "C:/projects/StormingRobots2017/Data/Mem/config_test.txt";
-    const char* in_dir = "C:/projects/StormingRobots2017/Data";
-	const char* rt_logname = "realtime/rcj_log";
-    const char* xml_name = "map_data/mazemap";
-#else
-    const char* fileConfig = "/home/alex/projects/rcj-code/Software/common/Mem/config_test.txt";
-    const char* in_dir = "/home/alex/projects/rcj-code/Data";
-	const char* rt_logname = "realtime/rcj_log";
-    const char* xml_name = "map_data/mazemap";
-#endif
 
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     printf("Fault 4 Passed\n");
@@ -53,7 +41,7 @@ void NavThread::run(void){
                 myRobot->StopMove();
                 break;
             case 5: //Move
-                CheckLightTile(); //check if anything happens during this time
+                myRobot->CheckLightTile(); //check if anything happens during this time
                 break;
             case 6: //Drop
                 for(int i = 0; i < myRobot->dropCnt; i++) {
