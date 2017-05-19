@@ -121,6 +121,7 @@ int main(int argc,char **argv){
                 //nav.getCellbyIndex(myRobot->waypts[bot_waypts-1])->getCellGrid(myRobot->currTile.x, myRobot->currTile.y);
                 printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
                 if(first_iter == true) {
+                    first_iter = false;
                     myRobot->SpinLaser();
                     sleep(8.5); //time for laser
 
@@ -164,6 +165,7 @@ int main(int argc,char **argv){
                         myRobot->currState = ARobot::WAYPTNAV;
                     }
                 }
+                myRobot->currState = ARobot::WAYPTNAV;
                 break;
             default:
                 /*Put stuff here*/
@@ -269,8 +271,6 @@ int WayPointNav(ARobot *robot, Navigate2D &nav_rt)
     if(bot_waypts > 1 && first_iter == false) {//remove where u went
 	   robot->waypts.pop_back();
        --bot_waypts;
-    } else if(first_iter == true) {
-        first_iter = false;
     }
     if(bot_waypts < 2) {
         robot->waypts.pop_back();
