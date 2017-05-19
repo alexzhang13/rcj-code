@@ -319,7 +319,7 @@ float ARobot::getRightVictimTemp()
 }
 
 void ARobot::setLightThresh(int black, int silver)
-{F
+{
     black_thresh = black;
     silver_thresh = silver;
 }
