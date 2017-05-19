@@ -1,3 +1,6 @@
+#ifndef _NAV_THREAD_h_
+#define _NAV_THREAD_h_
+
 #include <stdio.h>
 #include <unistd.h> // for sleep
 #include <string>
@@ -34,4 +37,4 @@ class NavThread : public Thread {
  private:
  	char buf[64];
 };
-#endif // _PROCESS_THREAD_h_
+#endif // _NAV_THREAD_h_
