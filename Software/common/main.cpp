@@ -266,18 +266,20 @@ int WayPointNav(ARobot *robot, Navigate2D &nav_rt)
     bot_waypts = robot->waypts.size();
     if(bot_waypts > 1 && first_iter == false) //remove where u went
 	   robot->waypts.pop_back();
+       --bot_waypts;
     else if(first_iter == true) {
         first_iter = false;
     }
     if(bot_waypts < 2) {
         robot->waypts.pop_back();
+        --bit_waypts;
         robot->currState = ARobot::PLANNING;
         return -1;
     }
     nav_rt.getCellbyIndex(robot->waypts[bot_waypts-2])->getCellGrid(robot->currTile.x_tovisit, robot->currTile.y_tovisit);
     printf("X_Tovisit: %d, Y_Tovisit: %d\n", robot->currTile.x_tovisit, robot->currTile.y_tovisit);
-    for(int i = 0; i < bot_waypts; i++) {
-        nav_rt.getCellbyIndex(robot->waypts[bot_waypts-i-1])->getCellGrid(x, y);
+    for(int i = 1; i <= bot_waypts; i++) {
+        nav_rt.getCellbyIndex(robot->waypts[bot_waypts-i])->getCellGrid(x, y);
         printf("Coords -> coord: %d x: %d, y: %d\n", robot->waypts[bot_waypts-i], x, y);
     }
     robot->CalcNextTile();
