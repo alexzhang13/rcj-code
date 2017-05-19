@@ -537,7 +537,7 @@ void Motor_Encoder()
   if(abs(leftEncoder) < abs(rightEncoder)){
     motorRight->setSpeed(speed_left); //corecting
   } else {
-    motorRight->setSpeed(speed_left+15); //take 
+    motorRight->setSpeed(speed_left+20); //take 
   }
   reading += millis(); reading += " m ";
   reading += left_mm; reading += " "; reading += right_mm;
