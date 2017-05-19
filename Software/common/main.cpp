@@ -59,6 +59,7 @@ int main(int argc,char **argv){
         switch(myRobot->currState) {
             case 0: //Planning
                 Navigate(in_dir, xml_name, myRobot, nav);
+                printf("navigating...\n");
                 break;
             case 1: //WayPtNav
                 WayPointNav(myRobot, nav);
@@ -115,7 +116,7 @@ int main(int argc,char **argv){
                 bot_waypts = myRobot->waypts.size();
                 nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-1]);
                 nav.getCellbyIndex(myRobot->waypts[bot_waypts-1])->getCellGrid(myRobot->currTile.x, myRobot->currTile.y);
-                printf("x: %d, y: %d", myRobot->currTile.x, myRobot->currTile.y);
+                printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
                 myRobot->SpinLaser();
                 sleep(8.5); //time for laser
 
@@ -272,7 +273,7 @@ int WayPointNav(ARobot *robot, Navigate2D &nav_rt)
     nav_rt.getCellbyIndex(robot->waypts[bot_waypts-2])->getCellGrid(robot->currTile.x_tovisit, robot->currTile.y_tovisit);
     for(int i = 0; i < bot_waypts; i++) {
         nav_rt.getCellbyIndex(robot->waypts[bot_waypts-i])->getCellGrid(x, y);
-        printf("Coords -> x: %d, y: %d\n", x, y);
+        printf("Coords -> coord: %d x: %d, y: %d\n", robot->waypts[bot_waypts-i], x, y);
     }
     robot->CalcNextTile();
 }
