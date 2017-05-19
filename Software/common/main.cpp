@@ -120,6 +120,7 @@ int main(int argc,char **argv){
                 nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]);
                 //nav.getCellbyIndex(myRobot->waypts[bot_waypts-1])->getCellGrid(myRobot->currTile.x, myRobot->currTile.y);
                 printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
+                sleep(0.1);
                 if(first_iter == true) {
                     first_iter = false;
                     myRobot->SpinLaser();
