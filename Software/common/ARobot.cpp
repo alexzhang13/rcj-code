@@ -167,7 +167,12 @@ void ARobot::UpdateNeighborCells()
                 temp_cell_list.push_back(temp_cell);
                 temp_cell.reset();
             }
-        } 
+        } else {
+            temp_cell.setCellGrid(currTile.x+1, currTile.y);
+            temp_cell.setWallWest(MazeCell::MOpen);
+            temp_cell_list.push_back(temp_cell);
+            temp_cell.reset();
+        }
     }
 
     if(wallsS == true) {
@@ -205,6 +210,11 @@ void ARobot::UpdateNeighborCells()
                 temp_cell_list.push_back(temp_cell);
                 temp_cell.reset();
             }
+        } else {
+            temp_cell.setCellGrid(currTile.x-1, currTile.y);
+            temp_cell.setWallEast(MazeCell::MOpen);
+            temp_cell_list.push_back(temp_cell);
+            temp_cell.reset();
         }
     }
 }
