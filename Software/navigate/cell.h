@@ -70,7 +70,7 @@ public:
 
 	// navigation state
 	typedef struct {
-		NavDir nav_dir;    // direction the robot is currently facing
+		NavDir nav_dir;    // global direction the robot is currently facing
 		xyCoord localpos;  // robot position wrt center center
 		xyCoord centerpos; // cell center position wrt map origin
 		CellHistory history; // cell history 
@@ -99,6 +99,8 @@ public:
 	inline void getCellGrid(int32_t &i, int32_t &j) {i=m_gridxy.x; j=m_gridxy.y;}
 	inline void setCenterXY(float x, float y) {m_navstate.centerpos.x = x;m_navstate.centerpos.y = y;} 
 	inline void getCenterXY(float &x, float &y) {x=m_navstate.centerpos.x;y=m_navstate.centerpos.y;} 
+	inline void setLocalPosition(float x, float y) {m_navstate.localpos.x = x; m_navstate.localpos.y = y;}
+	inline void getLocalPosition(float &x, float &y) {x=m_navstate.localpos.x; y=m_navstate.localpos.y;}
 	inline void updateNorthNeighbor(int32_t cn) { m_cellN = cn;}
 	inline int32_t getNeighborCellNorth() { return m_cellN;}
 	inline void updateEastNeighbor(int32_t cn) { m_cellE = cn;}
@@ -110,6 +112,9 @@ public:
 
 	inline void setNavDirection(NavDir nd) {m_navstate.nav_dir = nd; }
 	inline NavDir getNavDirection() { return m_navstate.nav_dir; }
+
+	inline void setNavTransition(float angle, float distance) {m_transit.angle = angle; m_transit.distance = distance;}
+	inline void getNavTransition(float &angle, float &distance) {angle=m_transit.angle; distance=m_transit.distance;}
 
 	inline void setVisitStatus(CellHistory chis) {m_navstate.history = chis;}
 	inline CellHistory getVisitStatus() { return m_navstate.history;}
