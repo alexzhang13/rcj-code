@@ -513,11 +513,11 @@ void ARobot::ParseIMU()
 {
     for(int i = 0; i < imuParseList.size(); i++)
     {
-        if(imuDataList.size() <= 0) {
+        /*if(imuDataList.size() <= 0) {
             imuParseList.front().parseData(-1); //special initial case
         } else {
             imuParseList.front().parseData(imuDataList[imuDataList.size()-1].getTStamp());
-        }
+        }*/
         imuParseList.front().runFilter();
         imuDataList.push_back(imuParseList.front());
         imuParseList.pop();
