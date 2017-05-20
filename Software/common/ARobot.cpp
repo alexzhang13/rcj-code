@@ -288,6 +288,9 @@ bool ARobot::CheckRamp()
 
 int ARobot::CheckVictimTemp()
 {
+    if(isVictim) //if a victim has already been there
+        return 0;
+
     size_t temp_vals = tempDataList.size(); //get average values
     float temp_avg = 0;
     for(int i = 1; i < 5; i++) { //left threshold
@@ -368,7 +371,6 @@ void ARobot::CheckLightTile()
         currTileLight = BLACK;
         if(backingBlack == false) {
             backingBlack = true;
-            StopMove();
             MoveDistance(175, BACK); //move back 16 cm
             UpdateCellMap(&sensor_info, backingBlack);
         }
@@ -474,6 +476,7 @@ void ARobot::StopTurn(BotDir dir)
                 currState = DROP;
             } else {
                 currState = IDLE; 
+                CheckVictimTemp();
             }          
             return;
         }
@@ -494,6 +497,7 @@ void ARobot::StopTurn(BotDir dir)
                 currState = DROP;
             } else {
                 currState = IDLE;
+                CheckVictimTemp();
             }
             return;
         }
