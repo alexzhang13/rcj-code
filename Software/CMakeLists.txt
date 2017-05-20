@@ -2,7 +2,7 @@ project(robot)
 cmake_minimum_required(VERSION 3.5)
 SET( CMAKE_CXX_FLAGS "-std=c++11 -O3")
 set (OpenCV_DIR /home/alex/opencv-3.1.0/build)
-
+set (raspicam_DIR /home/alex/raspicam-0.1.6/build)
 # source code
 set(SRCS
   common/ARobot.cpp
@@ -10,12 +10,14 @@ set(SRCS
   common/LightData.cpp
   common/TempData.cpp
   common/processThread.cpp
+  common/navThread.cpp
   common/RangeData.cpp
   common/main.cpp
   common/SerialPort.cpp
   common/Thread.cpp
   common/UartRx.cpp
   common/UartTx.cpp
+  common/picamera.cpp
   imu/MadgwickAHRS.cpp
   imu/MahonyAHRS.c
   navigate/cell.cpp
@@ -51,6 +53,8 @@ find_package(OpenCV REQUIRED)
 # boost
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 
+find_package(raspicam REQUIRED)
+
 include_directories(
   ${Boost_INCLUDE_DIR}
   #${PROJECT_SOURCE_DIR}/eigen_dir
@@ -67,4 +71,5 @@ target_link_libraries(${PROJECT_NAME}
   ${OpenCV_LIBS}
   ${CMAKE_THREAD_LIBS_INIT} 
   ${Boost_LIBRARIES}
+  ${raspicam_LIBS}
 )
