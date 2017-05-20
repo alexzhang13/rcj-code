@@ -8,6 +8,7 @@ static Madgwick madgwick;
 IMUData::IMUData()
 {
 	memset(m_command,'\0', 128);
+	prev_tstamp = 26;
 	//madgwick.begin(float sampleFrequency);
 	//m_data.clear();
 }
@@ -21,10 +22,9 @@ int IMUData::storeCommand(char* buf) {
 	memcpy(m_command, buf, 64);
 }
 
-int IMUData::parseData(int prev_TStamp)
+int IMUData::parseData()
 {
 	sscanf(m_command, "%d %c %f %f %f %f %f %f", &data.tstamp, &data.id, &data.ax, &data.ay, &data.az, &data.gx, &data.gy, &data.gz);
-	prev_tstamp = prev_TStamp; //set previous
 	//data.az *= -1; //inverted
 	return 0;
 }
