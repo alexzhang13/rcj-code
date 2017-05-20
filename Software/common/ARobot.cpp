@@ -530,11 +530,11 @@ void ARobot::ParseRange() {
         rangeParseList.front().getPosition();
         if(rangeParseList.front().coord.x_flag == true) {
             currTile.x_map = (currTile.x*300.0f) + rangeParseList.front().coord.x_glob;
-            //printf("X Coord: %f\n", rangeParseList.front().coord.x_glob);
+            printf("X Glob: %f\n", currTile.x_map);
         }
         if(rangeParseList.front().coord.y_flag == true) {
             currTile.y_map = (currTile.y*300.0f) + rangeParseList.front().coord.y_glob;
-            printf("Y Coord: %f Y Glob: %f\n", rangeParseList.front().coord.y_glob, currTile.y_map);
+            printf("Y Glob: %f\n", currTile.y_map);
         }
 
         //printf("x: %d y: %d x_map: %d y_map: %d\n", currTile.x, currTile.y, currTile.x_map, currTile.y_map);
