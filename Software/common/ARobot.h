@@ -140,6 +140,7 @@ class ARobot {
  	float threshRight; //Right Temperature Threshold
  	int silver_thresh; //Silver Tile Threshold
  	int black_thresh; //Black Tile Threshold
+ 	int yaw_drift; //Add to counter yaw drift...
  	float initialYaw;
  	float toTurn;
  	size_t mlen_light;

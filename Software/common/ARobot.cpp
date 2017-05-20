@@ -229,16 +229,16 @@ void ARobot::CalcNextTile()
     float angle; //offset angle
     if(currTile.x_tovisit - currTile.x > 0) { //east
         nextDir = EAST;
-        angle = atan((float)next_y/(float)next_x)*180.0f/3.1415926535f; //angle to left, should be pos
+        angle = -atan((float)next_y/(float)next_x)*180.0f/3.1415926535f; //angle to left, should be pos
     } else if (currTile.x_tovisit - currTile.x < 0) { //west
         nextDir = WEST;
-        angle = atan((float)next_y/(float)next_x)*180.0f/3.1415926535f; //angle to left, should be pos
+        angle = -atan((float)next_y/(float)next_x)*180.0f/3.1415926535f; //angle to left, should be pos
     } else if (currTile.y_tovisit - currTile.y > 0) { //north
         nextDir = NORTH;
-        angle = -atan((float)next_x/(float)next_y)*180.0f/3.1415926535f; //angle to right, should be neg
+        angle = atan((float)next_x/(float)next_y)*180.0f/3.1415926535f; //angle to right, should be neg
     } else if (currTile.y_tovisit - currTile.y < 0) { //south
         nextDir = SOUTH;
-        angle = -atan((float)next_x/(float)next_y)*180.0f/3.1415926535f; //angle to right, should be neg
+        angle = atan((float)next_x/(float)next_y)*180.0f/3.1415926535f; //angle to right, should be neg
     }
     //printf("Next_X: %d, Next_Y: %d, Dist: %d, Angle Dif: %f\n", next_x, next_y, dist, angle);
     //printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f\n", currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
@@ -254,7 +254,7 @@ void ARobot::TileTransition(BotOrientation direction, float angle, int32_t dist)
     /*Turning first*/
     if(turnNext == 3) {turnNext = -1;} //west -> north = turn right 1
     else if (turnNext == -3) {turnNext = 1;} //north -> west = turn left 1
-    if(abs(toTurn) > 2) { //ignore smaller angles
+    if(abs(toTurn) > 3) { //ignore smaller angles
         TurnDistance(abs(toTurn), (toTurn > 0) ? RIGHT : LEFT); //left is positive for IMU
         dist_temp = dist;
         toMove = true;
