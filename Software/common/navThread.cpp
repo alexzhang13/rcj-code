@@ -69,6 +69,7 @@ void NavThread::run(void){
 		        printf("DONE!");
                 break;
             case 9: //Data collection
+                myRobot->isVictim = nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim();
                 myRobot->CalibrateIMU();
                 sleep(1);
                 bot_waypts = myRobot->waypts.size();
@@ -93,7 +94,7 @@ void NavThread::run(void){
                         //save state
                     }
                     //check visual victim
-                    if(!nav.getCellbyIndex(myRobot->waypts[bot_waypts-1])->getVictim()) { //get currCell 
+                    if(!nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim()) { //get currCell 
                         switch(myRobot->CheckVictimTemp()) {
                             printf("%d", myRobot->CheckVictimTemp());
                             case 0:
@@ -103,12 +104,14 @@ void NavThread::run(void){
                                 myRobot->victimRight = true;
                                 myRobot->TurnDistance(90, ARobot::LEFT); //turn left to drop from back onto right side
                                 myRobot->dropCnt = 1;
+                                myRobot->isVictim = true;
                                 //myRobot->currState = ARobot::Drop; --> Done in StopTurn();
                                 break;
                             case 2:
                                 myRobot->victimLeft = true;
                                 myRobot->TurnDistance(90, ARobot::RIGHT); //turn right to drop from back onto left side
                                 myRobot->dropCnt = 1;
+                                myRobot->isVictim = true;
                                 //myRobot->currState = ARobot::Drop;
                                 break;
                             default:
