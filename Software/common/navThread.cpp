@@ -133,6 +133,7 @@ void NavThread::run(void){
 
 void NavThread::readConfig(const char* filename, ARobot *robot)
 {
+    printf("here\n");
     int black_thresh, silver_thresh;
     float threshLeft, threshRight;
     FILE *datafile;
