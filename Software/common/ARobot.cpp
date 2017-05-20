@@ -524,37 +524,31 @@ void ARobot::ParseIMU()
     }
 }
 void ARobot::ParseRange() {
-    for(int i = 0; i < rangeParseList.size(); i++)
-    {
-        rangeParseList.front().parseData();
-        rangeParseList.front().getPosition();
-        if(rangeParseList.front().coord.x_flag == true) {
-            currTile.x_map = (currTile.x*300.0f) + rangeParseList.front().coord.x_glob;
-            printf("X Glob: %f\n", currTile.x_map);
-        }
-        if(rangeParseList.front().coord.y_flag == true) {
-            currTile.y_map = (currTile.y*300.0f) + rangeParseList.front().coord.y_glob;
-            printf("Y Glob: %f\n", currTile.y_map);
-        }
-
-        //printf("x: %d y: %d x_map: %d y_map: %d\n", currTile.x, currTile.y, currTile.x_map, currTile.y_map);
-        rangeDataList.push_back(rangeParseList.front());
-        rangeParseList.pop();
+    rangeParseList.front().parseData();
+    rangeParseList.front().getPosition();
+    if(rangeParseList.front().coord.x_flag == true) {
+        currTile.x_map = (currTile.x*300.0f) + rangeParseList.front().coord.x_glob;
+        printf("X Glob: %f\n", currTile.x_map);
     }
+    if(rangeParseList.front().coord.y_flag == true) {
+        currTile.y_map = (currTile.y*300.0f) + rangeParseList.front().coord.y_glob;
+        printf("Y Glob: %f\n", currTile.y_map);
+    }
+
+    //printf("x: %d y: %d x_map: %d y_map: %d\n", currTile.x, currTile.y, currTile.x_map, currTile.y_map);
+    rangeDataList.push_back(rangeParseList.front());
+    rangeParseList.pop();
 }
 
 void ARobot::ParseTemp() {
-    for(int i = 0; i < tempParseList.size(); i++)
-    {
-        tempParseList.front().parseData();
-        tempDataList.push_back(tempParseList.front());
-        tempParseList.pop();
-    }
+    tempParseList.front().parseData();
+    tempDataList.push_back(tempParseList.front());
+    tempParseList.pop();
+
 }
 
 void ARobot::ParseLight() {
     lightParseList.front().parseData();
-    lightParseList.front().checkLight();
     lightDataList.push_back(lightParseList.front());
     lightParseList.pop();
 }

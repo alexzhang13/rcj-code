@@ -33,7 +33,7 @@ void Process_T::run(void){
           processed_status = true;
         }
         if(!processed_status)
-			sleep(0.001);
+			    sleep(0.01);
     }
 	return;
 }
