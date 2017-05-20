@@ -73,6 +73,7 @@ private:
 	char m_command[128]; //stored command
 	float temp_range[4]; //temporary number
 	int temp_dist; //temporary number
+	float curr_yaw;
 };
 
 #endif // !_TEMP_DATA_H_
