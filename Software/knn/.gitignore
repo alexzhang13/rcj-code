@@ -1,0 +1,22 @@
+# Compiled source #
+###################
+*.o
+*.so
+
+# OS generated files #
+######################
+*._*
+*.Trashes
+*.*~
+
+# Build directory #
+###################
+build/
+sbuild/
+*.kdev4/
+*.kdev4
+
+# Run text files #
+##################
+*Run.txt
+maps/
