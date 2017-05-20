@@ -21,7 +21,8 @@ public:
 		float laserL_b; //reading from the long laser facing backwards
 		float laserS_a; //reading from the short laser facing right
 		float laserS_b; //reading from the short laser facing left
-		int dir; //n = 0, e = 1, s = 2, w = 3
+		int dir; //n = 0, e = 3, s = 2, w = 1
+		int axis; //n = 0, e = 1, s = 2, w = 3
 	}Range_DataType;
 
 	typedef struct {
