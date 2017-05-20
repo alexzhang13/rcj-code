@@ -12,7 +12,7 @@ void NavThread::run(void){
     myRobot->CalibrateIMU();
     sleep(1);
     while(1) {
-        #if 1
+        #if 0
         switch(myRobot->currState) {
             case 0: //Planning
                 Navigate(in_dir, xml_name, myRobot, nav);
@@ -133,7 +133,6 @@ void NavThread::run(void){
 
 void NavThread::readConfig(const char* filename, ARobot *robot)
 {
-    printf("here\n");
     int black_thresh, silver_thresh;
     float threshLeft, threshRight;
     FILE *datafile;
