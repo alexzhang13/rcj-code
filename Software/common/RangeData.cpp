@@ -43,7 +43,8 @@ int RangeData::getPosition()
 {	
 	size_t imuSize = myRobot->imuDataList.size();
 	curr_yaw = myRobot->imuDataList[imuSize-1].m_yaw;
-
+	printf("curr_yaw: %f", abs(cos((3.1415926535f*curr_yaw)/180.0f);
+	
 	if(curr_yaw <= 45.0 || curr_yaw >= 315.0) { //north
 		data.dir = 0;
 		myRobot->currOrientation = ARobot::NORTH;
@@ -104,8 +105,8 @@ int RangeData::getPosition()
 	distance[(2+data.dir)%4] -= 150.0f; //for south and west it is regularly just subtracting 15 
 	distance[(3+data.dir)%4] -= 150.0f;
 
-	printf("Lasers: %f %f %f %f\n", data.laserL_a, data.laserS_a, data.laserL_b, data.laserS_b);
-	printf("Temps: %f %f %f %f\n", temp_range[(0+data.dir)%4], temp_range[(1+data.dir)%4], temp_range[(2+data.dir)%4], temp_range[(3+data.dir)%4]);
+	//printf("Lasers: %f %f %f %f\n", data.laserL_a, data.laserS_a, data.laserL_b, data.laserS_b);
+	//printf("Temps: %f %f %f %f\n", temp_range[(0+data.dir)%4], temp_range[(1+data.dir)%4], temp_range[(2+data.dir)%4], temp_range[(3+data.dir)%4]);
 
 	walls.wallN = (int)temp_range[(0+data.dir)%4]/300;
 	walls.wallE = (int)temp_range[(1+data.dir)%4]/300;
