@@ -43,7 +43,7 @@ int RangeData::getPosition()
 {	
 	size_t imuSize = myRobot->imuDataList.size();
 	curr_yaw = myRobot->imuDataList[imuSize-1].m_yaw;
-	printf("curr_yaw: %f\n", abs(cos((3.14159*curr_yaw)/180.0)));
+	printf("curr_yaw: %f\n", cos((3.14159*curr_yaw)/180.0));
 
 	if(curr_yaw <= 45.0 || curr_yaw >= 315.0) { //north
 		data.dir = 0;
