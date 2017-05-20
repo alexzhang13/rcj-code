@@ -4,7 +4,7 @@ using namespace std;
 
 void NavThread::run(void){
 
-    //readConfig(fileConfig, myRobot); //read config file about threshold calibrations
+    readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     printf("Fault 4 Passed\n");
     //readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     printf("Fault 5 Passed\n");

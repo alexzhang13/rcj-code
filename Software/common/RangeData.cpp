@@ -99,8 +99,8 @@ int RangeData::getPosition()
 	distance[(2+data.dir)%4] -= 150.0f; //for south and west it is regularly just subtracting 15 
 	distance[(3+data.dir)%4] -= 150.0f;
 
-	printf("Lasers: %f %f %f %f\n", data.laserL_a, data.laserS_a, data.laserL_b, data.laserS_b);
-	printf("Temps: %f %f %f %f\n", temp_range[(0+data.dir)%4], temp_range[(1+data.dir)%4], temp_range[(2+data.dir)%4], temp_range[(3+data.dir)%4]);
+	//printf("Lasers: %f %f %f %f\n", data.laserL_a, data.laserS_a, data.laserL_b, data.laserS_b);
+	//printf("Temps: %f %f %f %f\n", temp_range[(0+data.dir)%4], temp_range[(1+data.dir)%4], temp_range[(2+data.dir)%4], temp_range[(3+data.dir)%4]);
 
 	walls.wallN = (int)temp_range[(0+data.dir)%4]/300;
 	walls.wallE = (int)temp_range[(1+data.dir)%4]/300;
