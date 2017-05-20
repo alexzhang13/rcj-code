@@ -80,10 +80,13 @@ int32_t MazeMaps::displayPhysicalMap(int32_t floor_num, std::vector<GreedyDijkst
 		}
 	}
 
-	std::string name = "Floor " + std::to_string(floor_num);
-	cv::namedWindow(name);
-	cv::imshow(name, m_disp_img[floor_num]);
-	cv::waitKey(10);
+	if(!m_disp_img[floor_num].empty()) {
+		std::string name = "Floor " + std::to_string(floor_num);
+		cv::namedWindow(name);
+
+		cv::imshow(name, m_disp_img[floor_num]);
+		cv::waitKey(10);
+	}
 
 	return 0;
 }
