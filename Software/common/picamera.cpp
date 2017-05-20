@@ -30,29 +30,29 @@ bool _PiCamera_::cameraOpen(int32_t width, int32_t height)
 		m_height = height;
 	}
 
-	m_camera.setWidth ( m_width );
-	m_camera.setHeight ( m_height );
-	m_camera.setBrightness (60 );
+    m_camera.setWidth ( m_width );
+    m_camera.setHeight ( m_height );
+    m_camera.setBrightness (60 );
 
-	m_camera.setSharpness ( 0);
-	m_camera.setContrast ( 0 );
-	m_camera.setSaturation ( 0);
-	m_camera.setShutterSpeed( 0 );
-	m_camera.setISO ( 400 );
+    m_camera.setSharpness ( 0);
+    m_camera.setContrast ( 0 );
+    m_camera.setSaturation ( 0);
+    m_camera.setShutterSpeed( 0 );
+    m_camera.setISO ( 400 );
 
-	//Open camera 
-	cout<<"Opening Camera..."<<endl;
-	if ( !m_camera.open()) 
+   //Open camera 
+    cout<<"Opening Camera..."<<endl;
+    if ( !m_camera.open()) 
 	{
 		cerr<<"Error opening camera"<<endl;
 		return false;
 	}
-	//wait a while until camera stabilizes
-	cout<<"Sleeping for 3 secs"<<endl;
+    //wait a while until camera stabilizes
+    cout<<"Sleeping for 3 secs"<<endl;
 	m_width = m_camera.getWidth();
 	m_height = m_camera.getHeight();
 
-	cout << "width= " << m_width << ", height =" << m_height << "\n";
+    cout << "width= " << m_width << ", height =" << m_height << "\n";
 
 	//allocate memory
 	m_data=new unsigned char[  m_camera.getImageTypeSize  ( raspicam::RASPICAM_FORMAT_RGB )];    
