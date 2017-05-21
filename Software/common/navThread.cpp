@@ -56,7 +56,7 @@ void NavThread::run(void){
                     sleep(2);
                 }
                 myRobot->isDropped = true;
-                nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->setVictim(true);
+                nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->setVictim(MazeCell::Victim);
                 myRobot->currState = ARobot::PLANNING;
                 break;
             case 7: //BLACKBACK
@@ -74,7 +74,7 @@ void NavThread::run(void){
                 break;
             case 9: //Data collection
                 myRobot->isVictim = nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim();
-                if(!myRobot->isVictim) {myRobot->isDropped = false;}
+                if(!myRobot->isVictim) {isDropped = false;}
                 myRobot->CalibrateIMU();
                 sleep(1);
                 bot_waypts = myRobot->waypts.size();
@@ -100,7 +100,7 @@ void NavThread::run(void){
                         //save state
                     }
                     //check visual victim
-                    if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim()) { //get currCell
+                    if(!nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim()) { //get currCell
                         switch(myRobot->ProcessImage_Victim()) {
                             if(myRobot->victim.letter == '0') {myRobot->dropCnt = 0;}
                             else if(myRobot->victim.letter == 'H') {
