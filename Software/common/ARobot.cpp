@@ -21,6 +21,8 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     toMove = false;
     victimRight = false; //true if is dropping to the right
     victimLeft = false;
+    victim.letter = '0';
+    victim.isVictim = false;
 }
 
 ARobot::~ARobot() 
@@ -52,6 +54,10 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
             sensor_info->setVictim(true);
             sensor_info->setVictimDirection(MazeCell::NavDir(((int)currOrientation + 1)%4));
             victimRight = false;
+        } else if (victimFront) {
+            sensor_info->setVictim(true);
+            sensor_info->setVictimDirection(MazeCell::NavDir(((int)currOrientation)%4));
+            victimFront = false;
         } else if (victimLeft){
             sensor_info->setVictim(true);
             sensor_info->setVictimDirection(MazeCell::NavDir(((int)currOrientation + 3)%4));
@@ -310,23 +316,50 @@ int ARobot::CheckVictimTemp()
 }
 
 void ARobot::CheckVictimVisual() {
-   
+    ClearImgList();
+    for(int i = 0; i < picam->getImageList().size(); i++) {
+        imgList.push_back(picam->getImageList()[i]);
+    }
 }
 
-int ARobot::ProcessImage_Victim(Visual_Victim victim) {
-    //take vector of pictures and check if they work
-    if(victim.isVictim == true) {
-        if(victim.dir_victim == RIGHT) {
-
-        } else if (victim.dir_victim == LEFT) {
-
-        } else if (victim.dir_victim == FRONT) {
-            
+int ARobot::ProcessImage_Victim() {
+    victim.letter = '0'; //reset
+    victim.m_isVictim = false;
+    for(int i = 0; i < imgList.size(); i++) {
+        m_letter = knn.detectVictim(lmgList[i]);
+        if(m_letter != '0' && m_isVictim == true) { //error, not supposed to happen, means there is a mistake
+            victim.m_isVictim = false;
+            isVictim = false;
+            break;
+        }
+        if(m_letter != '0') {
+            victim.letter = m_letter;
+            if(i == 0) {
+                victim.dir_victim = LEFT;
+            } else if(i == 1) {
+                victim.dir_victim = FRONT;
+            } else {
+                victim.dir_victim = RIGHT;
+            }
+            victim.m_isVictim = true;
+            isVictim = true;
         }
     }
-    return 0;
+    if(victim.m_isVictim == true) {
+        if(victim.dir_victim == RIGHT) {
+            return 2;
+        } else if (victim.dir_victim == LEFT) {
+            return 0;
+        } else if (victim.dir_victim == FRONT) {
+            return 1;
+        }
+    }
+    return -1;
 }
 
+void ARobot::ClearImgList() {
+    imgList.clear();
+}
 void ARobot::setTempThresh(float left, float right)
 {
     threshLeft = left;
@@ -472,7 +505,7 @@ void ARobot::StopTurn(BotDir dir)
             i_command = (char*)malloc(i_length);
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
             WriteCommand(i_command, i_length);
-            if((victimLeft && dropCnt != 0) || (victimRight && dropCnt != 0)) {
+            if(isVictim) {
                 currState = DROP;
             } else {
                 currState = IDLE; 
@@ -493,7 +526,7 @@ void ARobot::StopTurn(BotDir dir)
             i_command = (char*)malloc(i_length);
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
             WriteCommand(i_command, i_length);
-            if(victimLeft || victimRight) {
+            if(isVictim) {
                 currState = DROP;
             } else {
                 currState = IDLE;

@@ -39,10 +39,9 @@ private:
 	int32_t m_width;
 	int32_t m_height;
 	int32_t m_max_len;
-	raspicam::RaspiCam m_camera; //Cmaera object
+	raspicam::RaspiCam m_camera; //Camera object
 	unsigned char *m_data;
 	std::vector<cv::Mat> m_frames; 
 };
 
 #endif
-/////////////////////////////////////////////////
