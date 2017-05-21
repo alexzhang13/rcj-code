@@ -95,9 +95,9 @@ void NavThread::run(void){
                     if(!nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim()) { //get currCell
                         switch(myRobot->ProcessImage_Victim()) {
                             if(myRobot->victim.letter == '0') {myRobot->dropCnt = 0;}
-                            else if(victim.letter == 'H') {
+                            else if(myRobot->victim.letter == 'H') {
                                 myRobot->dropCnt = 2;
-                            } else if (victim.letter == 'S') {
+                            } else if (myRobot->victim.letter == 'S') {
                                 myRobot->dropCnt = 1;
                             } else {
                                 myRobot->dropCnt = 0;
