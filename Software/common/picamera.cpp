@@ -21,6 +21,7 @@ _PiCamera_::~_PiCamera_()
 	if(!m_data)
 		delete m_data;
 	m_data = NULL;
+    m_camera.release();
 }
 
 bool _PiCamera_::cameraOpen(int32_t width, int32_t height)

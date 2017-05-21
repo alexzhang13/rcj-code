@@ -34,15 +34,15 @@ public:
 
 	inline std::vector<cv::Mat> *getImageList() { return &m_frames;}
 	inline void resetFrameBuffers() { m_frames.clear();}
+	inline void close() { m_camera.release(); }
 
 private:
 	int32_t m_width;
 	int32_t m_height;
 	int32_t m_max_len;
-	raspicam::RaspiCam m_camera; //Cmaera object
+	raspicam::RaspiCam m_camera; //Camera object
 	unsigned char *m_data;
 	std::vector<cv::Mat> m_frames; 
 };
 
 #endif
-/////////////////////////////////////////////////

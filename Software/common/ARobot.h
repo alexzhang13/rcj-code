@@ -13,11 +13,14 @@
 #include "UartTx.h"
 #include "cell.h"
 #include "navigate2D.h"
+#include "picamera.h"
+#include "kNNFilter.h"
 
 class LightData;
 class RangeData;
 class IMUData;
 class TempData;
+class _PiCamera_;
 
 class ARobot {
  public:
@@ -43,7 +46,7 @@ class ARobot {
  	typedef struct {
  		char letter;
  		BotDir dir_victim;
- 		bool isVictim;
+ 		bool m_isVictim;
  	} Visual_Victim;
 
  	/*Writing to Arduino*/
@@ -70,7 +73,7 @@ class ARobot {
  	float getLeftVictimTemp();
  	float getRightVictimTemp();
  	void CheckVictimVisual();
- 	int ProcessImage_Victim(Visual_Victim victim);
+ 	int ProcessImage_Victim();
 
  	/*Light Sensor -> Tile Control*/
  	void setLightThresh(int black, int silver);
@@ -88,6 +91,7 @@ class ARobot {
  	void StopMove();
  	void TurnDistance(int degrees, BotDir right);
  	void StopTurn(BotDir right);
+ 	void ResetEncoder();
 
  	/*Parsing*/
  	void ParseIMU();
@@ -100,6 +104,7 @@ class ARobot {
 	void ClearTemp();
 	void ClearLight();
 	void ClearScan();
+	void ClearImgList();
 
 	std::vector<MazeCell> temp_cell_list;
 	std::vector<int32_t> waypts; //current waypoint list
@@ -109,6 +114,7 @@ class ARobot {
 	std::vector<TempData> tempDataList;
 	std::vector<LightData> lightDataList;
 	std::vector<RangeData> scanDataList;
+	std::vector<cv::Mat> imgList;
 
 	std::queue<IMUData> imuParseList;
 	std::queue<RangeData> rangeParseList;
@@ -122,14 +128,18 @@ class ARobot {
 	BotOrientation currOrientation; //Current Direction through Compass System, Global
 	MazeCell::NavDir victimDir; //Direction of Victim in local coord
 	Map_Coord currTile;
+	kNNFilter knn;
 
 	MazeCell sensor_info; //sensor info for current cell
+	_PiCamera_ picam; //pi camera object
+	Visual_Victim victim; //visual victim param object
 
 	uint8_t dropCnt; //dropping counter
 	bool isVictim; //if a victim has been detected in this cell already
 	bool toMove; //true means the robot still has to move after turning
 	bool victimRight; //true if is dropping to the right
 	bool victimLeft;
+	bool victimFront;
 	bool backingBlack; //if the robot is backing up on a black tile
 	int dist_temp; //store temporary distance to travel
 
@@ -137,6 +147,7 @@ class ARobot {
  	SerialPort *mPort;
 
  private:
+ 	char m_letter;
  	float threshLeft; //Left Temperature Threshold
  	float threshRight; //Right Temperature Threshold
  	int silver_thresh; //Silver Tile Threshold

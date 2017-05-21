@@ -9,11 +9,20 @@ void NavThread::run(void){
     printf("Fault 4 Passed\n");
     readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     printf("Fault 5 Passed\n");
+    myRobot->picam.cameraOpen(320, 240); //start up camera
+
     //myRobot->SpinLaser();
     //myRobot->CalibrateIMU();
+    for(int i = 0; i < 10; i++) {
+            myRobot->picam.frameCapture();
+            //myRobot->picam.display();
+            sleep(0.01);
+    }
+    myRobot->CheckVictimVisual();
+    myRobot->picam.close();
     sleep(1);
     while(1) {
-        #if 1
+        #if 0
         switch(myRobot->currState) {
             case 0: //Planning
                 Navigate(in_dir, xml_name, myRobot, nav);
@@ -45,23 +54,21 @@ void NavThread::run(void){
                 myRobot->CheckLightTile(); //check if anything happens during this time
                 break;
             case 6: //Drop
+                myRobot->LEDLight(5000);
+                sleep(5);
                 for(int i = 0; i < myRobot->dropCnt; i++) {
                     myRobot->Drop();
                     sleep(2);
                 }
-                if(myRobot->victimRight) {
-                    myRobot->TurnDistance(90, ARobot::RIGHT); //turn back to right
-                } else if (myRobot->victimLeft) {
-                    myRobot->TurnDistance(90, ARobot::LEFT); //turn back to left
-                } else {
-                    myRobot->currState = ARobot::WAYPTNAV;
-                }
+                myRobot->currState = ARobot::PLANNING;
                 break;
             case 7: //BLACKBACK
                 sleep(1);
                 myRobot->backingBlack = false;
-                //updateCellMap called in Robot.cpp when initially seeing black
+                nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]); //update "temp curr_cell"
+                myRobot->UpdateCellMap(&myRobot->sensor_info, myRobot->backingBlack); //sensor_info auto resets in this function call
                 nav.configureCurCell(&myRobot->sensor_info);
+                nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-1]); //reupdate curr_cell
                 myRobot->currState = ARobot::PLANNING;
                 break;
             case 8: //DONE
@@ -79,10 +86,11 @@ void NavThread::run(void){
                 //nav.getCellbyIndex(myRobot->waypts[bot_waypts-1])->getCellGrid(myRobot->currTile.x, myRobot->currTile.y);
                 printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
                 sleep(0.1);
-                if(first_iter == true) {
-                    first_iter = false;
+                if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
                     myRobot->SpinLaser();
                     sleep(7.5); //time for laser
+                    myRobot->CheckVictimVisual();
+
                     if(myRobot->CheckRamp()) { //is ramp
                         myRobot->MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
                         break;
@@ -94,30 +102,58 @@ void NavThread::run(void){
                         //save state
                     }
                     //check visual victim
-                    if(!nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim()) { //get currCell 
-                        switch(myRobot->CheckVictimTemp()) {
-                            printf("%d", myRobot->CheckVictimTemp());
-                            case 0:
-                                myRobot->currState = ARobot::WAYPTNAV;
+                    if(!nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim()) { //get currCell
+                        switch(myRobot->ProcessImage_Victim()) {
+                            if(myRobot->victim.letter == '0') {myRobot->dropCnt = 0;}
+                            else if(myRobot->victim.letter == 'H') {
+                                myRobot->dropCnt = 2;
+                            } else if (myRobot->victim.letter == 'S') {
+                                myRobot->dropCnt = 1;
+                            } else {
+                                myRobot->dropCnt = 0;
+                            }
+                            case 0: //drop left
+                                myRobot->victimLeft = true;
+                                myRobot->TurnDistance(90, ARobot::RIGHT); //turn left to drop from back onto right side
+                                myRobot->isVictim = true;
+                                break; 
+                            case 1: //drop front
+                                myRobot->victimFront = true;
+                                myRobot->TurnDistance(180, ARobot::RIGHT); //turn left to drop from back onto right side
+                                myRobot->isVictim = true;
                                 break;
-                            case 1: //drop or go back to calculating
+                            case 2: //drop right
                                 myRobot->victimRight = true;
                                 myRobot->TurnDistance(90, ARobot::LEFT); //turn left to drop from back onto right side
-                                myRobot->dropCnt = 1;
                                 myRobot->isVictim = true;
-                                //myRobot->currState = ARobot::Drop; --> Done in StopTurn();
-                                break;
-                            case 2:
-                                myRobot->victimLeft = true;
-                                myRobot->TurnDistance(90, ARobot::RIGHT); //turn right to drop from back onto left side
-                                myRobot->dropCnt = 1;
-                                myRobot->isVictim = true;
-                                //myRobot->currState = ARobot::Drop;
-                                break;
+                                break;                               
                             default:
-                            myRobot->currState = ARobot::WAYPTNAV;
+                                switch(myRobot->CheckVictimTemp()) {
+                                    printf("%d", myRobot->CheckVictimTemp());
+                                    case 0:
+                                        myRobot->currState = ARobot::WAYPTNAV;
+                                        break;
+                                    case 1: //drop or go back to calculating
+                                        myRobot->victimRight = true;
+                                        myRobot->TurnDistance(90, ARobot::LEFT); //turn left to drop from back onto right side
+                                        myRobot->dropCnt = 1;
+                                        myRobot->isVictim = true;
+                                        //myRobot->currState = ARobot::Drop; --> Done in StopTurn();
+                                        break;
+                                    case 2:
+                                        myRobot->victimLeft = true;
+                                        myRobot->TurnDistance(90, ARobot::RIGHT); //turn right to drop from back onto left side
+                                        myRobot->dropCnt = 1;
+                                        myRobot->isVictim = true;
+                                        //myRobot->currState = ARobot::Drop;
+                                        break;
+                                    default:
+                                    myRobot->currState = ARobot::WAYPTNAV;
+                                        break;
+                                }
                                 break;
                         }
+                        break;
                     } else {
                         myRobot->currState = ARobot::WAYPTNAV;
                     }
@@ -129,7 +165,6 @@ void NavThread::run(void){
                 break;
         }
         #endif
-        sleep(0.01);
     }
 
     return;
@@ -197,6 +232,7 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
         robot->waypts = nav_rt.getNextCell()->waypts; //waypts
     } else {
         robot->currState = ARobot::DONE;
+        robot->picam.close();
         return;
     }
     first_iter = true;
@@ -226,6 +262,7 @@ int NavThread::WayPointNav(ARobot *robot, Navigate2D &nav_rt)
         nav_rt.getCellbyIndex(robot->waypts[bot_waypts-i])->getCellGrid(x, y);
         printf("Coords -> coord: %d x: %d, y: %d\n", robot->waypts[bot_waypts-i], x, y);
     }
+    first_iter = false;
     robot->CalcNextTile();
 }
 

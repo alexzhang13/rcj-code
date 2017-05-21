@@ -21,6 +21,8 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     toMove = false;
     victimRight = false; //true if is dropping to the right
     victimLeft = false;
+    victim.letter = '0';
+    victim.m_isVictim = false;
 }
 
 ARobot::~ARobot() 
@@ -52,6 +54,10 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
             sensor_info->setVictim(true);
             sensor_info->setVictimDirection(MazeCell::NavDir(((int)currOrientation + 1)%4));
             victimRight = false;
+        } else if (victimFront) {
+            sensor_info->setVictim(true);
+            sensor_info->setVictimDirection(MazeCell::NavDir((int)currOrientation));
+            victimFront = false;
         } else if (victimLeft){
             sensor_info->setVictim(true);
             sensor_info->setVictimDirection(MazeCell::NavDir(((int)currOrientation + 3)%4));
@@ -89,13 +95,12 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
         } 
         sensor_info->setVisitStatus(MazeCell::Visited);
     } else {
-        sensor_info->reset();
-        sensor_info->setCellGrid(currTile.x_tovisit, currTile.y_tovisit);
         sensor_info->setNonMovable(true);
         sensor_info->setCheckPt(false);
         sensor_info->setVictim(false);
         sensor_info->setStairCell(false);
         sensor_info->setVisitStatus(MazeCell::Visited);
+        printf("black!");
     }
 
 }
@@ -248,12 +253,12 @@ void ARobot::CalcNextTile()
 
 void ARobot::TileTransition(BotOrientation direction, float angle, int32_t dist)
 {
-    int turnNext = (int)direction - (int)currOrientation;
-    int toTurn = turnNext*90+(int)angle; //turning distance
-    
+    int turnNext = (int)direction - (int)currOrientation;   
     /*Turning first*/
     if(turnNext == 3) {turnNext = -1;} //west -> north = turn right 1
     else if (turnNext == -3) {turnNext = 1;} //north -> west = turn left 1
+    int toTurn = turnNext*90+(int)angle; //turning distance
+
     if(abs(toTurn) > 3) { //ignore smaller angles
         TurnDistance(abs(toTurn), (toTurn > 0) ? RIGHT : LEFT); //left is positive for IMU
         dist_temp = dist;
@@ -310,23 +315,51 @@ int ARobot::CheckVictimTemp()
 }
 
 void ARobot::CheckVictimVisual() {
-   
+    ClearImgList();
+    for(int i = 0; i < picam.getImageList()->size(); i++) {
+        imgList.push_back(picam.getImageList()->at(i));
+    }
+    printf("List Size: %d\n", imgList.size());
 }
 
-int ARobot::ProcessImage_Victim(Visual_Victim victim) {
-    //take vector of pictures and check if they work
-    if(victim.isVictim == true) {
-        if(victim.dir_victim == RIGHT) {
-
-        } else if (victim.dir_victim == LEFT) {
-
-        } else if (victim.dir_victim == FRONT) {
-            
+int ARobot::ProcessImage_Victim() {
+    victim.letter = '0'; //reset
+    victim.m_isVictim = false;
+    for(int i = 0; i < imgList.size(); i++) {
+        m_letter = knn.detectVictim(imgList[i]);
+        if(m_letter != '0' && victim.m_isVictim == true) { //error, not supposed to happen, means there is a mistake
+            victim.m_isVictim = false;
+            isVictim = false;
+            break;
+        }
+        if(m_letter != '0') {
+            victim.letter = m_letter;
+            if(i == 0) {
+                victim.dir_victim = LEFT;
+            } else if(i == 1) {
+                victim.dir_victim = FRONT;
+            } else {
+                victim.dir_victim = RIGHT;
+            }
+            victim.m_isVictim = true;
+            isVictim = true;
         }
     }
-    return 0;
+    if(victim.m_isVictim == true) {
+        if(victim.dir_victim == RIGHT) {
+            return 2;
+        } else if (victim.dir_victim == LEFT) {
+            return 0;
+        } else if (victim.dir_victim == FRONT) {
+            return 1;
+        }
+    }
+    return -1;
 }
 
+void ARobot::ClearImgList() {
+    imgList.clear();
+}
 void ARobot::setTempThresh(float left, float right)
 {
     threshLeft = left;
@@ -371,8 +404,9 @@ void ARobot::CheckLightTile()
         currTileLight = BLACK;
         if(backingBlack == false) {
             backingBlack = true;
-            MoveDistance(175, BACK); //move back 16 cm
-            UpdateCellMap(&sensor_info, backingBlack);
+            ResetEncoder();
+            sleep(0.5);
+            MoveDistance(155, BACK);
         }
     } else {
         currTileLight = WHITE;
@@ -428,6 +462,15 @@ void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
     }
     WriteCommand(i_command, i_length);
 }
+
+void ARobot::ResetEncoder() {
+    char* i_command;
+    int i_length = snprintf(NULL, 0, "%c %c", 'm', 'g') + 1;
+    i_command = (char*)malloc(i_length);
+
+    snprintf(i_command, i_length, "%c %c", 'm', 'g');
+    WriteCommand(i_command, i_length);
+}
 void ARobot::TurnDistance(int degrees, BotDir dir)
 {
     size_t imu_list = imuDataList.size();
@@ -466,13 +509,13 @@ void ARobot::StopTurn(BotDir dir)
         } else if(initialYaw <= 175.0f && currYaw > 185.0f) { //if robot crosses over from 180 to -180, direction switches
             currYaw -= 360; //range fixing
         }
-        if(currYaw+3 <= toTurn) {
+        if(currYaw+1 <= toTurn) {
             char* i_command;
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
             i_command = (char*)malloc(i_length);
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
             WriteCommand(i_command, i_length);
-            if((victimLeft && dropCnt != 0) || (victimRight && dropCnt != 0)) {
+            if(isVictim) {
                 currState = DROP;
             } else {
                 currState = IDLE; 
@@ -486,14 +529,14 @@ void ARobot::StopTurn(BotDir dir)
         } else if(initialYaw >= 185.0f && currYaw < 175.0f) { //if robot crosses over from -180 to 180, direction switches
             currYaw += 360; //range fixing
         }
-        if(currYaw-3 >= toTurn) {
+        if(currYaw-1 >= toTurn) {
             char* i_command;
             printf("done");
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
             i_command = (char*)malloc(i_length);
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
             WriteCommand(i_command, i_length);
-            if(victimLeft || victimRight) {
+            if(isVictim) {
                 currState = DROP;
             } else {
                 currState = IDLE;

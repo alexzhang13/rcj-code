@@ -20,6 +20,7 @@ set(SRCS
   common/picamera.cpp
   imu/MadgwickAHRS.cpp
   imu/MahonyAHRS.c
+  knn/kNNFilter.cpp
   navigate/cell.cpp
   navigate/floormap.cpp
   navigate/greedy_dijkstra.cpp

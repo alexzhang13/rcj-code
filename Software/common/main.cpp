@@ -35,10 +35,10 @@ int main(int argc,char **argv){
 	printf(".Start robot navigation\n");
     ARobot *myRobot = new ARobot(port);
     printf("Fault 1 Passed\n");
-    UartRx *uartrx = new UartRx(port, myRobot);
-	uartrx->setLogFile(in_dir, rt_logname);
+    //UartRx *uartrx = new UartRx(port, myRobot);
+	//uartrx->setLogFile(in_dir, rt_logname);
     printf("Fault 2 Passed\n");
-    Process_T *process_thread = new Process_T(port, myRobot);
+    //Process_T *process_thread = new Process_T(port, myRobot);
     printf("Fault 3 Passed\n");
     NavThread *nav_thread = new NavThread(myRobot);
 
