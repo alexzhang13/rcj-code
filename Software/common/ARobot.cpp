@@ -318,7 +318,7 @@ int ARobot::CheckVictimTemp()
 void ARobot::CheckVictimVisual() {
     ClearImgList();
     for(int i = 0; i < picam.getImageList()->size(); i++) {
-        imgList.push_back(picam.getImageList().at(i));
+        imgList.push_back(picam.getImageList()->at(i));
     }
 }
 
