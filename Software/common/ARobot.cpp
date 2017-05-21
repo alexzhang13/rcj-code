@@ -226,7 +226,7 @@ void ARobot::CalcNextTile()
     int next_y = (currTile.y_tovisit*300+150) - (currTile.y*300) - (int)rangeDataList[rangeDataList.size()-1].coord.y_glob; //next tile coords
     printf("Next_x: %d, Next_y, %d, ToVisit_X: %d, ToVisit_Y: %d, X: %f, Y: %f\n", next_x, next_y, currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
     int32_t dist = (int32_t)sqrt(next_x*next_x + next_y*next_y); //pythagorean
-    float angle; //offset angle
+    float angle = imuDataList[imuDataList.size()-1].m_yaw - ((int)imuDataList[imuDataList.size()-1].m_yaw/90)*90; //offset angle
     if(currTile.x_tovisit - currTile.x > 0) { //east
         nextDir = EAST;
         angle = -atan((float)next_y/(float)next_x)*180.0f/3.1415926535f; //angle to left, should be pos
@@ -242,6 +242,7 @@ void ARobot::CalcNextTile()
     }
     //printf("Next_X: %d, Next_Y: %d, Dist: %d, Angle Dif: %f\n", next_x, next_y, dist, angle);
     //printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f\n", currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
+    angle = imuDataList[imuDataList.size()-1].m_yaw - ((int)imuDataList[imuDataList.size()-1].m_yaw/90)*90; //offset angle
     TileTransition(nextDir, angle, dist);
 
 }
