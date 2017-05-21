@@ -15,7 +15,7 @@ void NavThread::run(void){
     //myRobot->CalibrateIMU();
     for(int i = 0; i < 10; i++) {
             myRobot->picam.frameCapture();
-            myRobot->picam.display();
+            //myRobot->picam.display();
             sleep(0.01);
     }
     myRobot->picam.close();
