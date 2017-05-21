@@ -13,6 +13,12 @@ void NavThread::run(void){
 
     //myRobot->SpinLaser();
     //myRobot->CalibrateIMU();
+    for(int i = 0; i < 10; i++) {
+            myRobot->picam.frameCapture();
+            myRobot->picam.display();
+            sleep(0.01);
+    }
+    myRobot->picam.close();
     sleep(1);
     while(1) {
         #if 0
@@ -158,9 +164,6 @@ void NavThread::run(void){
                 break;
         }
         #endif
-        myRobot->picam.frameCapture();
-        myRobot->picam.display();
-        sleep(0.01);
     }
 
     return;
