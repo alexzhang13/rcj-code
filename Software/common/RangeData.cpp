@@ -111,7 +111,7 @@ int RangeData::getPosition()
 	walls.wallE = (int)temp_range[(1+data.dir)%4]/300;
 	walls.wallS = (int)temp_range[(2+data.dir)%4]/300;
 	walls.wallW = (int)temp_range[(3+data.dir)%4]/300;
-	printf("Walls: %d %d %d %d\n", walls.wallN, walls.wallE, walls.wallS, walls.wallW);
+	//printf("Walls: %d %d %d %d\n", walls.wallN, walls.wallE, walls.wallS, walls.wallW);
 
 	for(int i = 0; i < 4; i++) {
 		if((data.dir + i) % 2 == 1) { //x coords

@@ -78,6 +78,7 @@ void NavThread::run(void){
                 myRobot->currTile.x = myRobot->currTile.x_tovisit;
                 myRobot->currTile.y = myRobot->currTile.y_tovisit;
                 //nav.getCellbyIndex(myRobot->waypts[bot_waypts-1])->getCellGrid(myRobot->currTile.x, myRobot->currTile.y);
+                nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]);
                 printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
                 sleep(0.1);
                 if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
