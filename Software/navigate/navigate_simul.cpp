@@ -52,6 +52,10 @@ int32_t NavigateSimul::setHomeCell(int32_t floor_num, MazeCell::NavDir heading)
 	homecell->setDebugLinkCell(m_gt_maps.getFloorMap(m_home_floor_num)->getCell((*check_pt_list)[index]));
 	m_home_cell_index = homecell->getCellNum();
 	m_cur_cell_index = m_home_cell_index;
+	m_navigateMaps.getFloorMap(m_home_floor_num)->setHomeCellFlag(true);
+	m_navigateMaps.getFloorMap(m_home_floor_num)->setHomeCellNum(m_home_cell_index);
+	m_navigateMaps.getFloorMap(m_cur_floor_index)->setCurCellIndex(m_cur_cell_index);
+	m_navigateMaps.getFloorMap(m_cur_floor_index)->setLatestChkPtCellIndex(m_cur_cell_index);
 	return 0;
 }
 
@@ -108,6 +112,9 @@ int32_t NavigateSimul::configureCurCell()
 	MazeCell *cur_cell = m_navigateMaps.getFloorMap(m_cur_floor_index)->getCurrentCell();
 	MazeCell *gt_cur_cell = (MazeCell*)cur_cell->getDebugLinkCell();
 
+	m_navigateMaps.getFloorMap(m_cur_floor_index)->setCurCellIndex(cur_cell->getCellNum());
+	m_navigateMaps.setCurFloorNum(m_cur_floor_index);
+	m_navigateMaps.setCurCellIndex(cur_cell->getCellNum());
 	cur_cell->setCheckPt(gt_cur_cell->getCheckPt());
 	cur_cell->setNonMovable(gt_cur_cell->getNonMovable());
 	cur_cell->setObstacle(gt_cur_cell->getObstacle());
@@ -125,8 +132,10 @@ int32_t NavigateSimul::configureCurCell()
 	std::vector<int32_t> *vlist = m_navigateMaps.getFloorMap(m_cur_floor_index)->getVisitedList();
 	bool matched = false;
 	for(i = 0; i < vlist->size(); i++) {
-		if(cur_cell->getCellNum() == (*vlist)[i])
+		if(cur_cell->getCellNum() == (*vlist)[i]) {
+			matched = true;
 			break;
+		}
 	}
 	if(!matched)
 		(*vlist).push_back(cur_cell->getCellNum());
@@ -221,7 +230,11 @@ int32_t NavigateSimul::detectLocalCells()
 		next_gt_cell->getWallNorth() == MazeCell::MBlack || next_gt_cell->getWallNorth() == MazeCell::MStair)) {
 		next_gt_cell = m_gt_maps.getFloorMap(m_cur_floor_index)->getCell(next_gt_cell->getNeighborCellNorth());
 		cindx = next_cell->getCellNum();
-		next_cell = m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(next_cell->getNeighborCellNorth());
+		int32_t north_cell_id = next_cell->getNeighborCellNorth();
+		if(north_cell_id == -1)
+			next_cell = NULL;
+		else
+			next_cell = m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(next_cell->getNeighborCellNorth());
 		j++;
 		if((next_cell == NULL || next_cell->getVisitStatus() == MazeCell::NotFound) && next_gt_cell != NULL) {
 			MazeCell *acell;
@@ -253,7 +266,11 @@ int32_t NavigateSimul::detectLocalCells()
 		next_gt_cell->getWallEast() == MazeCell::MBlack || next_gt_cell->getWallEast() == MazeCell::MStair)) {
 		next_gt_cell = m_gt_maps.getFloorMap(m_cur_floor_index)->getCell(next_gt_cell->getNeighborCellEast());
 		cindx = next_cell->getCellNum();
-		next_cell = m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(next_cell->getNeighborCellEast());
+		int32_t east_cell_id = next_cell->getNeighborCellEast();
+		if(east_cell_id == -1)
+			next_cell = NULL;
+		else
+			next_cell = m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(next_cell->getNeighborCellEast());
 		i++;
 		if((next_cell == NULL || next_cell->getVisitStatus() == MazeCell::NotFound) && next_gt_cell != NULL) {
 			MazeCell *acell;
@@ -283,10 +300,14 @@ int32_t NavigateSimul::detectLocalCells()
 	next_cell = m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(m_cur_cell_index);
 	while(next_gt_cell!= NULL && (next_gt_cell->getWallSouth() == MazeCell::MOpen || 
 		next_gt_cell->getWallSouth() == MazeCell::MBlack || next_gt_cell->getWallSouth() == MazeCell::MStair)) {
-		next_gt_cell = m_gt_maps.getFloorMap(m_cur_floor_index)->getCell(next_gt_cell->getNeighborCellSouth());
-		cindx = next_cell->getCellNum();
-		next_cell = m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(next_cell->getNeighborCellSouth());
-		j--;
+			next_gt_cell = m_gt_maps.getFloorMap(m_cur_floor_index)->getCell(next_gt_cell->getNeighborCellSouth());
+			cindx = next_cell->getCellNum();
+			int32_t south_cell_id = next_cell->getNeighborCellSouth();
+			if(south_cell_id == -1)
+				next_cell = NULL;
+			else
+				next_cell = m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(next_cell->getNeighborCellSouth());
+			j--;
 		if((next_cell == NULL || next_cell->getVisitStatus() == MazeCell::NotFound) && next_gt_cell != NULL) {
 			MazeCell *acell;
 			int32_t index = m_navigateMaps.getFloorMap(m_cur_floor_index)->findNewCell(i,j);
@@ -317,7 +338,11 @@ int32_t NavigateSimul::detectLocalCells()
 		next_gt_cell->getWallWest() == MazeCell::MBlack || next_gt_cell->getWallWest() == MazeCell::MStair)) {
 		next_gt_cell = m_gt_maps.getFloorMap(m_cur_floor_index)->getCell(next_gt_cell->getNeighborCellWest());
 		cindx = next_cell->getCellNum();
-		next_cell = m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(next_cell->getNeighborCellWest());
+		int32_t west_cell_id = next_cell->getNeighborCellWest();
+		if(west_cell_id == -1)
+			next_cell = NULL;
+		else
+			next_cell = m_navigateMaps.getFloorMap(m_cur_floor_index)->getCell(next_cell->getNeighborCellWest());
 		i--;
 		if((next_cell == NULL || next_cell->getVisitStatus() == MazeCell::NotFound) && next_gt_cell != NULL) {
 			MazeCell *acell;
@@ -364,6 +389,7 @@ int32_t NavigateSimul::updateLocalMap()
 int32_t NavigateSimul::navigatePlanning()
 {
 	int32_t i;
+	MazeFloorMap *mfm = m_navigateMaps.getFloorMap(m_cur_floor_index);
 	int32_t cellsize = m_navigateMaps.getFloorMap(m_cur_floor_index)->getCellSize();
 	// do not need to go anywhere
 	if(cellsize <=1)
@@ -428,6 +454,10 @@ int32_t NavigateSimul::navigation2D()
 	curcell->setNavDirection(heading);
 	curcell->setVisitStatus(MazeCell::Visited);
 	m_navigateMaps.getFloorMap(m_cur_floor_index)->setCurCellIndex(m_cur_cell_index);
+	printf("way points: ");
+	for(int32_t i = waypts-1; i > 0; i--) 
+		printf("%d -> ", m_next_cell.waypts[i]);
+	printf("%d\n", m_next_cell.waypts[0]);
 	return 0;
 }
 

@@ -12,9 +12,9 @@ int main(int argc, char **argv)
 {
 	//int ret = greedy_dikjstra_test();
 	//int ret = mapgen_test();
-	//int ret = navigation_simul_test();
+	int ret = navigation_simul_test();
 	//int ret = testMapLoad();
-	int ret = lineFitTest();
+	//int ret = lineFitTest();
 	return ret;
 }
 
@@ -113,7 +113,7 @@ int mapgen_test()
 int navigation_simul_test()
 {
 	int32_t i;
-	const char* in_dir = "C:/projects/StormingRobots2017/Data/map_data";
+	const char* in_dir = "D:/users/family/alex/rcj-code/Data/map_data";
 	const char* xmlname = "mazemap";
 	const char* xmlname_u = "updated_mazemap";
 	int32_t home_floor_num = 0;
@@ -141,7 +141,7 @@ int navigation_simul_test()
 		// back to the previous way point
 		// shall call configure cells
 		nav_simul.displayRouteMap();
-		_sleep(1000);
+		_sleep(100);
 	}
 
 	return 0;
@@ -150,14 +150,15 @@ int navigation_simul_test()
 int testMapLoad()
 {
 	int32_t i;
-	const char* in_dir = "C:/projects/StormingRobots2017/Data/map_data";
-	const char* xmlname = "mazemap_04272017";
+	const char* in_dir = "D:/users/family/alex/rcj-code/Data/map_data";
+	const char* xmlname = "mazemap_";
 	int32_t home_floor_num = 0;
 	MazeCell::NavDir heading = MazeCell::navNorth;
 	Navigate2D nav_rt;
 
-	nav_rt.getCurTime();
-	if(nav_rt.readChkPtMaps(in_dir, xmlname)!= 0) {
+	std::string t = nav_rt.getCurTime();
+	std::string filename = std::string(xmlname) + t;
+	if(nav_rt.readChkPtMaps(in_dir, filename.c_str())!= 0) {
 		nav_rt.setHomeCell(home_floor_num, heading);	
 	}
 
@@ -203,13 +204,26 @@ int testMapLoad()
 
 int lineFitTest()
 {
-	const char* filename = "D:/users/family/alex/rcj-code/Data/laser_data/laser_mount_data4.txt";
+	const char* filename = "D:/users/family/alex/rcj-code/Data/laser_data/distance_data1.txt";
 	LineFitAlgo lfa;
-	int32_t num_half_samples = 60;
-	int32_t angl_step = 3;
+	int32_t num_half_samples = 36;
+	int32_t angl_step = 5;
+	MazeCell::Position_2D pos;
+	MazeCell::NavDir orient;
+	int32_t cell_index = 3;
+
+	// set position
+	pos.x = 1;
+	pos.y = 3;
+	// set orientation
+	orient = MazeCell::navNorth;
 
 	lfa.update(num_half_samples, angl_step);
+	lfa.setRobotStatus(cell_index, orient, pos);
 	lfa.readDataFile(filename);
+	lfa.run();
+//	lfa.printoutData();
+	lfa.debpgPrints();
 
 	return 0;
 }
