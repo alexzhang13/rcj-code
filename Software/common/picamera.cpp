@@ -92,3 +92,8 @@ bool _PiCamera_::display()
 
 	return true;
 }
+
+void _PiCamera_::close()
+{
+    m_camera.close();
+}

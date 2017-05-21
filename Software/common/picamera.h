@@ -34,6 +34,7 @@ public:
 
 	inline std::vector<cv::Mat> *getImageList() { return &m_frames;}
 	inline void resetFrameBuffers() { m_frames.clear();}
+	inline void _PiCamera_::close() { m_camera.close(); }
 
 private:
 	int32_t m_width;
