@@ -19,6 +19,7 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     currTile.x = 0;
     currTile.y = 0;
     dropCnt = 0; //dropping counter
+    isDropped = false;
     toMove = false;
     victimRight = false; //true if is dropping to the right
     victimLeft = false;
