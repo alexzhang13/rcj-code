@@ -11,8 +11,8 @@ void NavThread::run(void){
     printf("Fault 5 Passed\n");
     myRobot->picam.cameraOpen(320, 240); //start up camera
 
-    myRobot->SpinLaser();
-    sleep(7.5);
+    //myRobot->SpinLaser();
+    //sleep(7.5);
     myRobot->CalibrateIMU();
     sleep(1.5);
     while(1) {
