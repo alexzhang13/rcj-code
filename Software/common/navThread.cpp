@@ -12,7 +12,7 @@ void NavThread::run(void){
     myRobot->picam.cameraOpen(320, 240); //start up camera
 
     myRobot->SpinLaser();
-    sleep(7.5);
+    sleep(2.5); //time for laser
     myRobot->CalibrateIMU();
     sleep(1.5);
     while(1) {
@@ -83,7 +83,7 @@ void NavThread::run(void){
                 sleep(0.1);
                 if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
                     myRobot->SpinLaser();
-                    sleep(7.5); //time for laser
+                    sleep(2.5); //time for laser
                     myRobot->CheckVictimVisual();
 
                     if(myRobot->CheckRamp()) { //is ramp
