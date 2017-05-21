@@ -18,6 +18,7 @@ void NavThread::run(void){
     while(1) {
         #if 1
         switch(myRobot->currState) {
+            if(cnt%100==0) {printf("State: %d\n", cnt);}
             case 0: //Planning
                 Navigate(in_dir, xml_name, myRobot, nav);
                 printf("navigating...\n");
@@ -158,6 +159,7 @@ void NavThread::run(void){
                 /*Put stuff here*/
                 break;
         }
+        cnt++;
         #endif
     }
 
