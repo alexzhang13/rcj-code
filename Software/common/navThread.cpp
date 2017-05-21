@@ -60,10 +60,10 @@ void NavThread::run(void){
             case 7: //BLACKBACK
                 sleep(1);
                 myRobot->backingBlack = false;
-                nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]); //update "temp curr_cell"
+                nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-1]); //update "temp curr_cell"
                 myRobot->UpdateCellMap(&myRobot->sensor_info, myRobot->backingBlack); //sensor_info auto resets in this function call
                 nav.configureCurCell(&myRobot->sensor_info);
-                nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-1]); //reupdate curr_cell
+                nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]); //reupdate curr_cell
                 myRobot->currState = ARobot::PLANNING;
                 break;
             case 8: //DONE
@@ -250,8 +250,8 @@ int NavThread::WayPointNav(ARobot *robot, Navigate2D &nav_rt)
         robot->currState = ARobot::PLANNING;
         return -1;
     }
-    nav_rt.getCellbyIndex(robot->waypts[bot_waypts-1])->getCellGrid(robot->currTile.x, robot->currTile.y);
-    nav_rt.getCellbyIndex(robot->waypts[bot_waypts-2])->getCellGrid(robot->currTile.x_tovisit, robot->currTile.y_tovisit);
+    nav_rt.getCellbyIndex(robot->waypts[bot_waypts-2])->getCellGrid(robot->currTile.x, robot->currTile.y);
+    nav_rt.getCellbyIndex(robot->waypts[bot_waypts-1])->getCellGrid(robot->currTile.x_tovisit, robot->currTile.y_tovisit);
     printf("X_Tovisit: %d, Y_Tovisit: %d\n", robot->currTile.x_tovisit, robot->currTile.y_tovisit);
     for(int i = 1; i <= bot_waypts; i++) {
         nav_rt.getCellbyIndex(robot->waypts[bot_waypts-i])->getCellGrid(x, y);
