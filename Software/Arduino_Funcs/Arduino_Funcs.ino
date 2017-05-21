@@ -77,8 +77,8 @@ bool motorSwitch = true; //false meaning turn off
 bool isMoving = false; //if the robot is running
 bool isTurning = false; //if the robot is turning
 int speed_left = 60; //the speed used to control the other motor (Which is imbalanced)
-int left_spd = 60;
-int right_spd = 75;
+int left_spd = 100;
+int right_spd = 125;
 float distance_mm = 0;
 volatile long int leftEncoder = 0; //left encoder
 volatile long int rightEncoder = 0; //right encoder
@@ -187,8 +187,8 @@ void setup() {
   delay(500);
   
   /*INITIALIZE MOTORS*/
-  motorRight->setSpeed(75);
-  motorLeft->setSpeed(60);
+  motorRight->setSpeed(right_spd);
+  motorLeft->setSpeed(left_spd);
 
   motorRight->run(FORWARD);
   motorLeft->run(FORWARD);
@@ -535,9 +535,9 @@ void Motor_Encoder()
     return;
   }
   if(abs(leftEncoder) < abs(rightEncoder)){
-    motorRight->setSpeed(speed_left); //corecting
+    motorRight->setSpeed(speed_left+10); //corecting
   } else {
-    motorRight->setSpeed(speed_left+20); //take 
+    motorRight->setSpeed(speed_left+25); //take 
   }
   reading += millis(); reading += " m ";
   reading += left_mm; reading += " "; reading += right_mm;
@@ -580,44 +580,32 @@ void Mount_Sweep()
   String reading = "";
     // scan from 0 to 180 degrees
   mount_laser.attach(SERVO_MOUNT);
+  reading += millis(); reading += " z";
+  Serial.println(reading); //take a screenshot at this moment (tell pi)
+  reading = "";
+  delay(500);
   for(int angle = 0; angle < 180; angle++)  
   {         
-    mount_laser.write(angle);     
-    if(angle % 5 == 0)
-    {       
-      reading += millis(); reading += (" y "); reading += angle; //add timestamp, laser label, angle
-      reading += " "; reading += laserA_l.readRangeContinuousMillimeters(); //laser 2 val (mm)
-      reading += " "; reading += laserA_s.readRangeContinuousMillimeters(); //laser 1 val (mm)
-      reading += " "; reading += laserB_l.readRangeContinuousMillimeters(); //laser 4 val (mm)
-      reading += " "; reading += laserB_s.readRangeContinuousMillimeters(); //laser 3 val (mm)
-      Serial.println(reading);
-      reading = "";  
-    }        
+    mount_laser.write(angle);       
     if(angle == 90) {
-      Serial.println("z"); //take a screenshot at this moment (tell pi)
+      reading += millis(); reading += " z";
+      Serial.println(reading); //take a screenshot at this moment (tell pi)
       delay(500);
     }
-    delay(7);                   
+    delay(1);                   
   } 
 
-  Serial.println("z"); //take a screenshot at this moment (tell pi)
+  reading = "";
+  reading += millis(); reading += " z";
+  Serial.println(reading); //take a screenshot at this moment (tell pi)
   delay(500);
-  // now scan back from 180 to 0 degrees
-  for(int angle = 180; angle >= 0; angle--)    
-  {                                
-    mount_laser.write(angle);  
-    if(angle % 5 == 0)
-    { 
-      reading += millis(); reading += (" y "); reading += angle; //add timestamp, laser label, angle
-      reading += " "; reading += laserA_l.readRangeContinuousMillimeters(); //laser 2 val (mm)
-      reading += " "; reading += laserA_s.readRangeContinuousMillimeters(); //laser 1 val (mm)
-      reading += " "; reading += laserB_l.readRangeContinuousMillimeters(); //laser 4 val (mm)
-      reading += " "; reading += laserB_s.readRangeContinuousMillimeters(); //laser 3 val (mm)
-      Serial.println(reading);
-      reading = "";  
-    }         
-    delay(7);       
-  } 
+  // now scan back from 180 to 0 degrees                            
+  for(int angle = 180; angle > 0; angle--)  
+  {         
+    mount_laser.write(angle);       
+    delay(3);                   
+  }     
+  delay(500);       
   mount_laser.detach();
 }
 
