@@ -224,7 +224,7 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
         robot->waypts = nav_rt.getNextCell()->waypts; //waypts
     } else {
         robot->currState = ARobot::DONE;
-        picam.close();
+        robo->picam.close();
         return;
     }
     first_iter = true;
