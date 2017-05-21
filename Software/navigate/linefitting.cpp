@@ -669,18 +669,9 @@ bool LineFitAlgo::updateCellConfigs()
 					}
 					break;
 				case MazeCell::navEast:
-					if(wall_status[i][j] > 0)
-						x = mDetectedCells.pos.x + j + 1;
-					else
-						x = mDetectedCells.pos.x + j;
+					x = mDetectedCells.pos.x + j + 1;
 					y = mDetectedCells.pos.y;
-
-					mDetectedCells.cur_cell.getCellGrid(xo, yo);
-					if(x == xo && y == yo) {
-						mDetectedCells.cur_cell.setWallEast(wall_status[i][j] > 0? MazeCell::MOpen : MazeCell::MWall);
-						j++;
-						continue;
-					}
+					mDetectedCells.cur_cell.setWallEast(MazeCell::MOpen);
 
 					for(k = 0; k < mDetectedCells.local_cell_list.size(); k++) {
 						mDetectedCells.local_cell_list[k].getCellGrid(xo, yo);
@@ -689,29 +680,19 @@ bool LineFitAlgo::updateCellConfigs()
 					};
 					// find a match
 					if(k < mDetectedCells.local_cell_list.size()) {
-						mDetectedCells.local_cell_list[k].setWallEast(wall_status[i][j] > 0? MazeCell::MOpen : MazeCell::MWall);
+						mDetectedCells.local_cell_list[k].setWallEast(MazeCell::MOpen);
 					}
 					else {
 						newcell.setCellGrid(x,y);
 						newcell.setCenterXY(x*newcell.getCellWidth(), y*newcell.getCellWidth());
-						newcell.setWallWest(wall_status[i][j] > 0? MazeCell::MOpen : MazeCell::MWall);
+						newcell.setWallWest(MazeCell::MOpen);
 						mDetectedCells.local_cell_list.push_back(newcell);
 					}
 					break;
 				case MazeCell::navSouth:
 					x = mDetectedCells.pos.x;
-					if(wall_status[i][j] > 0)
-						y = mDetectedCells.pos.y - j - 1;
-					else
-						y = mDetectedCells.pos.y - j;
-
-					mDetectedCells.cur_cell.getCellGrid(xo, yo);
-
-					if(x == xo && y == yo) {
-						mDetectedCells.cur_cell.setWallSouth(wall_status[i][j] > 0? MazeCell::MOpen : MazeCell::MWall);
-						j++;
-						continue;
-					}
+					y = mDetectedCells.pos.y - j - 1;
+					mDetectedCells.cur_cell.setWallSouth(MazeCell::MOpen);
 
 					for(k = 0; k < mDetectedCells.local_cell_list.size(); k++) {
 						mDetectedCells.local_cell_list[k].getCellGrid(xo, yo);
@@ -720,28 +701,20 @@ bool LineFitAlgo::updateCellConfigs()
 					};
 					// find a match
 					if(k < mDetectedCells.local_cell_list.size()) {
-						mDetectedCells.local_cell_list[k].setWallSouth(wall_status[i][j] > 0? MazeCell::MOpen : MazeCell::MWall);
+						mDetectedCells.local_cell_list[k].setWallSouth(MazeCell::MOpen);
 					}
 					else {
 						newcell.setCellGrid(x,y);
 						newcell.setCenterXY(x*newcell.getCellWidth(), y*newcell.getCellWidth());
-						newcell.setWallNorth(wall_status[i][j] > 0? MazeCell::MOpen : MazeCell::MWall);
+						newcell.setWallNorth(MazeCell::MOpen);
 						mDetectedCells.local_cell_list.push_back(newcell);
 					}
 					break;
 				case MazeCell::navWest:
-					if(wall_status[i][j] > 0)
-						x = mDetectedCells.pos.x - j -1;
-					else
-						x = mDetectedCells.pos.x - j;
+					x = mDetectedCells.pos.x - j -1;
 					y = mDetectedCells.pos.y;
-
-					mDetectedCells.cur_cell.getCellGrid(xo, yo);
-					if(x == xo && y == yo) {
-						mDetectedCells.cur_cell.setWallWest(wall_status[i][j] > 0? MazeCell::MOpen : MazeCell::MWall);
-						j++;
-						continue;
-					}
+					mDetectedCells.cur_cell.setWallWest(MazeCell::MOpen);
+	
 					for(k = 0; k < mDetectedCells.local_cell_list.size(); k++) {
 						mDetectedCells.local_cell_list[k].getCellGrid(xo, yo);
 						if(x == xo && y == yo)
