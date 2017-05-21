@@ -11,8 +11,8 @@ void NavThread::run(void){
     printf("Fault 5 Passed\n");
     //myRobot->picam.cameraOpen(320, 240); //start up camera
 
-    //myRobot->SpinLaser();
-    //sleep(2.5); //time for laser
+    myRobot->SpinLaser();
+    sleep(3); //time for laser
     myRobot->CalibrateIMU();
     sleep(1.5);
     while(1) {
@@ -82,8 +82,8 @@ void NavThread::run(void){
                 printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
                 sleep(0.1);
                 if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
-                    //myRobot->SpinLaser();
-                    //sleep(2.5); //time for laser
+                    myRobot->SpinLaser();
+                    sleep(3); //time for laser
                     myRobot->CheckVictimVisual();
 
                     if(myRobot->CheckRamp()) { //is ramp
