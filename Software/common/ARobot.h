@@ -14,7 +14,7 @@
 #include "cell.h"
 #include "navigate2D.h"
 #include "picamera.h"
-#include "knnFilter.h"
+#include "kNNFilter.h"
 
 class LightData;
 class RangeData;
