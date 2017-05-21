@@ -56,7 +56,7 @@ void NavThread::run(void){
                     sleep(2);
                 }
                 myRobot->isDropped = true;
-                nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->setVictim(MazeCell::Victim);
+                nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->setVictim(true);
                 myRobot->currState = ARobot::PLANNING;
                 break;
             case 7: //BLACKBACK
