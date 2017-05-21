@@ -11,18 +11,12 @@ void NavThread::run(void){
     printf("Fault 5 Passed\n");
     myRobot->picam.cameraOpen(320, 240); //start up camera
 
-    //myRobot->SpinLaser();
-    //myRobot->CalibrateIMU();
-    for(int i = 0; i < 10; i++) {
-            myRobot->picam.frameCapture();
-            //myRobot->picam.display();
-            sleep(0.01);
-    }
-    myRobot->CheckVictimVisual();
-    myRobot->picam.close();
-    sleep(1);
+    myRobot->SpinLaser();
+    sleep(7.5);
+    myRobot->CalibrateIMU();
+    sleep(1.5);
     while(1) {
-        #if 0
+        #if 1
         switch(myRobot->currState) {
             case 0: //Planning
                 Navigate(in_dir, xml_name, myRobot, nav);
@@ -129,7 +123,7 @@ void NavThread::run(void){
                                 break;                               
                             default:
                                 switch(myRobot->CheckVictimTemp()) {
-                                    printf("%d", myRobot->CheckVictimTemp());
+                                    printf("Victim Results: %d\n", myRobot->CheckVictimTemp());
                                     case 0:
                                         myRobot->currState = ARobot::WAYPTNAV;
                                         break;
