@@ -41,7 +41,6 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
 {
     size_t range_size = rangeDataList.size();
     if(!black_flag) {
-        printf("testing\n");
         if(currTileLight == SILVER) {
             sensor_info->setCheckPt(true);
             sensor_info->setNonMovable(false);
@@ -395,6 +394,7 @@ int ARobot::getSilverThresh()
 
 void ARobot::CheckLightTile()
 {
+    if(backingBlack = true) {return;}
     mlen_light = lightDataList.size();
     if(mlen_light < 3)
         return;
