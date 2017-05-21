@@ -131,6 +131,7 @@ class ARobot {
 
 	MazeCell sensor_info; //sensor info for current cell
 	_PiCamera_ picam; //pi camera object
+	Visual_Victim victim; //visual victim param object
 
 	uint8_t dropCnt; //dropping counter
 	bool isVictim; //if a victim has been detected in this cell already
@@ -145,7 +146,6 @@ class ARobot {
  	SerialPort *mPort;
 
  private:
- 	Visual_Victim victim;
  	char m_letter;
  	float threshLeft; //Left Temperature Threshold
  	float threshRight; //Right Temperature Threshold
