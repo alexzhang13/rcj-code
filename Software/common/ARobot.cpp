@@ -317,8 +317,8 @@ int ARobot::CheckVictimTemp()
 
 void ARobot::CheckVictimVisual() {
     ClearImgList();
-    for(int i = 0; i < picam->getImageList().size(); i++) {
-        imgList.push_back(picam->getImageList()[i]);
+    for(int i = 0; i < picam.getImageList().size(); i++) {
+        imgList.push_back(picam.getImageList()[i]);
     }
 }
 
@@ -326,8 +326,8 @@ int ARobot::ProcessImage_Victim() {
     victim.letter = '0'; //reset
     victim.m_isVictim = false;
     for(int i = 0; i < imgList.size(); i++) {
-        m_letter = knn.detectVictim(lmgList[i]);
-        if(m_letter != '0' && m_isVictim == true) { //error, not supposed to happen, means there is a mistake
+        m_letter = knn.detectVictim(imgList[i]);
+        if(m_letter != '0' && victim.m_isVictim == true) { //error, not supposed to happen, means there is a mistake
             victim.m_isVictim = false;
             isVictim = false;
             break;
