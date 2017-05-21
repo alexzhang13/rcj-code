@@ -2,11 +2,6 @@
 
 #include "kNNFilter.h"
 
-const int MIN_CONTOUR_AREA = 500;
-
-const int RESIZED_IMAGE_WIDTH = 20;
-const int RESIZED_IMAGE_HEIGHT = 30;
-
 char kNNFilter::detectVictim(cv::Mat matTestingNumbers) {
 
 	cv::FileStorage fsClassifications("classifications.xml", cv::FileStorage::READ);

@@ -14,6 +14,10 @@ using namespace std;
 class kNNFilter {
 
 public:
+	static const int MIN_CONTOUR_AREA = 500;
+
+	static const int RESIZED_IMAGE_WIDTH = 20;
+	static const int RESIZED_IMAGE_HEIGHT = 30;
 	std::vector<cv::Point> ptContour;           // contour
 	cv::Rect boundingRect;                      // bounding rect for contour
 	float fltArea;                              // area of contour
@@ -22,7 +26,7 @@ public:
 
 	inline bool checkIfContourIsValid() {
 		if(fltArea < MIN_CONTOUR_AREA) {return false;} //area too small for contour
-		if(boundingRect.width >= (boundingRect.height+5) || (boundingRec.width*1.5) < boundingRect.height) {return false;} //params
+		if(boundingRect.width >= (boundingRect.height+5) || (boundingRect.width*1.5) < boundingRect.height) {return false;} //params
 		return true;
 	}
 	inline static bool sortByBoundingRectXPosition(const kNNFilter& cwdLeft, const kNNFilter& cwdRight) { return(cwdLeft.boundingRect.x < cwdRight.boundingRect.x);}

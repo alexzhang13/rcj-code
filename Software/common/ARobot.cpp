@@ -22,7 +22,7 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     victimRight = false; //true if is dropping to the right
     victimLeft = false;
     victim.letter = '0';
-    victim.isVictim = false;
+    victim.m_isVictim = false;
 }
 
 ARobot::~ARobot() 
