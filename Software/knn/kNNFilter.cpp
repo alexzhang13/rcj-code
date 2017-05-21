@@ -63,6 +63,7 @@ char kNNFilter::detectVictim(cv::Mat matTestingNumbers) {
 	}
 
 	for(int i = 0; i < strFinalString.size(); i++) { //if anything corresponds correctly, return it? logic flawed but will do...
+		printf("Char: %c\n", strFinalString[i]);
 		if(toupper(strFinalString[i]) == 'H' || toupper(strFinalString[i]) == 'S' || toupper(strFinalString[i]) == 'U') {
 			return toupper(strFinalString[i]);
 		}

@@ -319,6 +319,7 @@ void ARobot::CheckVictimVisual() {
     for(int i = 0; i < picam.getImageList()->size(); i++) {
         imgList.push_back(picam.getImageList()->at(i));
     }
+    printf("List Size: %d\n", imgList.size());
 }
 
 int ARobot::ProcessImage_Victim() {
