@@ -208,6 +208,7 @@ void NavThread::writeCurrentMap(const char* filedir, const char* xmlname, ARobot
 
 void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt) 
 {
+    printf("Testing???\n");
     /*Navigational functions*/
     robot->sensor_info.reset(); //reset temp object
     robot->UpdateCellMap(&robot->sensor_info, false); //false = not black
@@ -237,7 +238,6 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
 
 int NavThread::WayPointNav(ARobot *robot, Navigate2D &nav_rt)
 {
-    printf("Testing???\n");
     int x = 0; int y = 0;
     bot_waypts = robot->waypts.size();
     if(bot_waypts > 1 && first_iter == false) {//remove where u went
