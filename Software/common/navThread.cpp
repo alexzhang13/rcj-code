@@ -18,6 +18,7 @@ void NavThread::run(void){
             //myRobot->picam.display();
             sleep(0.01);
     }
+    myRobot->CheckVictimVisual();
     myRobot->picam.close();
     sleep(1);
     while(1) {
