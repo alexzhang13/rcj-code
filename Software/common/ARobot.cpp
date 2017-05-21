@@ -15,12 +15,14 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     currDir = FRONT; 
     victimDir = MazeCell::NotDecided;
     currState = PLANNING;
+    currOrientation = NORTH;
     currTile.x = 0;
     currTile.y = 0;
     dropCnt = 0; //dropping counter
     toMove = false;
     victimRight = false; //true if is dropping to the right
     victimLeft = false;
+    victimFront = false;
     victim.letter = '0';
     victim.m_isVictim = false;
 }
@@ -78,7 +80,6 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
             sensor_info->setWallEast(MazeCell::MWall); 
         } else {
             sensor_info->setWallEast(MazeCell::MOpen);
-            printf("open East!\n");
         }
 
         if(rangeDataList[range_size-1].walls.wallS == 0) {
@@ -91,7 +92,6 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
             sensor_info->setWallWest(MazeCell::MWall);
         } else {
             sensor_info->setWallWest(MazeCell::MOpen);
-            printf("open West!\n");
         } 
         sensor_info->setVisitStatus(MazeCell::Visited);
     } else {
@@ -315,9 +315,6 @@ int ARobot::CheckVictimTemp()
 }
 
 void ARobot::CheckVictimVisual() {
-    ClearImgList();
-    picam.resetFrameBuffers();
-    
     for(int i = 0; i < picam.getImageList()->size(); i++) {
         imgList.push_back(picam.getImageList()->at(i));
     }
@@ -347,6 +344,8 @@ int ARobot::ProcessImage_Victim() {
             isVictim = true;
         }
     }
+    ClearImgList();
+    picam.resetFrameBuffers();
     if(victim.m_isVictim == true) {
         if(victim.dir_victim == RIGHT) {
             return 2;
