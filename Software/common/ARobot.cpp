@@ -95,8 +95,6 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
         } 
         sensor_info->setVisitStatus(MazeCell::Visited);
     } else {
-        sensor_info->reset();
-        sensor_info->setCellGrid(currTile.x_tovisit, currTile.y_tovisit);
         sensor_info->setNonMovable(true);
         sensor_info->setCheckPt(false);
         sensor_info->setVictim(false);
@@ -406,7 +404,6 @@ void ARobot::CheckLightTile()
         if(backingBlack == false) {
             backingBlack = true;
             MoveDistance(0, BACK); //move back 16 cm
-            UpdateCellMap(&sensor_info, backingBlack);
         }
     } else {
         currTileLight = WHITE;
