@@ -11,11 +11,11 @@ void NavThread::run(void){
     printf("Fault 5 Passed\n");
     myRobot->picam.cameraOpen(320, 240); //start up camera
 
-    myRobot->SpinLaser();
-    myRobot->CalibrateIMU();
+    //myRobot->SpinLaser();
+    //myRobot->CalibrateIMU();
     sleep(1);
     while(1) {
-        #if 1
+        #if 0
         switch(myRobot->currState) {
             case 0: //Planning
                 Navigate(in_dir, xml_name, myRobot, nav);
@@ -83,6 +83,7 @@ void NavThread::run(void){
                     myRobot->SpinLaser();
                     sleep(7.5); //time for laser
                     myRobot->CheckVictimVisual();
+
                     if(myRobot->CheckRamp()) { //is ramp
                         myRobot->MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
                         break;
@@ -157,6 +158,8 @@ void NavThread::run(void){
                 break;
         }
         #endif
+        myRobot->picam.frameCapture();
+        myRobot->picam.display();
         sleep(0.01);
     }
 
