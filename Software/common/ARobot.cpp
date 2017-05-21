@@ -403,7 +403,9 @@ void ARobot::CheckLightTile()
         currTileLight = BLACK;
         if(backingBlack == false) {
             backingBlack = true;
-            MoveDistance(0, BACK); //move back 16 cm
+            ResetEncoder();
+            sleep(0.5);
+            MoveDistance(155, BACK);
         }
     } else {
         currTileLight = WHITE;
@@ -457,6 +459,15 @@ void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
     if(!(currState == RAMP)) {
         currState = MOVE;
     }
+    WriteCommand(i_command, i_length);
+}
+
+void ARobot::ResetEncoder() {
+    char* i_command;
+    int i_length = snprintf(NULL, 0, "%c %c", 'm', 'g') + 1;
+    i_command = (char*)malloc(i_length);
+
+    snprintf(i_command, i_length, "%c %c", 'm', 'g');
     WriteCommand(i_command, i_length);
 }
 void ARobot::TurnDistance(int degrees, BotDir dir)

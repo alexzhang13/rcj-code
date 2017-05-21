@@ -91,6 +91,7 @@ class ARobot {
  	void StopMove();
  	void TurnDistance(int degrees, BotDir right);
  	void StopTurn(BotDir right);
+ 	void ResetEncoder();
 
  	/*Parsing*/
  	void ParseIMU();
