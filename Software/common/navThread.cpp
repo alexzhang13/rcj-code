@@ -49,7 +49,7 @@ void NavThread::run(void){
                 myRobot->CheckLightTile(); //check if anything happens during this time
                 break;
             case 6: //Drop
-                myRobot->LEDLight(5000);
+                myRobot->LEDLight(4500);
                 sleep(5);
                 for(int i = 0; i < myRobot->dropCnt; i++) {
                     myRobot->Drop();

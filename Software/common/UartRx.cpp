@@ -75,6 +75,7 @@ void UartRx::run(void){
         	storeScan(mBuf);
         } else if (c == 'z') {
         	myRobot->picam.frameCapture();
+        	printf("Image Captured\n")
        	} else if (c == 'm') {
             myRobot->currState = ARobot::DATA; //IDLE
             if(myRobot->backingBlack) {
