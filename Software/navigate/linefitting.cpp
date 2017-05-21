@@ -9,10 +9,12 @@ LineFitAlgo::LineFitAlgo()
 	m_SampleCnt = 0;
 	m_scan_angle = -1;
 	mDistOffset = 13.75f; // mm 
-	mAngleOffset = -1.5; //-1.8; // degrees
+	mAngleOffset = 10.0; //-1.5; //-1.8; // degrees
 	mEpsilon = 20.0;
 	mLineThresh = 10; //25;
 	mAngleThresh = 35.0f;
+	mOffset2BotCenter[0] = 9.525f; // dx
+	mOffset2BotCenter[1] = 31.75f; // dy
 	mAvgPts.clear();
 	mFittedLines.clear();
 }
@@ -44,12 +46,7 @@ void LineFitAlgo::resetData()
 	}
 
 	for(i = 0; i < BUF_LF_SIZE; i++) {
-		mPts[i].adjust_angle = -1;
-		for(j = 0; j < 4; j++) {
-			mPts[i].pt[j].d = 0;
-			mPts[i].pt[j].x = 0.0;
-			mPts[i].pt[j].y = 0.0;
-		}
+		mPts[i].adjust_angle = 0;
 	}
 
 	mAvgPts.clear();
@@ -69,14 +66,8 @@ void LineFitAlgo::update(int32_t half_samples, int32_t angle_separation)
 	return;
 }
 
-bool LineFitAlgo::readImage(const char *filename)
-{
-
-	return true;
-}
-
-// sensor data order is: right, left, forwward and backward
-// correspondingly, offset = 0, 180, 90, 270
+// sensor data order is: forward, right, downward, left
+// correspondingly, offset = 90, 360, 270, 180
 bool LineFitAlgo::readData(TimeDist &td)
 {
 	int32_t index;
@@ -104,6 +95,22 @@ bool LineFitAlgo::readData(TimeDist &td)
 		mTimeDist_rr[index].d[1] = td.d[1];
 		mTimeDist_rr[index].d[2] = td.d[2];
 		mTimeDist_rr[index].d[3] = td.d[3];
+
+		mTimeDist_rr[index].status[0] = mTimeDist_rr[index].status[1] = 1;
+		mTimeDist_rr[index].status[2] = mTimeDist_rr[index].status[3] = 1;
+	
+		if(mTimeDist_rr[index].d[0] >= mLongThresh) {
+			mTimeDist_rr[index].status[0] = 0; // overflow
+		}
+		if(mTimeDist_rr[index].d[2] >= mLongThresh) {
+			mTimeDist_rr[index].status[2] = 0; // overflow
+		}
+		if(mTimeDist_rr[index].d[1] >= mShortThresh) {
+			mTimeDist_rr[index].status[1] = 0; // overflow
+		}
+		if(mTimeDist_rr[index].d[3] >= mShortThresh) {
+			mTimeDist_rr[index].status[3] = 0; // overflow
+		}
 	}
 	else {
 		mTimeDist_rl[index].timestamp = td.timestamp;
@@ -112,6 +119,22 @@ bool LineFitAlgo::readData(TimeDist &td)
 		mTimeDist_rl[index].d[1] = td.d[1];
 		mTimeDist_rl[index].d[2] = td.d[2];
 		mTimeDist_rl[index].d[3] = td.d[3];
+
+		mTimeDist_rl[index].status[0] = mTimeDist_rl[index].status[1] = 1;
+		mTimeDist_rl[index].status[2] = mTimeDist_rl[index].status[3] = 1;
+
+		if(mTimeDist_rl[index].d[0] >= mLongThresh) {
+			mTimeDist_rl[index].status[0] = 0; // overflow
+		}
+		if(mTimeDist_rl[index].d[2] >= mLongThresh) {
+			mTimeDist_rl[index].status[2] = 0; // overflow
+		}
+		if(mTimeDist_rl[index].d[1] >= mShortThresh) {
+			mTimeDist_rl[index].status[1] = 0; // overflow
+		}
+		if(mTimeDist_rl[index].d[3] >= mShortThresh) {
+			mTimeDist_rl[index].status[3] = 0; // overflow
+		}
 	}
 
 	if(m_SampleCnt == mHalf_samples*2)
@@ -119,42 +142,32 @@ bool LineFitAlgo::readData(TimeDist &td)
 	return true;
 }
 
-// sensor data order is: right, left, forwward and backward
-// correspondingly, offset = 0, 180, 90, 270
+// sensor data order is: forward:long, right:short, downward:long, left:short
+// correspondingly, offset = 90, 360, 270, 180
 bool LineFitAlgo::parseData(TimeDist *datalist)
 {
 	int32_t i, j;
-	int32_t offset[4] = {360, 180, 90, 270};
+	int32_t offset[4] = {90, 360, 270, 180};
 	int32_t adjust_angle;
 	int32_t thresh;
+	DataStat datas;
 
 	for(j =0; j < 360/mAngleSep; j++) {
-		for(i = 0; i < 4; i++) 
-		{
-			adjust_angle = offset[i]-datalist[j].angle;
-			if(i == 0 || i == 1)
-				thresh = mShortThresh;
-			else if( i == 2 || i == 3)
-				thresh = mLongThresh;
-			if(adjust_angle >=0) {
-				mPts[adjust_angle%360].adjust_angle = adjust_angle%360;
-				if((datalist[j].d[i] >= thresh || datalist[j].timestamp == -1 || datalist[j].d[i] == 0)) {
-					mPts[adjust_angle%360].pt[i].x = 0;
-					mPts[adjust_angle%360].pt[i].y = 0;
-					mPts[adjust_angle%360].pt[i].d = 0;
+		if(datalist[j].angle != -1) {
+			for(i = 0; i < 4; i++) 
+			{
+				datas.pt.d = datalist[j].d[i];
+				datas.status = datalist[j].status[i];
+				adjust_angle = offset[i]-datalist[j].angle;
+
+				if(adjust_angle >=0) {
+					mPts[adjust_angle%360].adjust_angle = adjust_angle%360;
+					mPts[adjust_angle%360].data[i].push_back(datas);
 				}
-				else
-					mPts[adjust_angle%360].pt[i].d = datalist[j].d[i];
-			}
-			else {
-				mPts[(adjust_angle + 360)].adjust_angle = (adjust_angle+360)%360;
-				if((datalist[j].d[i] >= thresh || datalist[j].timestamp == -1 || datalist[j].d[i] == 0)) {
-					mPts[(adjust_angle+360)].pt[i].x = 0;
-					mPts[(adjust_angle+360)].pt[i].y = 0;
-					mPts[(adjust_angle+360)].pt[i].d = 0;
+				else {
+					mPts[(adjust_angle+360)].adjust_angle = (adjust_angle+360)%360;
+					mPts[(adjust_angle+360)].data[i].push_back(datas);
 				}
-				else
-					mPts[(adjust_angle+360)].pt[i].d = datalist[j].d[i];
 			}
 		}
 	}
@@ -170,9 +183,9 @@ bool LineFitAlgo::readDataFile(const char *filename)
 	if(hf == NULL)
 		return false;
 
-	while(1) { 
 		resetData();
-		for(int32_t i = 0; i < mHalf_samples*2; i++) {
+
+		for(int32_t i = 0; i < mHalf_samples*2+1; i++) {
 			if(feof(hf)) {
 				ret = true;
 				break;
@@ -181,40 +194,43 @@ bool LineFitAlgo::readDataFile(const char *filename)
 
 			readData(td);
 		}
+		fclose(hf);
 
-		if(ret)
-			break;
+		return true;
+}
 
-		MazeCell::Position_2D pos;
-		pos.x = pos.y = 0;
-		setRobotStatus(MazeCell::navNorth, pos);
-		parseData(mTimeDist_rr);
-		parseData(mTimeDist_rl);
-		convert2Vec();
-		lineFit();
-		updateCellConfigs();
-		// printoutData();
-		displayPoints();
-		mAvgPts.clear();
-		mLines.clear();
-		std::map<int32_t, FittedLine>::iterator it; 
-		for(it = mFittedLines.begin(); it != mFittedLines.end(); it++) {
-			LineFitAlgo::FittedLine fl = it->second;
-			fl.pts.clear();
-		}
-		mFittedLines.clear();
-	}
+bool LineFitAlgo::run()
+{
+	parseData(mTimeDist_rr);
+	parseData(mTimeDist_rl);
+	convert2Vec();
+	lineFit();
+	updateCellConfigs();
 
-	fclose(hf);
+
 	return true;
 }
 
+void LineFitAlgo::debpgPrints()
+{
+	// printoutData();
+	displayPoints();
+	mAvgPts.clear();
+	mLines.clear();
+	std::map<int32_t, FittedLine>::iterator it; 
+	for(it = mFittedLines.begin(); it != mFittedLines.end(); it++) {
+		LineFitAlgo::FittedLine fl = it->second;
+		fl.pts.clear();
+	}
+	return;
+}
 
-void LineFitAlgo::setRobotStatus(MazeCell::NavDir direction, MazeCell::Position_2D pos)
+void LineFitAlgo::setRobotStatus(int32_t cell_index, MazeCell::NavDir direction, MazeCell::Position_2D pos)
 {
 	mDetectedCells.direction = direction;
 	mDetectedCells.pos = pos;
-	mDetectedCells.global_angle = 0.0f;
+	mDetectedCells.local_angle = 0.0f;
+	mDetectedCells.cur_cell.setCellNum(cell_index);
 	mDetectedCells.local_cell_list.clear();
 	return;
 }
@@ -222,7 +238,7 @@ void LineFitAlgo::setRobotStatus(MazeCell::NavDir direction, MazeCell::Position_
 
 bool LineFitAlgo::convert2Vec()
 {
-	int32_t i, j;
+	int32_t i, j, k;
 	double xmin =  1.0e9;
 	double xmax = -1.0e9; 
 	double ymin = 1.0e9;
@@ -230,16 +246,37 @@ bool LineFitAlgo::convert2Vec()
 
 	for(i = 0; i < 360; i+=mAngleSep) {
 		for(j = 0; j < 4; j++) {
-			if(mPts[i].pt[j].d > 0) {
-				mPts[i].pt[j].x =cos(((double)mPts[i].adjust_angle+mAngleOffset)*3.1415926/180)*(mPts[i].pt[j].d+mDistOffset);
-				mPts[i].pt[j].y =sin(((double)mPts[i].adjust_angle+mAngleOffset)*3.1415926/180)*(mPts[i].pt[j].d+mDistOffset);
-
-				xmin = std::min(xmin, mPts[i].pt[j].x);
-				xmax = std::max(xmax, mPts[i].pt[j].x);
-				ymin = std::min(ymin, mPts[i].pt[j].y);
-				ymax = std::max(ymax, mPts[i].pt[j].y);
+			for(k = 0; k < mPts[i].data[j].size(); k++) {
+				if(mPts[i].data[j][k].status == 1) {
+					mPts[i].data[j][k].pt.x =cos(((double)mPts[i].adjust_angle+mAngleOffset)*3.1415926/180)*(mPts[i].data[j][k].pt.d+mDistOffset) - mOffset2BotCenter[0];
+					mPts[i].data[j][k].pt.y =sin(((double)mPts[i].adjust_angle+mAngleOffset)*3.1415926/180)*(mPts[i].data[j][k].pt.d+mDistOffset) - mOffset2BotCenter[1];
+				}
+				else {
+					if(j == 0 || j == 2) {
+						mPts[i].data[j][k].pt.x = (double)mLongThresh;
+						mPts[i].data[j][k].pt.y = (double)mLongThresh;
+					}
+					else {
+						mPts[i].data[j][k].pt.x = 0.0;
+						mPts[i].data[j][k].pt.y = 0.0;
+					}
+				}
+				xmin = std::min(xmin, mPts[i].data[j][k].pt.x);
+				xmax = std::max(xmax, mPts[i].data[j][k].pt.x);
+				ymin = std::min(ymin, mPts[i].data[j][k].pt.y);
+				ymax = std::max(ymax, mPts[i].data[j][k].pt.y);
 			}
 		}
+	}
+
+	for(i = 0; i < 360; i+=mAngleSep) {
+		printf("%d: ", mPts[i].adjust_angle);
+		for(j = 0; j < 4; j++) {
+			for(k = 0; k < mPts[i].data[j].size(); k++) {
+				printf("%d, ", mPts[i].data[j][k].pt.d);
+			}
+		}
+		printf("\n");
 	}
 
 	mXmin = int32_t(xmin);
@@ -257,20 +294,26 @@ bool LineFitAlgo::convert2Vec()
 		pt.x = 0.0f;
 		pt.y = 0.0f;
 		for(j = 0; j < 4; j++) {
-			if(mPts[i].pt[j].d > 0) {
-				pt.x += (float)mPts[i].pt[j].x;
-				pt.y += (float)mPts[i].pt[j].y;
-				cnt++;
+			if(mPts[i].data[j].size() > 0) {
+				cnt += mPts[i].data[j][k].status;
+				pt.x += (float)mPts[i].data[j][k].pt.x;
+				pt.y += (float)mPts[i].data[j][k].pt.y;
 			}
 		}
+
 		if(cnt > 0) {
 			pt.x /= float(cnt);
 			pt.y /= float(cnt);
 			mAvgPts.push_back(pt);
 		}
-		else {
-			pt.x = 0.0f;
-			pt.y = 0.0f;
+		else if(j == 0 || j == 2) {
+			pt.x = mLongThresh;
+			pt.y = mLongThresh;
+			mAvgPts.push_back(pt);
+		}
+		else if(j == 1 || j == 3) {
+			pt.x = mShortThresh;
+			pt.y = mShortThresh;
 		}
 	}
 
@@ -292,6 +335,11 @@ bool LineFitAlgo::lineFit()
 
 	if(mLines.size() < 1)
 		return false;
+
+	for(j = 0; j < mFittedLines.size(); j++) {
+		mFittedLines[j].pts.clear();
+	}
+	mFittedLines.clear();
 
 	// check how many points are close to a line
 	for(j = 0; j < mLines.size()-1; j++) {
@@ -359,6 +407,15 @@ bool LineFitAlgo::updateCellConfigs()
 				distance[0] += mFittedLines[i].aline.distance;
 				cnt[0]++;
 			}
+			else if(mFittedLines[i].aline.side == 1) // vertical right
+			{
+				float angle = mFittedLines[i].aline.local_angle;
+				distance[1] += mFittedLines[i].aline.distance;
+				if(angle < 0.0f)
+					angle = 180.0f + angle;
+				orient_y += angle;
+				cnt[1]++;
+			}
 			else if(mFittedLines[i].aline.side == 2) // horizontal down
 			{
 				orient_x+= mFittedLines[i].aline.local_angle;
@@ -374,89 +431,336 @@ bool LineFitAlgo::updateCellConfigs()
 				orient_y += angle;
 				cnt[3]++;
 			}
-			else if(mFittedLines[i].aline.side == 1) // vertical right
-			{
-				float angle = mFittedLines[i].aline.local_angle;
-				distance[1] += mFittedLines[i].aline.distance;
-				if(angle < 0.0f)
-					angle = 180.0f + angle;
-				orient_y += angle;
-				cnt[1]++;
-			}
 		}
 	}
 
-	orient_x = orient_x/(float)(cnt[0] + cnt[2]);
-	orient_y = orient_y/(float)(cnt[1] + cnt[3]);
-	for(i = 0;  i < 4; i++)
-		distance[i] /= float(cnt[i]);
+	if(cnt[0] + cnt[2] > 0)
+		orient_x = orient_x/(float)(cnt[0] + cnt[2]);
+	else
+		orient_x = 0.0f;
+
+	if(cnt[1] + cnt[3] > 0)
+		orient_y = orient_y/(float)(cnt[1] + cnt[3]);
+	else
+		orient_y = 90.0f;
+
+	for(i = 0;  i < 4; i++) {
+		if(cnt[i]  > 0)
+			distance[i] /= float(cnt[i]);
+		else
+			distance[i] = -1; // at least one side is open
+	}
 	// we are in trouble, not sure what happened
 	if(fabs(fabs(orient_y - orient_x) - 90.0f) > 10.0f)
 		return false;
 
-	MazeCell curCell;
+	float xo, yo;
+	float avg_orient = (orient_y + (90.0f - orient_x))/2;
 	mDetectedCells.cur_cell.setCellGrid(mDetectedCells.pos.x, mDetectedCells.pos.y);
+	mDetectedCells.cur_cell.setCenterXY(mDetectedCells.pos.x*mDetectedCells.cur_cell.getCellWidth(), mDetectedCells.pos.y*mDetectedCells.cur_cell.getCellWidth());
+	mDetectedCells.cur_cell.setNavDirection(mDetectedCells.direction);
+	mDetectedCells.local_angle = avg_orient;
+	mDetectedCells.global_angle = avg_orient - (float)mDetectedCells.direction * 90.0f;
 	MazeCell::NavDir direct = mDetectedCells.direction; // global direction
 
+	float short_distance[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 	for(i = 0; i < 4; i++) {
 		if(distance[i] > 0.0f) 
 		{
+			short_distance[i] = distance[i];
 			float a_dist = distance[i];
-			while(a_dist - curCell.getCellWidth() >=0.0f) {
+			while(a_dist - mDetectedCells.cur_cell.getCellWidth() >=0.0f) {
 				wall_status[i].push_back(1);
-				a_dist-= curCell.getCellWidth();
+				a_dist-= mDetectedCells.cur_cell.getCellWidth();
+				if(a_dist > 0.0f && a_dist < mDetectedCells.cur_cell.getCellWidth())
+					short_distance[i] = a_dist;
 			}
-			wall_status[i].push_back(0);
+			if(distance[i] < mLongThresh)
+				wall_status[i].push_back(0);
 		}
 	}
 
 	for(i = 0; i < 4; i++) {
-		if(wall_status[i].size() > 0)
+		if(wall_status[(i+(int32_t)direct)%4].size() > 0)
 			adjusted_wall_status[i] = wall_status[(i+(int32_t)direct)%4][0];
 	}
 
+	if(wall_status[2].size() + wall_status[0].size() > 0)
+		xo = (wall_status[2].size()*short_distance[2] + wall_status[0].size()*(mDetectedCells.cur_cell.getCellWidth()-short_distance[0]))/(wall_status[2].size()+ wall_status[0].size());
+	else
+		xo = 0.0f;
+	if(wall_status[1].size() + wall_status[3].size() > 0)
+		yo = (wall_status[1].size()*short_distance[1] + wall_status[3].size()*(mDetectedCells.cur_cell.getCellWidth()-short_distance[3]))/(wall_status[1].size()+wall_status[3].size());
+	else
+		yo = 0.0f;
+
+	// with respect to the center of the cell
+	xo -= mDetectedCells.cur_cell.getCellWidth()/2.0f;
+	yo -= mDetectedCells.cur_cell.getCellWidth()/2.0f;
+
+	mDetectedCells.xypos.x = xo;
+	mDetectedCells.xypos.y = yo;
+
 	// current cell update
-	setWallProp(curCell, adjusted_wall_status);
-	mDetectedCells.cur_cell = curCell;
+	setWallProp(mDetectedCells.cur_cell, adjusted_wall_status);
 
 	// local cell detection and update
 	for(i = 0; i < 4; i++) {
-		int j = 1;
+		int j = 0;
 		adjusted_wall_status[0] = adjusted_wall_status[1] = -1;
 		adjusted_wall_status[2] = adjusted_wall_status[3] = -1;
 		if(wall_status[i].size() > 0) {
-			while(wall_status[i].size() > j) {
+			while(j < wall_status[i].size()) {
+				int32_t x, y, xo, yo;
+				int k;
 				MazeCell newcell;
 				MazeCell::NavDir newdir = MazeCell::NavDir((i+(int32_t)direct)%4);
-				int32_t x, y;
 				switch(newdir) {
 				case MazeCell::navNorth:
-					adjusted_wall_status[0] = wall_status[i][j];
-					adjusted_wall_status[2] = wall_status[i][j-1];
-					y = mDetectedCells.pos.y + j;
-				break;
+					x = mDetectedCells.pos.x;
+					if(wall_status[i][j] > 0)
+						y = mDetectedCells.pos.y + j + 1;
+					else
+						y = mDetectedCells.pos.y + j;
+					
+					mDetectedCells.cur_cell.getCellGrid(xo, yo);
+					if(x == xo && y == yo) {
+						mDetectedCells.cur_cell.setWallNorth(wall_status[i][j] > 0? MazeCell::MOpen : MazeCell::MWall);
+						j++;
+						continue;
+					}
+							
+					for(k = 0; k < mDetectedCells.local_cell_list.size(); k++) {
+						mDetectedCells.local_cell_list[k].getCellGrid(xo, yo);
+						if(x == xo && y == yo)
+							break;
+					};
+					// find a match
+					if(k < mDetectedCells.local_cell_list.size()) {
+						mDetectedCells.local_cell_list[k].setWallNorth(wall_status[i][j] > 0? MazeCell::MOpen : MazeCell::MWall);
+					}
+					else {
+						newcell.setCellGrid(x,y);
+						newcell.setCenterXY(x*newcell.getCellWidth(), y*newcell.getCellWidth());
+						newcell.setWallSouth(wall_status[i][j] > 0? MazeCell::MOpen : MazeCell::MWall);
+						mDetectedCells.local_cell_list.push_back(newcell);
+					}
+					break;
 				case MazeCell::navEast:
-					adjusted_wall_status[1] = wall_status[i][j];
-					adjusted_wall_status[3] = wall_status[i][j-1];
-					x = mDetectedCells.pos.x + j;
-				break;
-				case MazeCell::navSouth:
-					adjusted_wall_status[2] = wall_status[i][j];
-					adjusted_wall_status[0] = wall_status[i][j-1];
-					y = mDetectedCells.pos.y + j;
-				break;
-				case MazeCell::navWest:
-					adjusted_wall_status[3] = wall_status[i][j];
-					adjusted_wall_status[1] = wall_status[i][j-1];
-					x = mDetectedCells.pos.x + j;
-				break;
+					if(wall_status[i][j] > 0)
+						x = mDetectedCells.pos.x + j + 1;
+					else
+						x = mDetectedCells.pos.x + j;
+					y = mDetectedCells.pos.y;
 
-				}
+					mDetectedCells.cur_cell.getCellGrid(xo, yo);
+					if(x == xo && y == yo) {
+						mDetectedCells.cur_cell.setWallEast(wall_status[i][j] > 0? MazeCell::MOpen : MazeCell::MWall);
+						j++;
+						continue;
+					}
+
+					for(k = 0; k < mDetectedCells.local_cell_list.size(); k++) {
+						mDetectedCells.local_cell_list[k].getCellGrid(xo, yo);
+						if(x == xo && y == yo)
+							break;
+					};
+					// find a match
+					if(k < mDetectedCells.local_cell_list.size()) {
+						mDetectedCells.local_cell_list[k].setWallEast(wall_status[i][j] > 0? MazeCell::MOpen : MazeCell::MWall);
+					}
+					else {
+						newcell.setCellGrid(x,y);
+						newcell.setCenterXY(x*newcell.getCellWidth(), y*newcell.getCellWidth());
+						newcell.setWallWest(wall_status[i][j] > 0? MazeCell::MOpen : MazeCell::MWall);
+						mDetectedCells.local_cell_list.push_back(newcell);
+					}
+					break;
+				case MazeCell::navSouth:
+					x = mDetectedCells.pos.x;
+					if(wall_status[i][j] > 0)
+						y = mDetectedCells.pos.y - j - 1;
+					else
+						y = mDetectedCells.pos.y - j;
+
+					mDetectedCells.cur_cell.getCellGrid(xo, yo);
+
+					if(x == xo && y == yo) {
+						mDetectedCells.cur_cell.setWallSouth(wall_status[i][j] > 0? MazeCell::MOpen : MazeCell::MWall);
+						j++;
+						continue;
+					}
+
+					for(k = 0; k < mDetectedCells.local_cell_list.size(); k++) {
+						mDetectedCells.local_cell_list[k].getCellGrid(xo, yo);
+						if(x == xo && y == yo)
+							break;
+					};
+					// find a match
+					if(k < mDetectedCells.local_cell_list.size()) {
+						mDetectedCells.local_cell_list[k].setWallSouth(wall_status[i][j] > 0? MazeCell::MOpen : MazeCell::MWall);
+					}
+					else {
+						newcell.setCellGrid(x,y);
+						newcell.setCenterXY(x*newcell.getCellWidth(), y*newcell.getCellWidth());
+						newcell.setWallNorth(wall_status[i][j] > 0? MazeCell::MOpen : MazeCell::MWall);
+						mDetectedCells.local_cell_list.push_back(newcell);
+					}
+					break;
+				case MazeCell::navWest:
+					if(wall_status[i][j] > 0)
+						x = mDetectedCells.pos.x - j -1;
+					else
+						x = mDetectedCells.pos.x - j;
+					y = mDetectedCells.pos.y;
+
+					mDetectedCells.cur_cell.getCellGrid(xo, yo);
+					if(x == xo && y == yo) {
+						mDetectedCells.cur_cell.setWallWest(wall_status[i][j] > 0? MazeCell::MOpen : MazeCell::MWall);
+						j++;
+						continue;
+					}
+					for(k = 0; k < mDetectedCells.local_cell_list.size(); k++) {
+						mDetectedCells.local_cell_list[k].getCellGrid(xo, yo);
+						if(x == xo && y == yo)
+							break;
+					};
+					// find a match
+					if(k < mDetectedCells.local_cell_list.size()) {
+						mDetectedCells.local_cell_list[k].setWallWest(MazeCell::MOpen);
+					}
+					else {
+						newcell.setCellGrid(x,y);
+						newcell.setCenterXY(x*newcell.getCellWidth(), y*newcell.getCellWidth());
+						newcell.setWallEast(MazeCell::MOpen);
+						mDetectedCells.local_cell_list.push_back(newcell);
+					}
+					break;
+				} // switch
 				j++;
 			}
+
+		}
+		else {
+				int32_t x, y, xo, yo;
+				int k;
+				MazeCell newcell;
+				MazeCell::NavDir newdir = MazeCell::NavDir((i+(int32_t)direct)%4);
+				switch(newdir) {
+				case MazeCell::navNorth:
+					x = mDetectedCells.pos.x;
+					y = mDetectedCells.pos.y + j + 1;
+					mDetectedCells.cur_cell.setWallNorth(MazeCell::MOpen);
+
+					for(k = 0; k < mDetectedCells.local_cell_list.size(); k++) {
+						mDetectedCells.local_cell_list[k].getCellGrid(xo, yo);
+						if(x == xo && y == yo)
+							break;
+					};
+					// find a match
+					if(k < mDetectedCells.local_cell_list.size()) {
+						mDetectedCells.local_cell_list[k].setWallNorth(MazeCell::MOpen);
+					}
+					else {
+						newcell.setCellGrid(x,y);
+						newcell.setCenterXY(x*newcell.getCellWidth(), y*newcell.getCellWidth());
+						newcell.setWallSouth(MazeCell::MOpen);
+						mDetectedCells.local_cell_list.push_back(newcell);
+					}
+					break;
+				case MazeCell::navEast:
+					if(wall_status[i][j] > 0)
+						x = mDetectedCells.pos.x + j + 1;
+					else
+						x = mDetectedCells.pos.x + j;
+					y = mDetectedCells.pos.y;
+
+					mDetectedCells.cur_cell.getCellGrid(xo, yo);
+					if(x == xo && y == yo) {
+						mDetectedCells.cur_cell.setWallEast(wall_status[i][j] > 0? MazeCell::MOpen : MazeCell::MWall);
+						j++;
+						continue;
+					}
+
+					for(k = 0; k < mDetectedCells.local_cell_list.size(); k++) {
+						mDetectedCells.local_cell_list[k].getCellGrid(xo, yo);
+						if(x == xo && y == yo)
+							break;
+					};
+					// find a match
+					if(k < mDetectedCells.local_cell_list.size()) {
+						mDetectedCells.local_cell_list[k].setWallEast(wall_status[i][j] > 0? MazeCell::MOpen : MazeCell::MWall);
+					}
+					else {
+						newcell.setCellGrid(x,y);
+						newcell.setCenterXY(x*newcell.getCellWidth(), y*newcell.getCellWidth());
+						newcell.setWallWest(wall_status[i][j] > 0? MazeCell::MOpen : MazeCell::MWall);
+						mDetectedCells.local_cell_list.push_back(newcell);
+					}
+					break;
+				case MazeCell::navSouth:
+					x = mDetectedCells.pos.x;
+					if(wall_status[i][j] > 0)
+						y = mDetectedCells.pos.y - j - 1;
+					else
+						y = mDetectedCells.pos.y - j;
+
+					mDetectedCells.cur_cell.getCellGrid(xo, yo);
+
+					if(x == xo && y == yo) {
+						mDetectedCells.cur_cell.setWallSouth(wall_status[i][j] > 0? MazeCell::MOpen : MazeCell::MWall);
+						j++;
+						continue;
+					}
+
+					for(k = 0; k < mDetectedCells.local_cell_list.size(); k++) {
+						mDetectedCells.local_cell_list[k].getCellGrid(xo, yo);
+						if(x == xo && y == yo)
+							break;
+					};
+					// find a match
+					if(k < mDetectedCells.local_cell_list.size()) {
+						mDetectedCells.local_cell_list[k].setWallSouth(wall_status[i][j] > 0? MazeCell::MOpen : MazeCell::MWall);
+					}
+					else {
+						newcell.setCellGrid(x,y);
+						newcell.setCenterXY(x*newcell.getCellWidth(), y*newcell.getCellWidth());
+						newcell.setWallNorth(wall_status[i][j] > 0? MazeCell::MOpen : MazeCell::MWall);
+						mDetectedCells.local_cell_list.push_back(newcell);
+					}
+					break;
+				case MazeCell::navWest:
+					if(wall_status[i][j] > 0)
+						x = mDetectedCells.pos.x - j -1;
+					else
+						x = mDetectedCells.pos.x - j;
+					y = mDetectedCells.pos.y;
+
+					mDetectedCells.cur_cell.getCellGrid(xo, yo);
+					if(x == xo && y == yo) {
+						mDetectedCells.cur_cell.setWallWest(wall_status[i][j] > 0? MazeCell::MOpen : MazeCell::MWall);
+						j++;
+						continue;
+					}
+					for(k = 0; k < mDetectedCells.local_cell_list.size(); k++) {
+						mDetectedCells.local_cell_list[k].getCellGrid(xo, yo);
+						if(x == xo && y == yo)
+							break;
+					};
+					// find a match
+					if(k < mDetectedCells.local_cell_list.size()) {
+						mDetectedCells.local_cell_list[k].setWallWest(MazeCell::MOpen);
+					}
+					else {
+						newcell.setCellGrid(x,y);
+						newcell.setCenterXY(x*newcell.getCellWidth(), y*newcell.getCellWidth());
+						newcell.setWallEast(MazeCell::MOpen);
+						mDetectedCells.local_cell_list.push_back(newcell);
+					}
+					break;
+				} // switch
 		}
 	}
-
 	return true;
 }
 

@@ -21,20 +21,27 @@ public:
 	} Pt2D;
 
 	typedef struct {
+		Pt2D pt;
+		int32_t status;
+	} DataStat;
+
+	typedef struct {
 		int32_t timestamp;
 		char ctrl;
 		int32_t angle;
-		int32_t d[4];
+		int32_t d[4]; // N, E, S, W
+		int32_t status[4]; //normal: 1, too far: 0
 	} TimeDist;
 
 	typedef struct {
 		int32_t adjust_angle;
-		Pt2D pt[4];
+		std::vector<DataStat> data[4]; // N, E, S, W
 	} AdjustPt2D;
 
 	typedef struct {
 		MazeCell::NavDir direction;
-		float global_angle;
+		float local_angle; // with respect to vehicle right (x)
+		float global_angle; // with respect to east (x)
 		MazeCell::Position_2D pos;
 		MazeCell::xyCoord xypos;
 		MazeCell cur_cell;
@@ -59,19 +66,15 @@ public:
 	// destructor
 	~LineFitAlgo();
 
-	void update(int32_t half_samples, int32_t angle_separation);  
-	bool readImage(const char *filename);
-	bool readData(TimeDist &td);
-	bool parseData(TimeDist *datalist);
+	void setRobotStatus(int32_t cell_index, MazeCell::NavDir direction, MazeCell::Position_2D pos);
 	bool readDataFile(const char *filename);
-	bool convert2Vec();
-	bool lineFit();
+	void update(int32_t half_samples, int32_t angle_separation);  
+	bool readData(TimeDist &td);
+	bool run();
 	bool updateCellConfigs();
+	void debpgPrints();
 
 	void printoutData();
-	void displayPoints();
-
-	void setRobotStatus(MazeCell::NavDir direction, MazeCell::Position_2D pos);
 
 	inline void setlineDetectTol(double tor) { mEpsilon = tor; }
 	inline double getLineDetectTol(void) { return mEpsilon;}
@@ -85,6 +88,11 @@ protected:
 
 	void resetData();
 	void setWallProp(MazeCell &cell, int32_t *wall_status);
+	bool parseData(TimeDist *datalist);
+	bool convert2Vec();
+	bool lineFit();
+	void displayPoints();
+
 private:
 	cv::Mat mImage;
 	TimeDist mTimeDist_rr[BUF_LF_SIZE];
@@ -101,6 +109,7 @@ private:
 	int32_t m_scan_angle;
 	double mDistOffset;
 	double mAngleOffset;
+	double mOffset2BotCenter[2];
 	int32_t mXmin, mYmin;
 	int32_t mXmax, mYmax;
 	double mEpsilon;
