@@ -315,9 +315,6 @@ int ARobot::CheckVictimTemp()
 }
 
 void ARobot::CheckVictimVisual() {
-    ClearImgList();
-    picam.resetFrameBuffers();
-
     for(int i = 0; i < picam.getImageList()->size(); i++) {
         imgList.push_back(picam.getImageList()->at(i));
     }
@@ -347,6 +344,8 @@ int ARobot::ProcessImage_Victim() {
             isVictim = true;
         }
     }
+    ClearImgList();
+    picam.resetFrameBuffers();
     if(victim.m_isVictim == true) {
         if(victim.dir_victim == RIGHT) {
             return 2;
