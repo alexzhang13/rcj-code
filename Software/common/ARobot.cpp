@@ -15,6 +15,7 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     currDir = FRONT; 
     victimDir = MazeCell::NotDecided;
     currState = PLANNING;
+    currOrientation = NORTH;
     currTile.x = 0;
     currTile.y = 0;
     dropCnt = 0; //dropping counter
