@@ -1,12 +1,6 @@
-// TrainAndTest.cpp
+//Modified for Robot use from https://github.com/MicrocontrollersAndMore/OpenCV_3_License_Plate_Recognition_Cpp
 
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/ml/ml.hpp>
-
-#include <iostream>
-#include <sstream>
+#include "kNNFilter.h"
 
 const int MIN_CONTOUR_AREA = 500;
 
