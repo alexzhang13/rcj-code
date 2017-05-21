@@ -145,6 +145,7 @@ void NavThread::run(void){
                                 }
                                 break;
                         }
+                        break;
                     } else {
                         myRobot->currState = ARobot::WAYPTNAV;
                     }
