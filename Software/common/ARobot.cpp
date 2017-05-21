@@ -56,7 +56,7 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
             victimRight = false;
         } else if (victimFront) {
             sensor_info->setVictim(true);
-            sensor_info->setVictimDirection(MazeCell::NavDir(((int)currOrientation)%4));
+            sensor_info->setVictimDirection(MazeCell::NavDir((int)currOrientation));
             victimFront = false;
         } else if (victimLeft){
             sensor_info->setVictim(true);
@@ -253,12 +253,12 @@ void ARobot::CalcNextTile()
 
 void ARobot::TileTransition(BotOrientation direction, float angle, int32_t dist)
 {
-    int turnNext = (int)direction - (int)currOrientation;
-    int toTurn = turnNext*90+(int)angle; //turning distance
-    
+    int turnNext = (int)direction - (int)currOrientation;   
     /*Turning first*/
     if(turnNext == 3) {turnNext = -1;} //west -> north = turn right 1
     else if (turnNext == -3) {turnNext = 1;} //north -> west = turn left 1
+    int toTurn = turnNext*90+(int)angle; //turning distance
+
     if(abs(toTurn) > 3) { //ignore smaller angles
         TurnDistance(abs(toTurn), (toTurn > 0) ? RIGHT : LEFT); //left is positive for IMU
         dist_temp = dist;
