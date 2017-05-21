@@ -240,7 +240,7 @@ void ARobot::CalcNextTile()
         nextDir = SOUTH;
         angle = atan((float)next_x/(float)next_y)*180.0f/3.1415926535f; //angle to right, should be neg
     }
-    angle = (int)imuDataList[imuDataList.size()-1].m_yaw - (((int)imuDataList[imuDataList.size()-1].m_yaw/90)*90;)
+    angle = (int)imuDataList[imuDataList.size()-1].m_yaw - ((int)imuDataList[imuDataList.size()-1].m_yaw/90)*90;
     if(angle > 45) {
         angle -= 90;
     }
