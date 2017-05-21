@@ -11,8 +11,8 @@ void NavThread::run(void){
     printf("Fault 5 Passed\n");
     myRobot->picam.cameraOpen(320, 240); //start up camera
 
-    myRobot->SpinLaser();
-    sleep(7.5);
+    //myRobot->SpinLaser();
+    //sleep(7.5);
     myRobot->CalibrateIMU();
     sleep(1.5);
     while(1) {
@@ -208,6 +208,7 @@ void NavThread::writeCurrentMap(const char* filedir, const char* xmlname, ARobot
 
 void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt) 
 {
+    printf("Testing???\n");
     /*Navigational functions*/
     robot->sensor_info.reset(); //reset temp object
     robot->UpdateCellMap(&robot->sensor_info, false); //false = not black
