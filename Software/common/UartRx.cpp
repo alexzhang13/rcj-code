@@ -74,7 +74,7 @@ void UartRx::run(void){
         } else if (c == 'y') {
         	storeScan(mBuf);
         } else if (c == 'z') {
-        	//myRobot->picam.frameCapture();
+        	myRobot->picam.frameCapture();
         	printf("Image Captured\n");
        	} else if (c == 'm') {
             myRobot->currState = ARobot::DATA; //IDLE

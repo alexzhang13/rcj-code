@@ -70,5 +70,8 @@ public:
 		if (!anglesComputed) computeAngles();
 		return yaw;
 	}
+	float setYaw(float m_yaw) {
+		yaw = m_yaw / 57.29578f;
+	}
 };
 #endif
