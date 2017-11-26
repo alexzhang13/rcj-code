@@ -55,7 +55,7 @@ class ARobot {
  	/*Algorithm <-> Control*/
  	void UpdateCellMap(MazeCell *sensor_info, bool backing_black);
  	void UpdateNeighborCells();
- 	void TileTransition(BotOrientation direction, float angle, int32_t dist);
+ 	void TileTransition(BotOrientation direction, int32_t dist);
  	void CalcNextTile();
 
  	/*IMU*/

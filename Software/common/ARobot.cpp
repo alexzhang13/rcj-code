@@ -229,29 +229,20 @@ void ARobot::CalcNextTile()
     float angle; //offset angle
     if(currTile.x_tovisit - currTile.x > 0) { //east
         nextDir = EAST;
-        angle = -atan((float)next_y/(float)next_x)*180.0f/3.1415926535f; //angle to left, should be pos
     } else if (currTile.x_tovisit - currTile.x < 0) { //west
         nextDir = WEST;
-        angle = -atan((float)next_y/(float)next_x)*180.0f/3.1415926535f; //angle to left, should be pos
     } else if (currTile.y_tovisit - currTile.y > 0) { //north
         nextDir = NORTH;
-        angle = atan((float)next_x/(float)next_y)*180.0f/3.1415926535f; //angle to right, should be neg
     } else if (currTile.y_tovisit - currTile.y < 0) { //south
         nextDir = SOUTH;
-        angle = atan((float)next_x/(float)next_y)*180.0f/3.1415926535f; //angle to right, should be neg
-    }
-    angle = (int)imuDataList[imuDataList.size()-1].m_yaw - ((int)imuDataList[imuDataList.size()-1].m_yaw/90)*90;
-    if(angle > 45) {
-        angle -= 90;
     }
     //printf("Next_X: %d, Next_Y: %d, Dist: %d, Angle Dif: %f\n", next_x, next_y, dist, angle);
     //printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f\n", currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
-    //angle = imuDataList[imuDataList.size()-1].m_yaw - ((int)imuDataList[imuDataList.size()-1].m_yaw/90)*90; //offset angle
-    TileTransition(nextDir, angle, dist);
+    TileTransition(nextDir, dist);
 
 }
 
-void ARobot::TileTransition(BotOrientation direction, float angle, int32_t dist)
+void ARobot::TileTransition(BotOrientation direction, int32_t dist)
 {
     int turnNext = (int)direction - (int)currOrientation;   
     /*Turning first*/
@@ -264,6 +255,14 @@ void ARobot::TileTransition(BotOrientation direction, float angle, int32_t dist)
         dist_temp = dist;
         toMove = true;
         return;
+    }
+	/*TODO*/
+    /*angle = -atan((float)next_y/(float)next_x)*180.0f/3.1415926535f; //angle to left, should be pos 
+    angle = atan((float)next_x/(float)next_y)*180.0f/3.1415926535f; //angle to right, should be neg*/
+
+    angle = (int)imuDataList[imuDataList.size()-1].m_yaw - ((int)imuDataList[imuDataList.size()-1].m_yaw/90)*90;
+    if(angle > 45) {
+        angle -= 90;
     }
     MoveDistance(dist, FRONT);
     return;
@@ -506,9 +505,7 @@ void ARobot::StopTurn(BotDir dir)
     size_t imu_list = imuDataList.size();
     float currYaw = imuDataList[imu_list-1].m_yaw;
     if(dir == RIGHT) {
-        if(initialYaw <= 5.0f && currYaw >= 15.0f) { //this is a special case where the initial is around 360, but then switches to around 0, making it done immediately
-            currYaw -= 360;
-        } else if(initialYaw <= 175.0f && currYaw > 185.0f) { //if robot crosses over from 180 to -180, direction switches
+        if(initialYaw <= 175.0f && currYaw > 185.0f) { //if robot crosses over from 180 to -180, direction switches
             currYaw -= 360; //range fixing
         }
         if(currYaw <= toTurn) {
@@ -526,9 +523,7 @@ void ARobot::StopTurn(BotDir dir)
             return;
         }
     } else if(dir == LEFT) {
-        if(initialYaw >= 355.0f && currYaw <= 345.0f) {
-            currYaw += 360;
-        } else if(initialYaw >= 185.0f && currYaw < 175.0f) { //if robot crosses over from -180 to 180, direction switches
+	if(initialYaw >= 185.0f && currYaw < 175.0f) { //if robot crosses over from -180 to 180, direction switches
             currYaw += 360; //range fixing
         }
         if(currYaw >= toTurn) {
