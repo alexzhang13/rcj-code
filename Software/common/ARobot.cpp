@@ -19,6 +19,7 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     currTile.x = 0;
     currTile.y = 0;
     dropCnt = 0; //dropping counter
+    isDropped = false;
     toMove = false;
     victimRight = false; //true if is dropping to the right
     victimLeft = false;
@@ -514,7 +515,7 @@ void ARobot::StopTurn(BotDir dir)
             i_command = (char*)malloc(i_length);
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
             WriteCommand(i_command, i_length);
-            if(isVictim) {
+            if(isVictim && isDropped == false) {
                 currState = DROP;
             } else {
                 currState = IDLE; 
@@ -533,7 +534,7 @@ void ARobot::StopTurn(BotDir dir)
             i_command = (char*)malloc(i_length);
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
             WriteCommand(i_command, i_length);
-            if(isVictim) {
+            if(isVictim && isDropped == false) {
                 currState = DROP;
             } else {
                 currState = IDLE;

@@ -55,6 +55,8 @@ void NavThread::run(void){
                     myRobot->Drop();
                     sleep(2);
                 }
+                myRobot->isDropped = true;
+                nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->setVictim(true);
                 myRobot->currState = ARobot::PLANNING;
                 break;
             case 7: //BLACKBACK
@@ -72,6 +74,7 @@ void NavThread::run(void){
                 break;
             case 9: //Data collection
                 myRobot->isVictim = nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim();
+                if(!myRobot->isVictim) {myRobot->isDropped = false;}
                 myRobot->CalibrateIMU();
                 sleep(1);
                 bot_waypts = myRobot->waypts.size();

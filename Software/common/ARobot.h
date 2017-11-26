@@ -136,6 +136,7 @@ class ARobot {
 
 	uint8_t dropCnt; //dropping counter
 	bool isVictim; //if a victim has been detected in this cell already
+	bool isDropped;
 	bool toMove; //true means the robot still has to move after turning
 	bool victimRight; //true if is dropping to the right
 	bool victimLeft;
