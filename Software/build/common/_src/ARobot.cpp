@@ -26,7 +26,7 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     this->mlen_light = 0;
     this->mlen_range = 0;
     this->mlen_temp = 0;
-    this->m_letter = '';
+    this->m_letter = ' ';
     this->silver_thresh = 0;
     this->threshLeft = 0;
     this->threshRight = 0;

@@ -17,7 +17,7 @@ set(SRCS
   build/common/_src/Thread.cpp
   build/common/_src/UartRx.cpp
   build/common/_src/UartTx.cpp
-  build/common/picamera.cpp
+  build/common/_src/picamera.cpp
   imu/MadgwickAHRS.cpp
   imu/MahonyAHRS.c
   knn/kNNFilter.cpp
@@ -43,6 +43,7 @@ include_directories(
   imu
   navigate
   xml
+  knn
 )
 
 # need pthread
