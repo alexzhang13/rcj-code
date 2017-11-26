@@ -19,10 +19,11 @@
 
 /*IMU*/
 #define MPU9250_ADDRESS            0x68
-#define GYRO_FULL_SCALE_250_DPS    0x00  
-#define ACC_FULL_SCALE_2_G        0x00  
+#define GYRO_FULL_SCALE_2000_DPS    0x03
+#define ACC_FULL_SCALE_2_G        0x00
 
 #define SMPLRT_DIV        0x19
+#define ACCEL_CONFIG2     0x1D
 #define CONFIG            0x1A
 #define FIFO_EN           0x23
 
@@ -62,9 +63,14 @@ String motor_queue; //Queue for motor commands
 String distance_queue; //Queue for distance commands
 String imu_queue; //Queue for IMU commands
 
-int16_t gx_drift, gy_drift, gz_drift; //gyro drift values
-bool isCalibrating = false;
-int g_iter = 0; //current gyro iteration
+int16_t gyroX[40] = {0}; //Gyro Correction "Shifted" Array X
+int16_t gyroY[40] = {0}; //Gyro Correction "Shifted" Array Y
+int16_t gyroZ[40] = {0}; //Gyro Correction "Shifted" Array Z
+int16_t g_avgX = 0; //Gyro Correction Avg of "Shifted" Array X
+int16_t g_avgY = 0; //Gyro Correction Avg of "Shifted" Array Y
+int16_t g_avgZ = 0; //Gyro Correction Avg of "Shifted" Array Z
+int8_t __iter = 0; //Curr Iteration "Faux Shift"
+bool isCalib = false; //Fire calibration y/n?
 
 bool motorWait = false; //wait for motor thread
 bool distanceWait = false; //wait for distance thread
@@ -165,15 +171,18 @@ void setup() {
   delay(100); //delay
   
   /*INITIALIZE MPU9250 AND REQUEST BYTES*/
-  I2CwriteByte(MPU9250_ADDRESS, CONFIG, 0x03);
-  I2CwriteByte(MPU9250_ADDRESS, SMPLRT_DIV, 0x18);
-  I2CwriteByte(MPU9250_ADDRESS, FIFO_EN, 0x00);
+  //I2CwriteByte(MPU9250_ADDRESS, SMPLRT_DIV, 0x18); //sample rate
+  //I2CwriteByte(MPU9250_ADDRESS, FIFO_EN, 0x00);
   delay(50);
   // Configure gyroscope range
-  I2CwriteByte(MPU9250_ADDRESS,27,GYRO_FULL_SCALE_250_DPS);
-  delay(50);
+  I2CwriteByte(MPU9250_ADDRESS,27,GYRO_FULL_SCALE_2000_DPS);
   // Configure accelerometers range
   I2CwriteByte(MPU9250_ADDRESS,28,ACC_FULL_SCALE_2_G);
+  delay(50);
+  
+  //Configure Low-Pass Filter
+  I2CwriteByte(MPU9250_ADDRESS, 26, 0x03);
+  I2CwriteByte(MPU9250_ADDRESS, 29, 0x03);
   delay(50);
 
   /*START SENSORS*/
@@ -333,11 +342,7 @@ static int distance_pt_func(struct pt *pt, int interval) { //125 hz = 8ms
          Mount_Sweep();
          distance_queue = " ";
       } else if (func == 'b') { //toggle on
-         if(distanceSwitch == true) {
-            distanceSwitch = false;
-         } else {
-            distanceSwitch = true;
-         }
+         distanceSwitch = !distanceSwitch;
          distance_queue = " ";
       } else {
         Serial.println("ERROR: FUNCTION IN DISTANCE QUEUE HAS INVALID FUNCTION CALL (LETTER INVALID)");
@@ -363,11 +368,7 @@ static int sensor_pt_func(struct pt *pt, int interval) { //5 hz = 200ms
       func = sensor_queue.charAt(0); //func char val
       sensor_queue.remove(0, 2); //leave only parameter left
       if(func == 'a') { //toggle sending data to the PI
-        if(sensorSwitch == true) {
-          sensorSwitch = false;
-        } else {
-          sensorSwitch = true;
-        }
+        sensorSwitch = !sensorSwitch;
         sensor_queue = " ";
       } else {
         Serial.println("ERROR: FUNCTION IN SENSOR QUEUE HAS INVALID FUNCTION CALL (LETTER INVALID)");
@@ -394,27 +395,21 @@ static int imu_pt_func(struct pt *pt, int interval) { //125 hz = 8ms
       func = imu_queue.charAt(0); //func char val
       imu_queue.remove(0, 2); //leave only parameter left
       if(func == 'a') { 
-         if(imuSwitch == true) {
-            imuSwitch = false;
-         } else {
-            imuSwitch = true;
-         }
+         imuSwitch = !imuSwitch;
          imu_queue = " ";
       } else if (func == 'b') {
-        isCalibrating = true;  
-        gx_drift = 0;
-        gy_drift = 0;
-        gz_drift = 0;
-        imu_queue = " ";   
+        isCalib = !isCalib;
+        imu_queue = " ";
       } else {
         Serial.println("i e");
         imu_queue = " ";
       }
     } 
-    if(isCalibrating == true) {
-       calibrateIMU();
-    } else if(imuSwitch == true) {
+    if(imuSwitch) {
        getIMU();
+    }
+    if(isCalib) {
+       calibrateIMU(); 
     }
     PT_WAIT_UNTIL(pt, millis() - timestamp > interval);
     timestamp = millis(); // take a new timestamp
@@ -621,37 +616,16 @@ void getDistanceReading()
 }
 
 void calibrateIMU() {
-  if(g_iter > 39) {
-    gx_drift /= g_iter;
-    gy_drift /= g_iter;
-    gz_drift /= g_iter;
-    g_iter = 0;
-    isCalibrating = false;
-    return;
+  g_avgX=0; g_avgY=0; g_avgZ=0;
+  for(int i=0; i<40; i++) {
+    g_avgX += gyroX[i];
+    g_avgY += gyroY[i];
+    g_avgZ += gyroZ[i];
   }
-  uint8_t Buf[14]; 
-  uint8_t ST1;
-  
-  //Accelerometer and Gyroscope
-  I2Cread(MPU9250_ADDRESS,0x3B,14,Buf);
-  
-  // Accelerometer
-  int16_t ax=Buf[0]<<8 | Buf[1];
-  int16_t ay=Buf[2]<<8 | Buf[3];
-  int16_t az=Buf[4]<<8 | Buf[5];
- 
-  // Gyroscope
-  int16_t gx=Buf[8]<<8 | Buf[9];
-  int16_t gy=Buf[10]<<8 | Buf[11];
-  int16_t gz=Buf[12]<<8 | Buf[13];
-
-  //check and remove drift
-  gx_drift += gx; 
-  gy_drift += gy; 
-  gz_drift += gz;
-    
-  //increase iteration count
-  ++g_iter;
+  g_avgX /= 40;
+  g_avgY /= 40;
+  g_avgZ /= 40;
+  return;
 }
 
 void getIMU()
@@ -674,14 +648,23 @@ void getIMU()
   int16_t gx=Buf[8]<<8 | Buf[9];
   int16_t gy=Buf[10]<<8 | Buf[11];
   int16_t gz=Buf[12]<<8 | Buf[13];
+
+  /*Getting Drift*/
+  gyroX[__iter] = gx;
+  gyroY[__iter] = gy;
+  gyroZ[__iter] = gz;
+  ++__iter;
+  if(__iter>=40) __iter=0; //reset
   
   //Apply drift
-  gx -= gx_drift; gy -= gy_drift; gz -= gz_drift;
+  gx -= g_avgX;
+  gy -= g_avgY;
+  gz -= g_avgZ;
   
   // Accelerometer
   reading += ax; reading += " "; reading += ay; reading += " "; reading += az; reading += " ";
   // Gyroscope
-  reading += gx; reading += " "; reading += gy; reading += " "; reading += gz; reading += " ";
+  reading += gz; reading += " "; reading += gy; reading += " "; reading += gz; reading += " ";
   
   Serial.println(reading);
 }
