@@ -5,19 +5,19 @@ set (OpenCV_DIR /home/alex/opencv-3.1.0/build)
 set (raspicam_DIR /home/alex/raspicam-0.1.6/build)
 # source code
 set(SRCS
-  common/ARobot.cpp
-  common/IMUData.cpp
-  common/LightData.cpp
-  common/TempData.cpp
-  common/processThread.cpp
-  common/navThread.cpp
-  common/RangeData.cpp
-  common/main.cpp
-  common/SerialPort.cpp
-  common/Thread.cpp
-  common/UartRx.cpp
-  common/UartTx.cpp
-  common/picamera.cpp
+  build/common/_src/ARobot.cpp
+  build/common/_src/IMUData.cpp
+  build/common/_src/LightData.cpp
+  build/common/_src/TempData.cpp
+  build/common/_src/processThread.cpp
+  build/common/_src/navThread.cpp
+  build/common/_src/RangeData.cpp
+  build/common/_src/main.cpp
+  build/common/_src/SerialPort.cpp
+  build/common/_src/Thread.cpp
+  build/common/_src/UartRx.cpp
+  build/common/_src/UartTx.cpp
+  build/common/picamera.cpp
   imu/MadgwickAHRS.cpp
   imu/MahonyAHRS.c
   knn/kNNFilter.cpp
@@ -39,7 +39,7 @@ set(SRCS
 
 #include path
 include_directories(
-  common
+  build/common/_headers
   imu
   navigate
   xml
