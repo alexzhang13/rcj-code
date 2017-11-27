@@ -12,7 +12,6 @@ void NavThread::run(void){
     //myRobot->picam.cameraOpen(320, 240); //start up camera
 
     //myRobot->SpinLaser();
-    sleep(5); //test if this affects turn
     myRobot->TurnDistance(90, ARobot::LEFT);
     sleep(1.5);
     while(1) {
