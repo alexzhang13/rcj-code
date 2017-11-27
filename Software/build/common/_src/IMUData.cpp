@@ -40,7 +40,7 @@ int IMUData::runFilter()
     } else {
     	madgwick.set(0.026);
     }*/
-	madgwick.updateIMU(data.gx/131, data.gy/131, data.gz/131, data.ax/16384, data.ay/16384, data.az/16384);
+	madgwick.updateIMU(data.gx/16.4, data.gy/16.4, data.gz/16.4, data.ax/16384, data.ay/16384, data.az/16384);
 	m_pitch = madgwick.getRoll(); //inverted
 	m_roll = madgwick.getPitch(); //inverted
 	m_yaw = madgwick.getYaw();
