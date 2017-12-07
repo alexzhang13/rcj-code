@@ -163,7 +163,6 @@ void NavThread::run(void){
                 break;
         }
         cnt++;
-        #endif
     }
 
     return;
