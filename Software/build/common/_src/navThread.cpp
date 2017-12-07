@@ -13,9 +13,11 @@ void NavThread::run(void){
 
     sleep(5);
     myRobot->CalibrateIMU();
-    //myRobot->TurnDistance(90, ARobot::LEFT);
+    myRobot->TurnDistance(90, ARobot::LEFT);
     sleep(1.5);
     while(1) {
+    	sleep(5);
+    	myRobot->CalibrateIMU();
         #if 0
         switch(myRobot->currState) {
             //if(cnt%100==0) {printf("State: %d\n", cnt);}
