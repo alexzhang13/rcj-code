@@ -40,7 +40,7 @@ int main(int argc,char **argv){
     printf("Fault 2 Passed\n");
     Process_T *process_thread = new Process_T(port, myRobot);
     printf("Fault 3 Passed\n");
-    //NavThread *nav_thread = new NavThread(myRobot);
+    NavThread *nav_thread = new NavThread(myRobot);
 
     while(1) {
         sleep(0.01);
