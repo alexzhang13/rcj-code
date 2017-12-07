@@ -11,14 +11,10 @@ void NavThread::run(void){
     printf("Fault 5 Passed\n");
     //myRobot->picam.cameraOpen(320, 240); //start up camera
 
-    sleep(5);
     myRobot->CalibrateIMU();
     myRobot->TurnDistance(90, ARobot::LEFT);
     sleep(1.5);
     while(1) {
-    	sleep(5);
-    	myRobot->CalibrateIMU();
-        #if 0
         switch(myRobot->currState) {
             //if(cnt%100==0) {printf("State: %d\n", cnt);}
             case 0: //Planning
@@ -29,6 +25,8 @@ void NavThread::run(void){
                 WayPointNav(myRobot, nav);
                 break;
             case 2: //Turn
+            	myRobot->CalibrateIMU();
+            	sleep(1);
                 myRobot->StopTurn(myRobot->currDir);
                 break;
             case 3: //Idle
