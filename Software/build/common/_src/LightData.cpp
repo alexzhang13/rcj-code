@@ -6,6 +6,8 @@
 LightData::LightData()
 {
 	memset(m_command,'\0', 128);
+	threshold_silver=0;
+	threshold_black=0;
 }
 
 LightData::~LightData()
@@ -13,7 +15,7 @@ LightData::~LightData()
 	
 }
 
-int LightData::storeCommand(char* buf, int thresh_black, int thresh_silver) {
+void LightData::storeCommand(char* buf, int thresh_black, int thresh_silver) {
 	memcpy(m_command, buf, 64);
 	threshold_black = thresh_black;
 	threshold_silver = thresh_silver;
