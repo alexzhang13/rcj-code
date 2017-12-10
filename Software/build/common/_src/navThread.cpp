@@ -14,7 +14,6 @@ void NavThread::run(void){
     myRobot->CalibrateIMU();
     sleep(1.5);
     myRobot->TurnDistance(180, ARobot::LEFT);
-    myRobot->TurnDistance(180, ARobot::RIGHT);
 
     while(1) {
         switch(myRobot->currState) {

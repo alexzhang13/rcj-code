@@ -538,7 +538,7 @@ void ARobot::StopTurn(BotDir dir)
             return;
         }
     } else if(dir == LEFT) {
-	if(initialYaw >= 185.0f && currYaw < 175.0f) { //if robot crosses over from -180 to 180, direction switches
+    	if(initialYaw > 185.0f && currYaw <= 175.0f) { //if robot crosses over from -180 to 180, direction switches
             currYaw += 360; //range fixing
         }
         if(currYaw >= toTurn) {
