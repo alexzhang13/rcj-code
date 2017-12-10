@@ -55,7 +55,7 @@ public:
 	RangeData(ARobot *robot);
 	~RangeData();
 
-	int storeCommand(char* buf);
+	void storeCommand(char* buf);
 	int parseData();
 	int getPosition();
 	int getScan();

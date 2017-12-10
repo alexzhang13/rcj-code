@@ -8,16 +8,19 @@
 RangeData::RangeData(ARobot *robot) :myRobot(robot)
 {
 	memset(m_command,'\0', 128);
-	x_count = 0;
-	y_count = 0;
-	walls.wallN = 0;
-	walls.wallE = 0;
-	walls.wallS = 0;
-	walls.wallW = 0;
 	coord.x = 0; 
 	coord.y = 0; //default center (0,0)
 	coord.x_flag = true; 
 	coord.y_flag = true; //assume readings are true at first
+	curr_yaw=0;
+	temp_dist=0;
+	walls.wallN = 0;
+	walls.wallE = 0;
+	walls.wallS = 0;
+	walls.wallW = 0;
+	x_count = 0;
+	y_count = 0;
+
 }
 
 RangeData::~RangeData()
@@ -25,7 +28,7 @@ RangeData::~RangeData()
 	
 }
 
-int RangeData::storeCommand(char* buf) {
+void RangeData::storeCommand(char* buf) {
 	memcpy(m_command, buf, 64);
 }
 
@@ -99,7 +102,7 @@ int RangeData::getPosition()
 		temp_range[3] = -300;
 	}
 
-	/*Convert Readings into Cartersian Coordinates where (0,0) is the center of the cell*/
+	/*Convert Readings into Cartesian Coordinates where (0,0) is the center of the cell*/
 	distance[(0+data.dir)%4] = 150.0f - distance[(0+data.dir)%4]; //depending on the rotational orientation, to get the center as (15, 15)
 	distance[(1+data.dir)%4] = 150.0f - distance[(1+data.dir)%4]; //we have to use the same reference, thus making north and east (15 - distance) for the coordinate, it's normally 30 - distance, but because of -15, it becomes 15 - distance 
 	distance[(2+data.dir)%4] -= 150.0f; //for south and west it is regularly just subtracting 15 

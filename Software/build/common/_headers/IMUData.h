@@ -29,7 +29,7 @@ public:
 	IMUData();
 	~IMUData();
 
-	int storeCommand(char* buf);
+	void storeCommand(char* buf);
 	int getTStamp();
 	int parseData();
 	int runFilter();

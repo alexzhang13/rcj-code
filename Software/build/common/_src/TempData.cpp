@@ -13,7 +13,7 @@ TempData::~TempData()
 	
 }
 
-int TempData::storeCommand(char* buf) {
+void TempData::storeCommand(char* buf) {
 	memcpy(m_command, buf, 64);
 }
 

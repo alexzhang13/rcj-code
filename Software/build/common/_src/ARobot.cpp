@@ -11,6 +11,7 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
 {
     this->backingBlack = false;
 	this->black_thresh=0;
+	this->cross_over = false;
     this->currTileLight = WHITE;
     this->currDir = FRONT;
     this->currState = PLANNING;
@@ -520,11 +521,14 @@ void ARobot::StopTurn(BotDir dir)
     size_t imu_list = imuDataList.size();
     float currYaw = imuDataList[imu_list-1].m_yaw;
     if(dir == RIGHT) {
-        if(initialYaw <= 180.0f && currYaw > 180.0f) { //if robot crosses over from 180 to -180, direction switches
-            currYaw -= 360; //range fixing
-        }
+        if(initialYaw <= 180.0f && currYaw > 180.0f) //if robot crosses over from 180 to -180, direction switches
+            cross_over = true;
+        if(cross_over) //condition holds even if prev doesn't when cross_over is already true
+        	currYaw -= 360; //range fixing
+
         if(currYaw <= toTurn) {
             char* i_command;
+            cross_over = false; //default cross bool now off
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
             i_command = (char*)malloc(i_length);
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
@@ -538,12 +542,14 @@ void ARobot::StopTurn(BotDir dir)
             return;
         }
     } else if(dir == LEFT) {
-    	if(initialYaw > 180.0f && currYaw <= 180.0f) { //if robot crosses over from -180 to 180, direction switches
-            currYaw += 360; //range fixing
-        }
+    	if(initialYaw > 180.0f && currYaw <= 180.0f) //if robot crosses over from -180 to 180, direction switches
+    		cross_over = true;
+        if(cross_over)
+        	currYaw += 360; //range fixing
+
         if(currYaw >= toTurn) {
             char* i_command;
-            printf("done");
+            cross_over = false; //default cross bool now off
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
             i_command = (char*)malloc(i_length);
             snprintf(i_command, i_length, "%c %c", 'm', 'c');

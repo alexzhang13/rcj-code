@@ -155,8 +155,9 @@ class ARobot {
  	int silver_thresh; //Silver Tile Threshold
  	int black_thresh; //Black Tile Threshold
  	int yaw_drift; //Add to counter yaw drift...
- 	float initialYaw;
- 	float toTurn;
+ 	float initialYaw; //initial yaw in a turn
+ 	float toTurn; //distance to turns
+ 	bool cross_over; //[check StopTurn() function] --> determines if the yaw has turned over 360 degs
  	size_t mlen_light;
  	size_t mlen_imu;
  	size_t mlen_range;

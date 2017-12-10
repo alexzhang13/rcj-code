@@ -9,6 +9,9 @@ static Madgwick madgwick;
 IMUData::IMUData()
 {
 	memset(m_command,'\0', 128);
+	m_roll = 0;
+	m_pitch = 0;
+	m_yaw = 0;
 	prev_tstamp = 26;
 	//madgwick.begin(float sampleFrequency);
 	//m_data.clear();
@@ -19,7 +22,7 @@ IMUData::~IMUData()
 	//m_data.clear();
 }
 
-int IMUData::storeCommand(char* buf) {
+void IMUData::storeCommand(char* buf) {
 	memcpy(m_command, buf, 64);
 }
 
