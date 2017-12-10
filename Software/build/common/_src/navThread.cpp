@@ -13,7 +13,7 @@ void NavThread::run(void){
 
     myRobot->CalibrateIMU();
     sleep(1.5);
-    myRobot->TurnDistance(180, ARobot::LEFT);
+    //myRobot->TurnDistance(180, ARobot::LEFT);
 
     while(1) {
         switch(myRobot->currState) {
@@ -35,7 +35,7 @@ void NavThread::run(void){
                     myRobot->MoveDistance(myRobot->dist_temp, ARobot::FRONT);
                     myRobot->toMove = false;
                 } else {
-                    //myRobot->currState = ARobot::WAYPTNAV;
+                    myRobot->currState = ARobot::WAYPTNAV;
                 }
                 break;
             case 4: //Ramp
@@ -158,10 +158,11 @@ void NavThread::run(void){
                 myRobot->currState = ARobot::WAYPTNAV;
                 break;
             default:
-                /*Put stuff here*/
+                /*Testing Purposes Only*/
+            	sleep(1);
                 break;
         }
-        cnt++;
+        //cnt++;
     }
 
     return;
