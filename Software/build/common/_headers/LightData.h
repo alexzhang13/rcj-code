@@ -20,7 +20,7 @@ public:
 	LightData();
 	~LightData();
 
-	int storeCommand(char* buf, int thresh_black, int thresh_silver);
+	void storeCommand(char* buf, int thresh_black, int thresh_silver);
 	int parseData();
 	int checkLight();
 
