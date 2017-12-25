@@ -14,7 +14,7 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
 	this->cross_over = false;
     this->currTileLight = WHITE;
     this->currDir = FRONT;
-    this->currState = /*PLANNING*/10;
+    this->currState = 0; //>9 = testing purposes
     this->currOrientation = NORTH;
     this->currTile.x = 0;
     this->currTile.y = 0;

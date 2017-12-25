@@ -9,11 +9,12 @@ void NavThread::run(void){
     printf("Fault 4 Passed\n");
     readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     printf("Fault 5 Passed\n");
-    //myRobot->picam.cameraOpen(320, 240); //start up camera
+    myRobot->picam.cameraOpen(320, 240); //start up camera
 
     myRobot->CalibrateIMU();
+    myRobot->ProcessImage_Victim();
     sleep(1.5);
-    //myRobot->TurnDistance(180, ARobot::LEFT);
+
 
     while(1) {
         switch(myRobot->currState) {
@@ -97,16 +98,16 @@ void NavThread::run(void){
                         myRobot->LEDLight(5000);
                         sleep(5);
                         //save state
+
                     }
                     //check visual victim
                     if(!nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim()) { //get currCell
                         switch(myRobot->ProcessImage_Victim()) {
-                            if(myRobot->victim.letter == '0') {myRobot->dropCnt = 0;}
-                            else if(myRobot->victim.letter == 'H') {
+                            if(myRobot->victim.letter == 'H') { //H
                                 myRobot->dropCnt = 2;
-                            } else if (myRobot->victim.letter == 'S') {
+                            } else if (myRobot->victim.letter == 'S') { //S
                                 myRobot->dropCnt = 1;
-                            } else {
+                            } else { //U or nothing
                                 myRobot->dropCnt = 0;
                             }
                             case 0: //drop left
@@ -262,6 +263,7 @@ int NavThread::WayPointNav(ARobot *robot, Navigate2D &nav_rt)
     }
     first_iter = false;
     robot->CalcNextTile();
+    return 0;
 }
 
 
