@@ -415,7 +415,7 @@ void ARobot::CheckLightTile()
     if(mlen_light < 3)
         return;
 
-    if(lightDataList[mlen_light-1].checkLight() == 2 && lightDataList[mlen_light-2].checkLight() == 2 && lightDataList[mlen_light-3].checkLight() == 2) {
+    /*if(lightDataList[mlen_light-1].checkLight() == 2 && lightDataList[mlen_light-2].checkLight() == 2 && lightDataList[mlen_light-3].checkLight() == 2) {
         currTileLight = SILVER;
     } else if (lightDataList[mlen_light-1].checkLight() == 1 && lightDataList[mlen_light-2].checkLight() == 1 && lightDataList[mlen_light-3].checkLight() == 1) {
         currTileLight = BLACK;
@@ -427,7 +427,7 @@ void ARobot::CheckLightTile()
         }
     } else {
         currTileLight = WHITE;
-    }
+    }*/
     if(mlen_light > 200) 
         lightDataList.erase(lightDataList.begin(), lightDataList.begin() + mlen_light - 200);
     return;
