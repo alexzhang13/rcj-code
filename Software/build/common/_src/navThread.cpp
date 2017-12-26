@@ -9,10 +9,10 @@ void NavThread::run(void){
     printf("Fault 4 Passed\n");
     readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     printf("Fault 5 Passed\n");
-    myRobot->picam.cameraOpen(320, 240); //start up camera
+    //myRobot->picam.cameraOpen(320, 240); //start up camera
 
-    myRobot->CalibrateIMU();
-    myRobot->ProcessImage_Victim();
+    //myRobot->CalibrateIMU();
+    //myRobot->ProcessImage_Victim();
     sleep(1.5);
 
 
