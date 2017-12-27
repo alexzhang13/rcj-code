@@ -82,9 +82,10 @@ bool distanceSwitch = true; //false meaning turn off
 bool motorSwitch = true; //false meaning turn off
 bool isMoving = false; //if the robot is running
 bool isTurning = false; //if the robot is turning
-int speed_left = 60; //the speed used to control the other motor (Which is imbalanced)
-int left_spd = 100;
-int right_spd = 125;
+int left_spd = 100; //left motor power
+int right_spd = 125; //right motor power
+int off_left = 10; //for Encoder() function, offset when left encoder is higher than right
+int off_right = 25; //for Encoder() function, offset when right encoder is higher than left
 float distance_mm = 0;
 volatile long int leftEncoder = 0; //left encoder
 volatile long int rightEncoder = 0; //right encoder
@@ -120,9 +121,10 @@ void setup() {
   Serial.begin(115200);
   Serial.setTimeout(50);
   Wire.begin();
-  AFMS.begin();  // create with the default frequency 1.6KHz
-  TWBR = ((F_CPU/400000l) - 16) / 2; //change i2c clock speed to 400k
+  AFMS.begin();
   delay(100);
+
+  Serial.println("Setup Complete.");
   
   digitalWrite(GPIO_PIN2, HIGH); //begin writing to XSHUT of first laser
   delay(50); //delay
@@ -169,7 +171,9 @@ void setup() {
   delay(300);
   laserA_s.startRangeContinuous();
   delay(100); //delay
-  
+
+  Serial.println("Lasers Complete.");
+    
   /*INITIALIZE MPU9250 AND REQUEST BYTES*/
   //I2CwriteByte(MPU9250_ADDRESS, SMPLRT_DIV, 0x18); //sample rate
   //I2CwriteByte(MPU9250_ADDRESS, FIFO_EN, 0x00);
@@ -181,10 +185,12 @@ void setup() {
   delay(50);
   
   //Configure Low-Pass Filter
-  I2CwriteByte(MPU9250_ADDRESS, 26, 0x03);
-  I2CwriteByte(MPU9250_ADDRESS, 29, 0x03);
+  I2CwriteByte(MPU9250_ADDRESS, 26, 0x02);
+  I2CwriteByte(MPU9250_ADDRESS, 29, 0x02);
   delay(50);
 
+  Serial.println("I2C Complete.");
+  
   /*START SENSORS*/
   mount_laser.attach(SERVO_MOUNT);   //Attach pin 10 to be for the laser mount
   mount_laser.write(0);
@@ -194,6 +200,8 @@ void setup() {
   dropper.write(60);
   dropper.detach();
   delay(500);
+
+  Serial.println("Servos Complete.");
   
   /*INITIALIZE MOTORS*/
   motorRight->setSpeed(right_spd);
@@ -206,6 +214,8 @@ void setup() {
   motorLeft->run(RELEASE);
   delay(50);
 
+  Serial.println("Motors Complete.");
+  
   /*INITIALIZE ALL SENSORS*/
   if (! tempA.begin()) { //look for tmp007 sensor
     Serial.println("No temperature sensor found");
@@ -217,6 +227,8 @@ void setup() {
     while (1);
   }
   delay(100);
+
+  Serial.println("Temperatures Complete.");
 
   /*START PROTOTHREADS*/
   PT_INIT(&drop_pt);  // Init Protothread for Dropper and LED
@@ -260,7 +272,7 @@ static int drop_pt_func(struct pt *pt, int interval) { //10 hz = 100ms
         lightUp(dropper_queue.toInt());
         dropper_queue = " ";
       } else {
-        Serial.println("ERROR: FUNCTION IN DROPPER QUEUE HAS INVALID FUNCTION CALL (LETTER INVALID)");
+        Serial.println("Dropper: Invalid");
         dropper_queue = " ";
       }
     }
@@ -313,8 +325,15 @@ static int dcmotor_pt_func(struct pt *pt, int interval) { //50 hz = 20ms
       } else if (func == 'h') {
          Turn_Small(motor_queue.toInt());
          motor_queue = " ";
+      } else if (func == 'i') {
+         int split = motor_queue.indexOf(' ');
+         String split_str = motor_queue;
+         motor_queue.remove(split);
+         split_str.remove(0, split+1);
+         Motor_setOffset(motor_queue.toInt(), split_str.toInt());
+         motor_queue = " ";
       } else {
-         Serial.println("ERROR: FUNCTION IN MOTOR QUEUE HAS INVALID FUNCTION CALL (LETTER INVALID)");
+         Serial.println("Motor: Invalid");
          motor_queue = " ";
       }
     }
@@ -345,7 +364,7 @@ static int distance_pt_func(struct pt *pt, int interval) { //125 hz = 8ms
          distanceSwitch = !distanceSwitch;
          distance_queue = " ";
       } else {
-        Serial.println("ERROR: FUNCTION IN DISTANCE QUEUE HAS INVALID FUNCTION CALL (LETTER INVALID)");
+        Serial.println("Distance: Invalid");
         distance_queue = " ";
       }
     } else {
@@ -467,6 +486,7 @@ void sortCommands(String command)
        imu_queue = command;
        command = " "; //dequeue central queue
     } else { //not supposed to happen but if it somehow does
+       Serial.println("z Signal Received: Invalid Function Call");
        command = " "; //dequeue central queue
     }
 }
@@ -515,11 +535,13 @@ void Motor_setSpeed(int left_speed, int right_speed)
 {
   left_spd = left_speed;
   right_spd = right_speed;
-  motorLeft->setSpeed(left_speed);
-  motorRight->setSpeed(right_speed);
-  speed_left = left_speed;
+  motorLeft->setSpeed(left_spd);
+  motorRight->setSpeed(right_spd);
 }
-
+void Motor_setOffset(int left_offset, int right_offset) {
+  off_left = left_offset;
+  off_right = right_offset;
+}
 void Motor_Encoder()
 {
   String reading = "";
@@ -530,9 +552,9 @@ void Motor_Encoder()
     return;
   }
   if(abs(leftEncoder) < abs(rightEncoder)){
-    motorRight->setSpeed(speed_left+10); //corecting
+    motorRight->setSpeed(left_spd + off_right); //corecting
   } else {
-    motorRight->setSpeed(speed_left+25); //take 
+    motorRight->setSpeed(left_spd + off_left); //take 
   }
   reading += millis(); reading += " m ";
   reading += left_mm; reading += " "; reading += right_mm;
@@ -542,9 +564,9 @@ void Motor_Encoder()
 void Motor_Turn() //Turning encoders
 {
    if(abs(leftEncoder) < abs(rightEncoder)){
-    motorRight->setSpeed(speed_left+15); //corecting
+    motorRight->setSpeed(left_spd + off_right); //corecting
   } else {
-    motorRight->setSpeed(speed_left+30); //take 
+    motorRight->setSpeed(left_spd + off_left); //take 
   }
 }
 
@@ -664,7 +686,7 @@ void getIMU()
   // Accelerometer
   reading += ax; reading += " "; reading += ay; reading += " "; reading += az; reading += " ";
   // Gyroscope
-  reading += gz; reading += " "; reading += gy; reading += " "; reading += gz; reading += " ";
+  reading += gx; reading += " "; reading += gy; reading += " "; reading += gz; reading += " ";
   
   Serial.println(reading);
 }
