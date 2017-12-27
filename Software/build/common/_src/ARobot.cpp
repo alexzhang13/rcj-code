@@ -28,7 +28,11 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     this->mlen_range = 0;
     this->mlen_temp = 0;
     this->m_letter = ' ';
+    this->off_left = 5;
+    this->off_right = 25;
     this->silver_thresh = 0;
+    this->speed_left = 100;
+    this->speed_right = 120;
     this->threshLeft = 0;
     this->threshRight = 0;
     this->toMove = false;
@@ -51,6 +55,7 @@ void ARobot::WriteCommand(char* i_command, int size)
 {
 	printf("Command %s written!\n", i_command);
     mPort->write(i_command, size);
+    mPort->write("k test", size);
 }
 
 void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)

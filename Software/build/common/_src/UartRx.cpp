@@ -76,7 +76,7 @@ void UartRx::run(void){
         	storeScan(mBuf);
         } else if (c == 'z') {
         	//myRobot->picam.frameCapture();
-        	printf("Image Captured\n");
+        	printf("Data Sent!\n");
        	} else if (c == 'm') {
             myRobot->currState = ARobot::DATA; //IDLE
             printf("motor is finished\n");
