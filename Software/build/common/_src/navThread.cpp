@@ -48,7 +48,13 @@ void NavThread::run(void){
                 break;
             case 5: //Move
                 //myRobot->CheckLightTile(); //check if anything happens during this time
-                sleep(0.5);
+            	char* i_command;
+            	int i_length = snprintf(NULL, 0, "%c %c", 'z', 'a') + 1;
+            	i_command = (char*)malloc(i_length);
+
+            	snprintf(i_command, i_length, "%c %c", 'z', 'a');
+            	myRobot->WriteCommand(i_command, i_length);
+                sleep(1);
                 break;
             case 6: //Drop
                 myRobot->LEDLight(4500);
