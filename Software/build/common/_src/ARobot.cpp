@@ -551,7 +551,7 @@ void ARobot::StopTurn(BotDir dir)
                 currState = DROP;
             } else {
                 currState = IDLE; 
-                CheckVictimTemp();
+                //CheckVictimTemp();
             }          
             return;
         }
@@ -572,7 +572,7 @@ void ARobot::StopTurn(BotDir dir)
                 currState = DROP;
             } else {
                 currState = IDLE;
-                CheckVictimTemp();
+                //CheckVictimTemp();
             }
             return;
         }
