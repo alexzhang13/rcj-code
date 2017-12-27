@@ -184,7 +184,7 @@ void NavThread::readConfig(const char* filename, ARobot *robot)
 		printf("%s is not available\n", filename);
       	return;
 	}
-    int ret = fscanf(datafile, "%d %d %f %f %d %d %d %d %d", &black_thresh, &silver_thresh, &threshLeft, &threshRight, &speed_left, &speed_right, &off_left, &off_right);
+    int ret = fscanf(datafile, "%d %d %f %f %d %d %d %d", &black_thresh, &silver_thresh, &threshLeft, &threshRight, &speed_left, &speed_right, &off_left, &off_right);
     robot->setTempThresh(threshLeft, threshRight);
     robot->setLightThresh(black_thresh, silver_thresh);
     robot->setSpeed(speed_left, speed_right);
