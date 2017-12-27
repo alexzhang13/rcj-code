@@ -47,7 +47,6 @@ void NavThread::run(void){
                 break;
             case 5: //Move
                 myRobot->CheckLightTile(); //check if anything happens during this time
-                if(cnt%1000==0) printf("hi\n");myRobot->MoveDistance(300, ARobot::FRONT);
                 break;
             case 6: //Drop
                 myRobot->LEDLight(4500);
