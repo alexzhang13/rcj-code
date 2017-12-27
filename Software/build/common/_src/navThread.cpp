@@ -47,7 +47,6 @@ void NavThread::run(void){
                 break;
             case 5: //Move
                 myRobot->CheckLightTile(); //check if anything happens during this time
-                printf("test\n");
                 break;
             case 6: //Drop
                 myRobot->LEDLight(4500);
