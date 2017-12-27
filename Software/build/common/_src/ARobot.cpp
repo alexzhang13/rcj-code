@@ -417,7 +417,7 @@ void ARobot::CheckLightTile()
     if(mlen_light < 3)
         return;
 
-    /*if(lightDataList[mlen_light-1].checkLight() == 2 && lightDataList[mlen_light-2].checkLight() == 2 && lightDataList[mlen_light-3].checkLight() == 2) {
+    if(lightDataList[mlen_light-1].checkLight() == 2 && lightDataList[mlen_light-2].checkLight() == 2 && lightDataList[mlen_light-3].checkLight() == 2) {
         currTileLight = SILVER;
     } else if (lightDataList[mlen_light-1].checkLight() == 1 && lightDataList[mlen_light-2].checkLight() == 1 && lightDataList[mlen_light-3].checkLight() == 1) {
         currTileLight = BLACK;
@@ -429,7 +429,7 @@ void ARobot::CheckLightTile()
         }
     } else {
         currTileLight = WHITE;
-    }*/
+    }
     if(mlen_light > 200) 
         lightDataList.erase(lightDataList.begin(), lightDataList.begin() + mlen_light - 200);
     return;
@@ -455,13 +455,22 @@ void ARobot::Drop()
     WriteCommand(i_command, i_length);
 }
 
-void ARobot::SetSpeed(int left_speed, int right_speed) {
+void ARobot::setSpeed(int left_speed, int right_speed) {
     char* i_command;
     int i_length = snprintf(NULL, 0, "%c %c %d %d", 'm', 'f', left_speed, right_speed) + 1;
     i_command = (char*)malloc(i_length);
 
     snprintf(i_command, i_length, "%c %c %d %d", 'm', 'f', left_speed, right_speed);
     WriteCommand(i_command, i_length);
+}
+
+void ARobot::setOffsetSpeed(int offset_l, int offset_r) {
+	char* i_command;
+	int i_length = snprintf(NULL, 0, "%c %c %d %d", 'm', 'i', offset_l, offset_r) + 1;
+	i_command = (char*)malloc(i_length);
+
+	snprintf(i_command, i_length, "%c %c %d %d", 'm', 'i', offset_l, offset_r);
+	WriteCommand(i_command, i_length);
 }
 
 void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true

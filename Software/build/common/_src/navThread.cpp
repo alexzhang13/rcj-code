@@ -46,7 +46,8 @@ void NavThread::run(void){
                 myRobot->StopMove();
                 break;
             case 5: //Move
-                myRobot->CheckLightTile(); //check if anything happens during this time
+                //myRobot->CheckLightTile(); //check if anything happens during this time
+                sleep(0.5);
                 break;
             case 6: //Drop
                 myRobot->LEDLight(4500);
@@ -89,7 +90,7 @@ void NavThread::run(void){
                     //sleep(2.5); //time for laser
                     //myRobot->CheckVictimVisual();
 
-                    if(myRobot->CheckRamp()) { //is ramp
+                    /*if(myRobot->CheckRamp()) { //is ramp
                         //myRobot->MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
                         break;
                     }
@@ -151,10 +152,10 @@ void NavThread::run(void){
                                 }
                                 break;
                         }
-                        break;*/
+                        break;
                     } else {
                         myRobot->currState = ARobot::WAYPTNAV;
-                    }
+                    }*/
                 }
                 myRobot->currState = ARobot::WAYPTNAV;
                 break;
@@ -171,7 +172,7 @@ void NavThread::run(void){
 
 void NavThread::readConfig(const char* filename, ARobot *robot)
 {
-    int black_thresh, silver_thresh;
+    int black_thresh, silver_thresh, speed_left, speed_right, off_left, off_right;
     float threshLeft, threshRight;
     FILE *datafile;
     if (filename == NULL)
@@ -182,9 +183,11 @@ void NavThread::readConfig(const char* filename, ARobot *robot)
 		printf("%s is not available\n", filename);
       	return;
 	}
-    int ret = fscanf(datafile, "%d %d %f %f", &black_thresh, &silver_thresh, &threshLeft, &threshRight);
+    int ret = fscanf(datafile, "%d %d %f %f %d %d %d %d %d", &black_thresh, &silver_thresh, &threshLeft, &threshRight, &speed_left, &speed_right, &off_left, &off_right);
     robot->setTempThresh(threshLeft, threshRight);
     robot->setLightThresh(black_thresh, silver_thresh);
+    robot->setSpeed(speed_left, speed_right);
+    robot->setOffsetSpeed(off_left, off_right);
 	fclose(datafile);
 }
 

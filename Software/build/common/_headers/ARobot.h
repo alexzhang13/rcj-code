@@ -87,7 +87,8 @@ class ARobot {
  	void Drop();
 
  	/*DC Motor Control*/
- 	void SetSpeed(int left_speed, int right_speed);
+ 	void setSpeed(int left_speed, int right_speed);
+ 	void setOffsetSpeed(int offset_l, int offset_r);
  	void MoveDistance(int distance_mm, BotDir forward);
  	void StopMove();
  	void TurnDistance(int degrees, BotDir right);
@@ -154,6 +155,10 @@ class ARobot {
  	float threshRight; //Right Temperature Threshold
  	int silver_thresh; //Silver Tile Threshold
  	int black_thresh; //Black Tile Threshold
+ 	int speed_left; //robot left motor power
+ 	int speed_right; //robot right motor power
+ 	int off_left; //robot left motor offset
+ 	int off_right; //robot right motor offset
  	int yaw_drift; //Add to counter yaw drift...
  	float initialYaw; //initial yaw in a turn
  	float toTurn; //distance to turns
