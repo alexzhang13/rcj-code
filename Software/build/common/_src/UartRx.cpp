@@ -64,7 +64,6 @@ void UartRx::run(void){
         }
 		runLogFile();
 		sscanf(mBuf, "%i %c", &ts, &c); 
-		printf("%i", &ts);
         if(c == 'i') { //check if it's IMU
             storeIMU(mBuf);
         } else if (c == 'r') {
@@ -75,7 +74,7 @@ void UartRx::run(void){
             //storeLight(mBuf);
         } else if (c == 'y') {
         	storeScan(mBuf);
-        } else if (ts == (int)'z') {
+        } else if (c == 'z') {
         	//myRobot->picam.frameCapture();
         	printf("Data Sent!\n");
        	} else if (c == 'm') {
