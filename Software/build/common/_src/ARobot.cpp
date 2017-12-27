@@ -49,7 +49,7 @@ ARobot::~ARobot()
 
 void ARobot::WriteCommand(char* i_command, int size)
 {
-	printf("Command %s written", i_command);
+	printf("Command %s written!\n", i_command);
     mPort->write(i_command, size);
 }
 
