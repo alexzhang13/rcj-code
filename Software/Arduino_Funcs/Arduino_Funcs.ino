@@ -486,7 +486,8 @@ void sortCommands(String command)
        imu_queue = command;
        command = " "; //dequeue central queue
     } else { //not supposed to happen but if it somehow does
-       Serial.println("z Signal Received: Invalid Function Call");
+       String reading = ""; reading += millis(); reading += " z Invalid Command -> Sent";
+       Serial.println(reading);
        command = " "; //dequeue central queue
     }
 }
