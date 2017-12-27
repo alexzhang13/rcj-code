@@ -49,6 +49,7 @@ ARobot::~ARobot()
 
 void ARobot::WriteCommand(char* i_command, int size)
 {
+	printf("Command %s written", i_command);
     mPort->write(i_command, size);
 }
 
@@ -280,6 +281,7 @@ void ARobot::TileTransition(int32_t dist)
         toMove = true;
         return;
     }
+
     MoveDistance(dist, FRONT);
     return;
 }
