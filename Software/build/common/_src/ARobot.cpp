@@ -53,13 +53,7 @@ ARobot::~ARobot()
 
 void ARobot::WriteCommand(char* i_command, int size)
 {
-	char* m_command;
-	int m_length = snprintf(NULL, 0, "%c %c", 'z', 'a') + 1;
-	    m_command = (char*)malloc(m_length);
-	snprintf(m_command, m_length, "%c %c", 'z', 'a');
-
     mPort->write(i_command, size);
-    mPort->write(m_command, m_length);
 }
 
 void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)

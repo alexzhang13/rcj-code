@@ -54,7 +54,7 @@ UartRx::~UartRx()
 
 void UartRx::run(void){   
 	int32_t ts;
-	char c, m;
+	char c, m, test;
     while(1) {
 		memset(mBuf,'\0', 128);
     	char *retval = mPort->fgets(mBuf,64);
@@ -63,6 +63,7 @@ void UartRx::run(void){
 			continue;
         }
 		runLogFile();
+		sscanf(mBuf, "%c", &test);
 		sscanf(mBuf, "%i %c", &ts, &c); 
         if(c == 'i') { //check if it's IMU
             storeIMU(mBuf);
@@ -74,7 +75,7 @@ void UartRx::run(void){
             //storeLight(mBuf);
         } else if (c == 'y') {
         	storeScan(mBuf);
-        } else if (c == 'z') {
+        } else if (test == 'z') {
         	//myRobot->picam.frameCapture();
         	printf("Data Sent!\n");
        	} else if (c == 'm') {
