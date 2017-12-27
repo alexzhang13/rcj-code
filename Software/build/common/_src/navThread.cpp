@@ -11,7 +11,7 @@ void NavThread::run(void){
     printf("Fault 5 Passed\n");
     //myRobot->picam.cameraOpen(320, 240); //start up camera
 
-    //myRobot->CalibrateIMU();
+    myRobot->CalibrateIMU();
     //myRobot->ProcessImage_Victim();
     sleep(1.5);
 
@@ -90,7 +90,7 @@ void NavThread::run(void){
                     myRobot->CheckVictimVisual();
 
                     if(myRobot->CheckRamp()) { //is ramp
-                        myRobot->MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
+                        //myRobot->MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
                         break;
                     }
                     myRobot->CheckLightTile();
