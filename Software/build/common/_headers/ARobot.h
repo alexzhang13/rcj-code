@@ -108,6 +108,9 @@ class ARobot {
 	void ClearScan();
 	void ClearImgList();
 
+	/*Testing Signal*/
+	void TestSignal();
+
 	std::vector<MazeCell> temp_cell_list;
 	std::vector<int32_t> waypts; //current waypoint list
 
