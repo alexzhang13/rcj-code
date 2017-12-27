@@ -32,7 +32,7 @@ void NavThread::run(void){
             case 3: //Idle
                 if(myRobot->toMove){
 		            sleep(1.5);
-		            printf("%s, %d\n", "Distance: ", myRobot->dist_temp);
+		            printf("%s, %d\n", "Idle to Distance: ", myRobot->dist_temp);
                     myRobot->MoveDistance(myRobot->dist_temp, ARobot::FRONT);
                     myRobot->toMove = false;
                 } else {
@@ -47,6 +47,7 @@ void NavThread::run(void){
                 break;
             case 5: //Move
                 myRobot->CheckLightTile(); //check if anything happens during this time
+                printf("test\n");
                 break;
             case 6: //Drop
                 myRobot->LEDLight(4500);
