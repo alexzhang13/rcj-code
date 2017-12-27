@@ -102,7 +102,7 @@ void NavThread::run(void){
                     }
                     //check visual victim
                     if(!nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim()) { //get currCell
-                        switch(myRobot->ProcessImage_Victim()) {
+                        /*switch(myRobot->ProcessImage_Victim()) {
                             if(myRobot->victim.letter == 'H') { //H
                                 myRobot->dropCnt = 2;
                             } else if (myRobot->victim.letter == 'S') { //S
@@ -151,7 +151,7 @@ void NavThread::run(void){
                                 }
                                 break;
                         }
-                        break;
+                        break;*/
                     } else {
                         myRobot->currState = ARobot::WAYPTNAV;
                     }

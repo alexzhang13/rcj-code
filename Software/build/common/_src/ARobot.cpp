@@ -410,7 +410,6 @@ int ARobot::getSilverThresh()
 
 void ARobot::CheckLightTile()
 {
-	printf("Checking Light...");
     if(backingBlack == true) {return;}
     mlen_light = lightDataList.size();
     if(mlen_light < 3)
