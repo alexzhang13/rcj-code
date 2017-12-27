@@ -410,6 +410,7 @@ int ARobot::getSilverThresh()
 
 void ARobot::CheckLightTile()
 {
+	printf("Checking Light...");
     if(backingBlack == true) {return;}
     mlen_light = lightDataList.size();
     if(mlen_light < 3)
@@ -464,7 +465,6 @@ void ARobot::SetSpeed(int left_speed, int right_speed) {
 
 void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
 {
-    printf("Distance: %d\n", distance_mm);
     char* i_command;
     int i_length = snprintf(NULL, 0, "%c %c %d", 'm', 'a', distance_mm) + 1;
     i_command = (char*)malloc(i_length);
@@ -477,6 +477,7 @@ void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
     if(!(currState == RAMP)) {
         currState = MOVE;
     }
+    printf("Distance: %d\n", distance_mm);
     WriteCommand(i_command, i_length);
 }
 
