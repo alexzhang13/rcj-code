@@ -87,7 +87,7 @@ void NavThread::run(void){
                 if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
                     //myRobot->SpinLaser();
                     //sleep(2.5); //time for laser
-                    myRobot->CheckVictimVisual();
+                    //myRobot->CheckVictimVisual();
 
                     if(myRobot->CheckRamp()) { //is ramp
                         //myRobot->MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
