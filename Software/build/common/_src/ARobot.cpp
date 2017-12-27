@@ -676,3 +676,10 @@ void ARobot::ClearScan()
 {
     scanDataList.clear();
 }
+void ARobot::TestSignal() {
+	char* i_command;
+	int i_length = snprintf(NULL, 0, "%c %c", 'z', 'a') + 1;
+	i_command = (char*)malloc(i_length);
+	snprintf(i_command, i_length, "%c %c", 'z', 'a');
+	WriteCommand(i_command, i_length);
+}
