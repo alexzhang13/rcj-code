@@ -4,6 +4,12 @@
 
 void Process_T::run(void){  
 	bool processed_status;   
+	/*Calibrate IMU on start up*/
+	int i_length = snprintf(NULL, 0, "%c %c", 'i', 'b') + 1;
+	char* i_command = (char*)malloc(i_length);
+	snprintf(i_command, i_length, "%c %c", 'i', 'b');
+	mPort->write(i_command, i_length);
+
     while(1) {
 		    processed_status = false; 
         while(myRobot->imuParseList.size() > 0) {

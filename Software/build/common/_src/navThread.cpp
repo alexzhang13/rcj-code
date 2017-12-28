@@ -17,8 +17,6 @@ void NavThread::run(void){
         switch(myRobot->currState) {
             //if(cnt%100==0) {printf("State: %d\n", cnt);}
             case 0: //Planning
-            	myRobot->CalibrateIMU();
-            	sleep(2);
                 //Navigate(in_dir, xml_name, myRobot, nav);
                 //printf("navigating...\n");
                 break;
