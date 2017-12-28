@@ -493,7 +493,7 @@ void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
     printf("Distance: %d\n", distance_mm);
     TestSignal(); //Test Un
     WriteCommand(i_command, i_length);
-    TestSignal(); //Test Deux
+    //TestSignal(); //Test Deux
 }
 
 void ARobot::ResetEncoder() {
