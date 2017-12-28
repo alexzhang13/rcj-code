@@ -7,7 +7,6 @@ void Process_T::run(void){
 
     while(1) {
 		    processed_status = false; 
-		printf("IMU List Size: %d", myRobot->imuParseList.size());
         while(myRobot->imuParseList.size() > 0) {
     	   myRobot->ParseIMU();
            myRobot->ClearIMU();
