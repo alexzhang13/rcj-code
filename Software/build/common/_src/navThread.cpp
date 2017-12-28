@@ -160,8 +160,6 @@ void NavThread::run(void){
                     }
                 }*/
                 myRobot->Correction();
-                sleep(0.1);
-                myRobot->currState = ARobot::WAYPTNAV;
                 break;
             default:
                 /*Testing Purposes Only*/
