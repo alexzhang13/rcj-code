@@ -600,7 +600,7 @@ void ARobot::StopTurn(BotDir dir)
         if(cross_over)
         	currYaw += 360; //range fixing
 
-        printf("Curr Yaw: %f\n", currYaw);
+        printf("Curr Yaw Test: %f\n", currYaw);
         if(currYaw >= toTurn) {
             char* i_command;
             cross_over = false; //default cross bool now off
