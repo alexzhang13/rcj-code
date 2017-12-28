@@ -641,10 +641,9 @@ void ARobot::ParseIMU()
         imuParseList.front().parseData(imuDataList[imuDataList.size()-1].getTStamp());
     }*/
     imuParseList.front().parseData();
-    if(imuCalibrated) {
+    if(imuCalibrated)
     	imuParseList.front().runFilter();
-    	imuDataList.push_back(imuParseList.front());
-    }
+    imuDataList.push_back(imuParseList.front());
     imuParseList.pop();
 }
 void ARobot::ParseRange() {
