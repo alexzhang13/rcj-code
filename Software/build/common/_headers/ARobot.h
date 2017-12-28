@@ -58,6 +58,7 @@ class ARobot {
  	void UpdateNeighborCells();
  	void TileTransition(int32_t dist);
  	void CalcNextTile();
+ 	void Correction();
 
  	/*IMU*/
  	void CalibrateIMU();

@@ -158,7 +158,9 @@ void NavThread::run(void){
                         myRobot->currState = ARobot::WAYPTNAV;
                     }
                 }*/
-                myRobot->currState = ARobot::WAYPTNAV;
+                myRobot->Correction();
+				sleep(2);
+                //myRobot->currState = ARobot::WAYPTNAV;
                 break;
             default:
                 /*Testing Purposes Only*/

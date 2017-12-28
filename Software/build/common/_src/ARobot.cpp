@@ -272,21 +272,56 @@ void ARobot::CalcNextTile()
 
     //printf("Next_X: %d, Next_Y: %d, Dist: %d, Angle Dif: %f\n", next_x, next_y, dist, angle);
     //printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f\n", currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
+    currOrientation = nextDir;
     TileTransition(dist);
 
 }
 
 void ARobot::TileTransition(int32_t dist)
 {
-    if(abs(toTurn) > 3) { //ignore smaller angles
+    if(abs(toTurn) > 2) { //ignore smaller angles
         TurnDistance(abs(toTurn), (toTurn > 0) ? LEFT : RIGHT); //left is positive for IMU
         dist_temp = dist;
         toMove = true;
         return;
     }
 
+    //printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f\n", currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
     MoveDistance(dist, FRONT);
     return;
+}
+
+void ARobot::Correction() {
+	const size_t yaw_vals = imuDataList.size(); //size may change, set constant size
+	int currYaw = imuDataList[yaw_vals].m_yaw;
+	//Assume correction is only necessary in the range -90 degrees -> +90 degrees
+	switch((int)currOrientation) {
+	case 0: //Bot facing North
+		if(currYaw >= 180) currYaw -= 360; //negative range
+		if(abs(0.0f-currYaw) >= 2.0f) {
+			TurnDistance(abs(0.0f-currYaw), (0.0f-currYaw > 0.0f) ? LEFT : RIGHT); //If yaw is negative, robot is on right side, so turn left, and vice versa
+		}
+		break;
+	case 1: //Bot facing East
+		if(abs(270.0f-currYaw) >= 2.0f) {
+			TurnDistance(abs(270.0f-currYaw), (270.0f-currYaw > 0.0f) ? LEFT : RIGHT); //If 270-yaw is positive, robot is on right side, so turn left, and vice versa
+		}
+		break;
+	case 2: //Bot facing South
+		if(abs(180.0f-currYaw) >= 2.0f) {
+			TurnDistance(abs(180.0f-currYaw), (180.0f-currYaw > 0.0f) ? LEFT : RIGHT); //If 180-yaw is positive, robot is on right side, so turn left, and vice versa
+		}
+		break;
+	case 3: //Bot facing West
+		if(abs(90.0f-currYaw) >= 2.0f) {
+			TurnDistance(abs(90.0f-currYaw), (90.0f-currYaw > 0.0f) ? LEFT : RIGHT); //If 90-yaw is positive, robot is on right side, so turn left, and vice versa
+		}
+		break;
+	default:
+		return;
+	}
+	return;
+
 }
 
 void ARobot::SpinLaser() {
@@ -579,7 +614,8 @@ void ARobot::StopTurn(BotDir dir)
             return;
         }
     }
-    
+
+    //printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f\n", currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
 }
 
 void ARobot::CalibrateIMU()
