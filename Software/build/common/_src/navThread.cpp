@@ -48,8 +48,7 @@ void NavThread::run(void){
                 break;
             case 5: //Move
                 //myRobot->CheckLightTile(); //check if anything happens during this time
-            	myRobot->TestSignal();
-                sleep(1);
+                sleep(0.5);
                 break;
             case 6: //Drop
                 myRobot->LEDLight(4500);
