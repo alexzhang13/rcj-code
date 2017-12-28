@@ -11,15 +11,15 @@ void NavThread::run(void){
     printf("Fault 5 Passed\n");
     //myRobot->picam.cameraOpen(320, 240); //start up camera
     //myRobot->ProcessImage_Victim();
+    myRobot->CalibrateIMU();
+    sleep(1);
+    myRobot->imuCalibrated = true; //turn on IMU flag
 
 
     while(1) {
         switch(myRobot->currState) {
             //if(cnt%100==0) {printf("State: %d\n", cnt);}
             case 0: //Planning
-            	myRobot->CalibrateIMU();
-            	sleep(1);
-            	myRobot->imuCalibrated = true; //turn on IMU flag
                 //Navigate(in_dir, xml_name, myRobot, nav);
                 //printf("navigating...\n");
                 break;
