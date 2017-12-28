@@ -85,8 +85,8 @@ void NavThread::run(void){
                 //nav.getCellbyIndex(myRobot->waypts[bot_waypts-1])->getCellGrid(myRobot->currTile.x, myRobot->currTile.y);
                 nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]);
                 printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
-                sleep(0.1);
-                if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
+                sleep(2);
+                /*if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
                     //myRobot->SpinLaser();
                     //sleep(2.5); //time for laser
                     //myRobot->CheckVictimVisual();
@@ -156,8 +156,8 @@ void NavThread::run(void){
                         break;
                     } else {
                         myRobot->currState = ARobot::WAYPTNAV;
-                    }*/
-                }
+                    }
+                }*/
                 myRobot->currState = ARobot::WAYPTNAV;
                 break;
             default:
