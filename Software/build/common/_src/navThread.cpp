@@ -4,7 +4,7 @@ using namespace std;
 
 void NavThread::run(void){
 
-	sleep(2);
+	sleep(1);
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     printf("Fault 4 Passed\n");
     readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
@@ -18,9 +18,9 @@ void NavThread::run(void){
             //if(cnt%100==0) {printf("State: %d\n", cnt);}
             case 0: //Planning
             	myRobot->CalibrateIMU();
-            	sleep(2);
+            	sleep(1);
             	myRobot->imuCalibrated = true; //turn on IMU flag
-                //Navigate(in_dir, xml_name, myRobot, nav);
+                Navigate(in_dir, xml_name, myRobot, nav);
                 //printf("navigating...\n");
                 break;
             case 1: //WayPtNav
