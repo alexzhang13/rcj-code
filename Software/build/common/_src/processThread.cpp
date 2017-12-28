@@ -7,7 +7,7 @@ void Process_T::run(void){
 
     while(1) {
 		    processed_status = false; 
-        while(myRobot->imuParseList.size() > 0 && myRobot->imuCalibrated) {
+        while(myRobot->imuParseList.size() > 0) {
     	   myRobot->ParseIMU();
            myRobot->ClearIMU();
 		       processed_status = true;
