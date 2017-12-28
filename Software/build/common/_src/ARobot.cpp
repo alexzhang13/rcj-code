@@ -301,27 +301,31 @@ void ARobot::Correction() {
 		if(currYaw >= 180) currYaw -= 360; //negative range
 		if(abs(0.0f-currYaw) >= 2.0f) {
 			TurnDistance((int)abs(0.0f-currYaw), (0.0f-currYaw > 0.0f) ? LEFT : RIGHT); //If yaw is negative, robot is on right side, so turn left, and vice versa
+			return;
 		}
 		break;
 	case 1: //Bot facing East
 		if(abs(270.0f-currYaw) >= 2.0f) {
 			TurnDistance((int)abs(270.0f-currYaw), (270.0f-currYaw > 0.0f) ? LEFT : RIGHT); //If 270-yaw is positive, robot is on right side, so turn left, and vice versa
+			return;
 		}
 		break;
 	case 2: //Bot facing South
 		if(abs(180.0f-currYaw) >= 2.0f) {
 			TurnDistance((int)abs(180.0f-currYaw), (180.0f-currYaw > 0.0f) ? LEFT : RIGHT); //If 180-yaw is positive, robot is on right side, so turn left, and vice versa
+			return;
 		}
 		break;
 	case 3: //Bot facing West
 		if(abs(90.0f-currYaw) >= 2.0f) {
 			TurnDistance((int)abs(90.0f-currYaw), (90.0f-currYaw > 0.0f) ? LEFT : RIGHT); //If 90-yaw is positive, robot is on right side, so turn left, and vice versa
+			return;
 		}
 		break;
 	default:
 		return;
 	}
-	this->currState = ARobot::WAYPTNAV;
+	this->currState = ARobot::WAYPTNAV; //if fails
 	return;
 
 }
