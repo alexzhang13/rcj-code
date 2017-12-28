@@ -43,6 +43,7 @@ int main(int argc,char **argv){
     NavThread *nav_thread = new NavThread(myRobot);
 
     while(1) {
+
         sleep(0.01);
     }
 
