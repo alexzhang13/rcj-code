@@ -24,7 +24,7 @@ void NavThread::run(void){
                 printf("navigating...\n");
                 break;
             case 1: //WayPtNav
-            	sleep(0.5);
+            	sleep(1);
                 WayPointNav(myRobot, nav);
                 break;
             case 2: //Turn
@@ -160,6 +160,7 @@ void NavThread::run(void){
                     }
                 }*/
                 myRobot->Correction();
+                sleep(0.1);
                 myRobot->currState = ARobot::WAYPTNAV;
                 break;
             default:
