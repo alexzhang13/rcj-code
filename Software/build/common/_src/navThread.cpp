@@ -4,13 +4,12 @@ using namespace std;
 
 void NavThread::run(void){
 
-
+	sleep(2);
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     printf("Fault 4 Passed\n");
     readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     printf("Fault 5 Passed\n");
     //myRobot->picam.cameraOpen(320, 240); //start up camera
-    sleep(2);
     //myRobot->ProcessImage_Victim();
 
 
