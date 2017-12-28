@@ -293,7 +293,7 @@ void ARobot::TileTransition(int32_t dist)
 
 void ARobot::Correction() {
 	const size_t yaw_vals = imuDataList.size(); //size may change, set constant size
-	int currYaw = imuDataList[yaw_vals].m_yaw;
+	float currYaw = imuDataList[yaw_vals].m_yaw;
 	//Assume correction is only necessary in the range -90 degrees -> +90 degrees
 	printf("Current Orientation: %d\nCurr Yaw: %f\n", (int)currOrientation, currYaw);
 	switch((int)currOrientation) {
