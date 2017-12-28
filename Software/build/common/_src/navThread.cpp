@@ -20,7 +20,7 @@ void NavThread::run(void){
             	myRobot->CalibrateIMU();
             	sleep(1);
             	myRobot->imuCalibrated = true; //turn on IMU flag
-                Navigate(in_dir, xml_name, myRobot, nav);
+                //Navigate(in_dir, xml_name, myRobot, nav);
                 //printf("navigating...\n");
                 break;
             case 1: //WayPtNav
