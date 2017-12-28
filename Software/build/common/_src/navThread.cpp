@@ -20,7 +20,7 @@ void NavThread::run(void){
         switch(myRobot->currState) {
             //if(cnt%100==0) {printf("State: %d\n", cnt);}
             case 0: //Planning
-                //Navigate(in_dir, xml_name, myRobot, nav);
+                Navigate(in_dir, xml_name, myRobot, nav);
                 //printf("navigating...\n");
                 break;
             case 1: //WayPtNav
@@ -159,7 +159,8 @@ void NavThread::run(void){
                         myRobot->currState = ARobot::WAYPTNAV;
                     }
                 }*/
-                myRobot->Correction();
+                //myRobot->Correction();
+                myRobot->currState = ARobot::WAYPTNAV;
                 break;
             default:
                 /*Testing Purposes Only*/
