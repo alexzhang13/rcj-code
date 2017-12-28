@@ -64,7 +64,7 @@ void UartRx::run(void){
         }
 		runLogFile();
 		sscanf(mBuf, "%i %c", &ts, &c); 
-        if(c == 'i') { //check if it's IMU
+        if(c == 'i' && myRobot->imuCalibrated) { //check if it's IMU
             storeIMU(mBuf);
         } else if (c == 'r') {
             storeRange(mBuf);

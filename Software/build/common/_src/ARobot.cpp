@@ -20,6 +20,7 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     this->currTile.y = 0;
     this->dist_temp=0;
     this->dropCnt = 0; //dropping counter
+    this->imuCalibrated = false;
 	this->initialYaw = 0;
     this->isDropped = false;
     this->isVictim = false;

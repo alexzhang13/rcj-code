@@ -148,6 +148,7 @@ class ARobot {
 	bool victimLeft;
 	bool victimFront;
 	bool backingBlack; //if the robot is backing up on a black tile
+	bool imuCalibrated; //flag if IMU is calibrated
 	int dist_temp; //store temporary distance to travel
 
  protected:
