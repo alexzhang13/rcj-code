@@ -45,7 +45,7 @@ public:
 	typedef struct {
 		uint32_t tstamp; //timestamp
 		char id;
-		int16_t angle;
+		int angle;
 		float readingN;
 		float readingE;
 		float readingS;
