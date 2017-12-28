@@ -14,7 +14,7 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
 	this->cross_over = false;
     this->currTileLight = WHITE;
     this->currDir = FRONT;
-    this->currState = PLANNING; //>9 = testing purposes
+    this->currState = 10;//PLANNING; //>9 = testing purposes
     this->currOrientation = NORTH;
     this->currTile.x = 0;
     this->currTile.y = 0;
@@ -604,7 +604,6 @@ void ARobot::StopTurn(BotDir dir)
         if(cross_over)
         	currYaw += 360; //range fixing
 
-        printf("Curr Yaw Test: %f\n", currYaw);
         if(currYaw >= toTurn) {
             char* i_command;
             cross_over = false; //default cross bool now off
