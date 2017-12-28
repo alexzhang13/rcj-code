@@ -20,8 +20,8 @@ void NavThread::run(void){
         switch(myRobot->currState) {
             //if(cnt%100==0) {printf("State: %d\n", cnt);}
             case 0: //Planning
-                Navigate(in_dir, xml_name, myRobot, nav);
-                printf("navigating...\n");
+                //Navigate(in_dir, xml_name, myRobot, nav);
+                //printf("navigating...\n");
                 break;
             case 1: //WayPtNav
             	sleep(1);
