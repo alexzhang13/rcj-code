@@ -24,6 +24,7 @@ void NavThread::run(void){
                 printf("navigating...\n");
                 break;
             case 1: //WayPtNav
+            	sleep(0.5);
                 WayPointNav(myRobot, nav);
                 break;
             case 2: //Turn
@@ -77,7 +78,7 @@ void NavThread::run(void){
             case 9: //Data collection
                 myRobot->isVictim = nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim();
                 if(!myRobot->isVictim) {myRobot->isDropped = false;}
-                sleep(2);
+                sleep(1);
                 myRobot->CalibrateIMU();
                 bot_waypts = myRobot->waypts.size();
                 myRobot->currTile.x = myRobot->currTile.x_tovisit;
@@ -85,7 +86,7 @@ void NavThread::run(void){
                 //nav.getCellbyIndex(myRobot->waypts[bot_waypts-1])->getCellGrid(myRobot->currTile.x, myRobot->currTile.y);
                 nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]);
                 printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
-                sleep(2);
+                sleep(1);
                 /*if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
                     //myRobot->SpinLaser();
                     //sleep(2.5); //time for laser
@@ -159,7 +160,7 @@ void NavThread::run(void){
                     }
                 }*/
                 myRobot->Correction();
-                //myRobot->currState = ARobot::WAYPTNAV;
+                myRobot->currState = ARobot::WAYPTNAV;
                 break;
             default:
                 /*Testing Purposes Only*/
