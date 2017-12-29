@@ -641,7 +641,7 @@ void ARobot::ParseIMU()
         imuParseList.front().parseData(imuDataList[imuDataList.size()-1].getTStamp());
     }*/
     imuParseList.front().parseData();
-    if(imuCalibrated)
+    if(imuCalibrated && currState != MOVE)
     	imuParseList.front().runFilter();
     imuDataList.push_back(imuParseList.front());
     imuParseList.pop();
