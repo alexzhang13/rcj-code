@@ -20,7 +20,8 @@ void NavThread::run(void){
         switch(myRobot->currState) {
             //if(cnt%100==0) {printf("State: %d\n", cnt);}
             case 0: //Planning
-                Navigate(in_dir, xml_name, myRobot, nav);
+                //Navigate(in_dir, xml_name, myRobot, nav);
+            	myRobot->TurnDistance(90, ARobot::LEFT);
                 //printf("navigating...\n");
                 break;
             case 1: //WayPtNav
@@ -38,7 +39,7 @@ void NavThread::run(void){
                     myRobot->MoveDistance(myRobot->dist_temp, ARobot::FRONT);
                     myRobot->toMove = false;
                 } else {
-                    myRobot->currState = ARobot::WAYPTNAV;
+                    //myRobot->currState = ARobot::WAYPTNAV;
                 }
                 break;
             case 4: //Ramp

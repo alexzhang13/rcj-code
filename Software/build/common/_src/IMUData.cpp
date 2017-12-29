@@ -38,7 +38,7 @@ int IMUData::getTStamp() {
 
 int IMUData::runFilter()
 {
-	madgwick.updateIMU(data.gx/131, data.gy/131, data.gz/131, data.ax/16384, data.ay/16384, data.az/16384);
+	madgwick.updateIMU(data.gx/129.0f, data.gy/129.0f, data.gz/129.0f, data.ax/16384.0f, data.ay/16384.0f, data.az/16384.0f);
 	m_pitch = madgwick.getRoll(); //inverted
 	m_roll = madgwick.getPitch(); //inverted
 	m_yaw = madgwick.getYaw();
