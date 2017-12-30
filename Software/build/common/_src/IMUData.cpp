@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
-
+static Madgwick madgwick;
 
 IMUData::IMUData()
 {
@@ -34,6 +34,11 @@ int IMUData::parseData()
 
 int IMUData::getTStamp() {
 	return data.tstamp;
+}
+
+static int IMUData::setYaw(float calibratedyaw) {
+	madgwick.setYaw(calibratedyaw);
+	return 0;
 }
 
 int IMUData::runFilter()

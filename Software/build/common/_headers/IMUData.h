@@ -11,7 +11,6 @@
 
 class IMUData {
 public:
-	static Madgwick madgwick;
 	typedef struct {
 		uint32_t tstamp; //timestamp
 		char id; //always comes out as i for imu
@@ -34,10 +33,7 @@ public:
 	int parseData();
 	int runFilter();
 	int runFilterYaw();
-	static int setYaw(float calibratedyaw) {
-		madgwick.setYaw(calibratedyaw);
-		return 0;
-	}
+	static int setYaw(float calibratedyaw);
 
 private:
 	int prev_tstamp;
