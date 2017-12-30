@@ -295,7 +295,8 @@ void ARobot::TileTransition(int32_t dist)
 void ARobot::CorrectYaw() {
 	const size_t range_vals = rangeDataList.size(); //size may change, set constant size
 	const size_t imu_vals = imuDataList.size();
-	IMUData::setYaw(rangeDataList[range_vals].getAlpha() * rangeDataList[range_vals].getAngle() + (1 - rangeDataList[range_vals].getAlpha()) * imuDataList[imu_vals].m_yaw);
+	float range_angle = rangeDataList[range_vals].getAngle() + ((4-(int)currOrientation)%4)*90.0;
+	IMUData::setYaw(rangeDataList[range_vals].getAlpha() * range_angle + (1.0 - rangeDataList[range_vals].getAlpha()) * imuDataList[imu_vals].m_yaw);
 }
 
 void ARobot::Correction() {
