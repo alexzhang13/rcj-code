@@ -36,7 +36,7 @@ int IMUData::getTStamp() {
 	return data.tstamp;
 }
 
-static int IMUData::setYaw(float calibratedyaw) {
+int IMUData::setYaw(float calibratedyaw) {
 	madgwick.setYaw(calibratedyaw);
 	return 0;
 }
