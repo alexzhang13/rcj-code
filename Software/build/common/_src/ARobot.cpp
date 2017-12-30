@@ -272,7 +272,7 @@ void ARobot::CalcNextTile()
 
 
     //printf("Next_X: %d, Next_Y: %d, Dist: %d, Angle Dif: %f\n", next_x, next_y, dist, angle);
-    //printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f\n", currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
+    //printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f\n", scurrTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
     currOrientation = nextDir;
     TileTransition(dist);
 
@@ -290,6 +290,12 @@ void ARobot::TileTransition(int32_t dist)
     //printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f\n", currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
     MoveDistance(dist, FRONT);
     return;
+}
+
+void ARobot::CorrectYaw() {
+	const size_t range_vals = rangeDataList.size(); //size may change, set constant size
+	const size_t imu_vals = imuDataList.size();
+	IMUData::setYaw(rangeDataList[range_vals].getAlpha() * rangeDataList[range_vals].getAngle() + (1 - rangeDataList[range_vals].getAlpha()) * imuDataList[imu_vals].m_yaw);
 }
 
 void ARobot::Correction() {
@@ -649,6 +655,7 @@ void ARobot::ParseIMU()
 void ARobot::ParseRange() {
     rangeParseList.front().parseData();
     rangeParseList.front().getPosition();
+    rangeParseList.front().setAngle();
     if(rangeParseList.front().coord.x_flag == true) {
         currTile.x_map = (currTile.x*300.0f) + rangeParseList.front().coord.x_glob;
         //printf("X Glob: %f\n", currTile.x_map);

@@ -59,6 +59,9 @@ public:
 	int parseData();
 	int getPosition();
 	int getScan();
+	int setAngle(); //based on object's data
+	float getAngle();
+	float getAlpha();
 
 	Scan_DataType scan;
 	Range_DataType data;
@@ -68,13 +71,17 @@ public:
 protected:
 	ARobot *myRobot;
 private:
+	bool avalid_long; //alpha is valid for verification using long distance
+	bool avalid_short; //alpha is valid for verification using short distance
+	char m_command[128]; //stored command
+	int temp_dist; //temporary number
 	uint8_t x_count; //count if the lasers don't see anything
 	uint8_t y_count;
 	float distance[4];
-	char m_command[128]; //stored command
 	float temp_range[4]; //temporary number
-	int temp_dist; //temporary number
 	float curr_yaw;
+	float alpha;
+	float angled;
 };
 
 #endif // !_TEMP_DATA_H_

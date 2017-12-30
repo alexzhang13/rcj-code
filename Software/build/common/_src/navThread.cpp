@@ -21,7 +21,7 @@ void NavThread::run(void){
             //if(cnt%100==0) {printf("State: %d\n", cnt);}
             case 0: //Planning
                 //Navigate(in_dir, xml_name, myRobot, nav);
-            	myRobot->TurnDistance(90, ARobot::LEFT);
+            	//myRobot->TurnDistance(90, ARobot::LEFT);
                 //printf("navigating...\n");
                 break;
             case 1: //WayPtNav
@@ -160,6 +160,7 @@ void NavThread::run(void){
                         myRobot->currState = ARobot::WAYPTNAV;
                     }
                 }*/
+                myRobot->CorrectYaw();
                 myRobot->Correction();
                 //myRobot->currState = ARobot::WAYPTNAV;
                 break;

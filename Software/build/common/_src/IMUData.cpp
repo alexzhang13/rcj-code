@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
-static Madgwick madgwick;
+
 
 IMUData::IMUData()
 {
@@ -38,7 +38,7 @@ int IMUData::getTStamp() {
 
 int IMUData::runFilter()
 {
-	madgwick.updateIMU(data.gx/123.0f, data.gy/123.0f, data.gz/123.0f, data.ax/16384.0f, data.ay/16384.0f, data.az/16384.0f);
+	madgwick.updateIMU(data.gx/131.0f, data.gy/131.0f, data.gz/131.0f, data.ax/16384.0f, data.ay/16384.0f, data.az/16384.0f);
 	m_pitch = madgwick.getRoll(); //inverted
 	m_roll = madgwick.getPitch(); //inverted
 	m_yaw = madgwick.getYaw();

@@ -59,6 +59,7 @@ class ARobot {
  	void TileTransition(int32_t dist);
  	void CalcNextTile();
  	void Correction();
+ 	void CorrectYaw();
 
  	/*IMU*/
  	void CalibrateIMU();
