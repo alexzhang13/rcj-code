@@ -5,6 +5,8 @@
 #include <string.h>
 #include "../_headers/IMUData.h"
 
+#define OFFSET 13.75
+
 RangeData::RangeData(ARobot *robot) :myRobot(robot)
 {
 	memset(m_command,'\0', 128);
@@ -59,12 +61,12 @@ int RangeData::setAngle() {
 	//drift is seemingly always negative
 	//keep threshold at 30 degrees (0 - 30)
 	if(avalid_short) {
-		angled = acos(max(1.0, 300.0/(data.laserS_a + data.laserS_b)));
-		alpha = 7.62*(300.0/(data.laserS_a + data.laserS_b));//max(1.0, min(0.0, 7.62*(300.0/(data.laserS_a + data.laserS_b)-0.866))); //30 degree turn range 0-1
+		angled = acos(max(0.99999, 300.0/(data.laserS_a + data.laserS_b + 2*OFFSET)));
+		alpha = 7.62*(300.0/(data.laserS_a + data.laserS_b + 2*OFFSET));//max(1.0, min(0.0, 7.62*(300.0/(data.laserS_a + data.laserS_b)-0.866))); //30 degree turn range 0-1
 		// 7.62 = (1 - 0) / (1 - 0.866) --> 0.886 = root (3) / 2 which is cos(30 deg)
 	} else if(avalid_long) {
-		angled = acos(max(1.0, (double)((int)((temp_range[0]+temp_range[2])/300)*300)/(data.laserL_a + data.laserL_b)));
-		alpha = max(1.0, min(0.0, 7.62*((((int)(temp_range[0]+temp_range[2])/300)*300)/(data.laserL_a + data.laserL_b)-0.866))); //30 degree turn range 0-1
+		angled = acos(max(1.0, (double)((int)((temp_range[0]+temp_range[2])/300)*300)/(data.laserL_a + data.laserL_b + 2*OFFSET)));
+		alpha = max(1.0, min(0.0, 7.62*((((int)(temp_range[0]+temp_range[2])/300)*300)/(data.laserL_a + data.laserL_b + 2*OFFSET)-0.866))); //30 degree turn range 0-1
 	}
 	printf("Alpha: %f\tPredicted Angle: %f\n", this->alpha, this->angled);
 	return 0;
