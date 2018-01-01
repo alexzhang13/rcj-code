@@ -39,7 +39,7 @@ void NavThread::run(void){
                     myRobot->MoveDistance(myRobot->dist_temp, ARobot::FRONT);
                     myRobot->toMove = false;
                 } else {
-                    //myRobot->currState = ARobot::WAYPTNAV;
+                    myRobot->currState = ARobot::WAYPTNAV;
                 }
                 break;
             case 4: //Ramp
