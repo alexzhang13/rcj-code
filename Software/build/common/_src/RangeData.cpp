@@ -69,7 +69,7 @@ int RangeData::setAngle() {
 		angled = acos(min(1.0, (double)((int)((temp_range[0]+temp_range[2])/300)*300)/(data.laserL_a + data.laserL_b + 2*OFFSET)));
 		alpha = min(1.0, min(0.0, 7.62*((((int)(temp_range[0]+temp_range[2])/300)*300)/(data.laserL_a + data.laserL_b + 2*OFFSET)-0.866))); //30 degree turn range 0-1
 	}
-	printf("Alpha: %f\tPredicted Angle: %f\n", this->alpha, this->angled);
+	//printf("Alpha: %f\tPredicted Angle: %f\n", this->alpha, this->angled);
 	return 0;
 }
 

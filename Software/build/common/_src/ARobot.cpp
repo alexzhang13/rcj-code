@@ -31,6 +31,7 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     this->m_letter = ' ';
     this->off_left = 5;
     this->off_right = 25;
+    this->offsetdir =0;
     this->silver_thresh = 0;
     this->speed_left = 100;
     this->speed_right = 120;
