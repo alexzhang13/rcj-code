@@ -32,7 +32,6 @@ public:
 	int getTStamp();
 	int parseData();
 	int runFilter();
-	int runFilterYaw();
 	int setYaw(float calibratedyaw);
 
 private:
