@@ -32,6 +32,7 @@ private:
 	float roll;
 	float pitch;
 	float yaw;
+	float yawoffset;
 	char anglesComputed;
 	void computeAngles();
 
@@ -70,8 +71,8 @@ public:
 		if (!anglesComputed) computeAngles();
 		return yaw;
 	}
-	float setYaw(float m_yaw) {
-		yaw = m_yaw / 57.29578f;
+	float setYawOffset(float offset) {
+		yawoffset = offset / 57.29578f;
 	}
 };
 #endif
