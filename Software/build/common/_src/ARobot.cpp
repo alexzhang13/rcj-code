@@ -313,6 +313,7 @@ void ARobot::CorrectYaw() {
 		newyaw += rangeDataList[range_vals-i].getAlpha() * (rangeDataList[range_vals-i].getAngle() + ((4-(int)currOrientation)%4)*90.0) + (1.0 - rangeDataList[range_vals-i].getAlpha()) * imuDataList[imu_vals-i].m_yaw;
 	}
 	newyaw /= 5.0;
+	printf("New Yaw: %f\n", newyaw);
 	IMUData::setYaw(newyaw);
 }
 
