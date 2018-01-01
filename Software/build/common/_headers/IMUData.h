@@ -33,7 +33,7 @@ public:
 	int parseData();
 	int runFilter();
 	int runFilterYaw();
-	static int setYaw(float calibratedyaw);
+	int setYaw(float calibratedyaw);
 
 private:
 	int prev_tstamp;
