@@ -314,7 +314,7 @@ void ARobot::CorrectYaw() {
 	}
 	newyaw /= 5.0;
 	printf("New Yaw: %f\n", newyaw);
-	IMUData::setYaw(newyaw);
+	imuDataList[imu_vals].setYaw(newyaw);
 }
 
 void ARobot::Correction() {
