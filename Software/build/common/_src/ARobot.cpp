@@ -249,16 +249,16 @@ void ARobot::CalcNextTile()
     int32_t dist = (int32_t)sqrt(next_x*next_x + next_y*next_y); //pythagorean
     float angle; //offset angle degrees
     if(currTile.x_tovisit - currTile.x > 0) { //east
-    	angle = -atan((float)next_y/(float)next_x)*180.0f/3.1415926535f; //angle to left, should be neg
+    	angle = atan((float)next_y/(float)next_x)*180.0f/3.1415926535f; //angle to left, should be neg
         nextDir = EAST;
     } else if (currTile.x_tovisit - currTile.x < 0) { //west
-    	angle = -atan((float)next_y/(float)next_x)*180.0f/3.1415926535f; //angle to left, should be neg
+    	angle = atan((float)next_y/(float)next_x)*180.0f/3.1415926535f; //angle to left, should be neg
         nextDir = WEST;
     } else if (currTile.y_tovisit - currTile.y > 0) { //north
-    	angle = atan((float)next_x/(float)next_y)*180.0f/3.1415926535f; //angle to left, should be pos
+    	angle = -atan((float)next_x/(float)next_y)*180.0f/3.1415926535f; //angle to left, should be pos
         nextDir = NORTH;
     } else if (currTile.y_tovisit - currTile.y < 0) { //south
-    	angle = atan((float)next_x/(float)next_y)*180.0f/3.1415926535f; //angle to left, should be pos
+    	angle = -atan((float)next_x/(float)next_y)*180.0f/3.1415926535f; //angle to left, should be pos
         nextDir = SOUTH;
     }
 
