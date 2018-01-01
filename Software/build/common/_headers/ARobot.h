@@ -63,6 +63,8 @@ class ARobot {
 
  	/*IMU*/
  	void CalibrateIMU();
+ 	void setOffsetDir();
+ 	BotDir getOffsetDir();
 
  	/*Ramp*/
  	bool CheckRamp();
@@ -169,6 +171,7 @@ class ARobot {
  	float initialYaw; //initial yaw in a turn
  	float toTurn; //distance to turns
  	bool cross_over; //[check StopTurn() function] --> determines if the yaw has turned over 360 degs
+ 	BotDir offsetdir; //what direction is the robot offset from the center right=1, left=3
  	size_t mlen_light;
  	size_t mlen_imu;
  	size_t mlen_range;

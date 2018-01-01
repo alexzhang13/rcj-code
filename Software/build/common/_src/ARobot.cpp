@@ -292,15 +292,32 @@ void ARobot::TileTransition(int32_t dist)
     return;
 }
 
+/*called only when robot is moving*/
+void ARobot::setOffsetDir() {
+	const size_t range_vals = rangeDataList.size()-1;
+	uint32_t tstamp = rangeDataList[range_vals].data.tstamp;
+
+}
+
+ARobot::BotDir ARobot::getOffsetDir() {
+	return offsetdir;
+}
+
 void ARobot::CorrectYaw() {
-	const size_t range_vals = rangeDataList.size(); //size may change, set constant size
-	const size_t imu_vals = imuDataList.size();
-	float range_angle = rangeDataList[range_vals].getAngle() + ((4-(int)currOrientation)%4)*90.0;
-	IMUData::setYaw(rangeDataList[range_vals].getAlpha() * range_angle + (1.0 - rangeDataList[range_vals].getAlpha()) * imuDataList[imu_vals].m_yaw);
+	const size_t range_vals = rangeDataList.size()-1; //size may change, set constant size
+	const size_t imu_vals = imuDataList.size()-1;
+	float newyaw=0.0;
+
+	//average of previous vals
+	for(int i = 0; i < 5; i++) {
+		newyaw += rangeDataList[range_vals-i].getAlpha() * (rangeDataList[range_vals-i].getAngle() + ((4-(int)currOrientation)%4)*90.0) + (1.0 - rangeDataList[range_vals-i].getAlpha()) * imuDataList[imu_vals-i].m_yaw;
+	}
+	newyaw /= 5.0;
+	IMUData::setYaw(newyaw);
 }
 
 void ARobot::Correction() {
-	const size_t yaw_vals = imuDataList.size(); //size may change, set constant size
+	const size_t yaw_vals = imuDataList.size()-1; //size may change, set constant size
 	float currYaw = imuDataList[yaw_vals].m_yaw;
 	//Assume correction is only necessary in the range -90 degrees -> +90 degrees
 	printf("Current Orientation: %d\nCurr Yaw: %f\n", (int)currOrientation, currYaw);
