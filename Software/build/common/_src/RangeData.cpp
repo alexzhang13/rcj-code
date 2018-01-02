@@ -64,16 +64,17 @@ int RangeData::setAngle() {
 	if(avalid_short) {
 		angled = acos(min(1.0, 300.0/(data.laserS_a + data.laserS_b + OFFSET))) * 180 / PI;
 		alpha = max(0.0, 7.62*(300.0/(data.laserS_a + data.laserS_b + OFFSET)-0.866)); //30 degree turn range 0-1
-		//if(alpha >= 1.15) alpha = 0;
-		//else if (alpha >= 1) alpha = 1;
+		if(alpha >= 1.2) alpha = 0;
+		else if (alpha >= 1) alpha = 1;
 		printf("Angle: %f\tAlpha: %f\n", angled, alpha);
-		//printf("Laser Reading Left:%f\tLaser Reading Right:%f\n", data.laserS_a, data.laserS_b);
 		// 7.62 = (1 - 0) / (1 - 0.866) --> 0.886 = root (3) / 2 which is cos(30 deg)
 	} else if(avalid_long) {
 		int far = ((int)temp_range[0]/300 + (int)temp_range[2]/300 + 1);
-		angled = acos(min(1.0, (double)(((int)temp_range[0]/300 + (int)temp_range[2]/300 + 1)*300)/(data.laserL_a + data.laserL_b + OFFSET))) * 180 / PI;
-		alpha = min(1.0, max(0.0, (7.62/pow(far,1.45))*((far*300)/(data.laserL_a + data.laserL_b + OFFSET)-0.786))); //30 degree turn range 0-1
-		printf("Angle: %f\tAlpha: %f\tValue: %i Distance: %f\n", angled, alpha, far*300, data.laserL_a + data.laserL_b + OFFSET);
+		angled = acos(min(1.0, (double)(far*300)/(data.laserL_a + data.laserL_b + OFFSET))) * 180 / PI;
+		alpha = max(0.0, (7.62/pow(far,1.45))*((far*300)/(data.laserL_a + data.laserL_b + OFFSET)-0.786)); //30 degree turn range 0-1
+		if(alpha >= 1.2) alpha = 0;
+		else if (alpha >= 1) alpha = 1;
+		//printf("Angle: %f\tAlpha: %f\tValue: %i Distance: %f\n", angled, alpha, far*300, data.laserL_a + data.laserL_b + OFFSET);
 	}
 	return 0;
 }
