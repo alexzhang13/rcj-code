@@ -5,7 +5,7 @@
 #include <string.h>
 #include "../_headers/IMUData.h"
 
-#define OFFSET 15
+#define OFFSET 17.5
 #define PI 3.1415926535
 
 RangeData::RangeData(ARobot *robot) :myRobot(robot)
