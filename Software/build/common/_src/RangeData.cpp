@@ -5,7 +5,7 @@
 #include <string.h>
 #include "../_headers/IMUData.h"
 
-#define OFFSET 13.75
+#define OFFSET 8
 #define PI 3.1415926535
 
 RangeData::RangeData(ARobot *robot) :myRobot(robot)
@@ -64,8 +64,8 @@ int RangeData::setAngle() {
 	if(avalid_short) {
 		angled = acos(min(1.0, 300.0/(data.laserS_a + data.laserS_b + OFFSET))) * 180 / PI;
 		alpha = max(0.0, 7.62*(300.0/(data.laserS_a + data.laserS_b + OFFSET)-0.866)); //30 degree turn range 0-1
-		if(alpha >= 1.15) alpha = 0;
-		else if (alpha >= 1) alpha = 1;
+		//if(alpha >= 1.15) alpha = 0;
+		//else if (alpha >= 1) alpha = 1;
 		printf("Angle: %f\tAlpha: %f\n", angled, alpha);
 		//printf("Laser Reading Left:%f\tLaser Reading Right:%f\n", data.laserS_a, data.laserS_b);
 		// 7.62 = (1 - 0) / (1 - 0.866) --> 0.886 = root (3) / 2 which is cos(30 deg)
