@@ -307,14 +307,18 @@ ARobot::BotDir ARobot::getOffsetDir() {
 void ARobot::CorrectYaw() {
 	const size_t range_vals = rangeDataList.size()-1; //size may change, set constant size
 	const size_t imu_vals = imuDataList.size()-1;
+	float angley;
 	float newyaw=0.0;
 
 	//average of previous vals
 	for(int i = 0; i < 5; i++) {
-		newyaw += rangeDataList[range_vals-i].getAlpha() * (rangeDataList[range_vals-i].getAngle() + ((4-(int)currOrientation)%4)*90.0) + (1.0 - rangeDataList[range_vals-i].getAlpha()) * imuDataList[imu_vals-i].m_yaw;
+		angley = (rangeDataList[range_vals-i].getAngle() + ((4-(int)currOrientation)%4)*90.0);
+		if(angley == 0.0) angley += 360;
+		newyaw += rangeDataList[range_vals-i].getAlpha() * angley + (1.0 - rangeDataList[range_vals-i].getAlpha()) * imuDataList[imu_vals-i].m_yaw;
 		printf("Alpha: %f\tCurrent New: %f\n", rangeDataList[range_vals-i].getAlpha(), newyaw);
 	}
 	newyaw /= 5.0;
+	if(newyaw==360) newyaw==0;
 	printf("New Yaw: %f\n", newyaw);
 	imuDataList[imu_vals].setYaw(newyaw);
 }
