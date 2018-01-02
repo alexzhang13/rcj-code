@@ -318,7 +318,7 @@ void ARobot::CorrectYaw() {
 		printf("Alpha: %f\tCurrent New: %f\n", rangeDataList[range_vals-i].getAlpha(), newyaw);
 	}
 	newyaw /= 5.0;
-	if(newyaw==360) newyaw==0;
+	if(newyaw==360) newyaw=0;
 	printf("New Yaw: %f\n", newyaw);
 	imuDataList[imu_vals].setYaw(newyaw);
 }
