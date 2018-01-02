@@ -315,7 +315,7 @@ void ARobot::CorrectYaw() {
 		angley = (rangeDataList[range_vals-i].getAngle() + ((4-(int)currOrientation)%4)*90.0);
 		if(angley <= 10.0) angley += 360;
 		newyaw += rangeDataList[range_vals-i].getAlpha() * angley + (1.0 - rangeDataList[range_vals-i].getAlpha()) * imuDataList[imu_vals-i].m_yaw;
-		printf("Alpha: %f\tCurrent New: %f\n", rangeDataList[range_vals-i].getAlpha(), newyaw);
+		//printf("Alpha: %f\tCurrent New: %f\n", rangeDataList[range_vals-i].getAlpha(), newyaw);
 	}
 	newyaw /= 5.0;
 	if(newyaw==360) newyaw=0;
