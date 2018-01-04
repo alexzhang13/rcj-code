@@ -62,7 +62,7 @@ class ARobot {
  	void CalcNextTile();
  	void Correction();
  	void CorrectYaw();
- 	int SlopeDir(const std::vector<int>& x, const std::vector<int>& y);
+ 	int SlopeDir(const std::vector<double>& x, const std::vector<double>& y);
 
  	/*IMU*/
  	void CalibrateIMU();
@@ -120,8 +120,8 @@ class ARobot {
 
 	std::vector<MazeCell> temp_cell_list;
 	std::vector<int32_t> waypts; //current waypoint list
-	std::vector<int> x_vals; //x accumulate
-	std::vector<int> y_vals; //y accumulate
+	std::vector<double> x_vals; //x accumulate
+	std::vector<double> y_vals; //y accumulate
 
  	std::vector<IMUData> imuDataList;
 	std::vector<RangeData> rangeDataList;
