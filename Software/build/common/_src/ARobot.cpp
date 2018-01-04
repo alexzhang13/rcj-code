@@ -312,8 +312,8 @@ void ARobot::CorrectYaw() {
 	float angley;
 	float newyaw=0.0;
 	offsetdir = SlopeDir(x_vals, y_vals);
-	//x_vals.clear();
-	//y_vals.clear();
+	x_vals.clear();
+	y_vals.clear();
 	sLock = 0;
 
 	//average of previous vals
@@ -371,6 +371,10 @@ void ARobot::Correction() {
 //https://www.easycalculation.com/statistics/learn-regression.php
 int ARobot::SlopeDir(const std::vector<int>& x, const std::vector<int>& y) {
     const auto n = x.size();
+    if(n<=0) {
+    	printf("Size is 0");
+    	return 1;
+    }
     const auto s_x = std::accumulate(x.begin(), x.end(), 0.0);
     const auto s_y = std::accumulate(y.begin(), y.end(), 0.0);
     const auto s_xx = std::inner_product(x.begin(), x.end(), x.begin(), 0.0);
