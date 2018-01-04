@@ -187,6 +187,6 @@ int RangeData::getPosition()
 		}
 	}
 
-	printf("X Coord: %d Y Coord: %d\n", coord.x, coord.y);
+	printf("X Coord: %f Y Coord: %f\n", coord.x, coord.y);
 	return 0;
 }
