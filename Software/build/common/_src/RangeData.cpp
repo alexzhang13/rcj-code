@@ -5,7 +5,7 @@
 #include <string.h>
 #include "../_headers/IMUData.h"
 
-#define OFFSET 22
+#define OFFSET 17.5
 #define PI 3.1415926535
 
 RangeData::RangeData(ARobot *robot) :myRobot(robot)
@@ -186,5 +186,7 @@ int RangeData::getPosition()
 			}
 		}
 	}
+
+	printf("X Coord: %d Y Coord: %d\n", coord.x, coord.y);
 	return 0;
 }
