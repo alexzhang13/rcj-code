@@ -31,8 +31,9 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     this->m_letter = ' ';
     this->off_left = 5;
     this->off_right = 25;
-    this->offsetdir = RIGHT;
+    this->offsetdir = 1;
     this->silver_thresh = 0;
+    this->sLock = 0;
     this->speed_left = 100;
     this->speed_right = 120;
     this->threshLeft = 0;
@@ -296,8 +297,10 @@ void ARobot::TileTransition(int32_t dist)
 /*called only when robot is moving*/
 void ARobot::setOffsetDir() {
 	const size_t range_vals = rangeDataList.size()-1;
-	uint32_t tstamp = rangeDataList[range_vals].data.tstamp;
-
+	//uint32_t tstamp = rangeDataList[range_vals].data.tstamp;
+	x_vals.push_back(rangeDataList[range_vals].coord.x);
+	x_vals.push_back(rangeDataList[range_vals].coord.y);
+	sLock++;
 }
 
 ARobot::BotDir ARobot::getOffsetDir() {
@@ -309,10 +312,14 @@ void ARobot::CorrectYaw() {
 	const size_t imu_vals = imuDataList.size()-1;
 	float angley;
 	float newyaw=0.0;
+	offsetdir = SlopeDir(x_vals, y_vals);
+	x_vals.clear();
+	y_vals.clear();
+	sLock = 0;
 
 	//average of previous vals
 	for(int i = 0; i < 5; i++) {
-		angley = (rangeDataList[range_vals-i].getAngle() + ((4-(int)currOrientation)%4)*90.0);
+		angley = (rangeDataList[range_vals-i].getAngle()*offsetdir + ((4-(int)currOrientation)%4)*90.0);
 		if(angley <= 10.0) angley += 360;
 		newyaw += rangeDataList[range_vals-i].getAlpha() * angley + (1.0 - rangeDataList[range_vals-i].getAlpha()) * imuDataList[imu_vals-i].m_yaw;
 		printf("Current Alpha: %f\tCurrent New: %f\n", rangeDataList[range_vals-i].getAlpha(), newyaw);
@@ -360,6 +367,17 @@ void ARobot::Correction() {
 	this->currState = ARobot::WAYPTNAV; //if fails
 	return;
 
+}
+
+//https://www.easycalculation.com/statistics/learn-regression.php
+int ARobot::SlopeDir(const std::vector<int>& x, const std::vector<int>& y) {
+    const auto n = x.size();
+    const auto s_x = std::accumulate(x.begin(), x.end(), 0.0);
+    const auto s_y = std::accumulate(y.begin(), y.end(), 0.0);
+    const auto s_xx = std::inner_product(x.begin(), x.end(), x.begin(), 0.0);
+    const auto s_xy = std::inner_product(x.begin(), x.end(), y.begin(), 0.0);
+    const auto a = (n * s_xy - s_x * s_y) / (n * s_xx - s_x * s_x);
+    return (int)a / abs((int)a);
 }
 
 void ARobot::SpinLaser() {

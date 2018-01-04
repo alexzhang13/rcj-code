@@ -16,6 +16,8 @@
 #include "cell.h"
 #include "navigate2D.h"
 #include "kNNFilter.h"
+#include <algorithm>
+#include <numeric>
 
 class LightData;
 class RangeData;
@@ -60,6 +62,7 @@ class ARobot {
  	void CalcNextTile();
  	void Correction();
  	void CorrectYaw();
+ 	int SlopeDir(const std::vector<int>& x, const std::vector<int>& y);
 
  	/*IMU*/
  	void CalibrateIMU();
@@ -117,6 +120,8 @@ class ARobot {
 
 	std::vector<MazeCell> temp_cell_list;
 	std::vector<int32_t> waypts; //current waypoint list
+	std::vector<int> x_vals; //x accumulate
+	std::vector<int> y_vals; //y accumulate
 
  	std::vector<IMUData> imuDataList;
 	std::vector<RangeData> rangeDataList;
@@ -144,6 +149,7 @@ class ARobot {
 	Visual_Victim victim; //visual victim param object
 
 	uint8_t dropCnt; //dropping counter
+	uint8_t sLock; //lock slope coords when > 5
 	bool isVictim; //if a victim has been detected in this cell already
 	bool isDropped;
 	bool toMove; //true means the robot still has to move after turning
@@ -171,7 +177,7 @@ class ARobot {
  	float initialYaw; //initial yaw in a turn
  	float toTurn; //distance to turns
  	bool cross_over; //[check StopTurn() function] --> determines if the yaw has turned over 360 degs
- 	BotDir offsetdir; //what direction is the robot offset from the center right=1, left=3
+ 	int8_t offsetdir; //what direction is the robot offset from the center right=1, left=3
  	size_t mlen_light;
  	size_t mlen_imu;
  	size_t mlen_range;

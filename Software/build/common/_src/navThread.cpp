@@ -51,8 +51,10 @@ void NavThread::run(void){
             case 5: //Move
                 //myRobot->CheckLightTile(); //check if anything happens during this time
             	//find the offset direction of the robot
-            	myRobot->setOffsetDir();
-                sleep(0.16);
+            	if(myRobot->sLock < 5) {
+            		myRobot->setOffsetDir();
+            	}
+                sleep(0.2);
                 break;
             case 6: //Drop
                 myRobot->LEDLight(4500);
