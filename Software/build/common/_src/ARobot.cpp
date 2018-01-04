@@ -371,6 +371,7 @@ void ARobot::Correction() {
 //https://www.easycalculation.com/statistics/learn-regression.php
 int ARobot::SlopeDir(const std::vector<int>& x, const std::vector<int>& y) {
     const auto n = x.size();
+    printf("TEST TEST TEST TEST TEST TEST %d\n", n);
     if(n<=0) {
     	printf("Size is 0\n");
     	return 1;
@@ -381,7 +382,6 @@ int ARobot::SlopeDir(const std::vector<int>& x, const std::vector<int>& y) {
     const auto s_xy = std::inner_product(x.begin(), x.end(), y.begin(), 0.0);
     const auto a = (n * s_xy - s_x * s_y) / (n * s_xx - s_x * s_x);
 
-    printf("TEST TEST TEST TEST TEST TEST \n");
     return (int)a / abs((int)a);
 }
 
