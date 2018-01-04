@@ -372,7 +372,7 @@ void ARobot::Correction() {
 int ARobot::SlopeDir(const std::vector<int>& x, const std::vector<int>& y) {
     const auto n = x.size();
     if(n<=0) {
-    	printf("Size is 0");
+    	printf("Size is 0\n");
     	return 1;
     }
     const auto s_x = std::accumulate(x.begin(), x.end(), 0.0);
@@ -380,6 +380,8 @@ int ARobot::SlopeDir(const std::vector<int>& x, const std::vector<int>& y) {
     const auto s_xx = std::inner_product(x.begin(), x.end(), x.begin(), 0.0);
     const auto s_xy = std::inner_product(x.begin(), x.end(), y.begin(), 0.0);
     const auto a = (n * s_xy - s_x * s_y) / (n * s_xx - s_x * s_x);
+
+    printf("TEST TEST TEST TEST TEST TEST \n");
     return (int)a / abs((int)a);
 }
 
