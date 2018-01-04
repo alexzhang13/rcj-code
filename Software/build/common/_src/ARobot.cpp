@@ -383,7 +383,7 @@ int ARobot::SlopeDir(const std::vector<double>& x, const std::vector<double>& y)
     const auto s_xy = std::inner_product(x.begin(), x.end(), y.begin(), 0.0);
     auto a = (n * s_xy - s_x * s_y) / (n * s_xx - s_x * s_x);
 
-    printf("Test: %d\n", a);
+    printf("Test: %f\n", a);
     return a / abs(a); //1 or -1
 }
 
