@@ -66,7 +66,7 @@ int RangeData::setAngle() {
 		alpha = max(0.0, 7.62*(300.0/(data.laserS_a + data.laserS_b + OFFSET)-0.866)); //30 degree turn range 0-1
 		if(alpha >= 1.2) alpha = 0;
 		else if (alpha >= 1) alpha = 1;
-		//printf("Angle: %f\tAlpha: %f\n", angled, alpha);
+		printf("Angle: %f\tAlpha: %f\n", angled, alpha);
 		// 7.62 = (1 - 0) / (1 - 0.866) --> 0.886 = root (3) / 2 which is cos(30 deg)
 	} else if(avalid_long) {
 		int far = ((int)temp_range[0]/300 + (int)temp_range[2]/300 + 1);
