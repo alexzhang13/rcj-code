@@ -312,8 +312,8 @@ void ARobot::CorrectYaw() {
 	float angley;
 	float newyaw=0.0;
 	offsetdir = SlopeDir(x_vals, y_vals);
-	x_vals.clear();
-	y_vals.clear();
+	//x_vals.clear();
+	//y_vals.clear();
 	sLock = 0;
 
 	//average of previous vals
