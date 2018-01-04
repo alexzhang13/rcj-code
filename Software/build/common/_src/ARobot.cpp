@@ -302,8 +302,7 @@ void ARobot::setOffsetDir() {
 	x_vals.push_back(rangeDataList[range_vals].coord.y);
 	sLock++;
 }
-
-ARobot::int ARobot::getOffsetDir() {
+int ARobot::getOffsetDir() {
 	return offsetdir;
 }
 
