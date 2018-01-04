@@ -299,7 +299,7 @@ void ARobot::setOffsetDir() {
 	const size_t range_vals = rangeDataList.size()-1;
 	//uint32_t tstamp = rangeDataList[range_vals].data.tstamp;
 	x_vals.push_back(rangeDataList[range_vals].coord.x);
-	x_vals.push_back(rangeDataList[range_vals].coord.y);
+	y_vals.push_back(rangeDataList[range_vals].coord.y);
 	sLock++;
 }
 int ARobot::getOffsetDir() {
@@ -380,10 +380,9 @@ int ARobot::SlopeDir(const std::vector<int>& x, const std::vector<int>& y) {
     const auto s_y = std::accumulate(y.begin(), y.end(), 0.0);
     const auto s_xx = std::inner_product(x.begin(), x.end(), x.begin(), 0.0);
     const auto s_xy = std::inner_product(x.begin(), x.end(), y.begin(), 0.0);
-
-    printf("Test: %d\n", n);
     auto a = (n * s_xy - s_x * s_y) / (n * s_xx - s_x * s_x);
 
+    printf("Test: %d\n", a);
     return a / abs(a); //1 or -1
 }
 

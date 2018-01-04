@@ -147,7 +147,7 @@ void NavThread::run(void){
                                         //myRobot->currState = ARobot::Drop; --> Done in StopTurn();
                                         break;
                                     case 2:
-                                        myRobot->victimLeft = true;
+                                        myRobot->victimLeft = true;printf("TEST TEST TEST TEST TEST TEST \n");
                                         myRobot->TurnDistance(90, ARobot::RIGHT); //turn right to drop from back onto left side
                                         myRobot->dropCnt = 1;
                                         myRobot->isVictim = true;
