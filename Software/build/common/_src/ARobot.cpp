@@ -303,7 +303,7 @@ void ARobot::setOffsetDir() {
 	sLock++;
 }
 
-ARobot::BotDir ARobot::getOffsetDir() {
+ARobot::int ARobot::getOffsetDir() {
 	return offsetdir;
 }
 

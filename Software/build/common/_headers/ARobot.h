@@ -67,7 +67,7 @@ class ARobot {
  	/*IMU*/
  	void CalibrateIMU();
  	void setOffsetDir();
- 	BotDir getOffsetDir();
+ 	int getOffsetDir();
 
  	/*Ramp*/
  	bool CheckRamp();
