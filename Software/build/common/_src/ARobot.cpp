@@ -370,7 +370,7 @@ void ARobot::Correction() {
 }
 
 //https://www.easycalculation.com/statistics/learn-regression.php
-int ARobot::SlopeDir(const std::vector<int>& x, const std::vector<int>& y) {
+int ARobot::SlopeDir(const std::vector<double>& x, const std::vector<double>& y) {
     const int n = x.size();
     if(n<=0) {
     	printf("Size is 0\n");
