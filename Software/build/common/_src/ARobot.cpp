@@ -370,19 +370,20 @@ void ARobot::Correction() {
 
 //https://www.easycalculation.com/statistics/learn-regression.php
 int ARobot::SlopeDir(const std::vector<int>& x, const std::vector<int>& y) {
-    const auto n = x.size();
-    printf("TEST TEST TEST TEST TEST TEST %d\n", n);
+    const int n = x.size();
     if(n<=0) {
     	printf("Size is 0\n");
     	return 1;
     }
+
     const auto s_x = std::accumulate(x.begin(), x.end(), 0.0);
     const auto s_y = std::accumulate(y.begin(), y.end(), 0.0);
+    printf("Test: %d\n", n);
     const auto s_xx = std::inner_product(x.begin(), x.end(), x.begin(), 0.0);
     const auto s_xy = std::inner_product(x.begin(), x.end(), y.begin(), 0.0);
-    const auto a = (n * s_xy - s_x * s_y) / (n * s_xx - s_x * s_x);
+    const int a = (n * s_xy - s_x * s_y) / (n * s_xx - s_x * s_x);
 
-    return (int)a / abs((int)a);
+    return a / abs(a); //1 or -1
 }
 
 void ARobot::SpinLaser() {
