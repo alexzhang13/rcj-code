@@ -792,7 +792,7 @@ void ARobot::TestSignal() {
 void ARobot::PrintXYCoords(int x, int y) {
 	for(int i = 29; i > 0; i--) {
 		for(int j = 0; j < 30; j++) {
-			if((y >= i-1 && y <= i+1) && (x <= j+1 && x >= j-1)) {
+			if((y >= i-2 && y <= i+2) && (x <= j+2 && x >= j-2)) {
 				printf("X");
 			} else {
 				printf(".");
