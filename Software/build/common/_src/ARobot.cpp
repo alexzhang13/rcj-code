@@ -272,7 +272,7 @@ void ARobot::CalcNextTile()
 
     toTurn = turnNext*90+(int)angle; //turning distance
 
-    PrintXYCoords((int)rangeDataList[rangeDataList.size()-1].coord.x_glob/30, (int)rangeDataList[rangeDataList.size()-1].coord.y_glob/30);
+    PrintXYCoords((int)rangeDataList[rangeDataList.size()-1].coord.x_glob/10, (int)rangeDataList[rangeDataList.size()-1].coord.y_glob/10);
     //printf("Next_X: %d, Next_Y: %d, Dist: %d, Angle Dif: %f\n", next_x, next_y, dist, angle);
     //printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f\n", scurrTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
     currOrientation = nextDir;
