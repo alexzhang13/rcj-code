@@ -86,7 +86,7 @@ int RangeData::setAngle() {
 		alpha = max(0.0, (7.62/pow(far-1,2))*((far*300)/(data.laserL_a + data.laserL_b + OFFSET)-0.786)); //30 degree turn range 0-1
 		if(alpha >= 1.3) alpha = 0;
 		else if (alpha >= 1) alpha = 1;
-		printf("Angle: %f\tAlpha: %f\tValue: %i Distance: %f\n", angled, alpha, far*300, data.laserL_a + data.laserL_b + OFFSET);
+		//printf("Angle: %f\tAlpha: %f\tValue: %i Distance: %f\n", angled, alpha, far*300, data.laserL_a + data.laserL_b + OFFSET);
 	}
 	return 0;
 }

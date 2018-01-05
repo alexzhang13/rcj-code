@@ -272,7 +272,7 @@ void ARobot::CalcNextTile()
 
     toTurn = turnNext*90+(int)angle; //turning distance
 
-
+    PrintXYCoords((int)rangeDataList[rangeDataList.size()-1].coord.x_glob, (int)rangeDataList[rangeDataList.size()-1].coord.y_glob);
     //printf("Next_X: %d, Next_Y: %d, Dist: %d, Angle Dif: %f\n", next_x, next_y, dist, angle);
     //printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f\n", scurrTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
     currOrientation = nextDir;
@@ -320,8 +320,8 @@ void ARobot::CorrectYaw() {
 	for(int i = 0; i < 5; i++) {
 		angley = (rangeDataList[range_vals-i].getAngle()*offsetdir + ((4-(int)currOrientation)%4)*90.0);
 		if(angley <= 10.0) angley += 360;
-		newyaw += rangeDataList[range_vals-i].getAlpha() * angley + (1.0 - rangeDataList[range_vals-i].getAlpha()) * imuDataList[imu_vals-i].m_yaw;
-		printf("Current Alpha: %f\tCurrent New: %f\n", rangeDataList[range_vals-i].getAlpha(), newyaw);
+		newyaw += rangeDataList[range_vals-i].getAlpha() * angley + (1.0 - rangeDataList[range_vals-i].getAlpha()) * (imuDataList[imu_vals-i].m_yaw > 10 ? imuDataList[imu_vals-i].m_yaw : imuDataList[imu_vals-i].m_yaw + 360.0);
+		printf("Angley: %f\tCurrent Alpha: %f\tCurrent New: %f\n", angley, rangeDataList[range_vals-i].getAlpha(), newyaw);
 	}
 	newyaw /= 5.0;
 	if(newyaw>=360) newyaw-=360;
@@ -371,17 +371,17 @@ void ARobot::Correction() {
 
 //https://www.easycalculation.com/statistics/learn-regression.php
 int ARobot::SlopeDir() {
-    const auto n = this->x_vals.size();
+    const int n = this->x_vals.size();
     if(n<=0) {
     	printf("Size is 0\n");
     	return 1;
     }
 
-    const double s_x = std::accumulate(this->x_vals.begin(), this->x_vals.end(), 0.0);
-    const double s_y = std::accumulate(this->y_vals.begin(), this->y_vals.end(), 0.0);
-    const double s_xx = std::inner_product(this->x_vals.begin(), this->x_vals.end(), this->x_vals.begin(), 0.0);
-    const double s_xy = std::inner_product(this->x_vals.begin(), this->x_vals.end(), this->y_vals.begin(), 0.0);
-    const double a = (n * s_xy - s_x * s_y) / (n * s_xx - s_x * s_x);
+    double s_x = std::accumulate(this->x_vals.begin(), this->x_vals.end(), 0.0);
+    double s_y = std::accumulate(this->y_vals.begin(), this->y_vals.end(), 0.0);
+    double s_xx = std::inner_product(this->x_vals.begin(), this->x_vals.end(), this->x_vals.begin(), 0.0);
+    double s_xy = std::inner_product(this->x_vals.begin(), this->x_vals.end(), this->y_vals.begin(), 0.0);
+    double a = (n * s_xy - s_x * s_y) / (n * s_xx - s_x * s_x);
 
     printf("n: %d\tSummed X: %f\tSummed Y: %f\tSummed X^2: %f\tSummed XY: %f\tA: %f\n", n, s_x, s_y, s_xx, s_xy, a);
     return a / abs(a); //1 or -1
@@ -786,3 +786,18 @@ void ARobot::TestSignal() {
 	snprintf(i_command, i_length, "%c %c", 'z', 'a');
 	WriteCommand(i_command, i_length);
 }
+
+void PrintXYCoords(int x, int y) {
+	for(int i=0;i < 30; i++) {
+		for(int j = 0; j < 30; j++) {
+			if((y >= i-1 && y <= i+1) && (x <= j+1 && x >= j-1)) {
+				printf("X");
+			} else {
+				printf(".");
+			}
+		}
+		printf("\n");
+	}
+}
+
+

@@ -117,6 +117,7 @@ class ARobot {
 
 	/*Testing Signal*/
 	void TestSignal();
+	void PrintXYCoords(int x, int y);
 
 	std::vector<MazeCell> temp_cell_list;
 	std::vector<int32_t> waypts; //current waypoint list
