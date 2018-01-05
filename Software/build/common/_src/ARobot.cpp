@@ -59,6 +59,22 @@ void ARobot::WriteCommand(char* i_command, int size)
     mPort->write(i_command, size);
 }
 
+//testing method
+void PrintXYCoords(int x, int y) {
+	for(int i=0;i < 30; i++) {
+		for(int j = 0; j < 30; j++) {
+			if((y >= i-1 && y <= i+1) && (x <= j+1 && x >= j-1)) {
+				printf("X");
+			} else {
+				printf(".");
+			}
+		}
+		printf("\n");
+	}
+}
+
+
+
 void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
 {
     size_t range_size = rangeDataList.size();
@@ -272,7 +288,7 @@ void ARobot::CalcNextTile()
 
     toTurn = turnNext*90+(int)angle; //turning distance
 
-    PrintXYCoords((int)rangeDataList[rangeDataList.size()-1].coord.x_glob, (int)rangeDataList[rangeDataList.size()-1].coord.y_glob);
+    PrintXYCoords((int)rangeDataList[rangeDataList.size()-1].coord.x_glob/30, (int)rangeDataList[rangeDataList.size()-1].coord.y_glob/30);
     //printf("Next_X: %d, Next_Y: %d, Dist: %d, Angle Dif: %f\n", next_x, next_y, dist, angle);
     //printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f\n", scurrTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
     currOrientation = nextDir;
@@ -786,18 +802,4 @@ void ARobot::TestSignal() {
 	snprintf(i_command, i_length, "%c %c", 'z', 'a');
 	WriteCommand(i_command, i_length);
 }
-
-void PrintXYCoords(int x, int y) {
-	for(int i=0;i < 30; i++) {
-		for(int j = 0; j < 30; j++) {
-			if((y >= i-1 && y <= i+1) && (x <= j+1 && x >= j-1)) {
-				printf("X");
-			} else {
-				printf(".");
-			}
-		}
-		printf("\n");
-	}
-}
-
 
