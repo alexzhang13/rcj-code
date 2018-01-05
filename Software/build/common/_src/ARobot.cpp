@@ -311,7 +311,7 @@ void ARobot::CorrectYaw() {
 	const size_t imu_vals = imuDataList.size()-1;
 	float angley;
 	float newyaw=0.0;
-	offsetdir = SlopeDir(x_vals, y_vals);
+	offsetdir = SlopeDir();
 	x_vals.clear();
 	y_vals.clear();
 	sLock = 0;
