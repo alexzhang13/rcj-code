@@ -59,22 +59,6 @@ void ARobot::WriteCommand(char* i_command, int size)
     mPort->write(i_command, size);
 }
 
-//testing method
-void PrintXYCoords(int x, int y) {
-	for(int i=0;i < 30; i++) {
-		for(int j = 0; j < 30; j++) {
-			if((y >= i-1 && y <= i+1) && (x <= j+1 && x >= j-1)) {
-				printf("X");
-			} else {
-				printf(".");
-			}
-		}
-		printf("\n");
-	}
-}
-
-
-
 void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
 {
     size_t range_size = rangeDataList.size();
@@ -795,11 +779,26 @@ void ARobot::ClearScan()
 {
     scanDataList.clear();
 }
+
 void ARobot::TestSignal() {
 	char* i_command;
 	int i_length = snprintf(NULL, 0, "%c %c", 'z', 'a') + 1;
 	i_command = (char*)malloc(i_length);
 	snprintf(i_command, i_length, "%c %c", 'z', 'a');
 	WriteCommand(i_command, i_length);
+}
+
+//testing method
+void ARobot::PrintXYCoords(int x, int y) {
+	for(int i=0;i < 30; i++) {
+		for(int j = 0; j < 30; j++) {
+			if((y >= i-1 && y <= i+1) && (x <= j+1 && x >= j-1)) {
+				printf("X");
+			} else {
+				printf(".");
+			}
+		}
+		printf("\n");
+	}
 }
 
