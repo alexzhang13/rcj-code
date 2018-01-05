@@ -370,17 +370,17 @@ void ARobot::Correction() {
 }
 
 //https://www.easycalculation.com/statistics/learn-regression.php
-int ARobot::SlopeDir(const std::vector<double>& x, const std::vector<double>& y) {
-    const int n = x.size();
+int ARobot::SlopeDir() {
+    const auto n = this->x_vals.size();
     if(n<=0) {
     	printf("Size is 0\n");
     	return 1;
     }
 
-    const double s_x = std::accumulate(x.begin(), x.end(), 0.0);
-    const double s_y = std::accumulate(y.begin(), y.end(), 0.0);
-    const double s_xx = std::inner_product(x.begin(), x.end(), x.begin(), 0.0);
-    const double s_xy = std::inner_product(x.begin(), x.end(), y.begin(), 0.0);
+    const double s_x = std::accumulate(this->x_vals.begin(), this->x_vals.end(), 0.0);
+    const double s_y = std::accumulate(this->y_vals.begin(), this->y_vals.end(), 0.0);
+    const double s_xx = std::inner_product(this->x_vals.begin(), this->x_vals.end(), this->x_vals.begin(), 0.0);
+    const double s_xy = std::inner_product(this->x_vals.begin(), this->x_vals.end(), this->y_vals.begin(), 0.0);
     const double a = (n * s_xy - s_x * s_y) / (n * s_xx - s_x * s_x);
 
     printf("n: %f\tSummed X: %f\tSummed Y: %f\tSummed X^2: %f\tSummed XY: %f\tA: %f\n", n, s_x, s_y, s_xx, s_xy, a);

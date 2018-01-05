@@ -62,7 +62,7 @@ class ARobot {
  	void CalcNextTile();
  	void Correction();
  	void CorrectYaw();
- 	int SlopeDir(const std::vector<double>& x, const std::vector<double>& y);
+ 	int SlopeDir(); //const std::vector<double>& x, const std::vector<double>& y
 
  	/*IMU*/
  	void CalibrateIMU();
