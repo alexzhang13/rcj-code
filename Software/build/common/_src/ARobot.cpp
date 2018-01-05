@@ -381,9 +381,9 @@ int ARobot::SlopeDir(const std::vector<double>& x, const std::vector<double>& y)
     const double s_y = std::accumulate(y.begin(), y.end(), 0.0);
     const double s_xx = std::inner_product(x.begin(), x.end(), x.begin(), 0.0);
     const double s_xy = std::inner_product(x.begin(), x.end(), y.begin(), 0.0);
-    double a = (n * s_xy - s_x * s_y) / (n * s_xx - s_x * s_x);
+    const double a = (n * s_xy - s_x * s_y) / (n * s_xx - s_x * s_x);
 
-    printf("Summed X: %f\tSummed Y: %f\tSummed X^2: %f\tSummed XY: %f\tA: %f\n", s_x, s_y, s_xx, s_xy, a);
+    printf("n: %f\tSummed X: %f\tSummed Y: %f\tSummed X^2: %f\tSummed XY: %f\tA: %f\n", n, s_x, s_y, s_xx, s_xy, a);
     return a / abs(a); //1 or -1
 }
 
