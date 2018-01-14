@@ -383,11 +383,11 @@ int ARobot::SlopeDir() {
     double s_y = std::accumulate(this->y_vals.begin(), this->y_vals.end(), 0.0);
     double s_xx = std::inner_product(this->x_vals.begin(), this->x_vals.end(), this->x_vals.begin(), 0.0);
     double s_xy = std::inner_product(this->x_vals.begin(), this->x_vals.end(), this->y_vals.begin(), 0.0);
-    long long double numer = n * s_xy - s_x * s_y;
-    long long double denom = n * s_xx - s_x * s_x;
+    long double numer = n * s_xy - s_x * s_y;
+    long double denom = n * s_xx - s_x * s_x;
     long double a = numer/denom;
 
-    printf("n: %d\tSummed X: %f\tSummed Y: %f\tSummed X^2: %f\tSummed XY: %f\tNumerator: %f\tDenominator: %f\tA: %f\n", n, s_x, s_y, s_xx, s_xy, numer, denom, a);
+    printf("n: %d\tSummed X: %f\tSummed Y: %f\tSummed X^2: %f\tSummed XY: %f\tNumerator: %ld\tDenominator: %ld\tA: ld\n", n, s_x, s_y, s_xx, s_xy, numer, denom, a);
     if(a == 0) return 1;
     return a / abs(a); //1 or -1
 }
