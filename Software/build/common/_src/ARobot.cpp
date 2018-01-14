@@ -387,7 +387,7 @@ int ARobot::SlopeDir() {
     long double denom = n * s_xx - s_x * s_x;
     long double a = numer/denom;
 
-    printf("n: %d\tSummed X: %f\tSummed Y: %f\tSummed X^2: %f\tSummed XY: %f\tNumerator: %lf\tDenominator: %lf\tA: lf\n", n, s_x, s_y, s_xx, s_xy, numer, denom, a);
+    printf("n: %d\tSummed X: %f\tSummed Y: %f\tSummed X^2: %f\tSummed XY: %f\tNumerator: %lf\tDenominator: %lf\tA: %lf\n", n, s_x, s_y, s_xx, s_xy, numer, denom, a);
     if(a == 0) return 1;
     return a / abs(a); //1 or -1
 }

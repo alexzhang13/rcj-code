@@ -36,9 +36,10 @@ void NavThread::run(void){
             case 3: //Idle
                 if(myRobot->toMove){
 		            sleep(1.5);
-		            printf("%s, %d\n", "Idle to Distance: ", myRobot->dist_temp);
-                    myRobot->MoveDistance(myRobot->dist_temp, ARobot::FRONT);
-                    myRobot->toMove = false;
+		            //printf("%s, %d\n", "Idle to Distance: ", myRobot->dist_temp);
+                    //myRobot->MoveDistance(myRobot->dist_temp, ARobot::FRONT);
+		            myRobot->toMove = false;
+		            myRobot->CalcNextTile();
                 } else {
                     myRobot->currState = ARobot::WAYPTNAV;
                 }
@@ -47,6 +48,7 @@ void NavThread::run(void){
                 while(myRobot->CheckRamp()) {    
                     sleep(0.1);
                 }
+                sleep(2);
                 myRobot->StopMove();
                 break;
             case 5: //Move
