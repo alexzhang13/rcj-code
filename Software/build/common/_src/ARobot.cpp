@@ -263,6 +263,8 @@ void ARobot::CalcNextTile()
         nextDir = SOUTH;
     }
 
+    printf("Next Direction: %d\n", (int)nextDir);
+
     int turnNext = (int)currOrientation - (int)nextDir; //left is pos, right is neg
     /*Turning first*/
     if(turnNext == 3) turnNext = -1; //west -> north = turn right 1
@@ -381,11 +383,12 @@ int ARobot::SlopeDir() {
     double s_y = std::accumulate(this->y_vals.begin(), this->y_vals.end(), 0.0);
     double s_xx = std::inner_product(this->x_vals.begin(), this->x_vals.end(), this->x_vals.begin(), 0.0);
     double s_xy = std::inner_product(this->x_vals.begin(), this->x_vals.end(), this->y_vals.begin(), 0.0);
-    auto numer = n * s_xy - s_x * s_y;
-    auto denom = n * s_xx - s_x * s_x;
-    double a = numer/denom;
+    long long double numer = n * s_xy - s_x * s_y;
+    long long double denom = n * s_xx - s_x * s_x;
+    long double a = numer/denom;
 
     printf("n: %d\tSummed X: %f\tSummed Y: %f\tSummed X^2: %f\tSummed XY: %f\tNumerator: %f\tDenominator: %f\tA: %f\n", n, s_x, s_y, s_xx, s_xy, numer, denom, a);
+    if(a == 0) return 1;
     return a / abs(a); //1 or -1
 }
 
