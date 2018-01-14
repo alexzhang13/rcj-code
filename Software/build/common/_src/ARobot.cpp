@@ -284,7 +284,7 @@ void ARobot::CalcNextTile()
 
 void ARobot::TileTransition(int32_t dist)
 {
-    if(abs(toTurn) >= 2f) { //ignore smaller angles
+    if(abs(toTurn) >= 2.0f) { //ignore smaller angles
         TurnDistance((int)abs(toTurn), (toTurn > 0) ? LEFT : RIGHT); //left is positive for IMU
         dist_temp = dist;
         toMove = true;
