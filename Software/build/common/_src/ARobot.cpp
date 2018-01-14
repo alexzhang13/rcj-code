@@ -300,6 +300,7 @@ void ARobot::TileTransition(int32_t dist)
 void ARobot::setOffsetDir() {
 	const size_t range_vals = rangeDataList.size()-1;
 	//uint32_t tstamp = rangeDataList[range_vals].data.tstamp;
+	printf("SetOffsetDir() X: %d\n", rangeDataList[range_vals].coord.x);
 	x_vals.push_back(rangeDataList[range_vals].coord.x);
 	y_vals.push_back(rangeDataList[range_vals].coord.y);
 	sLock++;
@@ -340,25 +341,25 @@ void ARobot::Correction() {
 	switch((int)currOrientation) {
 	case 0: //Bot facing North
 		if(currYaw >= 180) currYaw -= 360; //negative range
-		if(abs(0.0f-currYaw) >= 3.5f) {
+		if(abs(0.0f-currYaw) >= 2.0f) {
 			TurnDistance((int)abs(0.0f-currYaw), (0.0f-currYaw > 0.0f) ? LEFT : RIGHT); //If yaw is negative, robot is on right side, so turn left, and vice versa
 			return;
 		}
 		break;
 	case 1: //Bot facing East
-		if(abs(270.0f-currYaw) >= 3.5f) {
+		if(abs(270.0f-currYaw) >= 2.0f) {
 			TurnDistance((int)abs(270.0f-currYaw), (270.0f-currYaw > 0.0f) ? LEFT : RIGHT); //If 270-yaw is positive, robot is on right side, so turn left, and vice versa
 			return;
 		}
 		break;
 	case 2: //Bot facing South
-		if(abs(180.0f-currYaw) >= 3.5f) {
+		if(abs(180.0f-currYaw) >= 2.0f) {
 			TurnDistance((int)abs(180.0f-currYaw), (180.0f-currYaw > 0.0f) ? LEFT : RIGHT); //If 180-yaw is positive, robot is on right side, so turn left, and vice versa
 			return;
 		}
 		break;
 	case 3: //Bot facing West
-		if(abs(90.0f-currYaw) >= 3.5f) {
+		if(abs(90.0f-currYaw) >= 2.0f) {
 			TurnDistance((int)abs(90.0f-currYaw), (90.0f-currYaw > 0.0f) ? LEFT : RIGHT); //If 90-yaw is positive, robot is on right side, so turn left, and vice versa
 			return;
 		}
