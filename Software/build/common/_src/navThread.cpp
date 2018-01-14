@@ -31,7 +31,7 @@ void NavThread::run(void){
                 break;
             case 2: //Turn
                 myRobot->StopTurn(myRobot->currDir);
-                sleep(0.5);
+                sleep(0.1);
                 break;
             case 3: //Idle
                 if(myRobot->toMove){

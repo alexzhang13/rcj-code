@@ -176,6 +176,7 @@ class ARobot {
  	int off_right; //robot right motor offset
  	int yaw_drift; //Add to counter yaw drift...
  	float initialYaw; //initial yaw in a turn
+ 	float prevYaw; //previous yaw reading
  	float toTurn; //distance to turns
  	bool cross_over; //[check StopTurn() function] --> determines if the yaw has turned over 360 degs
  	int8_t offsetdir; //what direction is the robot offset from the center right=1, left=3

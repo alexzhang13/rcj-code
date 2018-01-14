@@ -642,11 +642,10 @@ void ARobot::StopTurn(BotDir dir)
     size_t imu_list = imuDataList.size();
     float currYaw = imuDataList[imu_list-1].m_yaw;
     if(dir == RIGHT) {
-        if(initialYaw <= 180.0f && currYaw > 180.0f) //if robot crosses over from 180 to -180, direction switches
+        if(prevYaw < currYaw) //if robot crosses over from 180 to -180, direction switches
             cross_over = true;
         if(cross_over) //condition holds even if prev doesn't when cross_over is already true
         	currYaw -= 360; //range fixing
-
         if(currYaw <= toTurn) {
             char* i_command;
             cross_over = false; //default cross bool now off
@@ -663,7 +662,7 @@ void ARobot::StopTurn(BotDir dir)
             return;
         }
     } else if(dir == LEFT) {
-    	if(initialYaw > 180.0f && currYaw <= 180.0f) //if robot crosses over from -180 to 180, direction switches
+    	if(prevYaw > currYaw) //if robot crosses over from -180 to 180, direction switches
     		cross_over = true;
         if(cross_over)
         	currYaw += 360; //range fixing
@@ -684,7 +683,7 @@ void ARobot::StopTurn(BotDir dir)
             return;
         }
     }
-
+    prevYaw = currYaw;
     //printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f\n", currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
 }
 
