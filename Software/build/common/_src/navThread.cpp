@@ -38,7 +38,6 @@ void NavThread::run(void){
 		            sleep(1.5);
 		            //printf("%s, %d\n", "Idle to Distance: ", myRobot->dist_temp);
                     //myRobot->MoveDistance(myRobot->dist_temp, ARobot::FRONT);
-		            myRobot->toMove = false;
 		            myRobot->CalcNextTile();
                 } else {
                     myRobot->currState = ARobot::WAYPTNAV;

@@ -248,6 +248,7 @@ void ARobot::CalcNextTile()
     int next_y = (currTile.y_tovisit*300+150) - (currTile.y*300) - (int)rangeDataList[rangeDataList.size()-1].coord.y_glob; //next tile coords
     printf("Next_x: %d, Next_y, %d, ToVisit_X: %d, ToVisit_Y: %d, X: %f, Y: %f\n", next_x, next_y, currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
     int32_t dist = (int32_t)sqrt(next_x*next_x + next_y*next_y); //pythagorean
+    if(toMove) {toTurn = 0; TileTransition(dist);}
     float angle; //offset angle degrees
     if(currTile.x_tovisit - currTile.x > 0) { //east
     	angle = atan((float)next_y/(float)next_x)*180.0f/3.1415926535f; //angle to left, should be neg
@@ -379,13 +380,13 @@ int ARobot::SlopeDir() {
     	return 1;
     }
 
-    double s_x = std::accumulate(this->x_vals.begin(), this->x_vals.end(), 0.0);
-    double s_y = std::accumulate(this->y_vals.begin(), this->y_vals.end(), 0.0);
-    double s_xx = std::inner_product(this->x_vals.begin(), this->x_vals.end(), this->x_vals.begin(), 0.0);
-    double s_xy = std::inner_product(this->x_vals.begin(), this->x_vals.end(), this->y_vals.begin(), 0.0);
-    long double numer = n * s_xy - s_x * s_y;
-    long double denom = n * s_xx - s_x * s_x;
-    long double a = numer/denom;
+    const auto s_x = std::accumulate(this->x_vals.begin(), this->x_vals.end(), 0.0);
+    const auto s_y = std::accumulate(this->y_vals.begin(), this->y_vals.end(), 0.0);
+    const auto s_xx = std::inner_product(this->x_vals.begin(), this->x_vals.end(), this->x_vals.begin(), 0.0);
+    const auto s_xy = std::inner_product(this->x_vals.begin(), this->x_vals.end(), this->y_vals.begin(), 0.0);
+    const auto numer = n * s_xy - s_x * s_y;
+    const auto denom = n * s_xx - s_x * s_x;
+    auto a = numer/denom;
 
     printf("n: %d\tSummed X: %f\tSummed Y: %f\tSummed X^2: %f\tSummed XY: %f\tNumerator: %lf\tDenominator: %lf\tA: %lf\n", n, s_x, s_y, s_xx, s_xy, numer, denom, a);
     if(a == 0) return 1;
