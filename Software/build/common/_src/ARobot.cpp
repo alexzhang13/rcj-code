@@ -244,8 +244,8 @@ void ARobot::UpdateNeighborCells()
 void ARobot::CalcNextTile()
 {
     BotOrientation nextDir;
-    int next_x = (currTile.x_tovisit*300+150) - (currTile.x*300) - (int)rangeDataList[rangeDataList.size()-1].coord.x_glob; //next tile coords
-    int next_y = (currTile.y_tovisit*300+150) - (currTile.y*300) - (int)rangeDataList[rangeDataList.size()-1].coord.y_glob; //next tile coords
+    int next_x = (currTile.x_tovisit*300+150) - (currTile.x*300) - (int)rangeDataList[rangeDataList.size()-2].coord.x_glob; //next tile coords
+    int next_y = (currTile.y_tovisit*300+150) - (currTile.y*300) - (int)rangeDataList[rangeDataList.size()-2].coord.y_glob; //next tile coords
     printf("Next_x: %d, Next_y, %d, ToVisit_X: %d, ToVisit_Y: %d, X: %f, Y: %f\n", next_x, next_y, currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
     int32_t dist = (int32_t)sqrt(next_x*next_x + next_y*next_y); //pythagorean
     if(toMove) {toMove = false; MoveDistance(dist, FRONT);}
@@ -264,14 +264,13 @@ void ARobot::CalcNextTile()
         nextDir = SOUTH;
     }
 
-    printf("Next Direction: %d\n", (int)nextDir);
-
+    printf("Current Orientation: %d\nNext Direction: %d\n", (int)currOrientation, (int)nextDir);
     int turnNext = (int)currOrientation - (int)nextDir; //left is pos, right is neg
     /*Turning first*/
     if(turnNext == 3) turnNext = -1; //west -> north = turn right 1
     else if (turnNext == -3) turnNext = 1; //north -> west = turn left 1
 
-    angle *= (turnNext>=0) ? 1 : -1; //determine direction of offset (left >= 0)
+    //angle *= (turnNext>=0) ? 1 : -1; //determine direction of offset (left >= 0)
 
     toTurn = turnNext*90+(int)angle; //turning distance
 
