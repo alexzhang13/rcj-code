@@ -298,9 +298,10 @@ void ARobot::TileTransition(int32_t dist)
 
 /*called only when robot is moving*/
 void ARobot::setOffsetDir() {
-	const size_t range_vals = rangeDataList.size()-1;
+	const size_t range_vals = rangeDataList.size()-2;
 	//uint32_t tstamp = rangeDataList[range_vals].data.tstamp;
-	printf("SetOffsetDir() X: %d\n", rangeDataList[range_vals].coord.x);
+	printf("SetOffsetDir() X: %d\t", rangeDataList[range_vals].coord.x_glob);
+	printf("SetOffsetDir() Y: %d\n", rangeDataList[range_vals].coord.y_glob);
 	x_vals.push_back(rangeDataList[range_vals].coord.x);
 	y_vals.push_back(rangeDataList[range_vals].coord.y);
 	sLock++;
