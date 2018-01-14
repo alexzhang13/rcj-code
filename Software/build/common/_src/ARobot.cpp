@@ -248,7 +248,7 @@ void ARobot::CalcNextTile()
     int next_y = (currTile.y_tovisit*300+150) - (currTile.y*300) - (int)rangeDataList[rangeDataList.size()-1].coord.y_glob; //next tile coords
     printf("Next_x: %d, Next_y, %d, ToVisit_X: %d, ToVisit_Y: %d, X: %f, Y: %f\n", next_x, next_y, currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
     int32_t dist = (int32_t)sqrt(next_x*next_x + next_y*next_y); //pythagorean
-    if(toMove) {toMove = false; toTurn = 0; TileTransition(dist);}
+    if(toMove) {toMove = false; MoveDistance(dist, FRONT);}
     float angle; //offset angle degrees
     if(currTile.x_tovisit - currTile.x > 0) { //east
     	angle = atan((float)next_y/(float)next_x)*180.0f/3.1415926535f; //angle to left, should be neg
