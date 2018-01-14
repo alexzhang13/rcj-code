@@ -284,7 +284,7 @@ void ARobot::CalcNextTile()
 
 void ARobot::TileTransition(int32_t dist)
 {
-    if(abs(toTurn) >= 2.0f) { //ignore smaller angles
+    if(abs(toTurn) >= 3.0f) { //ignore smaller angles
         TurnDistance((int)abs(toTurn), (toTurn > 0) ? LEFT : RIGHT); //left is positive for IMU
         dist_temp = dist;
         toMove = true;
@@ -341,25 +341,25 @@ void ARobot::Correction() {
 	switch((int)currOrientation) {
 	case 0: //Bot facing North
 		if(currYaw >= 180) currYaw -= 360; //negative range
-		if(abs(0.0f-currYaw) >= 2.0f) {
+		if(abs(0.0f-currYaw) >= 2.5f) {
 			TurnDistance((int)abs(0.0f-currYaw), (0.0f-currYaw > 0.0f) ? LEFT : RIGHT); //If yaw is negative, robot is on right side, so turn left, and vice versa
 			return;
 		}
 		break;
 	case 1: //Bot facing East
-		if(abs(270.0f-currYaw) >= 2.0f) {
+		if(abs(270.0f-currYaw) >= 2.5f) {
 			TurnDistance((int)abs(270.0f-currYaw), (270.0f-currYaw > 0.0f) ? LEFT : RIGHT); //If 270-yaw is positive, robot is on right side, so turn left, and vice versa
 			return;
 		}
 		break;
 	case 2: //Bot facing South
-		if(abs(180.0f-currYaw) >= 2.0f) {
+		if(abs(180.0f-currYaw) >= 2.5f) {
 			TurnDistance((int)abs(180.0f-currYaw), (180.0f-currYaw > 0.0f) ? LEFT : RIGHT); //If 180-yaw is positive, robot is on right side, so turn left, and vice versa
 			return;
 		}
 		break;
 	case 3: //Bot facing West
-		if(abs(90.0f-currYaw) >= 2.0f) {
+		if(abs(90.0f-currYaw) >= 2.5f) {
 			TurnDistance((int)abs(90.0f-currYaw), (90.0f-currYaw > 0.0f) ? LEFT : RIGHT); //If 90-yaw is positive, robot is on right side, so turn left, and vice versa
 			return;
 		}

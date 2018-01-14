@@ -19,8 +19,8 @@ RangeData::RangeData(ARobot *robot) :myRobot(robot)
 	avalid_short = true;
 	coord.x = 0; 
 	coord.y = 0; //default center (0,0)
-	coord.x_glob = 0;
-	coord.y_glob = 0;
+	coord.x_glob = 150;
+	coord.y_glob = 150;
 	coord.x_flag = true; 
 	coord.y_flag = true; //assume readings are true at first
 	curr_yaw=0;
