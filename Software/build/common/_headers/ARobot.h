@@ -178,6 +178,7 @@ class ARobot {
  	float initialYaw; //initial yaw in a turn
  	float prevYaw; //previous yaw reading
  	float toTurn; //distance to turns
+ 	bool initTurnRec; //specific special case (glitch) -- cleaner way will remove this sooner or later
  	bool cross_over; //[check StopTurn() function] --> determines if the yaw has turned over 360 degs
  	int8_t offsetdir; //what direction is the robot offset from the center right=1, left=3
  	size_t mlen_light;

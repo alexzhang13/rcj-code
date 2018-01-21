@@ -85,9 +85,9 @@ void NavThread::run(void){
             case 9: //Data collection
                 myRobot->isVictim = nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim();
                 if(!myRobot->isVictim) {myRobot->isDropped = false;}
-                sleep(1.2);
-                /*DO STUFF IN BETWEEN HERE eg. Camera, etc.*/
-                sleep(1.2);
+                sleep(0.5);
+                myRobot->SpinLaser();
+                sleep(2);
                 myRobot->CalibrateIMU();
                 bot_waypts = myRobot->waypts.size();
                 myRobot->currTile.x = myRobot->currTile.x_tovisit;
