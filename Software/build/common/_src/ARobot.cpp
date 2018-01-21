@@ -648,6 +648,7 @@ void ARobot::StopTurn(BotDir dir)
             cross_over = true;
         if(cross_over) //condition holds even if prev doesn't when cross_over is already true
         	currYaw -= 360; //range fixing
+        printf("Curr Yaw: %d\tPrev Yaw: %d\n", currYaw, prevYaw);
         if(currYaw <= toTurn) {
             char* i_command;
             cross_over = false; //default cross bool now off
