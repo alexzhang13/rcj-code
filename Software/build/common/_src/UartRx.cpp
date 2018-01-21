@@ -69,9 +69,9 @@ void UartRx::run(void){
         } else if (c == 'r') {
             storeRange(mBuf);
         } else if (c == 't') {
-            //storeTemp(mBuf);
+            storeTemp(mBuf);
        	} else if (c == 'l') {
-            //storeLight(mBuf);
+            storeLight(mBuf);
         } else if (c == 'y') {
         	storeScan(mBuf);
         } else if (c == 'z') {
