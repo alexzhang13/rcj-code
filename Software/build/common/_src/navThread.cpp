@@ -96,12 +96,12 @@ void NavThread::run(void){
                 nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]);
                 printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
                 sleep(1.5);
-                /*if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
+                if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
                     //myRobot->SpinLaser();
                     //sleep(2.5); //time for laser
                     //myRobot->CheckVictimVisual();
 
-                    /*if(myRobot->CheckRamp()) { //is ramp
+                    if(myRobot->CheckRamp()) { //is ramp
                         //myRobot->MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
                         break;
                     }
@@ -110,11 +110,10 @@ void NavThread::run(void){
                         myRobot->LEDLight(5000);
                         sleep(5);
                         //save state
-
                     }
                     //check visual victim
                     if(!nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim()) { //get currCell
-                        /*switch(myRobot->ProcessImage_Victim()) {
+                        switch(myRobot->ProcessImage_Victim()) {
                             if(myRobot->victim.letter == 'H') { //H
                                 myRobot->dropCnt = 2;
                             } else if (myRobot->victim.letter == 'S') { //S
@@ -151,7 +150,7 @@ void NavThread::run(void){
                                         //myRobot->currState = ARobot::Drop; --> Done in StopTurn();
                                         break;
                                     case 2:
-                                        myRobot->victimLeft = true;printf("TEST TEST TEST TEST TEST TEST \n");
+                                        myRobot->victimLeft = true;
                                         myRobot->TurnDistance(90, ARobot::RIGHT); //turn right to drop from back onto left side
                                         myRobot->dropCnt = 1;
                                         myRobot->isVictim = true;
@@ -167,7 +166,7 @@ void NavThread::run(void){
                     } else {
                         myRobot->currState = ARobot::WAYPTNAV;
                     }
-                }*/
+                }
                 myRobot->CorrectYaw();
                 myRobot->Correction();
                 //myRobot->currState = ARobot::WAYPTNAV;

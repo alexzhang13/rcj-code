@@ -32,6 +32,7 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     this->off_left = 5;
     this->off_right = 25;
     this->offsetdir = 1;
+    this->prevYaw = 0;
     this->silver_thresh = 0;
     this->sLock = 0;
     this->speed_left = 100;
@@ -626,6 +627,7 @@ void ARobot::TurnDistance(int degrees, BotDir dir)
         currDir = LEFT;
     }
     currState = TURN;
+    prevYaw = initialYaw;
     printf("Initial Yaw: %f Degrees: %d ToTurn: %f\n", initialYaw, degrees, toTurn);
     WriteCommand(i_command, i_length);
 }
