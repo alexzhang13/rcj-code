@@ -18,7 +18,7 @@ void NavThread::run(void){
 
     while(1) {
         switch(myRobot->currState) {
-            //if(cnt%100==0) {printf("State: %d\n", cnt);}
+            if(cnt%100==0) {printf("State: %d\n", myRobot->currState);}
             case 0: //Planning
                 Navigate(in_dir, xml_name, myRobot, nav);
             	//myRobot->TurnDistance(90, ARobot::LEFT);
@@ -96,7 +96,7 @@ void NavThread::run(void){
                 nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]);
                 printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
                 sleep(1.5);
-                if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
+                /*if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
                     //myRobot->SpinLaser();
                     //sleep(2.5); //time for laser
                     //myRobot->CheckVictimVisual();
@@ -166,7 +166,7 @@ void NavThread::run(void){
                     } else {
                         myRobot->currState = ARobot::WAYPTNAV;
                     }
-                }
+                }*/
                 myRobot->CorrectYaw();
                 myRobot->Correction();
                 //myRobot->currState = ARobot::WAYPTNAV;
