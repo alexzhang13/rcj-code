@@ -647,9 +647,10 @@ void ARobot::StopTurn(BotDir dir)
         if(prevYaw < currYaw) //if robot crosses over from 180 to -180, direction switches
             cross_over = true;
         if(cross_over) //condition holds even if prev doesn't when cross_over is already true
-        	currYaw -= 360; //range fixing
-        printf("Curr Yaw: %f\tPrev Yaw: %f\n", currYaw, prevYaw);
+        	currYaw -= 360.0f; //range fixing
+        //printf("Curr Yaw: %f\tPrev Yaw: %f\n", currYaw, prevYaw);
         if(currYaw <= toTurn) {
+        	printf("Turn is Finished?\n");
             char* i_command;
             cross_over = false; //default cross bool now off
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
@@ -668,7 +669,7 @@ void ARobot::StopTurn(BotDir dir)
     	if(prevYaw > currYaw) //if robot crosses over from -180 to 180, direction switches
     		cross_over = true;
         if(cross_over)
-        	currYaw += 360; //range fixing
+        	currYaw += 360.0f; //range fixing
 
         if(currYaw >= toTurn) {
             char* i_command;
