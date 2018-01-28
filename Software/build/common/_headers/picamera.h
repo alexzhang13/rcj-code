@@ -33,6 +33,7 @@ public:
 	inline cv::Mat *getLatestImage() { return m_frames.size() == 0 ? NULL : &m_frames[m_frames.size()-1];}
 
 	inline std::vector<cv::Mat> *getImageList() { return &m_frames;}
+	inline std::vector<cv::Mat> getImageListCopy() {return m_frames;}
 	inline void resetFrameBuffers() { m_frames.clear();}
 	inline void close() { m_camera.release(); }
 

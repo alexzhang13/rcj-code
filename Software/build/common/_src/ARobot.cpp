@@ -441,7 +441,10 @@ int ARobot::CheckVictimTemp()
 }
 
 void ARobot::CheckVictimVisual() {
-    imgList = picam.getImageList();
+    /*for(int i = 0; i < picam.getImageList()->size(); i++) {
+        imgList.push_back(picam.getImageList()->at(i));
+    }*/
+	imgList = picam.getImageListCopy();
     printf("List Size: %d\n", imgList.size());
 }
 
