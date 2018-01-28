@@ -450,9 +450,11 @@ void ARobot::CheckVictimVisual() {
 int ARobot::ProcessImage_Victim() {
     victim.letter = '0'; //reset
     victim.m_isVictim = false;
+
     for(int i = 0; i < imgList.size(); i++) {
         m_letter = knn.detectVictim(imgList[i]);
         if(m_letter != '0' && victim.m_isVictim == true) { //error, not supposed to happen, means there is a mistake
+        	printf("DNE\n");
             victim.m_isVictim = false;
             isVictim = false;
             break;
@@ -460,10 +462,13 @@ int ARobot::ProcessImage_Victim() {
         if(m_letter != '0') {
             victim.letter = m_letter;
             if(i == 0) {
+            	printf("Left\n");
                 victim.dir_victim = LEFT;
             } else if(i == 1) {
+            	printf("Right\n");
                 victim.dir_victim = FRONT;
             } else {
+            	printf("Front\n");
                 victim.dir_victim = RIGHT;
             }
             victim.m_isVictim = true;
