@@ -27,6 +27,9 @@ _PiCamera_::~_PiCamera_()
 
 bool _PiCamera_::cameraOpen(int32_t width, int32_t height)
 {
+	if(m_camera.open()) { //already open (test case only)
+		return true;
+	}
 	if(width > 0 && m_height > 0) {
 		m_width = width;
 		m_height = height;

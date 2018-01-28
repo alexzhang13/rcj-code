@@ -56,7 +56,7 @@ class ARobot {
  	void WriteCommand(char* command, int size);
 
  	/*Algorithm <-> Control*/
- 	void UpdateCellMap(MazeCell *sensor_info, bool backing_black);
+ 	void UpdateCellMap(MazeCell *sensor_info, bool backing_black, bool CheckRamp);
  	void UpdateNeighborCells();
  	void TileTransition(int32_t dist);
  	void CalcNextTile();

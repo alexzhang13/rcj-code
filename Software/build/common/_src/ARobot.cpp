@@ -50,7 +50,6 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     this->victimRight = false; //true if is dropping to the right
     this->yaw_drift = 0;
 }
-
 ARobot::~ARobot() 
 {
 
@@ -61,7 +60,7 @@ void ARobot::WriteCommand(char* i_command, int size)
     mPort->write(i_command, size);
 }
 
-void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
+void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag, bool CheckRamp)
 {
     size_t range_size = rangeDataList.size();
     if(!black_flag) {
@@ -72,7 +71,7 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
             sensor_info->setCheckPt(false);
             sensor_info->setNonMovable(false);
         }
-        if(CheckRamp()) {
+        if(CheckRamp) {
             sensor_info->setStairCell(true);
         } else {sensor_info->setStairCell(false);}
         if(victimRight) {
@@ -471,8 +470,8 @@ int ARobot::ProcessImage_Victim() {
             isVictim = true;
         }
     }
-    ClearImgList();
     picam.resetFrameBuffers();
+    ClearImgList();
     if(victim.m_isVictim == true) {
         if(victim.dir_victim == RIGHT) {
             return 2;

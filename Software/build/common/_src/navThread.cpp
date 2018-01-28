@@ -9,18 +9,28 @@ void NavThread::run(void){
     printf("Fault 4 Passed\n");
     readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     printf("Fault 5 Passed\n");
-    //myRobot->picam.cameraOpen(320, 240); //start up camera
+    myRobot->picam.cameraOpen(320, 240); //start up camera
     //myRobot->ProcessImage_Victim();
-    myRobot->CalibrateIMU();
+    //myRobot->CalibrateIMU();
     sleep(1);
     myRobot->imuCalibrated = true; //turn on IMU flag
+    myRobot->picam.frameCapture();
+    sleep(0.5);
+    myRobot->picam.frameCapture();
+    sleep(0.5);
+    myRobot->picam.frameCapture();
+    sleep(0.5);
 
+    myRobot->CheckVictimVisual();
+    printf("Side of Victim: %d\n", myRobot->ProcessImage_Victim());
+    sleep(0.5);
+    myRobot->picam.close();
 
     while(1) {
         switch(myRobot->currState) {
             if(cnt%100==0) {printf("State: %d\n", myRobot->currState);}
             case 0: //Planning
-                Navigate(in_dir, xml_name, myRobot, nav);
+                //Navigate(in_dir, xml_name, myRobot, nav);
             	//myRobot->TurnDistance(90, ARobot::LEFT);
                 printf("navigating...\n");
             	sleep(0.5);
@@ -49,14 +59,17 @@ void NavThread::run(void){
                 }
                 sleep(2);
                 myRobot->StopMove();
+                //do something with myRobot-sensor_info to update the cell info
+                //myRobot->UpdateCellMap(&myRobot->sensor_info, false, true); //update curr cell location ??
+                myRobot->currState = ARobot::WAYPTNAV;
                 break;
             case 5: //Move
                 //myRobot->CheckLightTile(); //check if anything happens during this time
             	//find the offset direction of the robot
-            	if(myRobot->sLock < 5) {
+            	sleep(0.2);
+            	if(myRobot->sLock < 20) {
             		myRobot->setOffsetDir();
             	}
-                sleep(0.2);
                 break;
             case 6: //Drop
                 myRobot->LEDLight(4500);
@@ -73,7 +86,7 @@ void NavThread::run(void){
                 sleep(1);
                 myRobot->backingBlack = false;
                 nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]); //update "temp curr_cell"
-                myRobot->UpdateCellMap(&myRobot->sensor_info, myRobot->backingBlack); //sensor_info auto resets in this function call
+                myRobot->UpdateCellMap(&myRobot->sensor_info, myRobot->backingBlack, false); //sensor_info auto resets in this function call
                 nav.configureCurCell(&myRobot->sensor_info);
                 nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-1]); //reupdate curr_cell
                 myRobot->currState = ARobot::PLANNING;
@@ -105,7 +118,6 @@ void NavThread::run(void){
                         //myRobot->MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
                         break;
                     }
-                    myRobot->CheckLightTile();
                     if(myRobot->currTileLight == ARobot::SILVER) {
                         myRobot->LEDLight(5000);
                         sleep(5);
@@ -230,7 +242,7 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
 {
     /*Navigational functions*/
     robot->sensor_info.reset(); //reset temp object
-    robot->UpdateCellMap(&robot->sensor_info, false); //false = not black
+    robot->UpdateCellMap(&robot->sensor_info, false, false); //false = not black
     robot->UpdateNeighborCells();
     nav_rt.configureCurCell(&robot->sensor_info);
     nav_rt.detectLocalCells(robot->temp_cell_list);
