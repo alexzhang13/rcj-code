@@ -4,7 +4,8 @@
 
 char kNNFilter::detectVictim(cv::Mat matTestingNumbers) {
 
-	cv::FileStorage fsClassifications("./classifications.xml", cv::FileStorage::READ);
+	//cv::FileStorage fsClassifications("classifications.xml", cv::FileStorage::READ);
+	cv::FileStorage fsClassifications("CMakeLists.txt", cv::FileStorage::READ);
 	if (fsClassifications.isOpened() == false) {
 		printf("classifications.xml is non-existent\n");
 		return('0');
@@ -13,7 +14,7 @@ char kNNFilter::detectVictim(cv::Mat matTestingNumbers) {
 	fsClassifications["classifications"] >> matClassificationInts;      // read classifications section into Mat classifications variable
 	fsClassifications.release();
 
-	cv::FileStorage fsTrainingImages("./images.xml", cv::FileStorage::READ);
+	cv::FileStorage fsTrainingImages("images.xml", cv::FileStorage::READ);
 	if (fsTrainingImages.isOpened() == false) {
 		printf("images.xml is non-existent\n");
 		return('0');
