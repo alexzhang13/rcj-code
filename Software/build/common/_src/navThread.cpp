@@ -35,7 +35,7 @@ void NavThread::run(void){
             case 0: //Planning
                 //Navigate(in_dir, xml_name, myRobot, nav);
             	//myRobot->TurnDistance(90, ARobot::LEFT);
-                printf("navigating...\n");
+                //printf("navigating...\n");
             	sleep(0.5);
                 break;
             case 1: //WayPtNav
