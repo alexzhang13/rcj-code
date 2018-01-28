@@ -14,10 +14,13 @@ void NavThread::run(void){
     //myRobot->CalibrateIMU();
     sleep(1);
     myRobot->imuCalibrated = true; //turn on IMU flag
+    printf("Capture 1\n");
     myRobot->picam.frameCapture();
     sleep(0.5);
+    printf("Capture 2\n");
     myRobot->picam.frameCapture();
     sleep(0.5);
+    printf("Capture 3\n");
     myRobot->picam.frameCapture();
     sleep(0.5);
 
