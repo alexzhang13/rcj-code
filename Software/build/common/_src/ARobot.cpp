@@ -452,9 +452,11 @@ int ARobot::ProcessImage_Victim() {
     victim.letter = '0'; //reset
     victim.m_isVictim = false;
     if(imgList[0].empty()) printf("Empty\n");
+    else printf("Has Content\n");
+
     for(int i = 0; i < imgList.size(); i++) {
-    	knn.detectVictim(imgList[i]);
-        m_letter = knn.detectVictim(imgList[i]);
+    	//knn.detectVictim(imgList[i]);
+        //m_letter = knn.detectVictim(imgList[i]);
         if(m_letter != '0' && victim.m_isVictim == true) { //error, not supposed to happen, means there is a mistake
         	printf("DNE\n");
             victim.m_isVictim = false;
