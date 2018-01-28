@@ -451,7 +451,7 @@ void ARobot::CheckVictimVisual() {
 int ARobot::ProcessImage_Victim() {
     victim.letter = '0'; //reset
     victim.m_isVictim = false;
-
+    if(imgList[0].empty()) printf("Empty\n");
     for(int i = 0; i < imgList.size(); i++) {
     	knn.detectVictim(imgList[i]);
         m_letter = knn.detectVictim(imgList[i]);
