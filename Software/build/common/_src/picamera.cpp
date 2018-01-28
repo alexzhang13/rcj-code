@@ -46,14 +46,14 @@ bool _PiCamera_::cameraOpen(int32_t width, int32_t height)
     m_camera.setISO ( 400 );
 
    //Open camera 
-    cout<<"Opening Camera..."<<endl;
+    printf("Opening Camera...\n");
     if ( !m_camera.open()) 
 	{
 		cerr<<"Error opening camera"<<endl;
 		return false;
 	}
     //wait a while until camera stabilizes
-    cout<<"Sleeping for 3 secs"<<endl;
+    printf("Sleeping for 3 secs\n");
 	m_width = m_camera.getWidth();
 	m_height = m_camera.getHeight();
 
