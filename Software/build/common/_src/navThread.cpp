@@ -49,9 +49,9 @@ void NavThread::run(void){
                 break;
             case 3: //Idle
                 if(myRobot->toMove){
-		            while(sleep(1.5)>0.5);
-                    //myRobot->MoveDistance(myRobot->dist_temp, ARobot::FRONT);
-		            myRobot->CalcNextTile();
+                    myRobot->MoveDistance(300, ARobot::FRONT);
+                    myRobot->toMove = false;
+		            //myRobot->CalcNextTile();
                 } else {
                     myRobot->currState = ARobot::WAYPTNAV;
                 }
