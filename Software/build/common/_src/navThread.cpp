@@ -38,7 +38,6 @@ void NavThread::run(void){
             case 0: //Planning
                 //Navigate(in_dir, xml_name, myRobot, nav);
             	myRobot->TurnDistance(180, ARobot::RIGHT);
-            	myRobot->TurnDistance(180, ARobot::LEFT);
                 //printf("navigating...\n");
             	sleep(0.5);
                 break;
@@ -52,6 +51,11 @@ void NavThread::run(void){
                 break;
             case 3: //Idle
                 if(myRobot->toMove){
+                	sleep(1);
+                	myRobot->CorrectYaw();
+                	myRobot->Correction();
+                	sleep(1);
+                	myRobot->CalibrateIMU();
                 	sleep(1);
                     //myRobot->MoveDistance(280, ARobot::FRONT);
                 	myRobot->CalcNextTile();
