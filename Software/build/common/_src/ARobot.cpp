@@ -5,6 +5,8 @@
 #include <errno.h>
 #include <math.h>
 
+#define ALPHA 0.728456789
+
 using namespace std;
 
 ARobot::ARobot(SerialPort *port) :mPort(port)
@@ -273,8 +275,7 @@ void ARobot::CalcNextTile()
 
     //angle *= (turnNext>=0) ? 1 : -1; //determine direction of offset (left >= 0)
 
-    if(toTurn==0) toTurn = (int)angle;
-    toTurn = turnNext*90; //turning distance
+    toTurn = turnNext*90 + (int)angle * ALPHA; //turning distance
 
     PrintXYCoords((int)rangeDataList[rangeDataList.size()-1].coord.x_glob/10, (int)rangeDataList[rangeDataList.size()-1].coord.y_glob/10);
     //printf("Next_X: %d, Next_Y: %d, Dist: %d, Angle Dif: %f\n", next_x, next_y, dist, angle);

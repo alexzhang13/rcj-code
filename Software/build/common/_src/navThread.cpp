@@ -9,12 +9,12 @@ void NavThread::run(void){
     printf("Fault 4 Passed\n");
     readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     printf("Fault 5 Passed\n");
-    //myRobot->picam.cameraOpen(320, 240); //start up camera
-    //myRobot->ProcessImage_Victim();
-    myRobot->CalibrateIMU();
-    sleep(1);
-    myRobot->imuCalibrated = true; //turn on IMU flag
-    /*printf("Capture 1\n");
+    myRobot->picam.cameraOpen(320, 240); //start up camera
+    myRobot->ProcessImage_Victim();
+    //myRobot->CalibrateIMU();
+    //sleep(1);
+    //myRobot->imuCalibrated = true; //turn on IMU flag
+    printf("Capture 1\n");
     myRobot->picam.frameCapture();
     sleep(0.5);
     printf("Capture 2\n");
@@ -30,13 +30,13 @@ void NavThread::run(void){
     myRobot->ProcessImage_Victim();
     //printf("Side of Victim: %d\n", myRobot->ProcessImage_Victim());
     sleep(0.5);
-    myRobot->picam.close();*/
+    myRobot->picam.close();
 
     while(1) {
         switch(myRobot->currState) {
             case 0: //Planning
-                Navigate(in_dir, xml_name, myRobot, nav);
-                printf("navigating...\n");
+                //Navigate(in_dir, xml_name, myRobot, nav);
+                //printf("navigating...\n");
             	sleep(0.5);
                 break;
             case 1: //WayPtNav
@@ -50,10 +50,10 @@ void NavThread::run(void){
             case 3: //Idle
                 if(myRobot->toMove){
                 	sleep(1);
-                    myRobot->MoveDistance(280, ARobot::FRONT);
+                    //myRobot->MoveDistance(280, ARobot::FRONT);
+                	myRobot->CalcNextTile();
                     myRobot->toMove = false;
                     sleep(1);
-		            //myRobot->CalcNextTile();
                 } else {
                     myRobot->currState = ARobot::WAYPTNAV;
                 }
