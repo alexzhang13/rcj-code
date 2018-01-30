@@ -34,11 +34,9 @@ void NavThread::run(void){
 
     while(1) {
         switch(myRobot->currState) {
-            if(cnt%100==0) {printf("State: %d\n", myRobot->currState);}
             case 0: //Planning
                 Navigate(in_dir, xml_name, myRobot, nav);
-            	//myRobot->TurnDistance(90, ARobot::LEFT);
-                //printf("navigating...\n");
+                printf("navigating...\n");
             	sleep(0.5);
                 break;
             case 1: //WayPtNav
@@ -52,7 +50,6 @@ void NavThread::run(void){
             case 3: //Idle
                 if(myRobot->toMove){
 		            sleep(1.5);
-		            //printf("%s, %d\n", "Idle to Distance: ", myRobot->dist_temp);
                     //myRobot->MoveDistance(myRobot->dist_temp, ARobot::FRONT);
 		            myRobot->CalcNextTile();
                 } else {
@@ -194,7 +191,6 @@ void NavThread::run(void){
             	sleep(1);
                 break;
         }
-        cnt++;
     }
 
     return;
