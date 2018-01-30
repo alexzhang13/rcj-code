@@ -49,7 +49,7 @@ void NavThread::run(void){
                 break;
             case 3: //Idle
                 if(myRobot->toMove){
-		            sleep(1.5);
+		            while(sleep(1.5)>0.5);
                     //myRobot->MoveDistance(myRobot->dist_temp, ARobot::FRONT);
 		            myRobot->CalcNextTile();
                 } else {
@@ -191,6 +191,7 @@ void NavThread::run(void){
             	sleep(1);
                 break;
         }
+        sleep(0.1);
     }
 
     return;
