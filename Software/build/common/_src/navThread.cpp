@@ -38,6 +38,7 @@ void NavThread::run(void){
             case 0: //Planning
                 //Navigate(in_dir, xml_name, myRobot, nav);
             	myRobot->TurnDistance(180, ARobot::RIGHT);
+            	myRobot->TurnDistance(180, ARobot::LEFT);
                 //printf("navigating...\n");
             	sleep(0.5);
                 break;
