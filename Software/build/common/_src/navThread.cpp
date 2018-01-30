@@ -9,12 +9,12 @@ void NavThread::run(void){
     printf("Fault 4 Passed\n");
     readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     printf("Fault 5 Passed\n");
-    /*myRobot->picam.cameraOpen(320, 240); //start up camera
+    //myRobot->picam.cameraOpen(320, 240); //start up camera
     //myRobot->ProcessImage_Victim();
-    //myRobot->CalibrateIMU();
-    sleep(4);
+    myRobot->CalibrateIMU();
+    sleep(1);
     myRobot->imuCalibrated = true; //turn on IMU flag
-    printf("Capture 1\n");
+    /*printf("Capture 1\n");
     myRobot->picam.frameCapture();
     sleep(0.5);
     printf("Capture 2\n");
@@ -72,7 +72,7 @@ void NavThread::run(void){
             case 5: //Move
                 //myRobot->CheckLightTile(); //check if anything happens during this time
             	//find the offset direction of the robot
-            	while(sleep(0.2)>0.05);
+            	sleep(0.2);
             	if(myRobot->sLock < 20) {
             		myRobot->setOffsetDir();
             	}
