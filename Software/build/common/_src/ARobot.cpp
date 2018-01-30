@@ -653,7 +653,7 @@ void ARobot::StopTurn(BotDir dir)
     if(initTurnRec) {initTurnRec = false; prevYaw = initialYaw;}
     if(dir == RIGHT) {
         if(prevYaw+1.0 < currYaw) {//if robot crosses over from 180 to -180, direction switches
-        	printf("Curr Yaw: %f\tPrev Yaw: %f\n", currYaw, prevYaw);
+        	//printf("Curr Yaw: %f\tPrev Yaw: %f\n", currYaw, prevYaw);
             cross_over = true;
         }
         if(cross_over) //condition holds even if prev doesn't when cross_over is already true
@@ -696,7 +696,7 @@ void ARobot::StopTurn(BotDir dir)
             return;
         }
     }
-    prevYaw = currYaw;
+    prevYaw = imuDataList[imu_list-1].m_yaw;
     //printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f\n", currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
 }
 

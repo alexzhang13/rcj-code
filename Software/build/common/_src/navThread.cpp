@@ -49,8 +49,10 @@ void NavThread::run(void){
                 break;
             case 3: //Idle
                 if(myRobot->toMove){
+                	sleep(1);
                     myRobot->MoveDistance(300, ARobot::FRONT);
                     myRobot->toMove = false;
+                    sleep(1);
 		            //myRobot->CalcNextTile();
                 } else {
                     myRobot->currState = ARobot::WAYPTNAV;
@@ -73,6 +75,7 @@ void NavThread::run(void){
             	if(myRobot->sLock < 20) {
             		myRobot->setOffsetDir();
             	}
+            	sleep(0.2);
                 break;
             case 6: //Drop
                 myRobot->LEDLight(4500);
