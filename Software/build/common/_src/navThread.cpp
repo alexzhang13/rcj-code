@@ -50,7 +50,7 @@ void NavThread::run(void){
             case 3: //Idle
                 if(myRobot->toMove){
                 	sleep(1);
-                    myRobot->MoveDistance(300, ARobot::FRONT);
+                    myRobot->MoveDistance(280, ARobot::FRONT);
                     myRobot->toMove = false;
                     sleep(1);
 		            //myRobot->CalcNextTile();
