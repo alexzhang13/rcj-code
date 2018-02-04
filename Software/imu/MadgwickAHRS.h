@@ -29,7 +29,7 @@ private:
 	float q2;
 	float q3;	// quaternion of sensor frame relative to auxiliary frame
 	float integralFBx = 0.0f;
-	float integralFBy = 0.0f
+	float integralFBy = 0.0f;
 	float integralFBz = 0.0f;	// integral error terms scaled by K
 	float invSampleFreq;
 	float roll;
