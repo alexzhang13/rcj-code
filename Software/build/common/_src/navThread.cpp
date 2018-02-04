@@ -52,6 +52,11 @@ void NavThread::run(void){
             case 3: //Idle
                 if(myRobot->toMove){
                 	sleep(1);
+                	myRobot->CorrectYaw();
+                	myRobot->Correction();
+                	sleep(1);
+                	myRobot->CalibrateIMU();
+                	sleep(1);
                     //myRobot->MoveDistance(280, ARobot::FRONT);
                 	myRobot->CalcNextTile();
                     myRobot->toMove = false;
