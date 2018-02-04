@@ -15,7 +15,7 @@ void NavThread::run(void){
     myRobot->CalibrateIMU();
     sleep(1);
     myRobot->imuCalibrated = true; //turn on IMU flag
-    /*printf("Capture 1\n");
+    printf("Capture 1\n");
     myRobot->picam.frameCapture();
     sleep(0.5);
     printf("Capture 2\n");
@@ -31,13 +31,12 @@ void NavThread::run(void){
     myRobot->ProcessImage_Victim();
     //printf("Side of Victim: %d\n", myRobot->ProcessImage_Victim());
     sleep(0.5);
-    myRobot->picam.close();*/
+    myRobot->picam.close();
 
     while(1) {
         switch(myRobot->currState) {
             case 0: //Planning
                 //Navigate(in_dir, xml_name, myRobot, nav);
-            	myRobot->TurnDistance(180, ARobot::RIGHT);
                 //printf("navigating...\n");
             	sleep(0.5);
                 break;
@@ -52,17 +51,13 @@ void NavThread::run(void){
             case 3: //Idle
                 if(myRobot->toMove){
                 	sleep(1);
-                	myRobot->CorrectYaw();
-                	myRobot->Correction();
-                	sleep(1);
                 	myRobot->CalibrateIMU();
                 	sleep(1);
-                    //myRobot->MoveDistance(280, ARobot::FRONT);
                 	myRobot->CalcNextTile();
                     myRobot->toMove = false;
                     sleep(1);
                 } else {
-                    //myRobot->currState = ARobot::WAYPTNAV;
+                    myRobot->currState = ARobot::WAYPTNAV;
                 }
                 break;
             case 4: //Ramp
