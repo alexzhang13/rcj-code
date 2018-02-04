@@ -28,6 +28,9 @@ private:
 	float q1;
 	float q2;
 	float q3;	// quaternion of sensor frame relative to auxiliary frame
+	float integralFBx = 0.0f;
+	float integralFBy = 0.0f
+	float integralFBz = 0.0f;	// integral error terms scaled by K
 	float invSampleFreq;
 	float roll;
 	float pitch;
@@ -74,7 +77,7 @@ public:
 		if (!anglesComputed) computeAngles();
 		return yaw;
 	}
-	float setYawOffset(float offset) {
+	void setYawOffset(float offset) {
 		yawoffset = offset / 57.29578f;
 	}
 };
