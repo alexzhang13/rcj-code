@@ -25,7 +25,7 @@
 //-------------------------------------------------------------------------------------------
 // Definitions
 
-#define sampleFreg 37.5f
+#define sampleFreq 37.5f
 #define sampleFreqDef   37.5f          // sample frequency in Hz - See website logs for details on  obtaining value
 #define betaDef         0.1f            // 2 * proportional gain
 #define PI 3.1415926;
