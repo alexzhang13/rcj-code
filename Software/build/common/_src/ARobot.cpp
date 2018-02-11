@@ -658,7 +658,7 @@ void ARobot::StopTurn(BotDir dir)
         }
         if(cross_over) //condition holds even if prev doesn't when cross_over is already true
         	currYaw -= 360.0f; //range fixing
-        if(currYaw <= toTurn) {
+        if(currYaw <= toTurn+1.0) { //error fixing
         	printf("Turn is Finished?\n");
             char* i_command;
             cross_over = false; //default cross bool now off
@@ -680,7 +680,7 @@ void ARobot::StopTurn(BotDir dir)
         if(cross_over)
         	currYaw += 360.0f; //range fixing
 
-        if(currYaw >= toTurn) {
+        if(currYaw >= toTurn-1.0) {
             char* i_command;
             cross_over = false; //default cross bool now off
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
