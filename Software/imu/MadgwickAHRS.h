@@ -28,15 +28,15 @@ private:
 	float q1;
 	float q2;
 	float q3;	// quaternion of sensor frame relative to auxiliary frame
-	float integralFBx = 0.0f;
-	float integralFBy = 0.0f;
-	float integralFBz = 0.0f;	// integral error terms scaled by K
+	float integralFBx;
+	float integralFBy;
+	float integralFBz;	// integral error terms scaled by K
 	float invSampleFreq;
 	float roll;
 	float pitch;
 	float yaw;
 	float yawoffset;
-	char anglesComputed;
+	bool anglesComputed;
 	void computeAngles();
 
 	//-------------------------------------------------------------------------------------------
