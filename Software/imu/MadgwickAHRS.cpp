@@ -50,7 +50,7 @@ Madgwick::Madgwick() {
 	integralFBy = 0.0f;
 	integralFBz = 0.0f;
 	invSampleFreq = 1.0f / sampleFreqDef;
-	anglesComputed = 0;
+	anglesComputed = false;
 }
 
 void Madgwick::update(float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz) {
@@ -152,7 +152,7 @@ void Madgwick::update(float gx, float gy, float gz, float ax, float ay, float az
 	q1 *= recipNorm;
 	q2 *= recipNorm;
 	q3 *= recipNorm;
-	anglesComputed = 0;
+	anglesComputed = false;
 }
 
 //-------------------------------------------------------------------------------------------
@@ -262,5 +262,5 @@ void Madgwick::computeAngles()
 	if(yaw < 0.0f)
 		yaw += 2*PI;
 
-	anglesComputed = 1;
+	anglesComputed = true;
 }
