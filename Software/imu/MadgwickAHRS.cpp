@@ -160,6 +160,118 @@ void Madgwick::update(float gx, float gy, float gz, float ax, float ay, float az
 
 void Madgwick::updateIMU(float gx, float gy, float gz, float ax, float ay, float az) {
 	float recipNorm;
+	float halfvx, halfvy, halfvz;
+	float halfex, halfey, halfez;
+	float qa, qb, qc;
+
+	// Convert gyroscope degrees/sec to radians/sec
+	gx *= 0.0174533f;
+	gy *= 0.0174533f;
+	gz *= 0.0174533f;
+
+	// Compute feedback only if accelerometer measurement valid (avoids NaN in accelerometer normalisation)
+	if(!((ax == 0.0f) && (ay == 0.0f) && (az == 0.0f))) {
+
+		// Normalise accelerometer measurement
+		recipNorm = invSqrt(ax * ax + ay * ay + az * az);
+		ax *= recipNorm;
+		ay *= recipNorm;
+		az *= recipNorm;        
+
+		// Estimated direction of gravity and vector perpendicular to magnetic flux
+		halfvx = q1 * q3 - q0 * q2;
+		halfvy = q0 * q1 + q2 * q3;
+		halfvz = q0 * q0 - 0.5f + q3 * q3;
+	
+		// Error is sum of cross product between estimated and measured direction of gravity
+		halfex = (ay * halfvz - az * halfvy);
+		halfey = (az * halfvx - ax * halfvz);
+		halfez = (ax * halfvy - ay * halfvx);
+
+		// Compute and apply integral feedback if enabled
+		if(twoKi > 0.0f) {
+			integralFBx += twoKi * halfex * (1.0f / sampleFreq);	// integral error scaled by Ki
+			integralFBy += twoKi * halfey * (1.0f / sampleFreq);
+			integralFBz += twoKi * halfez * (1.0f / sampleFreq);
+			gx += integralFBx;	// apply integral feedback
+			gy += integralFBy;
+			gz += integralFBz;
+		}
+		else {
+			integralFBx = 0.0f;	// prevent integral windup
+			integralFBy = 0.0f;
+			integralFBz = 0.0f;
+		}
+
+		// Apply proportional feedback
+		gx += twoKp * halfex;
+		gy += twoKp * halfey;
+		gz += twoKp * halfez;
+	}
+	
+	// Integrate rate of change of quaternion
+	gx *= (0.5f * (1.0f / sampleFreq));		// pre-multiply common factors
+	gy *= (0.5f * (1.0f / sampleFreq));
+	gz *= (0.5f * (1.0f / sampleFreq));
+	qa = q0;
+	qb = q1;
+	qc = q2;
+	q0 += (-qb * gx - qc * gy - q3 * gz);
+	q1 += (qa * gx + qc * gz - q3 * gy);
+	q2 += (qa * gy - qb * gz + q3 * gx);
+	q3 += (qa * gz + qb * gy - qc * gx); 
+	
+	// Normalise quaternion
+	recipNorm = invSqrt(q0 * q0 + q1 * q1 + q2 * q2 + q3 * q3);
+	q0 *= recipNorm;
+	q1 *= recipNorm;
+	q2 *= recipNorm;
+	q3 *= recipNorm;
+	anglesComputed = false;
+}
+
+//-------------------------------------------------------------------------------------------
+// Fast inverse square-root
+// See: http://en.wikipedia.org/wiki/Fast_inverse_square_root
+
+double Madgwick::invSqrt(double x) {
+	#if 0
+	float halfx = 0.5f * x;
+	float y = x;
+	long i = *(long*)&y;
+	i = 0x5f3759df - (i >> 1);
+	y = *(float*)&i;
+	y = y * (1.5f - (halfx * y * y));
+	y = y * (1.5f - (halfx * y * y));
+	#else
+
+	double y = 1.0/(double)sqrt(x);
+
+	#endif
+	return y;
+}
+
+//-------------------------------------------------------------------------------------------
+
+void Madgwick::computeAngles()
+{
+	roll = atan2f(q0*q1 + q2*q3, 0.5f - q1*q1 - q2*q2);
+	pitch = asinf(-2.0f * (q1*q3 - q0*q2));
+	yaw = atan2f(q1*q2 + q0*q3, 0.5f - q2*q2 - q3*q3);
+
+	if(roll < 0.0f)
+		roll+= 2*PI;
+
+	if(pitch < 0.0f)
+		pitch += 2*PI;
+
+	if(yaw < 0.0f)
+		yaw += 2*PI;
+
+	anglesComputed = true;
+}
+/*
+float recipNorm;
 	float s0, s1, s2, s3;
 	float qDot1, qDot2, qDot3, qDot4;
 	float _2q0, _2q1, _2q2, _2q3, _4q0, _4q1, _4q2 ,_8q1, _8q2, q0q0, q1q1, q2q2, q3q3;
@@ -224,46 +336,4 @@ void Madgwick::updateIMU(float gx, float gy, float gz, float ax, float ay, float
 	q1 *= recipNorm;
 	q2 *= recipNorm;
 	q3 *= recipNorm;
-	anglesComputed = false;
-}
-
-//-------------------------------------------------------------------------------------------
-// Fast inverse square-root
-// See: http://en.wikipedia.org/wiki/Fast_inverse_square_root
-
-double Madgwick::invSqrt(double x) {
-	#if 0
-	float halfx = 0.5f * x;
-	float y = x;
-	long i = *(long*)&y;
-	i = 0x5f3759df - (i >> 1);
-	y = *(float*)&i;
-	y = y * (1.5f - (halfx * y * y));
-	y = y * (1.5f - (halfx * y * y));
-	#else
-
-	double y = 1.0/(double)sqrt(x);
-
-	#endif
-	return y;
-}
-
-//-------------------------------------------------------------------------------------------
-
-void Madgwick::computeAngles()
-{
-	roll = atan2f(q0*q1 + q2*q3, 0.5f - q1*q1 - q2*q2);
-	pitch = asinf(-2.0f * (q1*q3 - q0*q2));
-	yaw = atan2f(q1*q2 + q0*q3, 0.5f - q2*q2 - q3*q3);
-
-	if(roll < 0.0f)
-		roll+= 2*PI;
-
-	if(pitch < 0.0f)
-		pitch += 2*PI;
-
-	if(yaw < 0.0f)
-		yaw += 2*PI;
-
-	anglesComputed = true;
-}
+*/
