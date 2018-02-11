@@ -29,7 +29,6 @@ void IMUData::storeCommand(char* buf) {
 int IMUData::parseData()
 {
 	sscanf(m_command, "%d %c %f %f %f %f %f %f", &data.tstamp, &data.id, &data.ax, &data.ay, &data.az, &data.gx, &data.gy, &data.gz);
-	printf("Gx: %f Gy: %f Gz: %f\n", &data.gx, &data.gy, &data.gz);
 	return 0;
 }
 
