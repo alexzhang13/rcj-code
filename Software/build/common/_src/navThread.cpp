@@ -15,7 +15,7 @@ void NavThread::run(void){
     myRobot->CalibrateIMU();
     sleep(1);
     myRobot->imuCalibrated = true; //turn on IMU flag
-    printf("Capture 1\n");
+    /*printf("Capture 1\n");
     myRobot->picam.frameCapture();
     sleep(0.5);
     printf("Capture 2\n");
@@ -31,7 +31,8 @@ void NavThread::run(void){
     myRobot->ProcessImage_Victim();
     //printf("Side of Victim: %d\n", myRobot->ProcessImage_Victim());
     sleep(0.5);
-    myRobot->picam.close();
+    myRobot->picam.close();*/
+    myRobot->TurnDistance(90, ARobot::RIGHT);
 
     while(1) {
         switch(myRobot->currState) {
