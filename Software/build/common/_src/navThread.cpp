@@ -9,13 +9,15 @@ void NavThread::run(void){
     printf("Fault 4 Passed\n");
     readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     printf("Fault 5 Passed\n");
-    //myRobot->picam.cameraOpen(320, 240); //start up camera
-    //myRobot->ProcessImage_Victim();
     sleep(0.5);
     myRobot->CalibrateIMU();
     sleep(1);
     myRobot->imuCalibrated = true; //turn on IMU flag
-    /*printf("Capture 1\n");
+
+
+    myRobot->picam.cameraOpen(320, 240); //start up camera
+    myRobot->ProcessImage_Victim();
+    printf("Capture 1\n");
     myRobot->picam.frameCapture();
     sleep(0.5);
     printf("Capture 2\n");
@@ -29,10 +31,9 @@ void NavThread::run(void){
     printf("Pushed Mat's into ImgList<Mat>\n");
     sleep(0.5);
     myRobot->ProcessImage_Victim();
-    //printf("Side of Victim: %d\n", myRobot->ProcessImage_Victim());
+    printf("Side of Victim: %d\n", myRobot->ProcessImage_Victim());
     sleep(0.5);
-    myRobot->picam.close();*/
-    myRobot->TurnDistance(90, ARobot::RIGHT);
+    myRobot->picam.close();
 
     while(1) {
         switch(myRobot->currState) {
