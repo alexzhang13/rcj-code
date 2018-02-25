@@ -30,7 +30,7 @@ int main(int argc,char **argv){
     const char* xml_name = "map_data/mazemap";
 #endif
 
-#ifdef 0
+/*
     SerialPort *port = new SerialPort("/dev/ttyAMA0",115200);
 	if(port == NULL)
 		printf(" Serial port open failed\n");
@@ -43,7 +43,7 @@ int main(int argc,char **argv){
     Process_T *process_thread = new Process_T(port, myRobot);
     printf("Fault 3 Passed\n");
     NavThread *nav_thread = new NavThread(myRobot);
-#endif
+*/
     wiringPiSetup();
     printf("wiringPi is working!\n");
 
