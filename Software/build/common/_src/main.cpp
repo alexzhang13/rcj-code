@@ -2,7 +2,9 @@
 #include <unistd.h> // for sleep
 #include <string>
 #include <iostream>
+extern "C" {
 #include <wiringPi.h>
+}
 
 #include <vector>
 #include "../_headers/ARobot.h"
