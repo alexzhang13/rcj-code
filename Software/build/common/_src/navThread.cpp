@@ -28,7 +28,6 @@ void NavThread::run(void){
     myRobot->CheckVictimVisual();
     printf("Pushed Mat's into ImgList<Mat>\n");
     sleep(0.5);
-    myRobot->DisplayVictimVisual();
     printf("Side of Victim: %d\n", myRobot->ProcessImage_Victim());
     sleep(0.5);
     myRobot->picam.close();
