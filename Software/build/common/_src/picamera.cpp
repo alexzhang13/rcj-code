@@ -75,7 +75,7 @@ bool _PiCamera_::frameCapture()
 	m_frames.push_back(img);
 	if(m_frames.size() > m_max_len)
 		m_frames.erase(m_frames.begin());
-	imshow("imgdisp", img)
+	imshow("imgdisp", img);
 	return true;
 }
 
