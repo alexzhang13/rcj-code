@@ -456,7 +456,7 @@ void ARobot::CheckVictimVisual() {
 void ARobot::DisplayVictimVisual() {
 	if(imgList.size() == 0) return;
 	for(int i = 0; i < imgList.size(); i++) {
-		cv::imshow("img_disp", imgList[i]);
+		cv::imwrite("img_disp" + std::to_string(i) + ".jpg", imgList[i]);
 	}
 }
 
@@ -465,7 +465,6 @@ int ARobot::ProcessImage_Victim() {
     victim.m_isVictim = false;
 
     for(int i = 0; i < imgList.size(); i++) {
-        m_letter = knn.detectVictim(imgList[i]);
         if(m_letter != '0' && victim.m_isVictim == true) { //error, not supposed to happen, means there is a mistake
         	printf("DNE\n");
             victim.m_isVictim = false;
