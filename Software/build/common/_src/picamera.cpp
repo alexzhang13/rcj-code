@@ -32,6 +32,7 @@ bool _PiCamera_::cameraOpen(int32_t width, int32_t height)
 		m_height = height;
 	}
 
+	m_camera.set(CV_CAP_PROP_FORMAT, CV_8UC1);
     m_camera.setWidth ( m_width );
     m_camera.setHeight ( m_height );
     m_camera.setBrightness (60 );
