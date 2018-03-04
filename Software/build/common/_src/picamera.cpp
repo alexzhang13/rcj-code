@@ -32,7 +32,7 @@ bool _PiCamera_::cameraOpen(int32_t width, int32_t height)
 		m_height = height;
 	}
 
-	m_camera.set(CV_CAP_PROP_FORMAT, CV_8UC1);
+	setFormat(raspicam::RASPICAM_FORMAT_GRAY);
     m_camera.setWidth ( m_width );
     m_camera.setHeight ( m_height );
     m_camera.setBrightness (60 );
@@ -50,15 +50,10 @@ bool _PiCamera_::cameraOpen(int32_t width, int32_t height)
 		cerr<<"Error opening camera"<<endl;
 		return false;
 	}
-    //wait a while until camera stabilizes
-    printf("Sleeping for 3 secs\n");
+
 	m_width = m_camera.getWidth();
 	m_height = m_camera.getHeight();
-
     cout << "width= " << m_width << ", height =" << m_height << "\n";
-
-	//allocate memory
-	m_data=new unsigned char[  m_camera.getImageTypeSize  ( raspicam::RASPICAM_FORMAT_RGB )];    
 
 	return true;
 }
@@ -67,16 +62,19 @@ bool _PiCamera_::frameCapture()
 {
 	cv::Mat img;
 	m_camera.grab();
-
+	//allocate memory
+	m_data=new unsigned char[  m_camera.getImageTypeSize  ( raspicam::RASPICAM_FORMAT_RGB )];
 	//extract the image in rgb format
-	//m_camera.retrieve ( m_data,raspicam::RASPICAM_FORMAT_RGB );//get camera image
 	m_camera.retrieve ( m_data,raspicam::RASPICAM_FORMAT_IGNORE );//get camera image
 	
 	img = cv::Mat(m_height, m_width, CV_8UC3, m_data); 
 	m_frames.push_back(img);
 	if(m_frames.size() > m_max_len)
 		m_frames.erase(m_frames.begin());
+
 	imshow("imgdisp", img);
+
+	delete m_data;
 	return true;
 }
 
