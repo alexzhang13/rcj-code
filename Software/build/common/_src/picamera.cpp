@@ -32,7 +32,7 @@ bool _PiCamera_::cameraOpen(int32_t width, int32_t height)
 		m_height = height;
 	}
 
-	setFormat(raspicam::RASPICAM_FORMAT_GRAY);
+	m_camera.setFormat(raspicam::RASPICAM_FORMAT_GRAY);
     m_camera.setWidth ( m_width );
     m_camera.setHeight ( m_height );
     m_camera.setBrightness (60 );
