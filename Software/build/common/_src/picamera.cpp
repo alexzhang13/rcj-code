@@ -72,8 +72,6 @@ bool _PiCamera_::frameCapture()
 	if(m_frames.size() > m_max_len)
 		m_frames.erase(m_frames.begin());
 
-	imwrite("imgdisp.jpg", img);
-
 	delete m_data;
 	return true;
 }
