@@ -13,8 +13,6 @@ void NavThread::run(void){
     myRobot->CalibrateIMU();
     sleep(1);
     myRobot->imuCalibrated = true; //turn on IMU flag
-
-
     myRobot->picam.cameraOpen(320, 240); //start up camera
     myRobot->ProcessImage_Victim();
     printf("Capture 1\n");
@@ -30,10 +28,12 @@ void NavThread::run(void){
     myRobot->CheckVictimVisual();
     printf("Pushed Mat's into ImgList<Mat>\n");
     sleep(0.5);
-    myRobot->ProcessImage_Victim();
-    printf("Side of Victim: %d\n", myRobot->ProcessImage_Victim());
+    myRobot->DisplayVictimVisual();
+    //printf("Side of Victim: %d\n", myRobot->ProcessImage_Victim());
     sleep(0.5);
     myRobot->picam.close();
+
+
 
     while(1) {
         switch(myRobot->currState) {
@@ -120,7 +120,8 @@ void NavThread::run(void){
                 nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]);
                 printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
                 sleep(1.5);
-                /*if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
+#if 0
+                if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
                     //myRobot->SpinLaser();
                     //sleep(2.5); //time for laser
                     //myRobot->CheckVictimVisual();
@@ -189,10 +190,10 @@ void NavThread::run(void){
                     } else {
                         myRobot->currState = ARobot::WAYPTNAV;
                     }
-                }*/
+                }
+#endif
                 myRobot->CorrectYaw();
                 myRobot->Correction();
-                //myRobot->currState = ARobot::WAYPTNAV;
                 break;
             default:
                 /*Testing Purposes Only*/
