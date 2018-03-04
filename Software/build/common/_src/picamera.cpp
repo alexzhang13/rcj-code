@@ -68,7 +68,7 @@ bool _PiCamera_::frameCapture()
 	m_camera.retrieve ( m_data,raspicam::RASPICAM_FORMAT_IGNORE );//get camera image
 	
 	img = cv::Mat(m_height, m_width, CV_8UC3, m_data); 
-	m_frames.push_back(img);
+	m_frames.push_back(img.clone());
 	if(m_frames.size() > m_max_len)
 		m_frames.erase(m_frames.begin());
 
