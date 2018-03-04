@@ -130,7 +130,7 @@ class ARobot {
 	std::vector<TempData> tempDataList;
 	std::vector<LightData> lightDataList;
 	std::vector<RangeData> scanDataList;
-	std::vector<cv::Mat> *imgList;
+	std::vector<cv::Mat> imgList;
 
 	std::queue<IMUData> imuParseList;
 	std::queue<RangeData> rangeParseList;
