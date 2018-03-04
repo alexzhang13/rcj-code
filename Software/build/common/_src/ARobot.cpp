@@ -455,7 +455,7 @@ void ARobot::CheckVictimVisual() {
  */
 void ARobot::DisplayVictimVisual() {
 	if(imgList->size() == 0) return;
-	cv::imwrite("img_disp.jpg", imgList[0]);
+	cv::imwrite("img_disp.jpg", picam.getImageList()[0]);
 	for(int i = 0; i < imgList->size(); i++) {
 		//cv::imwrite("img_disp" + std::to_string(i) + ".jpg", imgList[i]);
 	}
