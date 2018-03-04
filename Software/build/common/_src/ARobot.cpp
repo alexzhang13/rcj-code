@@ -446,16 +446,16 @@ void ARobot::CheckVictimVisual() {
     /*for(int i = 0; i < picam.getImageList()->size(); i++) {
         imgList.push_back(picam.getImageList()->at(i));
     }*/
-	imgList = picam.getImageListCopy();
-    printf("List Size: %d\n", imgList.size());
+	imgList = picam.getImageList();
+    printf("List Size: %d\n", imgList->size());
 }
 
 /**
  * Tester Function
  */
 void ARobot::DisplayVictimVisual() {
-	if(imgList.size() == 0) return;
-	for(int i = 0; i < imgList.size(); i++) {
+	if(imgList->size() == 0) return;
+	for(int i = 0; i < imgList->size(); i++) {
 		cv::imwrite("img_disp" + std::to_string(i) + ".jpg", imgList[i]);
 	}
 }
@@ -464,7 +464,7 @@ int ARobot::ProcessImage_Victim() {
     victim.letter = '0'; //reset
     victim.m_isVictim = false;
 
-    for(int i = 0; i < imgList.size(); i++) {
+    for(int i = 0; i < imgList->size(); i++) {
         if(m_letter != '0' && victim.m_isVictim == true) { //error, not supposed to happen, means there is a mistake
         	printf("DNE\n");
             victim.m_isVictim = false;
@@ -502,7 +502,7 @@ int ARobot::ProcessImage_Victim() {
 }
 
 void ARobot::ClearImgList() {
-    imgList.clear();
+    imgList->clear();
 }
 void ARobot::setTempThresh(float left, float right)
 {
