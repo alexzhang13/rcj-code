@@ -18,7 +18,7 @@ void NavThread::run(void){
     printf("Capture 1\n");
     myRobot->picam.frameCapture();
     sleep(0.5);
-    printf("Capture 2\n");
+    /*printf("Capture 2\n");
     myRobot->picam.frameCapture();
     sleep(0.5);
     printf("Capture 3\n");
@@ -30,7 +30,7 @@ void NavThread::run(void){
     sleep(0.5);
     //myRobot->DisplayVictimVisual();
     //printf("Side of Victim: %d\n", myRobot->ProcessImage_Victim());
-    sleep(0.5);
+    sleep(0.5);*/
     myRobot->picam.close();
 
 
