@@ -8,6 +8,8 @@
 #include "../_headers/ARobot.h"
 #include "../_headers/IMUData.h"
 #include "../_headers/navThread.h"
+#include "../_headers/dataThread.h"
+#include "../_headers/testThread.h"
 #include "../_headers/processThread.h"
 #include "../_headers/RangeData.h"
 #include "../_headers/SerialPort.h"
@@ -49,8 +51,9 @@ int main(int argc,char **argv){
     //pinSetup()
     //spawnThread(sThread)
 
-    NavThread *nav_thread = new NavThread(myRobot);
-
+    NavThread *nav_thread = new NavThread(myRobot, false);
+    //TestThread *test_thread = new TestThread(myRobot);
+    //DataThread *data_thread = new DataThread(myRobot);
 
     while(1) {
     	//if(Button Pressed) when UnPressed, call spawnThread
@@ -67,9 +70,20 @@ int main(int argc,char **argv){
  * 1 1 --> Tester Thread (i.e. Testing kNN PiCam, etc.)
  */
 void respawnThread(Thread *currThread) {
-	/*TODO: Pause current thread if it's paused? (check this)*/
-
+	/*TODO: Pause current thread if it's paused? (check this)
 	//getPin 22 23 24 27
+	int currChoice = getPin(23) + getPin(24)*2;
+	switch(currChoice) {
+		case 0: //0 0
+			break;
+		case 1: //1 0
+			break;
+		case 2: //0 1
+			break;
+		case 3: //1 1
+			break;
+	}
+	*/
 }
 
 

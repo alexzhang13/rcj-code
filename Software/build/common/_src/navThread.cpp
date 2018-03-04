@@ -7,7 +7,8 @@ void NavThread::run(void){
 	sleep(1);
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     printf("Fault 4 Passed\n");
-    readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
+    if(this->readMap)
+    	readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     printf("Fault 5 Passed\n");
     sleep(0.5);
     myRobot->CalibrateIMU();
@@ -27,12 +28,10 @@ void NavThread::run(void){
     myRobot->CheckVictimVisual();
     printf("Pushed Mat's into ImgList<Mat>\n");
     sleep(0.5);
-    myRobot->DisplayVictimVisual();
-    //printf("Side of Victim: %d\n", myRobot->ProcessImage_Victim());
+    //myRobot->DisplayVictimVisual();
+    printf("Side of Victim: %d\n", myRobot->ProcessImage_Victim());
     sleep(0.5);
     myRobot->picam.close();
-
-
 
     while(1) {
         switch(myRobot->currState) {
