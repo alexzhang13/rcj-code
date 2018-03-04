@@ -1,6 +1,7 @@
 #include "../_headers/ARobot.h"
 
 #include <string.h>
+#include <string>
 #include <stdio.h>
 #include <errno.h>
 #include <math.h>
@@ -447,6 +448,16 @@ void ARobot::CheckVictimVisual() {
     }*/
 	imgList = picam.getImageListCopy();
     printf("List Size: %d\n", imgList.size());
+}
+
+/**
+ * Tester Function
+ */
+void ARobot::DisplayVictimVisual() {
+	if(imgList.size() == 0) return;
+	for(int i = 0; i < imgList.size(); i++) {
+		cv::imshow("img_disp", imgList[i]);
+	}
 }
 
 int ARobot::ProcessImage_Victim() {

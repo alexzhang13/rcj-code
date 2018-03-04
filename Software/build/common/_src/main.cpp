@@ -17,6 +17,9 @@
 
 using namespace std;
 
+Thread *sThread; //spawned thread
+void respawnThread(Thread *currThread);
+
 int main(int argc,char **argv){
 #ifdef WIN32
     const char* fileConfig = "C:/projects/StormingRobots2017/Data/Mem/config_test.txt";
@@ -35,20 +38,39 @@ int main(int argc,char **argv){
 		printf(" Serial port open failed\n");
 	printf(".Start robot navigation\n");
     ARobot *myRobot = new ARobot(port);
+    Thread *currThread;
     printf("Fault 1 Passed\n");
     UartRx *uartrx = new UartRx(port, myRobot);
 	uartrx->setLogFile(in_dir, rt_logname);
     printf("Fault 2 Passed\n");
     Process_T *process_thread = new Process_T(port, myRobot);
     printf("Fault 3 Passed\n");
+
+    //pinSetup()
+    //spawnThread(sThread)
+
     NavThread *nav_thread = new NavThread(myRobot);
 
 
     while(1) {
-
+    	//if(Button Pressed) when UnPressed, call spawnThread
         sleep(0.01);
     }
 
     return 0;
 }
+
+/**
+ * 0 0 --> Restart Navigation Program
+ * 0 1 --> Use previous data (Silver)
+ * 1 0 --> Collect Data
+ * 1 1 --> Tester Thread (i.e. Testing kNN PiCam, etc.)
+ */
+void respawnThread(Thread *currThread) {
+	/*TODO: Pause current thread if it's paused? (check this)*/
+
+	//getPin 22 23 24 27
+}
+
+
 

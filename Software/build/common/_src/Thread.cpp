@@ -52,3 +52,23 @@ void *Thread::threadFunc(void * obj){
     ((Thread*)obj)->run();
     return NULL;
 }
+
+void Thread::pauseThread()
+{ // tell the thread to suspend
+    pthread_mutex_lock(&m_SuspendMutex);
+    m_SuspendFlag = 1;
+    pthread_mutex_unlock(&m_SuspendMutex);
+}
+void Thread::unpauseThread()
+{ // tell the thread to resume
+    pthread_mutex_lock(&m_SuspendMutex);
+    m_SuspendFlag = 0;
+    //phtread_cond_broadcast(&m_ResumeCond);
+    pthread_mutex_unlock(&m_SuspendMutex);
+}
+void Thread::checkSuspend()
+{ // if suspended, suspend until resumed
+    pthread_mutex_lock(&m_SuspendMutex);
+    while (m_SuspendFlag != 0) pthread_cond_wait(&m_ResumeCond, &m_SuspendMutex);
+    pthread_mutex_unlock(&m_SuspendMutex);
+}
