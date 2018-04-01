@@ -48,7 +48,7 @@ int main(int argc,char **argv){
     Process_T *process_thread = new Process_T(port, myRobot);
     printf("Fault 3 Passed\n");
 
-    //pinSetup()
+    pinSetup();
     //spawnThread(sThread)
 
     NavThread *nav_thread = new NavThread(myRobot, false);
