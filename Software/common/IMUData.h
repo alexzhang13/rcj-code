@@ -11,7 +11,6 @@
 
 class IMUData {
 public:
-
 	typedef struct {
 		uint32_t tstamp; //timestamp
 		char id; //always comes out as i for imu
@@ -29,11 +28,11 @@ public:
 	IMUData();
 	~IMUData();
 
-	int storeCommand(char* buf);
+	void storeCommand(char* buf);
 	int getTStamp();
 	int parseData();
 	int runFilter();
-	int runFilterYaw();
+	int setYaw(float calibratedyaw);
 
 private:
 	int prev_tstamp;

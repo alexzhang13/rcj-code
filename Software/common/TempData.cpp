@@ -1,4 +1,5 @@
-#include "TempData.h"
+#include "../_headers/TempData.h"
+
 #include <stdio.h>
 #include <string.h>
 
@@ -12,7 +13,7 @@ TempData::~TempData()
 	
 }
 
-int TempData::storeCommand(char* buf) {
+void TempData::storeCommand(char* buf) {
 	memcpy(m_command, buf, 64);
 }
 

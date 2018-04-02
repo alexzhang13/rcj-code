@@ -1,11 +1,12 @@
-#include "UartRx.h"
+#include "../_headers/UartRx.h"
+
 #include <unistd.h> // for sleep
-#include "IMUData.h"
-#include "TempData.h"
-#include "LightData.h"
-#include "RangeData.h"
 #include <stdio.h>
 #include <string.h>
+#include "../_headers/IMUData.h"
+#include "../_headers/LightData.h"
+#include "../_headers/RangeData.h"
+#include "../_headers/TempData.h"
 
 #ifdef WIN32
 #include <windows.h>
@@ -74,11 +75,11 @@ void UartRx::run(void){
         } else if (c == 'y') {
         	storeScan(mBuf);
         } else if (c == 'z') {
-        	myRobot->picam.frameCapture();
-        	printf("Image Captured\n");
+        	//myRobot->picam.frameCapture();
+        	printf("Data Sent!\n");
        	} else if (c == 'm') {
             myRobot->currState = ARobot::DATA; //IDLE
-            printf("motor is finished motor is finished motor is finished\n");
+            printf("motor is finished\n");
             if(myRobot->backingBlack) {
             	myRobot->currState = ARobot::BLACKBACK;
             }

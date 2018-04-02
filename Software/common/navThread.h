@@ -6,20 +6,20 @@
 #include <string>
 #include <iostream>
 
-#include "processThread.h"
-#include "ARobot.h"
-#include "Thread.h"
-#include "IMUData.h"
-#include "RangeData.h"
-#include "SerialPort.h"
-#include "UartRx.h"
-#include "UartTx.h"
 #include <vector>
+#include "../_headers/ARobot.h"
+#include "../_headers/IMUData.h"
+#include "../_headers/processThread.h"
+#include "../_headers/RangeData.h"
+#include "../_headers/SerialPort.h"
+#include "../_headers/Thread.h"
+#include "../_headers/UartRx.h"
+#include "../_headers/UartTx.h"
 
 class NavThread : public Thread {
  public:
-    NavThread(ARobot *robot)
-        :myRobot(robot)
+    NavThread(ARobot *robot, bool isNew)
+        : myRobot(robot), readMap(isNew)
     {cnt = 0; bot_waypts = 0; first_iter = true;}
 
     virtual void run(void);
@@ -31,6 +31,7 @@ class NavThread : public Thread {
 	int cnt;
 	size_t bot_waypts;
 	bool first_iter;
+	bool readMap;
  protected:
     SerialPort *mPort;
     ARobot *myRobot;

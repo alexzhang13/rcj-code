@@ -1,13 +1,13 @@
 #ifndef _PROCESS_THREAD_h_
 #define _PROCESS_THREAD_h_
 
-#include "ARobot.h"
-#include "Thread.h"
-#include "SerialPort.h"
-#include "Thread.h"
-#include "IMUData.h"
-#include "RangeData.h"
-#include "SerialPort.h"
+#include "../_headers/ARobot.h"
+#include "../_headers/IMUData.h"
+#include "../_headers/RangeData.h"
+#include "../_headers/SerialPort.h"
+#include "../_headers/SerialPort.h"
+#include "../_headers/Thread.h"
+#include "../_headers/Thread.h"
 
 class Process_T : public Thread {
  public:

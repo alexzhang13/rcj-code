@@ -21,7 +21,7 @@ public:
 	TempData();
 	~TempData();
 
-	int storeCommand(char* buf);
+	void storeCommand(char* buf);
 	int parseData();
 	int getRightTemp();
 	int getLeftTemp();

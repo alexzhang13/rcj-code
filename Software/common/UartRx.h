@@ -1,13 +1,13 @@
 #ifndef _UartRx_h_
 #define _UartRx_h_
 
-#include "ARobot.h"
-#include "Thread.h"
-#include "SerialPort.h"
-#include "Thread.h"
-#include "SerialPort.h"
 #include <string>
 #include <stdio.h>
+#include "../_headers/ARobot.h"
+#include "../_headers/SerialPort.h"
+#include "../_headers/SerialPort.h"
+#include "../_headers/Thread.h"
+#include "../_headers/Thread.h"
 
 class ARobot;
 class UartRx : public Thread {

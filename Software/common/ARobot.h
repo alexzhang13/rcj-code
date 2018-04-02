@@ -3,18 +3,21 @@
 
 #include <vector>
 #include <queue>
-#include "Thread.h"
-#include "IMUData.h"
-#include "RangeData.h"
-#include "TempData.h"
-#include "LightData.h"
-#include "SerialPort.h"
-#include "UartRx.h"
-#include "UartTx.h"
+
+#include "../_headers/IMUData.h"
+#include "../_headers/LightData.h"
+#include "../_headers/picamera.h"
+#include "../_headers/RangeData.h"
+#include "../_headers/SerialPort.h"
+#include "../_headers/TempData.h"
+#include "../_headers/Thread.h"
+#include "../_headers/UartRx.h"
+#include "../_headers/UartTx.h"
 #include "cell.h"
 #include "navigate2D.h"
-#include "picamera.h"
 #include "kNNFilter.h"
+#include <algorithm>
+#include <numeric>
 
 class LightData;
 class RangeData;
@@ -53,13 +56,18 @@ class ARobot {
  	void WriteCommand(char* command, int size);
 
  	/*Algorithm <-> Control*/
- 	void UpdateCellMap(MazeCell *sensor_info, bool backing_black);
+ 	void UpdateCellMap(MazeCell *sensor_info, bool backing_black, bool CheckRamp);
  	void UpdateNeighborCells();
- 	void TileTransition(BotOrientation direction, int32_t dist);
+ 	void TileTransition(int32_t dist);
  	void CalcNextTile();
+ 	void Correction();
+ 	void CorrectYaw();
+ 	int SlopeDir(); //const std::vector<double>& x, const std::vector<double>& y
 
  	/*IMU*/
  	void CalibrateIMU();
+ 	void setOffsetDir();
+ 	int getOffsetDir();
 
  	/*Ramp*/
  	bool CheckRamp();
@@ -86,7 +94,8 @@ class ARobot {
  	void Drop();
 
  	/*DC Motor Control*/
- 	void SetSpeed(int left_speed, int right_speed);
+ 	void setSpeed(int left_speed, int right_speed);
+ 	void setOffsetSpeed(int offset_l, int offset_r);
  	void MoveDistance(int distance_mm, BotDir forward);
  	void StopMove();
  	void TurnDistance(int degrees, BotDir right);
@@ -106,8 +115,15 @@ class ARobot {
 	void ClearScan();
 	void ClearImgList();
 
+	/*Testing Signal*/
+	void TestSignal();
+	void PrintXYCoords(int x, int y);
+	void DisplayVictimVisual();
+
 	std::vector<MazeCell> temp_cell_list;
 	std::vector<int32_t> waypts; //current waypoint list
+	std::vector<double> x_vals; //x accumulate
+	std::vector<double> y_vals; //y accumulate
 
  	std::vector<IMUData> imuDataList;
 	std::vector<RangeData> rangeDataList;
@@ -135,6 +151,7 @@ class ARobot {
 	Visual_Victim victim; //visual victim param object
 
 	uint8_t dropCnt; //dropping counter
+	uint8_t sLock; //lock slope coords when > 5
 	bool isVictim; //if a victim has been detected in this cell already
 	bool isDropped;
 	bool toMove; //true means the robot still has to move after turning
@@ -142,6 +159,7 @@ class ARobot {
 	bool victimLeft;
 	bool victimFront;
 	bool backingBlack; //if the robot is backing up on a black tile
+	bool imuCalibrated; //flag if IMU is calibrated
 	int dist_temp; //store temporary distance to travel
 
  protected:
@@ -153,9 +171,17 @@ class ARobot {
  	float threshRight; //Right Temperature Threshold
  	int silver_thresh; //Silver Tile Threshold
  	int black_thresh; //Black Tile Threshold
+ 	int speed_left; //robot left motor power
+ 	int speed_right; //robot right motor power
+ 	int off_left; //robot left motor offset
+ 	int off_right; //robot right motor offset
  	int yaw_drift; //Add to counter yaw drift...
- 	float initialYaw;
- 	float toTurn;
+ 	float initialYaw; //initial yaw in a turn
+ 	float prevYaw; //previous yaw reading
+ 	float toTurn; //distance to turns
+ 	bool initTurnRec; //specific special case (glitch) -- cleaner way will remove this sooner or later
+ 	bool cross_over; //[check StopTurn() function] --> determines if the yaw has turned over 360 degs
+ 	int8_t offsetdir; //what direction is the robot offset from the center right=1, left=3
  	size_t mlen_light;
  	size_t mlen_imu;
  	size_t mlen_range;

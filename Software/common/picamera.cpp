@@ -1,4 +1,5 @@
-#include "picamera.h"
+#include "../_headers/picamera.h"
+
 #include <stdio.h>
 #include <unistd.h> // for sleep
 #include <string>
@@ -31,6 +32,7 @@ bool _PiCamera_::cameraOpen(int32_t width, int32_t height)
 		m_height = height;
 	}
 
+	m_camera.setFormat(raspicam::RASPICAM_FORMAT_GRAY);
     m_camera.setWidth ( m_width );
     m_camera.setHeight ( m_height );
     m_camera.setBrightness (60 );
@@ -42,21 +44,16 @@ bool _PiCamera_::cameraOpen(int32_t width, int32_t height)
     m_camera.setISO ( 400 );
 
    //Open camera 
-    cout<<"Opening Camera..."<<endl;
+    printf("Opening Camera...\n");
     if ( !m_camera.open()) 
 	{
 		cerr<<"Error opening camera"<<endl;
 		return false;
 	}
-    //wait a while until camera stabilizes
-    cout<<"Sleeping for 3 secs"<<endl;
+
 	m_width = m_camera.getWidth();
 	m_height = m_camera.getHeight();
-
     cout << "width= " << m_width << ", height =" << m_height << "\n";
-
-	//allocate memory
-	m_data=new unsigned char[  m_camera.getImageTypeSize  ( raspicam::RASPICAM_FORMAT_RGB )];    
 
 	return true;
 }
@@ -65,16 +62,18 @@ bool _PiCamera_::frameCapture()
 {
 	cv::Mat img;
 	m_camera.grab();
-
+	//allocate memory
+	m_data=new unsigned char[  m_camera.getImageTypeSize  ( raspicam::RASPICAM_FORMAT_RGB )];
 	//extract the image in rgb format
-	//m_camera.retrieve ( m_data,raspicam::RASPICAM_FORMAT_RGB );//get camera image	
-	m_camera.retrieve ( m_data,raspicam::RASPICAM_FORMAT_IGNORE );//get camera image	
+	m_camera.retrieve ( m_data,raspicam::RASPICAM_FORMAT_IGNORE );//get camera image
 	
 	img = cv::Mat(m_height, m_width, CV_8UC3, m_data); 
-	m_frames.push_back(img);
+	m_frames.push_back(img.clone());
 	if(m_frames.size() > m_max_len)
 		m_frames.erase(m_frames.begin());
 
+	imwrite("img.jpg", img);
+	delete m_data;
 	return true;
 }
 

@@ -1,12 +1,14 @@
-#include "processThread.h"
+#include "../_headers/processThread.h"
+
 #include <unistd.h> // for sleep
 
 void Process_T::run(void){  
 	bool processed_status;   
+
     while(1) {
 		    processed_status = false; 
         while(myRobot->imuParseList.size() > 0) {
-    	     myRobot->ParseIMU();
+    	   myRobot->ParseIMU();
            myRobot->ClearIMU();
 		       processed_status = true;
         }

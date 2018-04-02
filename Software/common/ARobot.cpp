@@ -1,33 +1,58 @@
+#include "../_headers/ARobot.h"
+
 #include <string.h>
+#include <string>
 #include <stdio.h>
 #include <errno.h>
-#include "ARobot.h"
 #include <math.h>
+
+#define ALPHA 0.728456789
 
 using namespace std;
 
 ARobot::ARobot(SerialPort *port) :mPort(port)
 {
-    initialYaw = 0;
-    toTurn = 0;
-    backingBlack = false;
-    currTileLight = WHITE;
-    currDir = FRONT; 
-    victimDir = MazeCell::NotDecided;
-    currState = PLANNING;
-    currOrientation = NORTH;
-    currTile.x = 0;
-    currTile.y = 0;
-    dropCnt = 0; //dropping counter
-    isDropped = false;
-    toMove = false;
-    victimRight = false; //true if is dropping to the right
-    victimLeft = false;
-    victimFront = false;
-    victim.letter = '0';
-    victim.m_isVictim = false;
+    this->backingBlack = false;
+	this->black_thresh=0;
+	this->cross_over = false;
+    this->currTileLight = WHITE;
+    this->currDir = FRONT;
+    this->currState = PLANNING; //>9 = testing purposes
+    this->currOrientation = NORTH;
+    this->currTile.x = 0;
+    this->currTile.y = 0;
+    this->dist_temp=0;
+    this->dropCnt = 0; //dropping counter
+    this->imuCalibrated = false;
+	this->initialYaw = 0;
+	this->initTurnRec = false;
+    this->isDropped = false;
+    this->isVictim = false;
+    this->mlen_imu = 0;
+    this->mlen_light = 0;
+    this->mlen_range = 0;
+    this->mlen_temp = 0;
+    this->m_letter = '0';
+    this->off_left = 5;
+    this->off_right = 25;
+    this->offsetdir = 1;
+    this->prevYaw = 0;
+    this->silver_thresh = 0;
+    this->sLock = 0;
+    this->speed_left = 100;
+    this->speed_right = 120;
+    this->threshLeft = 0;
+    this->threshRight = 0;
+    this->toMove = false;
+    this->toTurn = 0;
+    this->victim.letter = '0';
+    this->victim.m_isVictim = false;
+    this->victimDir = MazeCell::NotDecided;
+    this->victimFront = false;
+    this->victimLeft = false;
+    this->victimRight = false; //true if is dropping to the right
+    this->yaw_drift = 0;
 }
-
 ARobot::~ARobot() 
 {
 
@@ -38,7 +63,7 @@ void ARobot::WriteCommand(char* i_command, int size)
     mPort->write(i_command, size);
 }
 
-void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
+void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag, bool CheckRamp)
 {
     size_t range_size = rangeDataList.size();
     if(!black_flag) {
@@ -49,7 +74,7 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag)
             sensor_info->setCheckPt(false);
             sensor_info->setNonMovable(false);
         }
-        if(CheckRamp()) {
+        if(CheckRamp) {
             sensor_info->setStairCell(true);
         } else {sensor_info->setStairCell(false);}
         if(victimRight) {
@@ -223,50 +248,153 @@ void ARobot::UpdateNeighborCells()
 void ARobot::CalcNextTile()
 {
     BotOrientation nextDir;
-    int next_x = (currTile.x_tovisit*300+150) - (currTile.x*300) - (int)rangeDataList[rangeDataList.size()-1].coord.x_glob; //next tile coords
-    int next_y = (currTile.y_tovisit*300+150) - (currTile.y*300) - (int)rangeDataList[rangeDataList.size()-1].coord.y_glob; //next tile coords
+    int next_x = (currTile.x_tovisit*300+150) - (currTile.x*300) - (int)rangeDataList[rangeDataList.size()-2].coord.x_glob; //next tile coords
+    int next_y = (currTile.y_tovisit*300+150) - (currTile.y*300) - (int)rangeDataList[rangeDataList.size()-2].coord.y_glob; //next tile coords
     printf("Next_x: %d, Next_y, %d, ToVisit_X: %d, ToVisit_Y: %d, X: %f, Y: %f\n", next_x, next_y, currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
     int32_t dist = (int32_t)sqrt(next_x*next_x + next_y*next_y); //pythagorean
-    float angle; //offset angle
+    float angle; //offset angle degrees
     if(currTile.x_tovisit - currTile.x > 0) { //east
+    	angle = atan((float)next_y/(float)next_x)*180.0f/3.1415926535f; //angle to left, should be neg
         nextDir = EAST;
     } else if (currTile.x_tovisit - currTile.x < 0) { //west
+    	angle = atan((float)next_y/(float)next_x)*180.0f/3.1415926535f; //angle to left, should be neg
         nextDir = WEST;
     } else if (currTile.y_tovisit - currTile.y > 0) { //north
+    	angle = -atan((float)next_x/(float)next_y)*180.0f/3.1415926535f; //angle to left, should be pos
         nextDir = NORTH;
     } else if (currTile.y_tovisit - currTile.y < 0) { //south
+    	angle = -atan((float)next_x/(float)next_y)*180.0f/3.1415926535f; //angle to left, should be pos
         nextDir = SOUTH;
     }
+
+    printf("Current Orientation: %d\nNext Direction: %d\n", (int)currOrientation, (int)nextDir);
+    int turnNext = (int)currOrientation - (int)nextDir; //left is pos, right is neg
+    /*Turning first*/
+    if(turnNext == 3) turnNext = -1; //west -> north = turn right 1
+    else if (turnNext == -3) turnNext = 1; //north -> west = turn left 1
+
+    //angle *= (turnNext>=0) ? 1 : -1; //determine direction of offset (left >= 0)
+
+    toTurn = turnNext*90 + (int)angle * ALPHA; //turning distance
+
+    PrintXYCoords((int)rangeDataList[rangeDataList.size()-1].coord.x_glob/10, (int)rangeDataList[rangeDataList.size()-1].coord.y_glob/10);
     //printf("Next_X: %d, Next_Y: %d, Dist: %d, Angle Dif: %f\n", next_x, next_y, dist, angle);
-    //printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f\n", currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
-    TileTransition(nextDir, dist);
+    //printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f\n", scurrTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
+    currOrientation = nextDir;
+    TileTransition(dist);
 
 }
 
-void ARobot::TileTransition(BotOrientation direction, int32_t dist)
+void ARobot::TileTransition(int32_t dist)
 {
-    int turnNext = (int)direction - (int)currOrientation;   
-    /*Turning first*/
-    if(turnNext == 3) {turnNext = -1;} //west -> north = turn right 1
-    else if (turnNext == -3) {turnNext = 1;} //north -> west = turn left 1
-    int toTurn = turnNext*90+(int)angle; //turning distance
-
-    if(abs(toTurn) > 3) { //ignore smaller angles
-        TurnDistance(abs(toTurn), (toTurn > 0) ? RIGHT : LEFT); //left is positive for IMU
+    if(abs(toTurn) >= 3.0f) { //ignore smaller angles
+        TurnDistance((int)abs(toTurn), (toTurn > 0) ? LEFT : RIGHT); //left is positive for IMU
         dist_temp = dist;
         toMove = true;
         return;
     }
-	/*TODO*/
-    /*angle = -atan((float)next_y/(float)next_x)*180.0f/3.1415926535f; //angle to left, should be pos 
-    angle = atan((float)next_x/(float)next_y)*180.0f/3.1415926535f; //angle to right, should be neg*/
 
-    angle = (int)imuDataList[imuDataList.size()-1].m_yaw - ((int)imuDataList[imuDataList.size()-1].m_yaw/90)*90;
-    if(angle > 45) {
-        angle -= 90;
-    }
+    //printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f\n", currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
     MoveDistance(dist, FRONT);
     return;
+}
+
+/*called only when robot is moving*/
+void ARobot::setOffsetDir() {
+	const size_t range_vals = rangeDataList.size()-2;
+	//uint32_t tstamp = rangeDataList[range_vals].data.tstamp;
+	//printf("SetOffsetDir() X: %f\t", rangeDataList[range_vals].coord.x_glob);
+	//printf("SetOffsetDir() Y: %f\n", rangeDataList[range_vals].coord.y_glob);
+	x_vals.push_back(rangeDataList[range_vals].coord.x);
+	y_vals.push_back(rangeDataList[range_vals].coord.y);
+	sLock++;
+}
+int ARobot::getOffsetDir() {
+	return offsetdir;
+}
+
+void ARobot::CorrectYaw() {
+	const size_t range_vals = rangeDataList.size()-1; //size may change, set constant size
+	const size_t imu_vals = imuDataList.size()-1;
+	float angley;
+	float newyaw=0.0;
+	offsetdir = SlopeDir();
+	x_vals.clear();
+	y_vals.clear();
+	sLock = 0;
+
+	//average of previous vals
+	for(int i = 0; i < 5; i++) {
+		angley = (rangeDataList[range_vals-i].getAngle()*offsetdir + ((4-(int)currOrientation)%4)*90.0);
+		if(angley <= 10.0) angley += 360;
+		newyaw += rangeDataList[range_vals-i].getAlpha() * angley + (1.0 - rangeDataList[range_vals-i].getAlpha()) * (imuDataList[imu_vals-i].m_yaw > 10 ? imuDataList[imu_vals-i].m_yaw : imuDataList[imu_vals-i].m_yaw + 360.0);
+		printf("Angley: %f\tCurrent Alpha: %f\tCurrent New: %f\n", angley, rangeDataList[range_vals-i].getAlpha(), newyaw);
+	}
+	newyaw /= 5.0;
+	if(newyaw>=360) newyaw-=360;
+	printf("New Yaw: %f\n", newyaw);
+	imuDataList[imu_vals].setYaw(newyaw);
+	imuDataList[imu_vals].m_yaw = newyaw; //after change
+}
+
+void ARobot::Correction() {
+	const size_t yaw_vals = imuDataList.size()-1; //size may change, set constant size
+	float currYaw = imuDataList[yaw_vals].m_yaw;
+	//Assume correction is only necessary in the range -90 degrees -> +90 degrees
+	printf("Current Orientation: %d\nCurr Yaw: %f\n", (int)currOrientation, currYaw);
+	switch((int)currOrientation) {
+	case 0: //Bot facing North
+		if(currYaw >= 180) currYaw -= 360; //negative range
+		if(abs(0.0f-currYaw) >= 2.5f) {
+			TurnDistance((int)abs(0.0f-currYaw), (0.0f-currYaw > 0.0f) ? LEFT : RIGHT); //If yaw is negative, robot is on right side, so turn left, and vice versa
+			return;
+		}
+		break;
+	case 1: //Bot facing East
+		if(abs(270.0f-currYaw) >= 2.5f) {
+			TurnDistance((int)abs(270.0f-currYaw), (270.0f-currYaw > 0.0f) ? LEFT : RIGHT); //If 270-yaw is positive, robot is on right side, so turn left, and vice versa
+			return;
+		}
+		break;
+	case 2: //Bot facing South
+		if(abs(180.0f-currYaw) >= 2.5f) {
+			TurnDistance((int)abs(180.0f-currYaw), (180.0f-currYaw > 0.0f) ? LEFT : RIGHT); //If 180-yaw is positive, robot is on right side, so turn left, and vice versa
+			return;
+		}
+		break;
+	case 3: //Bot facing West
+		if(abs(90.0f-currYaw) >= 2.5f) {
+			TurnDistance((int)abs(90.0f-currYaw), (90.0f-currYaw > 0.0f) ? LEFT : RIGHT); //If 90-yaw is positive, robot is on right side, so turn left, and vice versa
+			return;
+		}
+		break;
+	default:
+		return;
+	}
+	this->currState = ARobot::WAYPTNAV; //if fails
+	return;
+
+}
+
+//https://www.easycalculation.com/statistics/learn-regression.php
+int ARobot::SlopeDir() {
+    const int n = this->x_vals.size();
+    if(n<=0) {
+    	printf("Size is 0\n");
+    	return 1;
+    }
+
+    const auto s_x = std::accumulate(this->x_vals.begin(), this->x_vals.end(), 0.0);
+    const auto s_y = std::accumulate(this->y_vals.begin(), this->y_vals.end(), 0.0);
+    const auto s_xx = std::inner_product(this->x_vals.begin(), this->x_vals.end(), this->x_vals.begin(), 0.0);
+    const auto s_xy = std::inner_product(this->x_vals.begin(), this->x_vals.end(), this->y_vals.begin(), 0.0);
+    const auto numer = n * s_xy - s_x * s_y;
+    const auto denom = n * s_xx - s_x * s_x;
+    auto a = numer/denom;
+
+    //printf("n: %d\tSummed X: %f\tSummed Y: %f\tSummed X^2: %f\tSummed XY: %f\tNumerator: %lf\tDenominator: %lf\tA: %lf\n", n, s_x, s_y, s_xx, s_xy, numer, denom, a);
+    if(a == 0) return 1;
+    return a / abs(a); //1 or -1
 }
 
 void ARobot::SpinLaser() {
@@ -316,17 +444,32 @@ int ARobot::CheckVictimTemp()
 
 void ARobot::CheckVictimVisual() {
     for(int i = 0; i < picam.getImageList()->size(); i++) {
-        imgList.push_back(picam.getImageList()->at(i));
+        imgList.push_back(picam.getImageList()->at(i).clone());
     }
     printf("List Size: %d\n", imgList.size());
+}
+
+/**
+ * Tester Function
+ */
+void ARobot::DisplayVictimVisual() {
+	if(imgList.size() == 0) return;
+	cv::imwrite("img_disp.jpg", picam.getImageList()[0]);
+	/*for(int i = 0; i < imgList.size(); i++) {
+		string str = "img_disp" + std::to_string(i) + ".jpg";
+		cv::imwrite(str, imgList[i]);
+	}*/
 }
 
 int ARobot::ProcessImage_Victim() {
     victim.letter = '0'; //reset
     victim.m_isVictim = false;
+
     for(int i = 0; i < imgList.size(); i++) {
-        m_letter = knn.detectVictim(imgList[i]);
+    	m_letter = knn.detectVictim(imgList[i]);
+    	printf(m_letter + "\n");
         if(m_letter != '0' && victim.m_isVictim == true) { //error, not supposed to happen, means there is a mistake
+        	printf("DNE\n");
             victim.m_isVictim = false;
             isVictim = false;
             break;
@@ -334,18 +477,21 @@ int ARobot::ProcessImage_Victim() {
         if(m_letter != '0') {
             victim.letter = m_letter;
             if(i == 0) {
+            	printf("Left\n");
                 victim.dir_victim = LEFT;
             } else if(i == 1) {
+            	printf("Right\n");
                 victim.dir_victim = FRONT;
             } else {
+            	printf("Front\n");
                 victim.dir_victim = RIGHT;
             }
             victim.m_isVictim = true;
             isVictim = true;
         }
     }
-    ClearImgList();
     picam.resetFrameBuffers();
+    ClearImgList();
     if(victim.m_isVictim == true) {
         if(victim.dir_victim == RIGHT) {
             return 2;
@@ -395,7 +541,7 @@ int ARobot::getSilverThresh()
 
 void ARobot::CheckLightTile()
 {
-    if(backingBlack = true) {return;}
+    if(backingBlack == true) {return;}
     mlen_light = lightDataList.size();
     if(mlen_light < 3)
         return;
@@ -438,7 +584,7 @@ void ARobot::Drop()
     WriteCommand(i_command, i_length);
 }
 
-void ARobot::SetSpeed(int left_speed, int right_speed) {
+void ARobot::setSpeed(int left_speed, int right_speed) {
     char* i_command;
     int i_length = snprintf(NULL, 0, "%c %c %d %d", 'm', 'f', left_speed, right_speed) + 1;
     i_command = (char*)malloc(i_length);
@@ -447,9 +593,17 @@ void ARobot::SetSpeed(int left_speed, int right_speed) {
     WriteCommand(i_command, i_length);
 }
 
+void ARobot::setOffsetSpeed(int offset_l, int offset_r) {
+	char* i_command;
+	int i_length = snprintf(NULL, 0, "%c %c %d %d", 'm', 'i', offset_l, offset_r) + 1;
+	i_command = (char*)malloc(i_length);
+
+	snprintf(i_command, i_length, "%c %c %d %d", 'm', 'i', offset_l, offset_r);
+	WriteCommand(i_command, i_length);
+}
+
 void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
 {
-    printf("Distance: %d\n", distance_mm);
     char* i_command;
     int i_length = snprintf(NULL, 0, "%c %c %d", 'm', 'a', distance_mm) + 1;
     i_command = (char*)malloc(i_length);
@@ -462,7 +616,10 @@ void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
     if(!(currState == RAMP)) {
         currState = MOVE;
     }
+    printf("Distance: %d\n", distance_mm);
+    //TestSignal(); //Test Un
     WriteCommand(i_command, i_length);
+    //TestSignal(); //Test Deux
 }
 
 void ARobot::ResetEncoder() {
@@ -490,6 +647,7 @@ void ARobot::TurnDistance(int degrees, BotDir dir)
         currDir = LEFT;
     }
     currState = TURN;
+    initTurnRec = true;
     printf("Initial Yaw: %f Degrees: %d ToTurn: %f\n", initialYaw, degrees, toTurn);
     WriteCommand(i_command, i_length);
 }
@@ -505,12 +663,18 @@ void ARobot::StopTurn(BotDir dir)
 {
     size_t imu_list = imuDataList.size();
     float currYaw = imuDataList[imu_list-1].m_yaw;
+    if(initTurnRec) {initTurnRec = false; prevYaw = initialYaw;}
     if(dir == RIGHT) {
-        if(initialYaw <= 175.0f && currYaw > 185.0f) { //if robot crosses over from 180 to -180, direction switches
-            currYaw -= 360; //range fixing
+        if(prevYaw+1.0 < currYaw) {//if robot crosses over from 180 to -180, direction switches
+        	//printf("Curr Yaw: %f\tPrev Yaw: %f\n", currYaw, prevYaw);
+            cross_over = true;
         }
-        if(currYaw <= toTurn) {
+        if(cross_over) //condition holds even if prev doesn't when cross_over is already true
+        	currYaw -= 360.0f; //range fixing
+        if(currYaw <= toTurn+1.0) { //error fixing
+        	printf("Turn is Finished?\n");
             char* i_command;
+            cross_over = false; //default cross bool now off
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
             i_command = (char*)malloc(i_length);
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
@@ -519,17 +683,19 @@ void ARobot::StopTurn(BotDir dir)
                 currState = DROP;
             } else {
                 currState = IDLE; 
-                CheckVictimTemp();
+                //CheckVictimTemp();
             }          
             return;
         }
     } else if(dir == LEFT) {
-	if(initialYaw >= 185.0f && currYaw < 175.0f) { //if robot crosses over from -180 to 180, direction switches
-            currYaw += 360; //range fixing
-        }
-        if(currYaw >= toTurn) {
+    	if(prevYaw > currYaw+1.0) //if robot crosses over from -180 to 180, direction switches
+    		cross_over = true;
+        if(cross_over)
+        	currYaw += 360.0f; //range fixing
+
+        if(currYaw >= toTurn-1.0) {
             char* i_command;
-            printf("done");
+            cross_over = false; //default cross bool now off
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
             i_command = (char*)malloc(i_length);
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
@@ -538,12 +704,13 @@ void ARobot::StopTurn(BotDir dir)
                 currState = DROP;
             } else {
                 currState = IDLE;
-                CheckVictimTemp();
+                //CheckVictimTemp();
             }
             return;
         }
     }
-    
+    prevYaw = imuDataList[imu_list-1].m_yaw;
+    //printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f\n", currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
 }
 
 void ARobot::CalibrateIMU()
@@ -562,13 +729,15 @@ void ARobot::ParseIMU()
         imuParseList.front().parseData(imuDataList[imuDataList.size()-1].getTStamp());
     }*/
     imuParseList.front().parseData();
-    imuParseList.front().runFilter();
+    if(imuCalibrated)
+    	imuParseList.front().runFilter();
     imuDataList.push_back(imuParseList.front());
     imuParseList.pop();
 }
 void ARobot::ParseRange() {
     rangeParseList.front().parseData();
     rangeParseList.front().getPosition();
+    rangeParseList.front().setAngle();
     if(rangeParseList.front().coord.x_flag == true) {
         currTile.x_map = (currTile.x*300.0f) + rangeParseList.front().coord.x_glob;
         //printf("X Glob: %f\n", currTile.x_map);
@@ -642,3 +811,26 @@ void ARobot::ClearScan()
 {
     scanDataList.clear();
 }
+
+void ARobot::TestSignal() {
+	char* i_command;
+	int i_length = snprintf(NULL, 0, "%c %c", 'z', 'a') + 1;
+	i_command = (char*)malloc(i_length);
+	snprintf(i_command, i_length, "%c %c", 'z', 'a');
+	WriteCommand(i_command, i_length);
+}
+
+//testing method
+void ARobot::PrintXYCoords(int x, int y) {
+	for(int i = 29; i > 0; i--) {
+		for(int j = 0; j < 30; j++) {
+			if((y >= i-2 && y <= i+2) && (x <= j+2 && x >= j-2)) {
+				printf("X");
+			} else {
+				printf(".");
+			}
+		}
+		printf("\n");
+	}
+}
+
