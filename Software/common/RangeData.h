@@ -58,6 +58,7 @@ public:
 	void storeCommand(char* buf);
 	int parseData();
 	int getPosition();
+        int getRangeOffset();
 	int getScan();
 	int setAngle(); //based on object's data
 	float getAngle();
@@ -75,6 +76,7 @@ private:
 	bool avalid_short; //alpha is valid for verification using short distance
 	char m_command[128]; //stored command
 	int temp_dist; //temporary number
+        int numwallslong; //number of walls calculated (long distance)
 	uint8_t x_count; //count if the lasers don't see anything
 	uint8_t y_count;
 	float distance[4];

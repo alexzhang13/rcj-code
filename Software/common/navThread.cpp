@@ -4,7 +4,7 @@ using namespace std;
 
 void NavThread::run(void){
 
-	sleep(1);
+    sleep(1);
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     printf("Fault 4 Passed\n");
     if(this->readMap)
@@ -14,7 +14,7 @@ void NavThread::run(void){
     myRobot->CalibrateIMU();
     sleep(1);
     myRobot->imuCalibrated = true; //turn on IMU flag
-    myRobot->picam.cameraOpen(320, 240); //start up camera
+#if 0    myRobot->picam.cameraOpen(320, 240); //start up camera
     printf("Capture 1\n");
     myRobot->picam.frameCapture();
     sleep(0.5);
@@ -31,12 +31,12 @@ void NavThread::run(void){
     printf("Side of Victim: %d\n", myRobot->ProcessImage_Victim());
     sleep(0.5);
     myRobot->picam.close();
-
+#endif
     while(1) {
         switch(myRobot->currState) {
             case 0: //Planning
-                //Navigate(in_dir, xml_name, myRobot, nav);
-                //printf("navigating...\n");
+                Navigate(in_dir, xml_name, myRobot, nav);
+                printf("navigating...\n");
             	sleep(0.5);
                 break;
             case 1: //WayPtNav
@@ -49,12 +49,15 @@ void NavThread::run(void){
                 break;
             case 3: //Idle
                 if(myRobot->toMove){
-                	sleep(1);
-                	myRobot->CalibrateIMU();
-                	sleep(1);
-                	myRobot->CalcNextTile();
+                    sleep(1);
+                    myRobot->CalibrateIMU();
+                    sleep(1);
+                    myRobot->CalcNextTile();
                     myRobot->toMove = false;
                     sleep(1);
+                } else if(myRobot->correctionFailed) {
+                    sleep(1);
+                    myRobot->CorrectionFailed(myRobot->correctionErrorChange);
                 } else {
                     myRobot->currState = ARobot::WAYPTNAV;
                 }
@@ -190,7 +193,6 @@ void NavThread::run(void){
                 }
 #endif
                 myRobot->CorrectYaw();
-                myRobot->Correction();
                 break;
             default:
                 /*Testing Purposes Only*/

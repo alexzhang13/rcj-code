@@ -19,8 +19,8 @@
 
 using namespace std;
 
-Thread *sThread; //spawned thread
 void respawnThread(Thread *currThread);
+void stopThread(Thread *currThread);
 
 int main(int argc,char **argv){
 #ifdef WIN32
@@ -34,29 +34,41 @@ int main(int argc,char **argv){
     const char* rt_logname = "realtime/rcj_log";
     const char* xml_name = "map_data/mazemap";
 #endif
+    bool isRunning = false; //start program button
+    Thread *sThread; //spawned thread
+
+    //Set up Wires
+    wiringPiSetup();
+    pinMode(22, OUTPUT); //LED Pin
+    pinMode(23, INPUT); //Dipswitch PIN 2
+    pinMode(24, INPUT); //Dipswitch PIN 1
+    pinMode(27, INPUT); //Push Pin (Toggle Program)
+    printf("WiringPI Init Passed");
 
     SerialPort *port = new SerialPort("/dev/ttyAMA0",115200);
-	if(port == NULL)
-		printf(" Serial port open failed\n");
-	printf(".Start robot navigation\n");
+    if(port == NULL)
+          printf(" Serial port open failed\n");
+    printf(".Start robot navigation\n");
     ARobot *myRobot = new ARobot(port);
-    Thread *currThread;
-    printf("Fault 1 Passed\n");
+    printf("ARobot Init Passed\n");
+
     UartRx *uartrx = new UartRx(port, myRobot);
-	uartrx->setLogFile(in_dir, rt_logname);
-    printf("Fault 2 Passed\n");
+    uartrx->setLogFile(in_dir, rt_logname);
+    printf("UartRx Thread Init Passed\n");
+
     Process_T *process_thread = new Process_T(port, myRobot);
-    printf("Fault 3 Passed\n");
-
-    wiringPiSetup();
-    //spawnThread(sThread)
-
-    NavThread *nav_thread = new NavThread(myRobot, false);
-    //TestThread *test_thread = new TestThread(myRobot);
-    //DataThread *data_thread = new DataThread(myRobot);
+    printf("Process Thread Init Passed\n");
 
     while(1) {
-    	//if(Button Pressed) when UnPressed, call spawnThread
+        //printf("DS 1: %d\tDS 2: %d\tPP: %d\n", digitalRead(24), digitalRead(23), digitalRead(27));
+
+        if(digitalRead(27)==0 && !isRunning) { //button is pressed when off
+            spawnThread(currThread);
+            isRunning = true;
+        } else if(digitalRead(x)==1 && isRunning) {
+            stopThread(currThread);
+            isRunning = false;
+        }
         sleep(0.01);
     }
 
@@ -69,21 +81,27 @@ int main(int argc,char **argv){
  * 1 0 --> Collect Data
  * 1 1 --> Tester Thread (i.e. Testing kNN PiCam, etc.)
  */
-void respawnThread(Thread *currThread) {
-	/*TODO: Pause current thread if it's paused? (check this)
-	//getPin 22 23 24 27
-	int currChoice = getPin(23) + getPin(24)*2;
-	switch(currChoice) {
-		case 0: //0 0
-			break;
-		case 1: //1 0
-			break;
-		case 2: //0 1
-			break;
-		case 3: //1 1
-			break;
+void spawnThread(Thread *currThread) {
+    //getPin 22 23 24 27
+    int currChoice = digitalRead(24) + digitalRead(23)*2;
+    switch(currChoice) {
+        case 0: //0 0
+            currThread = new NavThread(myRobot, false);
+            break;
+        case 1: //1 0
+            currThread = new NavThread(myRobot, true);
+            break;
+        case 2: //0 1
+            currThread = new DataThread(myRobot);
+            break;
+        case 3: //1 1
+            currThread = new TestThread(myRobot);
+            break;
 	}
-	*/
+}
+
+void stopThread(Thread *currThread) {
+    delete currThread;
 }
 
 

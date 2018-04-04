@@ -248,9 +248,20 @@ void ARobot::UpdateNeighborCells()
 void ARobot::CalcNextTile()
 {
     BotOrientation nextDir;
-    int next_x = (currTile.x_tovisit*300+150) - (currTile.x*300) - (int)rangeDataList[rangeDataList.size()-2].coord.x_glob; //next tile coords
-    int next_y = (currTile.y_tovisit*300+150) - (currTile.y*300) - (int)rangeDataList[rangeDataList.size()-2].coord.y_glob; //next tile coords
-    printf("Next_x: %d, Next_y, %d, ToVisit_X: %d, ToVisit_Y: %d, X: %f, Y: %f\n", next_x, next_y, currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
+    float calculatedNextGlobX=0;
+    float calculatedNextGlobY=0;
+
+    //Average the Previous Readings[Assuming Still], TODO: Change Later, Messy Algorithm
+    for(int i=2;i<10;i++) {
+        calculatedNextGlobX += rangeDataList[rangeDataList.size()-i].coord.x_glob;
+        calculatedNextGlobY += rangeDataList[rangeDataList.size()-i].coord.y_glob;
+    }
+    calculatedNextGlobX /= 8.0f;
+    calculatedNextGlobY /= 8.0f;
+
+    //Find Next Coordinates for the Bot
+    int next_x = (currTile.x_tovisit*300+150) - (currTile.x*300) - (int)calculatedNextGlobX; //next tile coords
+    int next_y = (currTile.y_tovisit*300+150) - (currTile.y*300) - (int)calculatedNextGlobY; //next tile coords
     int32_t dist = (int32_t)sqrt(next_x*next_x + next_y*next_y); //pythagorean
     float angle; //offset angle degrees
     if(currTile.x_tovisit - currTile.x > 0) { //east
@@ -267,19 +278,20 @@ void ARobot::CalcNextTile()
         nextDir = SOUTH;
     }
 
-    printf("Current Orientation: %d\nNext Direction: %d\n", (int)currOrientation, (int)nextDir);
+    //Calculate the Bot's turning, including any offsets
     int turnNext = (int)currOrientation - (int)nextDir; //left is pos, right is neg
-    /*Turning first*/
     if(turnNext == 3) turnNext = -1; //west -> north = turn right 1
     else if (turnNext == -3) turnNext = 1; //north -> west = turn left 1
 
-    //angle *= (turnNext>=0) ? 1 : -1; //determine direction of offset (left >= 0)
+    toTurn = turnNext*90 + (int)angle; //turning distance
 
-    toTurn = turnNext*90 + (int)angle * ALPHA; //turning distance
+    //Debugging Stuff
+    printf("Calculated X: %d\nCalculated Y: %d\n", calculatedNextGlobX, calculatedNextGlobY);
+    printf("Current Orientation: %d\nNext Direction: %d\nTurn Angle: %d", (int)currOrientation, (int)nextDir, toTurn);
+    printf("To Travel[X]: %d, To Travel[Y]: %d, Next X-Cell: %d, Next Y-Cell: %d, X-Absolute: %f, Y-Absolute: %f\n", next_x, next_y, currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
+    PrintXYCoords((int)calculatedNextGlobX/10, (int)calculatedNextGlobY/10);
 
-    PrintXYCoords((int)rangeDataList[rangeDataList.size()-1].coord.x_glob/10, (int)rangeDataList[rangeDataList.size()-1].coord.y_glob/10);
-    //printf("Next_X: %d, Next_Y: %d, Dist: %d, Angle Dif: %f\n", next_x, next_y, dist, angle);
-    //printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f\n", scurrTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
+    //Move on to actual movement
     currOrientation = nextDir;
     TileTransition(dist);
 
@@ -287,14 +299,12 @@ void ARobot::CalcNextTile()
 
 void ARobot::TileTransition(int32_t dist)
 {
-    if(abs(toTurn) >= 3.0f) { //ignore smaller angles
+    if(abs(toTurn) >= 1.5f) { //ignore smaller angles
         TurnDistance((int)abs(toTurn), (toTurn > 0) ? LEFT : RIGHT); //left is positive for IMU
         dist_temp = dist;
         toMove = true;
         return;
     }
-
-    //printf("To_X: %d, To_Y: %d, Curr_X: %f, Curr_Y: %f\n", currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
     MoveDistance(dist, FRONT);
     return;
 }
@@ -318,53 +328,63 @@ void ARobot::CorrectYaw() {
 	const size_t imu_vals = imuDataList.size()-1;
 	float angley;
 	float newyaw=0.0;
-	offsetdir = SlopeDir();
-	x_vals.clear();
-	y_vals.clear();
-	sLock = 0;
+        //offsetdir = SlopeDir();
+        //x_vals.clear();
+        //y_vals.clear();
+        //sLock = 0;
 
-	//average of previous vals
+        //average of previous vals - Very very messy. The <= 10 is supposed to be a case where it's 360 degrees or 0, and it flucuates. I will fix this later
 	for(int i = 0; i < 5; i++) {
-		angley = (rangeDataList[range_vals-i].getAngle()*offsetdir + ((4-(int)currOrientation)%4)*90.0);
-		if(angley <= 10.0) angley += 360;
-		newyaw += rangeDataList[range_vals-i].getAlpha() * angley + (1.0 - rangeDataList[range_vals-i].getAlpha()) * (imuDataList[imu_vals-i].m_yaw > 10 ? imuDataList[imu_vals-i].m_yaw : imuDataList[imu_vals-i].m_yaw + 360.0);
-		printf("Angley: %f\tCurrent Alpha: %f\tCurrent New: %f\n", angley, rangeDataList[range_vals-i].getAlpha(), newyaw);
+            angley = rangeDataList[range_vals-i].getAngle() * ((4-(int)currOrientation)%4*90.0-imuDataList[imu_vals-1]) + (4-(int)currOrientation)%4*90.0;
+            if(angley <= 10.0) angley += 360;
+            newyaw += rangeDataList[range_vals-i].getAlpha() * angley + (1.0 - rangeDataList[range_vals-i].getAlpha()) * (imuDataList[imu_vals-i].m_yaw > 10 ? imuDataList[imu_vals-i].m_yaw : imuDataList[imu_vals-i].m_yaw + 360.0);
+            printf("Angley: %f\tCurrent Alpha: %f\tCurrent New: %f\n", angley, rangeDataList[range_vals-i].getAlpha(), newyaw);
 	}
-	newyaw /= 5.0;
-	if(newyaw>=360) newyaw-=360;
+        newyaw /= 5.0;
+        if(newyaw>=360) newyaw-=360;
 	printf("New Yaw: %f\n", newyaw);
 	imuDataList[imu_vals].setYaw(newyaw);
-	imuDataList[imu_vals].m_yaw = newyaw; //after change
+        imuDataList[imu_vals].m_yaw = newyaw; //after change
+
+        this->correctionError = rangeDataList[range_vals-1].getRangeOffset();
+        this->correctionErrorChange = 9999; //messy, but put high number for now
+        Correction();
 }
 
 void ARobot::Correction() {
 	const size_t yaw_vals = imuDataList.size()-1; //size may change, set constant size
 	float currYaw = imuDataList[yaw_vals].m_yaw;
+        this->correctionFailed = true; //automatically set this parameter for correction
+
 	//Assume correction is only necessary in the range -90 degrees -> +90 degrees
 	printf("Current Orientation: %d\nCurr Yaw: %f\n", (int)currOrientation, currYaw);
 	switch((int)currOrientation) {
 	case 0: //Bot facing North
 		if(currYaw >= 180) currYaw -= 360; //negative range
-		if(abs(0.0f-currYaw) >= 2.5f) {
-			TurnDistance((int)abs(0.0f-currYaw), (0.0f-currYaw > 0.0f) ? LEFT : RIGHT); //If yaw is negative, robot is on right side, so turn left, and vice versa
+                if(abs(0.0f-currYaw) >= 1.0f) {
+                        this->correctionDir = (0.0f-currYaw > 0.0f) ? LEFT : RIGHT;
+                        TurnDistance((int)abs(0.0f-currYaw), this->correctionDir); //If yaw is negative, robot is on right side, so turn left, and vice versa
 			return;
 		}
 		break;
 	case 1: //Bot facing East
-		if(abs(270.0f-currYaw) >= 2.5f) {
-			TurnDistance((int)abs(270.0f-currYaw), (270.0f-currYaw > 0.0f) ? LEFT : RIGHT); //If 270-yaw is positive, robot is on right side, so turn left, and vice versa
+                if(abs(270.0f-currYaw) >= 1.0f) {
+                        this->correctionDir = (270.0f-currYaw > 0.0f) ? LEFT : RIGHT;
+                        TurnDistance((int)abs(270.0f-currYaw), this->correctionDir); //If 270-yaw is positive, robot is on right side, so turn left, and vice versa
 			return;
 		}
 		break;
 	case 2: //Bot facing South
-		if(abs(180.0f-currYaw) >= 2.5f) {
-			TurnDistance((int)abs(180.0f-currYaw), (180.0f-currYaw > 0.0f) ? LEFT : RIGHT); //If 180-yaw is positive, robot is on right side, so turn left, and vice versa
+                if(abs(180.0f-currYaw) >= 1.0f) {
+                        this->correctionDir = (180.0f-currYaw > 0.0f) ? LEFT : RIGHT;
+                        TurnDistance((int)abs(180.0f-currYaw), this->correctionDir); //If 180-yaw is positive, robot is on right side, so turn left, and vice versa
 			return;
 		}
 		break;
 	case 3: //Bot facing West
-		if(abs(90.0f-currYaw) >= 2.5f) {
-			TurnDistance((int)abs(90.0f-currYaw), (90.0f-currYaw > 0.0f) ? LEFT : RIGHT); //If 90-yaw is positive, robot is on right side, so turn left, and vice versa
+                if(abs(90.0f-currYaw) >= 1.0f) {
+                        this->correctionDir = (90.0f-currYaw > 0.0f) ? LEFT : RIGHT;
+                        TurnDistance((int)abs(90.0f-currYaw), this->correctionDir); //If 90-yaw is positive, robot is on right side, so turn left, and vice versa
 			return;
 		}
 		break;
@@ -374,6 +394,39 @@ void ARobot::Correction() {
 	this->currState = ARobot::WAYPTNAV; //if fails
 	return;
 
+}
+
+void ARobot::CorrectionFailed(float prevErrorChange) { //if correction was faulty try to change
+    //check if everything is good
+    float currentError = rangeDataList[rangeDataList.size()-1].getRangeOffset();
+    correctionErrorChange = correctionError - currentError; //positive is good, current < prev
+    printf("Current Error: %f\Previous Error: %f\nCurrent Change: %f\tPrevious Change%f\n", currentError, correctionError, correctionErrorChange, prevErrorChange);
+
+    if(correctionError > currentError) {
+        this->correctionFailed = false; //correction finished
+        return;
+    }
+    if(this->correctionDir == LEFT) {
+        if(correctionErrorChange < prevErrorChange) { //correct direction
+            this->FixYaw(1);
+            TurnDistance(1, RIGHT); //correct correction
+        } else { //bad case, means something went wrong
+            this->FixYaw(-1);
+            TurnDistance(1, LEFT); //overshot correction
+            this->correctionFailed = false; //correction finished
+        }
+    } else { //right
+        if(correctionErrorChange < prevErrorChange) { //good case, 3.0 margin
+            this->FixYaw(-1);
+            TurnDistance(1, LEFT); //correct correction
+        } else { //bad case, means something went wrong
+            this->FixYaw(1);
+            TurnDistance(1, RIGHT); //correct correction
+            this->correctionFailed = false; //correction finished
+        }
+    }
+    this->correctionError = rangeDataList[rangeDataList.size()-1].getRangeOffset();
+    return;
 }
 
 //https://www.easycalculation.com/statistics/learn-regression.php
@@ -719,6 +772,18 @@ void ARobot::CalibrateIMU()
     char* i_command = (char*)malloc(i_length);
     snprintf(i_command, i_length, "%c %c", 'i', 'b');
     WriteCommand(i_command, i_length);
+}
+
+void ARobot::FixYaw(int degrees) {\
+    imu_vals = imuDataList.size();
+    float newyaw = imuDataList[imu_vals-1].m_yaw;
+    newyaw += degrees;
+
+    if(newyaw>=360) newyaw-=360;
+    else if(newyaw<0) newyaw+=360;
+    imuDataList[imu_vals].setYaw(newyaw);
+    imuDataList[imu_vals].m_yaw = newyaw; //after change
+    printf("New Yaw: %f\n", newyaw);
 }
 
 void ARobot::ParseIMU()

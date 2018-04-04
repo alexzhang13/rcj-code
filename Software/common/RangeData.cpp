@@ -72,6 +72,15 @@ float RangeData::getAngle() {
 	return this->angled;
 }
 
+//pos or negative
+int RangeData::getRangeOffset() {
+    if(avalid_short) {
+        return data.laserS_a + data.laserS_b + 28 - 300;
+    } else if(avalid_long) {
+        return data.laserL_a + data.laserL_b + 28 - this->numwallslong*300;
+    }
+}
+
 int RangeData::setAngle() {
 	//drift is seemingly always negative
 	//keep threshold at 30 degrees (0 - 30)
@@ -171,6 +180,7 @@ int RangeData::getPosition()
 	walls.wallE = (int)temp_range[(1+data.dir)%4]/300;
 	walls.wallS = (int)temp_range[(2+data.dir)%4]/300;
 	walls.wallW = (int)temp_range[(3+data.dir)%4]/300;
+        this->numwallslong = (int)temp_range[0]/300 + (int)temp_range[2]/300;
 	//printf("Walls: %d %d %d %d\n", walls.wallN, walls.wallE, walls.wallS, walls.wallW);
 
 	for(int i = 0; i < 4; i++) {
