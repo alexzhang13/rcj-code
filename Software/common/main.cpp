@@ -35,7 +35,7 @@ int main(int argc,char **argv){
     const char* xml_name = "map_data/mazemap";
 #endif
     bool isRunning = false; //start program button
-    Thread *sThread; //spawned thread
+    Thread *currThread; //spawned thread
 
     //Set up Wires, Below is the wiringPi -> Pi Rev.3 GPIO Mapping
     //22 --> 3 (WiringPI)

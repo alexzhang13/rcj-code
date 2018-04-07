@@ -286,8 +286,8 @@ void ARobot::CalcNextTile()
     toTurn = turnNext*90 + (int)angle; //turning distance
 
     //Debugging Stuff
-    printf("Calculated X: %d\nCalculated Y: %d\n", calculatedNextGlobX, calculatedNextGlobY);
-    printf("Current Orientation: %d\nNext Direction: %d\nTurn Angle: %d", (int)currOrientation, (int)nextDir, toTurn);
+    printf("Calculated X: %f\nCalculated Y: %f\n", calculatedNextGlobX, calculatedNextGlobY);
+    printf("Current Orientation: %d\nNext Direction: %d\nTurn Angle: %f", (int)currOrientation, (int)nextDir, toTurn);
     printf("To Travel[X]: %d, To Travel[Y]: %d, Next X-Cell: %d, Next Y-Cell: %d, X-Absolute: %f, Y-Absolute: %f\n", next_x, next_y, currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
     PrintXYCoords((int)calculatedNextGlobX/10, (int)calculatedNextGlobY/10);
 
@@ -400,7 +400,7 @@ void ARobot::CorrectionFailed(float prevErrorChange) { //if correction was fault
     //check if everything is good
     float currentError = rangeDataList[rangeDataList.size()-1].getRangeOffset();
     correctionErrorChange = correctionError - currentError; //positive is good, current < prev
-    printf("Current Error: %f\Previous Error: %f\nCurrent Change: %f\tPrevious Change%f\n", currentError, correctionError, correctionErrorChange, prevErrorChange);
+    printf("Current Error: %f\tPrevious Error: %f\nCurrent Change: %f\tPrevious Change%f\n", currentError, correctionError, correctionErrorChange, prevErrorChange);
 
     if(correctionError > currentError) {
         this->correctionFailed = false; //correction finished
@@ -520,7 +520,6 @@ int ARobot::ProcessImage_Victim() {
 
     for(int i = 0; i < imgList.size(); i++) {
     	m_letter = knn.detectVictim(imgList[i]);
-    	printf(m_letter + "\n");
         if(m_letter != '0' && victim.m_isVictim == true) { //error, not supposed to happen, means there is a mistake
         	printf("DNE\n");
             victim.m_isVictim = false;
