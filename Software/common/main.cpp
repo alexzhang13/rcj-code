@@ -66,7 +66,10 @@ int main(int argc,char **argv){
     Process_T *process_thread = new Process_T(port, myRobot);
     printf("Process Thread Init Passed\n");
 
+    currThread = new TestThread(myRobot);
+
     while(1) {
+#if 0
         if(iteration % 1000 == 0) {
             if(digitalRead(2)==1 && !isRunning && reset) { //button is pressed when off
                 printf("Spawning New Thread...\n");
@@ -82,8 +85,9 @@ int main(int argc,char **argv){
                 reset = true;
             }
         }
-        sleep(0.01);
         ++iteration;
+#endif
+        sleep(0.01);
     }
 
     return 0;
