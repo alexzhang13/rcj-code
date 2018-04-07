@@ -790,6 +790,7 @@ void ARobot::TestRangeSensors() {
     printf("Short Dist: %d\tLong Dist: %d\n", rangeDataList[range_vals].getRangeShort(), rangeDataList[range_vals].getRangeLong());
     printf("Error: %d\t", rangeDataList[range_vals].getRangeOffset());
     printf("Alpha Value: %f\n", rangeDataList[range_vals].getAlpha());
+    return;
 }
 
 void ARobot::ParseIMU()
