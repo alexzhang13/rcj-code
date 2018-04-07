@@ -35,6 +35,8 @@ int main(int argc,char **argv){
     const char* xml_name = "map_data/mazemap";
 #endif
     bool isRunning = false; //start program button
+    bool reset = false; //flag
+    int iteration = 0;
     Thread *currThread; //spawned thread
 
     //Set up Wires, Below is the wiringPi -> Pi Rev.3 GPIO Mapping
@@ -65,17 +67,25 @@ int main(int argc,char **argv){
     printf("Process Thread Init Passed\n");
 
     while(1) {
-        printf("DS 1: %d\tDS 2: %d\tPP: %d\n", digitalRead(5), digitalRead(4), digitalRead(2));
-        if(digitalRead(2)==1 && !isRunning) { //button is pressed when off
-            printf("Spawning New Thread...\n");
-            spawnThread(currThread, myRobot);
-            isRunning = true;
-        } else if(digitalRead(2)==0 && isRunning) {
-            printf("Thread Killed...\n");
-            stopThread(currThread);
-            isRunning = false;
+        if(iteration % 100 == 99) {
+            iteration = 0;
+            printf("DS 1: %d\tDS 2: %d\tPP: %d\n", digitalRead(5), digitalRead(4), digitalRead(2));
+
+            if(digitalRead(2)==1 && !isRunning) { //button is pressed when off
+                printf("Spawning New Thread...\n");
+                spawnThread(currThread, myRobot);
+                isRunning = true;
+            } else if(digitalRead(2)==1 && isRunning && reset) {
+                printf("Thread Killed...\n");
+                stopThread(currThread);
+                isRunning = false;
+                reset = false;
+            } else if (digitalRead(2)==0 && isRunning) {
+                reset = true;
+            }
         }
         sleep(0.01);
+        ++iteration;
     }
 
     return 0;
