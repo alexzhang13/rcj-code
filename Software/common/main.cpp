@@ -19,7 +19,7 @@
 
 using namespace std;
 
-void respawnThread(Thread *currThread);
+void spawnThread(Thread *currThread,  ARobot *myRobot);
 void stopThread(Thread *currThread);
 
 int main(int argc,char **argv){
@@ -37,12 +37,17 @@ int main(int argc,char **argv){
     bool isRunning = false; //start program button
     Thread *sThread; //spawned thread
 
-    //Set up Wires
+    //Set up Wires, Below is the wiringPi -> Pi Rev.3 GPIO Mapping
+    //22 --> 3 (WiringPI)
+    //23 --> 4
+    //24 --> 5 [WORKS]
+    //27 --> 2 [WORKS]
+
     wiringPiSetup();
-    pinMode(22, OUTPUT); //LED Pin
-    pinMode(23, INPUT); //Dipswitch PIN 2
-    pinMode(24, INPUT); //Dipswitch PIN 1
-    pinMode(27, INPUT); //Push Pin (Toggle Program)
+    pinMode(3, OUTPUT); //LED Pin
+    pinMode(4, INPUT); //Dipswitch PIN 2
+    pinMode(5, INPUT); //Dipswitch PIN 1
+    pinMode(2, INPUT); //Push Pin (Toggle Program)
     printf("WiringPI Init Passed");
 
     SerialPort *port = new SerialPort("/dev/ttyAMA0",115200);
@@ -60,12 +65,10 @@ int main(int argc,char **argv){
     printf("Process Thread Init Passed\n");
 
     while(1) {
-        //printf("DS 1: %d\tDS 2: %d\tPP: %d\n", digitalRead(24), digitalRead(23), digitalRead(27));
-
-        if(digitalRead(27)==0 && !isRunning) { //button is pressed when off
-            spawnThread(currThread);
+        if(digitalRead(2)==1 && !isRunning) { //button is pressed when off
+            spawnThread(currThread, myRobot);
             isRunning = true;
-        } else if(digitalRead(x)==1 && isRunning) {
+        } else if(digitalRead(2)==0 && isRunning) {
             stopThread(currThread);
             isRunning = false;
         }
@@ -81,9 +84,8 @@ int main(int argc,char **argv){
  * 1 0 --> Collect Data
  * 1 1 --> Tester Thread (i.e. Testing kNN PiCam, etc.)
  */
-void spawnThread(Thread *currThread) {
-    //getPin 22 23 24 27
-    int currChoice = digitalRead(24) + digitalRead(23)*2;
+void spawnThread(Thread *currThread, ARobot *myRobot) {
+    int currChoice = digitalRead(5) + digitalRead(4)*2;
     switch(currChoice) {
         case 0: //0 0
             currThread = new NavThread(myRobot, false);
@@ -103,6 +105,7 @@ void spawnThread(Thread *currThread) {
 void stopThread(Thread *currThread) {
     delete currThread;
 }
+
 
 
 

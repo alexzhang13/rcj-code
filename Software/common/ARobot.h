@@ -162,7 +162,9 @@ class ARobot {
 	bool victimFront;
 	bool backingBlack; //if the robot is backing up on a black tile
 	bool imuCalibrated; //flag if IMU is calibrated
+        bool correctionFailed; // if correction fails
 	int dist_temp; //store temporary distance to travel
+        float correctionErrorChange; //delta error
 
  protected:
  	SerialPort *mPort;
@@ -182,9 +184,7 @@ class ARobot {
  	float prevYaw; //previous yaw reading
  	float toTurn; //distance to turns
         float correctionError; //if correction fails, find distance to ensure something went wrong
-        float correctionErrorChange; //delta error
         BotDir correctionDir; //direction the robot just tried to fix itself
-        bool correctionFailed; // if correction fails
  	bool initTurnRec; //specific special case (glitch) -- cleaner way will remove this sooner or later
  	bool cross_over; //[check StopTurn() function] --> determines if the yaw has turned over 360 degs
  	int8_t offsetdir; //what direction is the robot offset from the center right=1, left=3
@@ -194,3 +194,4 @@ class ARobot {
  	size_t mlen_temp;
 }; // class Thread
 #endif // _Thread_h_
+

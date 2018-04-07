@@ -333,10 +333,10 @@ void ARobot::CorrectYaw() {
         //y_vals.clear();
         //sLock = 0;
 
-        //average of previous vals - Very very messy. The <= 10 is supposed to be a case where it's 360 degrees or 0, and it flucuates. I will fix this later
+        //average of previous vals - Very very messy. The <= 30 is supposed to be a case where it's 360 degrees or 0, and it flucuates. I will fix this later
 	for(int i = 0; i < 5; i++) {
-            angley = rangeDataList[range_vals-i].getAngle() * ((4-(int)currOrientation)%4*90.0-imuDataList[imu_vals-1]) + (4-(int)currOrientation)%4*90.0;
-            if(angley <= 10.0) angley += 360;
+            angley = (rangeDataList[range_vals-i].getAngle()*offsetdir + ((4-(int)currOrientation)%4)*90.0);
+            if(angley <= 30.0) angley += 360;
             newyaw += rangeDataList[range_vals-i].getAlpha() * angley + (1.0 - rangeDataList[range_vals-i].getAlpha()) * (imuDataList[imu_vals-i].m_yaw > 10 ? imuDataList[imu_vals-i].m_yaw : imuDataList[imu_vals-i].m_yaw + 360.0);
             printf("Angley: %f\tCurrent Alpha: %f\tCurrent New: %f\n", angley, rangeDataList[range_vals-i].getAlpha(), newyaw);
 	}
@@ -775,7 +775,7 @@ void ARobot::CalibrateIMU()
 }
 
 void ARobot::FixYaw(int degrees) {\
-    imu_vals = imuDataList.size();
+    const size_t imu_vals = imuDataList.size();
     float newyaw = imuDataList[imu_vals-1].m_yaw;
     newyaw += degrees;
 
@@ -898,4 +898,5 @@ void ARobot::PrintXYCoords(int x, int y) {
 		printf("\n");
 	}
 }
+
 

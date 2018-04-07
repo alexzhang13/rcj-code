@@ -14,7 +14,8 @@ void NavThread::run(void){
     myRobot->CalibrateIMU();
     sleep(1);
     myRobot->imuCalibrated = true; //turn on IMU flag
-#if 0    myRobot->picam.cameraOpen(320, 240); //start up camera
+#if 0   
+    myRobot->picam.cameraOpen(320, 240); //start up camera
     printf("Capture 1\n");
     myRobot->picam.frameCapture();
     sleep(0.5);
