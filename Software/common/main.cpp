@@ -19,7 +19,7 @@
 
 using namespace std;
 
-void respawnThread(Thread *currThread);
+void spawnThread(Thread *currThread,  ARobot *myRobot);
 void stopThread(Thread *currThread);
 
 int main(int argc,char **argv){
@@ -81,7 +81,7 @@ int main(int argc,char **argv){
  * 1 0 --> Collect Data
  * 1 1 --> Tester Thread (i.e. Testing kNN PiCam, etc.)
  */
-void spawnThread(Thread *currThread) {
+void spawnThread(Thread *currThread, ARobot *myRobot) {
     //getPin 22 23 24 27
     int currChoice = digitalRead(24) + digitalRead(23)*2;
     switch(currChoice) {
