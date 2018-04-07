@@ -76,6 +76,7 @@ class ARobot {
 
  	/*Laser*/
  	void SpinLaser();
+        void TestRangeSensors();
 
  	/*Temperature Sensor -> Victim Control*/
  	int CheckVictimTemp();
