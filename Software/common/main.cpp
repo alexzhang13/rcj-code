@@ -88,7 +88,8 @@ void spawnThread(Thread *currThread, ARobot *myRobot) {
     int currChoice = digitalRead(5) + digitalRead(4)*2;
     switch(currChoice) {
         case 0: //0 0
-            currThread = new NavThread(myRobot, false);
+            //currThread = new NavThread(myRobot, false);
+            currThread = new TestThread(myRobot);
             break;
         case 1: //1 0
             currThread = new NavThread(myRobot, true);

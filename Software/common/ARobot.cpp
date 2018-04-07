@@ -786,6 +786,13 @@ void ARobot::FixYaw(int degrees) {\
     printf("New Yaw: %f\n", newyaw);
 }
 
+void ARobot::TestRangeSensors() {
+   const size_t range_vals = rangeDataList.size();
+    printf("Short Dist: %d\tLong Dist: %d\n", rangeDataList[range_vals].getRangeShort(), rangeDataList[range_vals].getRangeLong());
+    printf("Error: %d\t", rangeDataList[range_vals].getRangeOffset());
+    printf("Alpha Value: %f\n", rangeDataList[range_vals].getAlpha());
+}
+
 void ARobot::ParseIMU()
 {
     /*if(imuDataList.size() <= 0) {

@@ -61,6 +61,8 @@ public:
         int getRangeOffset();
 	int getScan();
 	int setAngle(); //based on object's data
+        int getRangeShort();
+        int getRangeLong();
 	float getAngle();
 	float getAlpha();
 
