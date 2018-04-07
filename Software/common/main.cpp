@@ -66,9 +66,11 @@ int main(int argc,char **argv){
 
     while(1) {
         if(digitalRead(2)==1 && !isRunning) { //button is pressed when off
+            printf("Spawning New Thread...\n");
             spawnThread(currThread, myRobot);
             isRunning = true;
         } else if(digitalRead(2)==0 && isRunning) {
+            printf("Thread Killed...\n");
             stopThread(currThread);
             isRunning = false;
         }
