@@ -68,9 +68,6 @@ int main(int argc,char **argv){
 
     while(1) {
         if(iteration % 1000 == 0) {
-            iteration = 0;
-            printf("DS 1: %d\tDS 2: %d\tPP: %d\n", digitalRead(5), digitalRead(4), digitalRead(2));
-
             if(digitalRead(2)==1 && !isRunning && reset) { //button is pressed when off
                 printf("Spawning New Thread...\n");
                 spawnThread(currThread, myRobot);
