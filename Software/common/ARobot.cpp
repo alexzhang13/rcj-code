@@ -6,8 +6,6 @@
 #include <errno.h>
 #include <math.h>
 
-#define ALPHA 0.728456789
-
 using namespace std;
 
 ARobot::ARobot(SerialPort *port) :mPort(port)
@@ -342,19 +340,17 @@ void ARobot::CorrectYaw() {
 	}
         newyaw /= 5.0;
         if(newyaw>=360) newyaw-=360;
-	printf("New Yaw: %f\n", newyaw);
-	imuDataList[imu_vals].setYaw(newyaw);
+		printf("New Yaw: %f\n", newyaw);
+		imuDataList[imu_vals].setYaw(newyaw);
         imuDataList[imu_vals].m_yaw = newyaw; //after change
 
         this->correctionError = rangeDataList[range_vals-1].getRangeOffset();
-        this->correctionErrorChange = 9999; //messy, but put high number for now
         Correction();
 }
 
 void ARobot::Correction() {
 	const size_t yaw_vals = imuDataList.size()-1; //size may change, set constant size
 	float currYaw = imuDataList[yaw_vals].m_yaw;
-        this->correctionFailed = true; //automatically set this parameter for correction
 
 	//Assume correction is only necessary in the range -90 degrees -> +90 degrees
 	printf("Current Orientation: %d\nCurr Yaw: %f\n", (int)currOrientation, currYaw);
@@ -396,16 +392,23 @@ void ARobot::Correction() {
 
 }
 
-void ARobot::CorrectionFailed(float prevErrorChange) { //if correction was faulty try to change
+void ARobot::CheckCorrection() {
+	float currentError = rangeDataList[rangeDataList.size()-1].getRangeOffset();
+	if(correctionError > currentError || currentError <= 3) {
+        this->correctionFailed = false; //correction finished
+        return;
+    } else {
+		this->correctionFailed = true; //automatically set this parameter for correction
+		return;
+    }
+}
+
+void ARobot::CorrectionFailed() { //if correction was faulty try to change
     //check if everything is good
     float currentError = rangeDataList[rangeDataList.size()-1].getRangeOffset();
     correctionErrorChange = correctionError - currentError; //positive is good, current < prev
     printf("Current Error: %f\tPrevious Error: %f\nCurrent Change: %f\tPrevious Change%f\n", currentError, correctionError, correctionErrorChange, prevErrorChange);
 
-    if(correctionError > currentError) {
-        this->correctionFailed = false; //correction finished
-        return;
-    }
     if(this->correctionDir == LEFT) {
         if(correctionErrorChange < prevErrorChange) { //correct direction
             this->FixYaw(1);
