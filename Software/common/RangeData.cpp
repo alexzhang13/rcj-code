@@ -83,9 +83,9 @@ int RangeData::getRangeLong() {
 //pos or negative
 int RangeData::getRangeOffset() {
     if(avalid_short) {
-        return data.laserS_a + data.laserS_b + 28 - 300;
+        return data.laserS_a + data.laserS_b + 20 - 300;
     } else if(avalid_long) {
-        return data.laserL_a + data.laserL_b + 28 - this->numwallslong*300;
+        return data.laserL_a + data.laserL_b + 20 - this->numwallslong*300;
     }
 }
 
