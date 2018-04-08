@@ -338,8 +338,8 @@ void ARobot::CorrectYaw() {
     newyaw /= 5.0;
     if(newyaw>=360) 
     	newyaw-=360;
-	printf("New Yaw: %f\n", newyaw);
-	imuDataList[imu_vals].setYaw(newyaw);
+    printf("New Yaw: %f\n", newyaw);
+    imuDataList[imu_vals].setYaw(newyaw);
     imuDataList[imu_vals].m_yaw = newyaw; //after change
 
     this->correctionError = rangeDataList[range_vals-1].getRangeOffset();
@@ -484,23 +484,25 @@ int ARobot::CheckVictimTemp()
 {
     if(isVictim) //if a victim has already been there
         return 0;
-
     size_t temp_vals = tempDataList.size(); //get average values
-    float temp_avg = 0;
-    for(int i = 1; i < 5; i++) { //left threshold
-        temp_avg += tempDataList[temp_vals-i].getLeftTemp();
+    int numAboveThreshR=0; //multiple values above threshold [at least 1/2]
+    int numAboveThreshL=0;
+
+    for(int i = 1; i < 9; i++) { //left threshold
+        if(tempDataList[temp_vals-1].getLeftTemp()[i] > this->threshLeft) {
+            ++numAboveThreshL;
+        }
+        if(tempDataList[temp_vals-1].getRightTemp()[i] > this->threshRight) {
+            ++numAboveThreshR;
+        }
     }
-    if(temp_avg/4.0f > threshLeft) {
+    if(numAboveThreshL > 4) {
         return 2;
-    }
-    temp_avg = 0; //reset
-    for(int i = 1; i < 5; i++) { //right threshold
-        temp_avg += tempDataList[temp_vals-i].getRightTemp();
-    }
-    if(temp_avg/4.0f > threshRight) {
+    } else if(numAboveThreshR > 4) {
         return 1;
+    } else {
+        return 0;
     }
-    return 0;
 }
 
 void ARobot::CheckVictimVisual() {
@@ -601,7 +603,8 @@ int ARobot::getSilverThresh()
 
 void ARobot::CheckLightTile()
 {
-    if(backingBlack == true) {return;}
+    if(backingBlack)
+        return;
     mlen_light = lightDataList.size();
     if(mlen_light < 3)
         return;
@@ -614,7 +617,7 @@ void ARobot::CheckLightTile()
             backingBlack = true;
             ResetEncoder();
             sleep(1);
-            MoveDistance(155, BACK);
+            MoveDistance(150, BACK);
         }
     } else {
         currTileLight = WHITE;
@@ -743,7 +746,6 @@ void ARobot::StopTurn(BotDir dir)
                 currState = DROP;
             } else {
                 currState = IDLE; 
-                //CheckVictimTemp();
             }          
             return;
         }
@@ -764,7 +766,6 @@ void ARobot::StopTurn(BotDir dir)
                 currState = DROP;
             } else {
                 currState = IDLE;
-                //CheckVictimTemp();
             }
             return;
         }
