@@ -11,24 +11,24 @@
 class TempData {
 public:
 
-	typedef struct {
-            uint32_t tstamp; //timestamp
-            char id; //always comes out as t for temp
-            int tmpR[9];
-            int tmpL[9];
-	}TMP_DataType;
+    typedef struct {
+        uint32_t tstamp; //timestamp
+        char id; //always comes out as t for temp
+        int tmpR[9];
+        int tmpL[9];
+    }TMP_DataType;
 
-	TempData();
-	~TempData();
+    TempData();
+    ~TempData();
 
-	void storeCommand(char* buf);
-	int parseData();
-        int* getRightTemp();
-        int* getLeftTemp();
+    void storeCommand(char* buf);
+    int parseData();
+    int* getRightTemp();
+    int* getLeftTemp();
 
 private:
-	TMP_DataType data;
-	char m_command[128];
+    TMP_DataType data;
+    char m_command[128];
 };
 
 #endif // !_TEMP_DATA_H_
