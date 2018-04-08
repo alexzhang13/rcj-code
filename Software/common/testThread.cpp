@@ -26,7 +26,7 @@ void TestThread::run(void){
     sleep(1);
     while(1) {
         myRobot->TestRangeSensors();
-        sleep(2);
+        sleep(1);
     }
     return;
 }

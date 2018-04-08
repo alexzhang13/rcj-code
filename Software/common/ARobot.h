@@ -60,7 +60,8 @@ class ARobot {
  	void UpdateNeighborCells();
  	void TileTransition(int32_t dist);
  	void CalcNextTile();
-        void CorrectionFailed(float prevErrorChange);
+    void CorrectionFailed();
+    void CheckCorrection();
  	void Correction();
  	void CorrectYaw();
  	int SlopeDir(); //const std::vector<double>& x, const std::vector<double>& y
@@ -68,7 +69,7 @@ class ARobot {
  	/*IMU*/
  	void CalibrateIMU();
  	void setOffsetDir();
-        void FixYaw(int degrees); //add certain number of degrees to fix yaw
+    void FixYaw(int degrees); //add certain number of degrees to fix yaw
  	int getOffsetDir();
 
  	/*Ramp*/
@@ -163,9 +164,10 @@ class ARobot {
 	bool victimFront;
 	bool backingBlack; //if the robot is backing up on a black tile
 	bool imuCalibrated; //flag if IMU is calibrated
-        bool correctionFailed; // if correction fails
+    bool correctionFailed; // if correction fails
+    bool isCorrecting; //is the robot in a state of correcting
 	int dist_temp; //store temporary distance to travel
-        float correctionErrorChange; //delta error
+    float correctionErrorChange; //delta error
 
  protected:
  	SerialPort *mPort;
@@ -184,8 +186,8 @@ class ARobot {
  	float initialYaw; //initial yaw in a turn
  	float prevYaw; //previous yaw reading
  	float toTurn; //distance to turns
-        float correctionError; //if correction fails, find distance to ensure something went wrong
-        BotDir correctionDir; //direction the robot just tried to fix itself
+    float correctionError; //if correction fails, find distance to ensure something went wrong
+    BotDir correctionDir; //direction the robot just tried to fix itself
  	bool initTurnRec; //specific special case (glitch) -- cleaner way will remove this sooner or later
  	bool cross_over; //[check StopTurn() function] --> determines if the yaw has turned over 360 degs
  	int8_t offsetdir; //what direction is the robot offset from the center right=1, left=3

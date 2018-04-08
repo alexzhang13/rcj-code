@@ -326,26 +326,24 @@ void ARobot::CorrectYaw() {
 	const size_t imu_vals = imuDataList.size()-1;
 	float angley;
 	float newyaw=0.0;
-        //offsetdir = SlopeDir();
-        //x_vals.clear();
-        //y_vals.clear();
-        //sLock = 0;
+	this->isCorrecting = true;
 
-        //average of previous vals - Very very messy. The <= 30 is supposed to be a case where it's 360 degrees or 0, and it flucuates. I will fix this later
+    //average of previous vals - Very very messy. The <= 30 is supposed to be a case where it's 360 degrees or 0, and it flucuates. I will fix this later
 	for(int i = 0; i < 5; i++) {
             angley = (rangeDataList[range_vals-i].getAngle()*offsetdir + ((4-(int)currOrientation)%4)*90.0);
             if(angley <= 30.0) angley += 360;
             newyaw += rangeDataList[range_vals-i].getAlpha() * angley + (1.0 - rangeDataList[range_vals-i].getAlpha()) * (imuDataList[imu_vals-i].m_yaw > 10 ? imuDataList[imu_vals-i].m_yaw : imuDataList[imu_vals-i].m_yaw + 360.0);
             printf("Angley: %f\tCurrent Alpha: %f\tCurrent New: %f\n", angley, rangeDataList[range_vals-i].getAlpha(), newyaw);
 	}
-        newyaw /= 5.0;
-        if(newyaw>=360) newyaw-=360;
-		printf("New Yaw: %f\n", newyaw);
-		imuDataList[imu_vals].setYaw(newyaw);
-        imuDataList[imu_vals].m_yaw = newyaw; //after change
+    newyaw /= 5.0;
+    if(newyaw>=360) 
+    	newyaw-=360;
+	printf("New Yaw: %f\n", newyaw);
+	imuDataList[imu_vals].setYaw(newyaw);
+    imuDataList[imu_vals].m_yaw = newyaw; //after change
 
-        this->correctionError = rangeDataList[range_vals-1].getRangeOffset();
-        Correction();
+    this->correctionError = rangeDataList[range_vals-1].getRangeOffset();
+    Correction();
 }
 
 void ARobot::Correction() {
@@ -406,26 +404,33 @@ void ARobot::CheckCorrection() {
 void ARobot::CorrectionFailed() { //if correction was faulty try to change
     //check if everything is good
     float currentError = rangeDataList[rangeDataList.size()-1].getRangeOffset();
-    correctionErrorChange = correctionError - currentError; //positive is good, current < prev
-    printf("Current Error: %f\tPrevious Error: %f\nCurrent Change: %f\tPrevious Change%f\n", currentError, correctionError, correctionErrorChange, prevErrorChange);
+    printf("Current Error: %f\tPrevious Error: %f\n", currentError, this->correctionError);
 
     if(this->correctionDir == LEFT) {
-        if(correctionErrorChange < prevErrorChange) { //correct direction
+        if(currentError < this->correctionError) { //correct direction
             this->FixYaw(1);
             TurnDistance(1, RIGHT); //correct correction
+        } else if(currentError == this->correctionError) {
+        	this->correctionFailed = false; //correction finished
+            this->isCorrecting = false;
         } else { //bad case, means something went wrong
-            this->FixYaw(-1);
-            TurnDistance(1, LEFT); //overshot correction
+            this->FixYaw(-1);  
             this->correctionFailed = false; //correction finished
+            this->isCorrecting = false;
+            TurnDistance(1, LEFT); //overshot correction
         }
     } else { //right
-        if(correctionErrorChange < prevErrorChange) { //good case, 3.0 margin
+        if(currentError < this->correctionError) { //good case, 3.0 margin
             this->FixYaw(-1);
             TurnDistance(1, LEFT); //correct correction
+        } else if(currentError == this->correctionError) {
+        	this->correctionFailed = false; //correction finished
+            this->isCorrecting = false;
         } else { //bad case, means something went wrong
             this->FixYaw(1);
-            TurnDistance(1, RIGHT); //correct correction
             this->correctionFailed = false; //correction finished
+            this->isCorrecting = false;
+            TurnDistance(1, RIGHT); //correct correction
         }
     }
     this->correctionError = rangeDataList[rangeDataList.size()-1].getRangeOffset();

@@ -65,6 +65,10 @@ public:
         int getRangeLong();
 	float getAngle();
 	float getAlpha();
+	//generated based on excel tests
+	inline float CorrectLongReading(float reading) {
+		return 159 + 177*reading - 3.26*pow(reading, 2);
+	};
 
 	Scan_DataType scan;
 	Range_DataType data;

@@ -5,7 +5,7 @@
 #include <string.h>
 #include "IMUData.h"
 
-#define OFFSET 17.5
+#define OFFSET 20
 #define PI 3.1415926535
 #define SHORTOFFSET 30.0
 #define LONGOFFSET 55.0
@@ -46,16 +46,9 @@ void RangeData::storeCommand(char* buf) {
 int RangeData::parseData()
 {
 	sscanf(m_command, "%d %c %d %f %f %f %f", &data.tstamp, &data.id, &data.angle, &data.laserL_a, &data.laserS_a, &data.laserL_b, &data.laserS_b);
-	if(data.laserL_a >= 400) {
-		data.laserL_a -= LONGOFFSET;
-	} else if (data.laserL_b >= 300) {
-		data.laserL_a -= LONGOFFSET;
-	}
-	if(data.laserL_b >= 400) {
-		data.laserL_b -= LONGOFFSET;
-	} else if (data.laserL_b >= 300) {
-		data.laserL_b -= SHORTOFFSET;
-	}
+	//Correct the two VL5L30X Sensors based on the equation
+	data.laserL_a = CorrectLongReading(data.laserL_a);
+	data.laserL_b = CorrectLongReading(data.laserL_b);
 	return 0;
 }
 
@@ -90,28 +83,32 @@ int RangeData::getRangeOffset() {
 }
 
 int RangeData::setAngle() {
-	//drift is seemingly always negative
-	//keep threshold at 30 degrees (0 - 30)
+	// 7.62 = (1 - 0) / (1 - 0.866) --> 0.886 = root (3) / 2 which is cos(30 deg)
 	if(avalid_short) {
 		angled = acos(min(1.0, 300.0/(data.laserS_a + data.laserS_b + OFFSET))) * 180 / PI;
-		alpha = max(0.0, 7.62*(300.0/(data.laserS_a + data.laserS_b + OFFSET)-0.866)); //30 degree turn range 0-1
-		if(alpha >= 1.3) alpha = 0;
-                else if (alpha > 1) alpha = 1;
+		alpha = max(0.0, 1 - (this->getRangeOffset()/10.0)); //linear as opposed to based on angles
+		//alpha = max(0.0, 7.62*(300.0/(data.laserS_a + data.laserS_b + OFFSET)-0.866)); //30 degree turn range 0-1
+		if(alpha >= 1.5) //too high, must be invalid
+			alpha = 0;
+        else if (alpha > 1) 
+        	alpha = 1;
 		//printf("Distance: %f\tAlpha: %f\n", data.laserS_a + data.laserS_b + OFFSET, alpha);
-		// 7.62 = (1 - 0) / (1 - 0.866) --> 0.886 = root (3) / 2 which is cos(30 deg)
 	} else if(avalid_long) {
 		int far = ((int)temp_range[0]/300 + (int)temp_range[2]/300 + 1);
 		angled = acos(min(1.0, (double)(far*300)/(data.laserL_a + data.laserL_b + OFFSET))) * 180 / PI;
-		alpha = max(0.0, (7.62/pow(far-1,2))*((far*300)/(data.laserL_a + data.laserL_b + OFFSET)-0.786)); //30 degree turn range 0-1
-		if(alpha >= 1.3) alpha = 0;
-                else if (alpha > 1) alpha = 1;
+		alpha = max(0.0, 1 - (this->getRangeOffset()/20.0)); //linear as opposed to based on angles
+		//alpha = max(0.0, (7.62/pow(far-1,2))*((far*300)/(data.laserL_a + data.laserL_b + OFFSET)-0.786)); //30 degree turn range 0-1
+		if(alpha >= 1.5) 
+			alpha = 0;
+        else if (alpha > 1) 
+        	alpha = 1;
 		//printf("Angle: %f\tAlpha: %f\tValue: %i Distance: %f\n", angled, alpha, far*300, data.laserL_a + data.laserL_b + OFFSET);
 	}
 	return 0;
 }
 
 int RangeData::getPosition()
-{	
+{	s
 	size_t imuSize = myRobot->imuDataList.size();
 	curr_yaw = myRobot->imuDataList[imuSize-1].m_yaw;
 

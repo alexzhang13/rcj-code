@@ -14,12 +14,11 @@ void NavThread::run(void){
     myRobot->CalibrateIMU();
     sleep(1);
     myRobot->imuCalibrated = true; //turn on IMU flag
-
     while(1) {
         switch(myRobot->currState) {
             case 0: //Planning
-                //Navigate(in_dir, xml_name, myRobot, nav);
-                myRobot->TestRangeSensors();
+                Navigate(in_dir, xml_name, myRobot, nav);
+                printf("navigating...\n");
             	sleep(0.5);
                 break;
             case 1: //WayPtNav
@@ -32,15 +31,17 @@ void NavThread::run(void){
                 break;
             case 3: //Idle
                 if(myRobot->toMove){
-                    sleep(1);
+                    sleep(0.3);
                     myRobot->CalibrateIMU();
-                    sleep(1);
+                    sleep(0.3);
                     myRobot->CalcNextTile();
                     myRobot->toMove = false;
-                    sleep(1);
+                } else if(myRobot->isCorrecting) {
+                	sleep(0.5);
+                	myRobot->CheckCorrection();
                 } else if(myRobot->correctionFailed) {
-                    sleep(1);
-                    myRobot->CorrectionFailed(myRobot->correctionErrorChange);
+                    sleep(0.5);
+                    myRobot->CorrectionFailed();
                 } else {
                     myRobot->currState = ARobot::WAYPTNAV;
                 }
