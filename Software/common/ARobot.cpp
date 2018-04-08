@@ -6,8 +6,6 @@
 #include <errno.h>
 #include <math.h>
 
-#define ALPHA 0.728456789
-
 using namespace std;
 
 ARobot::ARobot(SerialPort *port) :mPort(port)
