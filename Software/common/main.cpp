@@ -66,7 +66,7 @@ int main(int argc,char **argv){
     Process_T *process_thread = new Process_T(port, myRobot);
     printf("Process Thread Init Passed\n");
 
-    currThread = new TestThread(myRobot);
+    //currThread = new TestThread(myRobot);
 
     while(1) {
         if(iteration % 1000 == 0) {
