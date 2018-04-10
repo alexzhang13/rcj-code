@@ -70,7 +70,7 @@ int main(int argc,char **argv){
 
     while(1) {
         if(iteration % 1000 == 0) {
-            printf("Dip 1: %d\tDip 2: %d\n", digitalRead(5), digitalRead(4));
+            printf("Dip 1: %d\tDip 2: %d\tDip 3: %d\n", digitalRead(5), digitalRead(4), digitalRead(2));
             #if 0
             if(digitalRead(2)==1 && !isRunning && reset) { //button is pressed when off
                 printf("Spawning New Thread...\n");
