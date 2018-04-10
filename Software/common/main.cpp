@@ -69,8 +69,9 @@ int main(int argc,char **argv){
     currThread = new TestThread(myRobot);
 
     while(1) {
-#if 0
         if(iteration % 1000 == 0) {
+            printf("Dip 1: &d\tDip 2: %d\n", digitalRead(5), digitalRead(4));
+            #if 0
             if(digitalRead(2)==1 && !isRunning && reset) { //button is pressed when off
                 printf("Spawning New Thread...\n");
                 spawnThread(currThread, myRobot);
@@ -84,9 +85,9 @@ int main(int argc,char **argv){
             } else if (digitalRead(2)==0) {
                 reset = true;
             }
+            #endif
         }
         ++iteration;
-#endif
         sleep(0.01);
     }
 
