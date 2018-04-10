@@ -54,7 +54,7 @@ int main(int argc,char **argv){
 
     SerialPort *port = new SerialPort("/dev/ttyAMA0",115200);
     if(port == NULL)
-          printf(" Serial port open failed\n");
+        printf(" Serial port open failed\n");
     printf(".Start robot navigation\n");
     ARobot *myRobot = new ARobot(port);
     printf("ARobot Init Passed\n");
@@ -66,11 +66,12 @@ int main(int argc,char **argv){
     Process_T *process_thread = new Process_T(port, myRobot);
     printf("Process Thread Init Passed\n");
 
-    currThread = new NavThread(myRobot, false);
+    currThread = new TestThread(myRobot);
 
     while(1) {
-#if 0
         if(iteration % 1000 == 0) {
+            printf("Dip 1: &d\tDip 2: %d\n", digitalRead(5), digitalRead(4));
+            #if 0
             if(digitalRead(2)==1 && !isRunning && reset) { //button is pressed when off
                 printf("Spawning New Thread...\n");
                 spawnThread(currThread, myRobot);
@@ -84,9 +85,9 @@ int main(int argc,char **argv){
             } else if (digitalRead(2)==0) {
                 reset = true;
             }
+            #endif
         }
         ++iteration;
-#endif
         sleep(0.01);
     }
 
@@ -102,20 +103,20 @@ int main(int argc,char **argv){
 void spawnThread(Thread *currThread, ARobot *myRobot) {
     int currChoice = digitalRead(5) + digitalRead(4)*2;
     switch(currChoice) {
-        case 0: //0 0
-            //currThread = new NavThread(myRobot, false);
-            currThread = new TestThread(myRobot);
-            break;
-        case 1: //1 0
-            currThread = new NavThread(myRobot, true);
-            break;
-        case 2: //0 1
-            currThread = new DataThread(myRobot);
-            break;
-        case 3: //1 1
-            currThread = new TestThread(myRobot);
-            break;
-	}
+    case 0: //0 0
+        //currThread = new NavThread(myRobot, false);
+        currThread = new TestThread(myRobot);
+        break;
+    case 1: //1 0
+        currThread = new NavThread(myRobot, true);
+        break;
+    case 2: //0 1
+        currThread = new DataThread(myRobot);
+        break;
+    case 3: //1 1
+        currThread = new TestThread(myRobot);
+        break;
+    }
 }
 
 void stopThread(Thread *currThread) {

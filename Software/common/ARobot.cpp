@@ -6,15 +6,13 @@
 #include <errno.h>
 #include <math.h>
 
-#define ALPHA 0.728456789
-
 using namespace std;
 
 ARobot::ARobot(SerialPort *port) :mPort(port)
 {
     this->backingBlack = false;
-	this->black_thresh=0;
-	this->cross_over = false;
+    this->black_thresh=0;
+    this->cross_over = false;
     this->currTileLight = WHITE;
     this->currDir = FRONT;
     this->currState = PLANNING; //>9 = testing purposes
@@ -24,8 +22,8 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     this->dist_temp=0;
     this->dropCnt = 0; //dropping counter
     this->imuCalibrated = false;
-	this->initialYaw = 0;
-	this->initTurnRec = false;
+    this->initialYaw = 0;
+    this->initTurnRec = false;
     this->isDropped = false;
     this->isVictim = false;
     this->mlen_imu = 0;
@@ -98,11 +96,11 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag, bool CheckRam
         if(rangeDataList[range_size-1].walls.wallN == 0) {
             sensor_info->setWallNorth(MazeCell::MWall);
         } else {
-             sensor_info->setWallNorth(MazeCell::MOpen);
+            sensor_info->setWallNorth(MazeCell::MOpen);
         }
 
         if(rangeDataList[range_size-1].walls.wallE == 0) {
-            sensor_info->setWallEast(MazeCell::MWall); 
+            sensor_info->setWallEast(MazeCell::MWall);
         } else {
             sensor_info->setWallEast(MazeCell::MOpen);
         }
@@ -111,13 +109,13 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag, bool CheckRam
             sensor_info->setWallSouth(MazeCell::MWall);
         } else {
             sensor_info->setWallSouth(MazeCell::MOpen);
-        } 
+        }
 
         if(rangeDataList[range_size-1].walls.wallW == 0) {
             sensor_info->setWallWest(MazeCell::MWall);
         } else {
             sensor_info->setWallWest(MazeCell::MOpen);
-        } 
+        }
         sensor_info->setVisitStatus(MazeCell::Visited);
     } else {
         sensor_info->setNonMovable(true);
@@ -135,7 +133,7 @@ void ARobot::UpdateNeighborCells()
     MazeCell temp_cell;
     size_t sizeRange = rangeDataList.size();
     if(sizeRange < 4)
-	return;
+        return;
 
     bool wallsN = true;
     bool wallsE = true;
@@ -145,24 +143,24 @@ void ARobot::UpdateNeighborCells()
     for(int i = 1; i < 4; i++) {
         if(rangeDataList[sizeRange-i].walls.wallN != rangeDataList[sizeRange-1-i].walls.wallN)
             wallsN = false;
-            break;
+        break;
     }
     for(int i = 1; i < 4; i++) {
         if(rangeDataList[sizeRange-i].walls.wallE != rangeDataList[sizeRange-1-i].walls.wallE)
             wallsE = false;
-            break;
+        break;
     }
     for(int i = 1; i < 4; i++) {
         if(rangeDataList[sizeRange-i].walls.wallS != rangeDataList[sizeRange-1-i].walls.wallS)
             wallsS = false;
-            break;
+        break;
     }
     for(int i = 1; i < 4; i++) {
         if(rangeDataList[sizeRange-i].walls.wallW != rangeDataList[sizeRange-1-i].walls.wallW)
             wallsW = false;
-            break;
+        break;
     }
- 
+
     if(wallsN == true) {
         if(rangeDataList[sizeRange-1].walls.wallN != -1) {
             for(int i = 1; i <= rangeDataList[sizeRange-i].walls.wallN; i++) {
@@ -265,16 +263,16 @@ void ARobot::CalcNextTile()
     int32_t dist = (int32_t)sqrt(next_x*next_x + next_y*next_y); //pythagorean
     float angle; //offset angle degrees
     if(currTile.x_tovisit - currTile.x > 0) { //east
-    	angle = atan((float)next_y/(float)next_x)*180.0f/3.1415926535f; //angle to left, should be neg
+        angle = atan((float)next_y/(float)next_x)*180.0f/3.1415926535f; //angle to left, should be neg
         nextDir = EAST;
     } else if (currTile.x_tovisit - currTile.x < 0) { //west
-    	angle = atan((float)next_y/(float)next_x)*180.0f/3.1415926535f; //angle to left, should be neg
+        angle = atan((float)next_y/(float)next_x)*180.0f/3.1415926535f; //angle to left, should be neg
         nextDir = WEST;
     } else if (currTile.y_tovisit - currTile.y > 0) { //north
-    	angle = -atan((float)next_x/(float)next_y)*180.0f/3.1415926535f; //angle to left, should be pos
+        angle = -atan((float)next_x/(float)next_y)*180.0f/3.1415926535f; //angle to left, should be pos
         nextDir = NORTH;
     } else if (currTile.y_tovisit - currTile.y < 0) { //south
-    	angle = -atan((float)next_x/(float)next_y)*180.0f/3.1415926535f; //angle to left, should be pos
+        angle = -atan((float)next_x/(float)next_y)*180.0f/3.1415926535f; //angle to left, should be pos
         nextDir = SOUTH;
     }
 
@@ -311,118 +309,128 @@ void ARobot::TileTransition(int32_t dist)
 
 /*called only when robot is moving*/
 void ARobot::setOffsetDir() {
-	const size_t range_vals = rangeDataList.size()-2;
-	//uint32_t tstamp = rangeDataList[range_vals].data.tstamp;
-	//printf("SetOffsetDir() X: %f\t", rangeDataList[range_vals].coord.x_glob);
-	//printf("SetOffsetDir() Y: %f\n", rangeDataList[range_vals].coord.y_glob);
-	x_vals.push_back(rangeDataList[range_vals].coord.x);
-	y_vals.push_back(rangeDataList[range_vals].coord.y);
-	sLock++;
+    const size_t range_vals = rangeDataList.size()-2;
+    //uint32_t tstamp = rangeDataList[range_vals].data.tstamp;
+    //printf("SetOffsetDir() X: %f\t", rangeDataList[range_vals].coord.x_glob);
+    //printf("SetOffsetDir() Y: %f\n", rangeDataList[range_vals].coord.y_glob);
+    x_vals.push_back(rangeDataList[range_vals].coord.x);
+    y_vals.push_back(rangeDataList[range_vals].coord.y);
+    sLock++;
 }
 int ARobot::getOffsetDir() {
-	return offsetdir;
+    return offsetdir;
 }
 
 void ARobot::CorrectYaw() {
-	const size_t range_vals = rangeDataList.size()-1; //size may change, set constant size
-	const size_t imu_vals = imuDataList.size()-1;
-	float angley;
-	float newyaw=0.0;
-        //offsetdir = SlopeDir();
-        //x_vals.clear();
-        //y_vals.clear();
-        //sLock = 0;
+    const size_t range_vals = rangeDataList.size()-1; //size may change, set constant size
+    const size_t imu_vals = imuDataList.size()-1;
+    float angley;
+    float newyaw=0.0;
+    this->isCorrecting = true;
 
-        //average of previous vals - Very very messy. The <= 30 is supposed to be a case where it's 360 degrees or 0, and it flucuates. I will fix this later
-	for(int i = 0; i < 5; i++) {
-            angley = (rangeDataList[range_vals-i].getAngle()*offsetdir + ((4-(int)currOrientation)%4)*90.0);
-            if(angley <= 30.0) angley += 360;
-            newyaw += rangeDataList[range_vals-i].getAlpha() * angley + (1.0 - rangeDataList[range_vals-i].getAlpha()) * (imuDataList[imu_vals-i].m_yaw > 10 ? imuDataList[imu_vals-i].m_yaw : imuDataList[imu_vals-i].m_yaw + 360.0);
-            printf("Angley: %f\tCurrent Alpha: %f\tCurrent New: %f\n", angley, rangeDataList[range_vals-i].getAlpha(), newyaw);
-	}
-        newyaw /= 5.0;
-        if(newyaw>=360) newyaw-=360;
-	printf("New Yaw: %f\n", newyaw);
-	imuDataList[imu_vals].setYaw(newyaw);
-        imuDataList[imu_vals].m_yaw = newyaw; //after change
+    //average of previous vals - Very very messy. The <= 30 is supposed to be a case where it's 360 degrees or 0, and it flucuates. I will fix this later
+    for(int i = 0; i < 5; i++) {
+        angley = (rangeDataList[range_vals-i].getAngle()*offsetdir + ((4-(int)currOrientation)%4)*90.0);
+        if(angley <= 30.0) angley += 360;
+        newyaw += rangeDataList[range_vals-i].getAlpha() * angley + (1.0 - rangeDataList[range_vals-i].getAlpha()) * (imuDataList[imu_vals-i].m_yaw > 10 ? imuDataList[imu_vals-i].m_yaw : imuDataList[imu_vals-i].m_yaw + 360.0);
+        printf("Angley: %f\tCurrent Alpha: %f\tCurrent New: %f\n", angley, rangeDataList[range_vals-i].getAlpha(), newyaw);
+    }
+    newyaw /= 5.0;
+    if(newyaw>=360)
+        newyaw-=360;
+    printf("New Yaw: %f\n", newyaw);
+    imuDataList[imu_vals].setYaw(newyaw);
+    imuDataList[imu_vals].m_yaw = newyaw; //after change
 
-        this->correctionError = rangeDataList[range_vals-1].getRangeOffset();
-        this->correctionErrorChange = 9999; //messy, but put high number for now
-        Correction();
+    this->correctionError = rangeDataList[range_vals-1].getRangeOffset();
+    Correction();
 }
 
 void ARobot::Correction() {
-	const size_t yaw_vals = imuDataList.size()-1; //size may change, set constant size
-	float currYaw = imuDataList[yaw_vals].m_yaw;
-        this->correctionFailed = true; //automatically set this parameter for correction
+    const size_t yaw_vals = imuDataList.size()-1; //size may change, set constant size
+    float currYaw = imuDataList[yaw_vals].m_yaw;
 
-	//Assume correction is only necessary in the range -90 degrees -> +90 degrees
-	printf("Current Orientation: %d\nCurr Yaw: %f\n", (int)currOrientation, currYaw);
-	switch((int)currOrientation) {
-	case 0: //Bot facing North
-		if(currYaw >= 180) currYaw -= 360; //negative range
-                if(abs(0.0f-currYaw) >= 1.0f) {
-                        this->correctionDir = (0.0f-currYaw > 0.0f) ? LEFT : RIGHT;
-                        TurnDistance((int)abs(0.0f-currYaw), this->correctionDir); //If yaw is negative, robot is on right side, so turn left, and vice versa
-			return;
-		}
-		break;
-	case 1: //Bot facing East
-                if(abs(270.0f-currYaw) >= 1.0f) {
-                        this->correctionDir = (270.0f-currYaw > 0.0f) ? LEFT : RIGHT;
-                        TurnDistance((int)abs(270.0f-currYaw), this->correctionDir); //If 270-yaw is positive, robot is on right side, so turn left, and vice versa
-			return;
-		}
-		break;
-	case 2: //Bot facing South
-                if(abs(180.0f-currYaw) >= 1.0f) {
-                        this->correctionDir = (180.0f-currYaw > 0.0f) ? LEFT : RIGHT;
-                        TurnDistance((int)abs(180.0f-currYaw), this->correctionDir); //If 180-yaw is positive, robot is on right side, so turn left, and vice versa
-			return;
-		}
-		break;
-	case 3: //Bot facing West
-                if(abs(90.0f-currYaw) >= 1.0f) {
-                        this->correctionDir = (90.0f-currYaw > 0.0f) ? LEFT : RIGHT;
-                        TurnDistance((int)abs(90.0f-currYaw), this->correctionDir); //If 90-yaw is positive, robot is on right side, so turn left, and vice versa
-			return;
-		}
-		break;
-	default:
-		return;
-	}
-	this->currState = ARobot::WAYPTNAV; //if fails
-	return;
+    //Assume correction is only necessary in the range -90 degrees -> +90 degrees
+    printf("Current Orientation: %d\nCurr Yaw: %f\n", (int)currOrientation, currYaw);
+    switch((int)currOrientation) {
+    case 0: //Bot facing North
+        if(currYaw >= 180) currYaw -= 360; //negative range
+        if(abs(0.0f-currYaw) >= 1.0f) {
+            this->correctionDir = (0.0f-currYaw > 0.0f) ? LEFT : RIGHT;
+            TurnDistance((int)abs(0.0f-currYaw), this->correctionDir); //If yaw is negative, robot is on right side, so turn left, and vice versa
+            return;
+        }
+        break;
+    case 1: //Bot facing East
+        if(abs(270.0f-currYaw) >= 1.0f) {
+            this->correctionDir = (270.0f-currYaw > 0.0f) ? LEFT : RIGHT;
+            TurnDistance((int)abs(270.0f-currYaw), this->correctionDir); //If 270-yaw is positive, robot is on right side, so turn left, and vice versa
+            return;
+        }
+        break;
+    case 2: //Bot facing South
+        if(abs(180.0f-currYaw) >= 1.0f) {
+            this->correctionDir = (180.0f-currYaw > 0.0f) ? LEFT : RIGHT;
+            TurnDistance((int)abs(180.0f-currYaw), this->correctionDir); //If 180-yaw is positive, robot is on right side, so turn left, and vice versa
+            return;
+        }
+        break;
+    case 3: //Bot facing West
+        if(abs(90.0f-currYaw) >= 1.0f) {
+            this->correctionDir = (90.0f-currYaw > 0.0f) ? LEFT : RIGHT;
+            TurnDistance((int)abs(90.0f-currYaw), this->correctionDir); //If 90-yaw is positive, robot is on right side, so turn left, and vice versa
+            return;
+        }
+        break;
+    default:
+        return;
+    }
+    this->currState = ARobot::WAYPTNAV; //if fails
+    return;
 
 }
 
-void ARobot::CorrectionFailed(float prevErrorChange) { //if correction was faulty try to change
-    //check if everything is good
+void ARobot::CheckCorrection() {
     float currentError = rangeDataList[rangeDataList.size()-1].getRangeOffset();
-    correctionErrorChange = correctionError - currentError; //positive is good, current < prev
-    printf("Current Error: %f\tPrevious Error: %f\nCurrent Change: %f\tPrevious Change%f\n", currentError, correctionError, correctionErrorChange, prevErrorChange);
-
-    if(correctionError > currentError) {
+    if(correctionError > currentError || currentError <= 3) {
         this->correctionFailed = false; //correction finished
         return;
+    } else {
+        this->correctionFailed = true; //automatically set this parameter for correction
+        return;
     }
+}
+
+void ARobot::CorrectionFailed() { //if correction was faulty try to change
+    //check if everything is good
+    float currentError = rangeDataList[rangeDataList.size()-1].getRangeOffset();
+    printf("Current Error: %f\tPrevious Error: %f\n", currentError, this->correctionError);
+
     if(this->correctionDir == LEFT) {
-        if(correctionErrorChange < prevErrorChange) { //correct direction
+        if(currentError < this->correctionError) { //correct direction
             this->FixYaw(1);
             TurnDistance(1, RIGHT); //correct correction
+        } else if(currentError == this->correctionError) {
+            this->correctionFailed = false; //correction finished
+            this->isCorrecting = false;
         } else { //bad case, means something went wrong
             this->FixYaw(-1);
-            TurnDistance(1, LEFT); //overshot correction
             this->correctionFailed = false; //correction finished
+            this->isCorrecting = false;
+            TurnDistance(1, LEFT); //overshot correction
         }
     } else { //right
-        if(correctionErrorChange < prevErrorChange) { //good case, 3.0 margin
+        if(currentError < this->correctionError) { //good case, 3.0 margin
             this->FixYaw(-1);
             TurnDistance(1, LEFT); //correct correction
+        } else if(currentError == this->correctionError) {
+            this->correctionFailed = false; //correction finished
+            this->isCorrecting = false;
         } else { //bad case, means something went wrong
             this->FixYaw(1);
-            TurnDistance(1, RIGHT); //correct correction
             this->correctionFailed = false; //correction finished
+            this->isCorrecting = false;
+            TurnDistance(1, RIGHT); //correct correction
         }
     }
     this->correctionError = rangeDataList[rangeDataList.size()-1].getRangeOffset();
@@ -433,8 +441,8 @@ void ARobot::CorrectionFailed(float prevErrorChange) { //if correction was fault
 int ARobot::SlopeDir() {
     const int n = this->x_vals.size();
     if(n<=0) {
-    	printf("Size is 0\n");
-    	return 1;
+        printf("Size is 0\n");
+        return 1;
     }
 
     const auto s_x = std::accumulate(this->x_vals.begin(), this->x_vals.end(), 0.0);
@@ -476,23 +484,25 @@ int ARobot::CheckVictimTemp()
 {
     if(isVictim) //if a victim has already been there
         return 0;
-
     size_t temp_vals = tempDataList.size(); //get average values
-    float temp_avg = 0;
-    for(int i = 1; i < 5; i++) { //left threshold
-        temp_avg += tempDataList[temp_vals-i].getLeftTemp();
+    int numAboveThreshR=0; //multiple values above threshold [at least 1/2]
+    int numAboveThreshL=0;
+
+    for(int i = 1; i < 9; i++) { //left threshold
+        if(tempDataList[temp_vals-1].getLeftTemp()[i] > this->threshLeft) {
+            ++numAboveThreshL;
+        }
+        if(tempDataList[temp_vals-1].getRightTemp()[i] > this->threshRight) {
+            ++numAboveThreshR;
+        }
     }
-    if(temp_avg/4.0f > threshLeft) {
+    if(numAboveThreshL > 4) {
         return 2;
-    }
-    temp_avg = 0; //reset
-    for(int i = 1; i < 5; i++) { //right threshold
-        temp_avg += tempDataList[temp_vals-i].getRightTemp();
-    }
-    if(temp_avg/4.0f > threshRight) {
+    } else if(numAboveThreshR > 4) {
         return 1;
+    } else {
+        return 0;
     }
-    return 0;
 }
 
 void ARobot::CheckVictimVisual() {
@@ -506,12 +516,12 @@ void ARobot::CheckVictimVisual() {
  * Tester Function
  */
 void ARobot::DisplayVictimVisual() {
-	if(imgList.size() == 0) return;
-	cv::imwrite("img_disp.jpg", picam.getImageList()[0]);
-	/*for(int i = 0; i < imgList.size(); i++) {
-		string str = "img_disp" + std::to_string(i) + ".jpg";
-		cv::imwrite(str, imgList[i]);
-	}*/
+    if(imgList.size() == 0) return;
+    cv::imwrite("img_disp.jpg", picam.getImageList()[0]);
+    /*for(int i = 0; i < imgList.size(); i++) {
+                string str = "img_disp" + std::to_string(i) + ".jpg";
+                cv::imwrite(str, imgList[i]);
+        }*/
 }
 
 int ARobot::ProcessImage_Victim() {
@@ -519,9 +529,9 @@ int ARobot::ProcessImage_Victim() {
     victim.m_isVictim = false;
 
     for(int i = 0; i < imgList.size(); i++) {
-    	m_letter = knn.detectVictim(imgList[i]);
+        m_letter = knn.detectVictim(imgList[i]);
         if(m_letter != '0' && victim.m_isVictim == true) { //error, not supposed to happen, means there is a mistake
-        	printf("DNE\n");
+            printf("DNE\n");
             victim.m_isVictim = false;
             isVictim = false;
             break;
@@ -529,13 +539,13 @@ int ARobot::ProcessImage_Victim() {
         if(m_letter != '0') {
             victim.letter = m_letter;
             if(i == 0) {
-            	printf("Left\n");
+                printf("Left\n");
                 victim.dir_victim = LEFT;
             } else if(i == 1) {
-            	printf("Right\n");
+                printf("Right\n");
                 victim.dir_victim = FRONT;
             } else {
-            	printf("Front\n");
+                printf("Front\n");
                 victim.dir_victim = RIGHT;
             }
             victim.m_isVictim = true;
@@ -593,7 +603,8 @@ int ARobot::getSilverThresh()
 
 void ARobot::CheckLightTile()
 {
-    if(backingBlack == true) {return;}
+    if(backingBlack)
+        return;
     mlen_light = lightDataList.size();
     if(mlen_light < 3)
         return;
@@ -606,12 +617,12 @@ void ARobot::CheckLightTile()
             backingBlack = true;
             ResetEncoder();
             sleep(1);
-            MoveDistance(155, BACK);
+            MoveDistance(150, BACK);
         }
     } else {
         currTileLight = WHITE;
     }
-    if(mlen_light > 200) 
+    if(mlen_light > 200)
         lightDataList.erase(lightDataList.begin(), lightDataList.begin() + mlen_light - 200);
     return;
 }
@@ -646,12 +657,12 @@ void ARobot::setSpeed(int left_speed, int right_speed) {
 }
 
 void ARobot::setOffsetSpeed(int offset_l, int offset_r) {
-	char* i_command;
-	int i_length = snprintf(NULL, 0, "%c %c %d %d", 'm', 'i', offset_l, offset_r) + 1;
-	i_command = (char*)malloc(i_length);
+    char* i_command;
+    int i_length = snprintf(NULL, 0, "%c %c %d %d", 'm', 'i', offset_l, offset_r) + 1;
+    i_command = (char*)malloc(i_length);
 
-	snprintf(i_command, i_length, "%c %c %d %d", 'm', 'i', offset_l, offset_r);
-	WriteCommand(i_command, i_length);
+    snprintf(i_command, i_length, "%c %c %d %d", 'm', 'i', offset_l, offset_r);
+    WriteCommand(i_command, i_length);
 }
 
 void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
@@ -718,13 +729,13 @@ void ARobot::StopTurn(BotDir dir)
     if(initTurnRec) {initTurnRec = false; prevYaw = initialYaw;}
     if(dir == RIGHT) {
         if(prevYaw+1.0 < currYaw) {//if robot crosses over from 180 to -180, direction switches
-        	//printf("Curr Yaw: %f\tPrev Yaw: %f\n", currYaw, prevYaw);
+            //printf("Curr Yaw: %f\tPrev Yaw: %f\n", currYaw, prevYaw);
             cross_over = true;
         }
         if(cross_over) //condition holds even if prev doesn't when cross_over is already true
-        	currYaw -= 360.0f; //range fixing
+            currYaw -= 360.0f; //range fixing
         if(currYaw <= toTurn+1.0) { //error fixing
-        	printf("Turn is Finished?\n");
+            printf("Turn is Finished?\n");
             char* i_command;
             cross_over = false; //default cross bool now off
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
@@ -734,16 +745,15 @@ void ARobot::StopTurn(BotDir dir)
             if(isVictim && isDropped == false) {
                 currState = DROP;
             } else {
-                currState = IDLE; 
-                //CheckVictimTemp();
-            }          
+                currState = IDLE;
+            }
             return;
         }
     } else if(dir == LEFT) {
-    	if(prevYaw > currYaw+1.0) //if robot crosses over from -180 to 180, direction switches
-    		cross_over = true;
+        if(prevYaw > currYaw+1.0) //if robot crosses over from -180 to 180, direction switches
+            cross_over = true;
         if(cross_over)
-        	currYaw += 360.0f; //range fixing
+            currYaw += 360.0f; //range fixing
 
         if(currYaw >= toTurn-1.0) {
             char* i_command;
@@ -756,7 +766,6 @@ void ARobot::StopTurn(BotDir dir)
                 currState = DROP;
             } else {
                 currState = IDLE;
-                //CheckVictimTemp();
             }
             return;
         }
@@ -802,7 +811,7 @@ void ARobot::ParseIMU()
     }*/
     imuParseList.front().parseData();
     if(imuCalibrated)
-    	imuParseList.front().runFilter();
+        imuParseList.front().runFilter();
     imuDataList.push_back(imuParseList.front());
     imuParseList.pop();
 }
@@ -885,25 +894,25 @@ void ARobot::ClearScan()
 }
 
 void ARobot::TestSignal() {
-	char* i_command;
-	int i_length = snprintf(NULL, 0, "%c %c", 'z', 'a') + 1;
-	i_command = (char*)malloc(i_length);
-	snprintf(i_command, i_length, "%c %c", 'z', 'a');
-	WriteCommand(i_command, i_length);
+    char* i_command;
+    int i_length = snprintf(NULL, 0, "%c %c", 'z', 'a') + 1;
+    i_command = (char*)malloc(i_length);
+    snprintf(i_command, i_length, "%c %c", 'z', 'a');
+    WriteCommand(i_command, i_length);
 }
 
 //testing method
 void ARobot::PrintXYCoords(int x, int y) {
-	for(int i = 29; i > 0; i--) {
-		for(int j = 0; j < 30; j++) {
-			if((y >= i-2 && y <= i+2) && (x <= j+2 && x >= j-2)) {
-				printf("X");
-			} else {
-				printf(".");
-			}
-		}
-		printf("\n");
-	}
+    for(int i = 29; i > 0; i--) {
+        for(int j = 0; j < 30; j++) {
+            if((y >= i-2 && y <= i+2) && (x <= j+2 && x >= j-2)) {
+                printf("X");
+            } else {
+                printf(".");
+            }
+        }
+        printf("\n");
+    }
 }
 
 

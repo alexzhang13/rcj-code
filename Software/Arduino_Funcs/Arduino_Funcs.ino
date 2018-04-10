@@ -19,7 +19,7 @@
 
 /*IMU*/
 #define MPU9250_ADDRESS            0x68
-#define GYRO_FULL_SCALE_2000_DPS    0x03
+#define GYRO_FULL_SCALE_250_DPS    0x00
 #define ACC_FULL_SCALE_2_G        0x00
 
 #define SMPLRT_DIV        0x19
@@ -27,15 +27,15 @@
 #define CONFIG            0x1A
 #define FIFO_EN           0x23
 
-#include <Wire.h>
-#include <SoftwareSerial.h>
 #include <Adafruit_MotorShield.h>
+#include <QueueArray.h>
+#include <Servo.h>
+#include <SoftwareSerial.h>
+#include <Tpa81.h>
 #include <VL6180X.h> //tof short range polulu library
 #include <VL53L0X.h> //tof long range polulu library
-#include <Servo.h>
-#include <QueueArray.h>
+#include <Wire.h>
 #include "pt.h"
-#include "Adafruit_TMP007.h"
 #include "utility/Adafruit_MS_PWMServoDriver.h"
 
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();  //Initialize Motorshield
@@ -47,9 +47,8 @@ VL6180X laserA_s; //init laser var1 SHORT
 VL6180X laserB_s; //init laser var2 SHORT
 VL53L0X laserA_l; //init laser var3 LONG
 VL53L0X laserB_l; //init laser var4 LONG
-
-Adafruit_TMP007 tempA; //init temp_sensor var 1
-Adafruit_TMP007 tempB(0x41); //init temp_sensor var 2
+Tpa81 tempA(1); //Temperature Sensor (Left)
+Tpa81 tempB(2); //Temperature Sensor (Right)
 
 Servo dropper; //init dropper RC Servo
 Servo mount_laser; //init laser mount RC Servo
@@ -62,6 +61,9 @@ String dropper_queue; //Queue for dropper commands
 String motor_queue; //Queue for motor commands
 String distance_queue; //Queue for distance commands
 String imu_queue; //Queue for IMU commands
+
+unsigned char tempReadingA[8];
+unsigned char tempReadingB[8];
 
 int16_t gyroX[40] = {0}; //Gyro Correction "Shifted" Array X
 int16_t gyroY[40] = {0}; //Gyro Correction "Shifted" Array Y
@@ -125,8 +127,22 @@ void setup() {
   delay(100);
 
   Serial.println("Setup Complete.");
+
+  pinMode(GPIO_PIN1, INPUT); //begin writing to XSHUT of first laser
+  delay(50); //delay
+  laserA_s.init(); //init laser object, look for it
+  laserA_s.configureDefault(); //laser config
+  laserA_s.writeReg(VL6180X::SYSRANGE__MAX_CONVERGENCE_TIME, 36);
+  laserA_s.setTimeout(0); //in case you can't find the laser object, timeout for this long
+  laserB_s.writeReg16Bit(VL6180X::SYSALS__INTEGRATION_PERIOD, 52);
+  laserA_s.setAddress(0x24);
+  laserA_s.stopContinuous();
+  delay(300);
+  laserA_s.startRangeContinuous();
+  delay(100); //delay
+  Serial.println("Lasers Complete.");
   
-  digitalWrite(GPIO_PIN2, HIGH); //begin writing to XSHUT of first laser
+  pinMode(GPIO_PIN2, INPUT);
   delay(50); //delay
   laserB_s.init(); //init laser object, look for it
   laserB_s.configureDefault(); //laser config
@@ -136,10 +152,10 @@ void setup() {
   laserB_s.stopContinuous();
   delay(300);
   laserB_s.startRangeContinuous();
-  laserB_s.setAddress(0x26);
+  laserB_s.setAddress(0x25);
   delay(100); //delay
 
-  digitalWrite(GPIO_PINL1, HIGH); //begin writing to XSHUT of first laser
+  pinMode(GPIO_PINL1, INPUT);
   delay(50); //delay
   laserA_l.init(); //init laser object, look for it
   laserA_l.setTimeout(0); //in case you can't find the laser object, timeout for this long
@@ -149,7 +165,7 @@ void setup() {
   laserA_l.setAddress(0x27);
   delay(100); //delay
 
-  digitalWrite(GPIO_PINL2, HIGH); //begin writing to XSHUT of first laser
+  pinMode(GPIO_PINL2, INPUT);; //begin writing to XSHUT of first laser
   delay(50); //delay
   laserB_l.init(); //init laser object, look for it
   laserB_l.setTimeout(0); //in case you can't find the laser object, timeout for this long
@@ -158,35 +174,20 @@ void setup() {
   laserB_l.startContinuous();
   laserB_l.setAddress(0x28);
   delay(100); //delay
-
-  digitalWrite(GPIO_PIN1, HIGH); //begin writing to XSHUT of first laser
-  delay(50); //delay
-  laserA_s.init(); //init laser object, look for it
-  laserA_s.configureDefault(); //laser config
-  laserA_s.writeReg(VL6180X::SYSRANGE__MAX_CONVERGENCE_TIME, 36);
-  laserA_s.setTimeout(0); //in case you can't find the laser object, timeout for this long
-  laserB_s.writeReg16Bit(VL6180X::SYSALS__INTEGRATION_PERIOD, 52);
-  laserA_s.setAddress(0x25);
-  laserA_s.stopContinuous();
-  delay(300);
-  laserA_s.startRangeContinuous();
-  delay(100); //delay
-
-  Serial.println("Lasers Complete.");
     
   /*INITIALIZE MPU9250 AND REQUEST BYTES*/
   //I2CwriteByte(MPU9250_ADDRESS, SMPLRT_DIV, 0x18); //sample rate
   //I2CwriteByte(MPU9250_ADDRESS, FIFO_EN, 0x00);
   delay(50);
   // Configure gyroscope range
-  I2CwriteByte(MPU9250_ADDRESS,27,GYRO_FULL_SCALE_2000_DPS);
+  I2CwriteByte(MPU9250_ADDRESS,27,GYRO_FULL_SCALE_250_DPS);
   // Configure accelerometers range
   I2CwriteByte(MPU9250_ADDRESS,28,ACC_FULL_SCALE_2_G);
   delay(50);
   
   //Configure Low-Pass Filter
-  I2CwriteByte(MPU9250_ADDRESS, 26, 0x02);
-  I2CwriteByte(MPU9250_ADDRESS, 29, 0x02);
+  //I2CwriteByte(MPU9250_ADDRESS, 26, 0x04); //gyro
+  //I2CwriteByte(MPU9250_ADDRESS, 29, 0x02);
   delay(50);
 
   Serial.println("I2C Complete.");
@@ -215,20 +216,6 @@ void setup() {
   delay(50);
 
   Serial.println("Motors Complete.");
-  
-  /*INITIALIZE ALL SENSORS*/
-  if (! tempA.begin()) { //look for tmp007 sensor
-    Serial.println("No temperature sensor found");
-    while (1);
-  }
-  delay(100);
-  if (! tempB.begin()) { //look for tmp007 sensor
-    Serial.println("No temperature sensor found");
-    while (1);
-  }
-  delay(100);
-
-  Serial.println("Temperatures Complete.");
 
   /*START PROTOTHREADS*/
   PT_INIT(&drop_pt);  // Init Protothread for Dropper and LED
@@ -253,7 +240,7 @@ void loop() {
    drop_pt_func(&drop_pt, 201);
    dcmotor_pt_func(&dcmotor_pt, 24);
    distance_pt_func(&distance_pt, 153);
-   sensor_pt_func(&sensor_pt, 101);
+   sensor_pt_func(&sensor_pt, 251);
    imu_pt_func(&imu_pt, 25);
 }
 
@@ -687,7 +674,11 @@ void getIMU()
   // Accelerometer
   reading += ax; reading += " "; reading += ay; reading += " "; reading += az; reading += " ";
   // Gyroscope
-  reading += gx; reading += " "; reading += gy; reading += " "; reading += gz; reading += " ";
+  if(isMoving || isTurning) {
+    reading += gx; reading += " "; reading += gy; reading += " "; reading += gz; reading += " ";
+  } else {
+    reading += "0 0 0";
+  }
   
   Serial.println(reading);
 }
@@ -745,7 +736,20 @@ void getTempReading() //temperature sensor(s)
 {
   String reading = ""; 
   reading += millis(); reading += " t ";
-  reading += tempA.readObjTempC(); reading += " "; reading += tempB.readObjTempC(); Serial.println(reading); //writeQueue();
+  reading += tempA.getData(tempReadingA); reading += " ";
+  for(int i = 0; i < sizeof(tempReadingA)/sizeof(char); i++)
+  {
+    reading += (int)tempReadingA[i];
+    reading += " ";
+  } 
+  reading += tempB.getData(tempReadingB); reading += " ";
+  for(int i = 0; i < sizeof(tempReadingB)/sizeof(char); i++)
+  {
+    reading += (int)tempReadingB[i];
+    reading += " ";
+  }
+  reading.trim();
+  Serial.println(reading); //writeQueue();
 }
 // encoder event for the interrupt call
 void leftEncoderEvent() {
