@@ -230,8 +230,6 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
     robot->UpdateCellMap(&robot->sensor_info, false, false); //false = not black
     robot->UpdateNeighborCells();
 
-    if(robot->sensor_info == NULL)
-         cout << "Sensor Info NULL" << endl;
     nav_rt.configureCurCell(&robot->sensor_info);
     cout << "1" << endl;
     nav_rt.detectLocalCells(robot->temp_cell_list);
