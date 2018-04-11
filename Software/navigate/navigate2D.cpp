@@ -106,13 +106,13 @@ int32_t Navigate2D::setStairCell(int floor_num, MazeCell *stair_cell)
 //! from sensor detection
 int32_t Navigate2D::configureCurCell(MazeCell *sensor_info)
 {
-        printf("Function Init Complete...\n");
 	int32_t i;
 	MazeCell *cur_cell = m_navigateMaps.getFloorMap(m_cur_floor_index)->getCurrentCell();
 
-        printf("Inits...\n");
 	m_navigateMaps.getFloorMap(m_cur_floor_index)->setCurCellIndex(cur_cell->getCellNum());
+        printf("1");
 	m_navigateMaps.setCurFloorNum(m_cur_floor_index);
+        printf("2\n");
 	m_navigateMaps.setCurCellIndex(cur_cell->getCellNum());
 	
         printf("Indexing Complete...\n");
