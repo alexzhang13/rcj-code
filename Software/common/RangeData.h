@@ -66,9 +66,10 @@ public:
     float getAngle();
     float getAlpha();
     //generated based on excel tests
-    inline float CorrectLongReading(float reading) {
+    float CorrectLongReading(float reading) {
+        printf("Corrected: %f\n", 19.6 + 0.802*reading - 0.000118*pow(reading, 2));
         return 19.6 + 0.802*reading - 0.000118*pow(reading, 2);
-    };
+    }
 
     Scan_DataType scan;
     Range_DataType data;
