@@ -47,8 +47,8 @@ int RangeData::parseData()
 {
     sscanf(m_command, "%d %c %d %f %f %f %f", &data.tstamp, &data.id, &data.angle, &data.laserL_a, &data.laserS_a, &data.laserL_b, &data.laserS_b);
     //Correct the two VL5L30X Sensors based on the equation
-    data.laserL_a = CorrectLongReading(data.laserL_a);
-    data.laserL_b = CorrectLongReading(data.laserL_b);
+    //data.laserL_a = CorrectLongReading(data.laserL_a);
+    //data.laserL_b = CorrectLongReading(data.laserL_b);
     return 0;
 }
 
