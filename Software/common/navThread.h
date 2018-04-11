@@ -20,7 +20,12 @@ class NavThread : public Thread {
 public:
     NavThread(ARobot *robot, bool isNew)
         : myRobot(robot), readMap(isNew)
-    {cnt = 0; bot_waypts = 0; first_iter = true;}
+    {
+        cnt = 0;
+        bot_waypts = 0;
+        first_iter = true;
+        nav = new Navigate2D();
+    }
 
     virtual void run(void);
     void readConfig(const char* filename, ARobot *robot);
