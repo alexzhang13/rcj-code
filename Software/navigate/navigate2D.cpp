@@ -108,17 +108,11 @@ int32_t Navigate2D::configureCurCell(MazeCell *sensor_info)
 {
 	int32_t i;
 	MazeCell *cur_cell = m_navigateMaps.getFloorMap(m_cur_floor_index)->getCurrentCell();
-        if(&cur_cell != nullptr) printf("Not Null (Curr_Cell)!\n");
-        printf("Floor Index: %d\n", m_cur_floor_index);
-        printf("Floor Index: %d\tCell: %d", m_cur_floor_index, cur_cell->getHomeCell());
 
 	m_navigateMaps.getFloorMap(m_cur_floor_index)->setCurCellIndex(cur_cell->getCellNum());
-        printf("1");
 	m_navigateMaps.setCurFloorNum(m_cur_floor_index);
-        printf("2\n");
 	m_navigateMaps.setCurCellIndex(cur_cell->getCellNum());
-	
-        printf("Indexing Complete...\n");
+
 	cur_cell->setCheckPt(sensor_info->getCheckPt());
 	cur_cell->setNonMovable(sensor_info->getNonMovable());
 	cur_cell->setObstacle(sensor_info->getObstacle());
@@ -131,7 +125,6 @@ int32_t Navigate2D::configureCurCell(MazeCell *sensor_info)
 	cur_cell->setWallWest(sensor_info->getWallWest());
 	cur_cell->setVisitStatus(MazeCell::Visited);
 
-        printf("Fill Data Complete...\n");
 	if(cur_cell->getStairCell())
 		m_navigateMaps.getFloorMap(m_cur_floor_index)->setStairCell(cur_cell);
 

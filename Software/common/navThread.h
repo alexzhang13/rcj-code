@@ -28,6 +28,7 @@ public:
 
     virtual void run(void);
     void readConfig(const char* filename, ARobot *robot);
+    void startNewMap(ARobot *robot, Navigate2D &nav_rt);
     void readCurrentMap(const char* filedir, const char* xmlname, ARobot *robot, Navigate2D &nav_rt);
     void writeCurrentMap(const char* filedir, const char* xmlname, ARobot *robot, Navigate2D &nav_rt);
     void Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt);
