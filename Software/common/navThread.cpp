@@ -9,6 +9,9 @@ void NavThread::run(void){
     printf("Fault 4 Passed\n");
     if(this->readMap)
         readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
+    else
+        startNewMap(myRobot, nav);
+
     printf("Fault 5 Passed\n");
     myRobot->CalibrateIMU();
     sleep(1);
@@ -199,10 +202,16 @@ void NavThread::readConfig(const char* filename, ARobot *robot)
     fclose(datafile);
 }
 
+void NavThread::startNewMap(ARobot *robot, Navigate2D &nav_rt) {
+    MazeCell::NavDir heading = MazeCell::navNorth;
+    int32_t home_floor_num = 0;
+    nav_rt.setHomeCell(home_floor_num, heading);
+    return;
+}
+
 void NavThread::readCurrentMap(const char* filedir, const char* xmlname, ARobot *robot, Navigate2D &nav_rt)
 {
     MazeCell::NavDir heading = MazeCell::navNorth;
-
     int32_t home_floor_num = 0;
     std::string t = nav_rt.getCurTime();
     std::string newfile = std::string(xmlname) + "_" + t;
@@ -228,14 +237,10 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
     robot->sensor_info.reset(); //reset temp object
     robot->UpdateCellMap(&robot->sensor_info, false, false); //false = not black
     robot->UpdateNeighborCells();
-    if(&robot->sensor_info != nullptr) cout << "Not Null!" << endl;
 
     nav_rt.configureCurCell(&robot->sensor_info);
-    cout << "1" << endl;
     nav_rt.detectLocalCells(robot->temp_cell_list);
-    cout << "2" << endl;
     nav_rt.updateLocalMap();
-    cout << "Navigation Prereqs Passed..." << endl;
     nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
     cout << "Map File Written..." << endl;
 
