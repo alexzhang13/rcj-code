@@ -63,7 +63,7 @@ void ARobot::WriteCommand(char* i_command, int size)
 
 void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag, bool CheckRamp)
 {
-    size_t range_size = rangeDataList.size();
+    const size_t range_size = rangeDataList.size();
     if(!black_flag) {
         if(currTileLight == SILVER) {
             sensor_info->setCheckPt(true);
