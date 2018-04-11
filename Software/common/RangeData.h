@@ -67,7 +67,7 @@ public:
     float getAlpha();
     //generated based on excel tests
     float CorrectLongReading(float reading) {
-        printf("Corrected: %f\n", 19.6 + 0.802*reading - 0.000118*pow(reading, 2));
+        if(reading >= 1500) return 8190;
         return 19.6 + 0.802*reading - 0.000118*pow(reading, 2);
     }
 
