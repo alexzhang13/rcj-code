@@ -18,8 +18,8 @@ void NavThread::run(void){
     while(1) {
         switch(myRobot->currState) {
         case 0: //Planning
-            Navigate(in_dir, xml_name, myRobot, nav);
             printf("navigating...\n");
+            Navigate(in_dir, xml_name, myRobot, nav);
             sleep(0.5);
             break;
         case 1: //WayPtNav
