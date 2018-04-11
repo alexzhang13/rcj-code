@@ -24,7 +24,6 @@ public:
         cnt = 0;
         bot_waypts = 0;
         first_iter = true;
-        nav = new Navigate2D();
     }
 
     virtual void run(void);
