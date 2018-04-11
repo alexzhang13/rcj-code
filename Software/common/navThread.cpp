@@ -10,10 +10,10 @@ void NavThread::run(void){
     if(this->readMap)
         readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     printf("Fault 5 Passed\n");
-    sleep(0.5);
     myRobot->CalibrateIMU();
     sleep(1);
     myRobot->imuCalibrated = true; //turn on IMU flag
+    sleep(2);
 
     while(1) {
         switch(myRobot->currState) {
