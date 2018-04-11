@@ -234,9 +234,11 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
     nav_rt.configureCurCell(&robot->sensor_info);
     nav_rt.detectLocalCells(robot->temp_cell_list);
     nav_rt.updateLocalMap();
-    nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
-    robot->temp_cell_list.clear();
     cout << "Navigation Prereqs Passed..." << endl;
+    nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
+    cout << "Map File Written..." << endl;
+
+    robot->temp_cell_list.clear();
 
     //nav_rt.slam2d(); // will move to another thread
     // what to do next
