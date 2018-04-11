@@ -67,7 +67,7 @@ public:
     float getAlpha();
     //generated based on excel tests
     inline float CorrectLongReading(float reading) {
-        return 159 + 177*reading - 3.26*pow(reading, 2);
+        return 19.6 + 0.802*reading - 0.000118*pow(reading, 2);
     };
 
     Scan_DataType scan;
