@@ -108,7 +108,7 @@ int32_t Navigate2D::configureCurCell(MazeCell *sensor_info)
 {
 	int32_t i;
 	MazeCell *cur_cell = m_navigateMaps.getFloorMap(m_cur_floor_index)->getCurrentCell();
-
+        if(&cur_cell != nullptr) printf("Not Null (Curr_Cell)!\n");
         printf("Floor Index: %d\tCell: %d", m_cur_floor_index, cur_cell->getHomeCell());
 
 	m_navigateMaps.getFloorMap(m_cur_floor_index)->setCurCellIndex(cur_cell->getCellNum());
