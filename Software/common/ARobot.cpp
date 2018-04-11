@@ -131,7 +131,7 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag, bool CheckRam
 void ARobot::UpdateNeighborCells()
 {
     MazeCell temp_cell;
-    size_t sizeRange = rangeDataList.size();
+    const size_t sizeRange = rangeDataList.size();
     if(sizeRange < 4)
         return;
 

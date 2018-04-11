@@ -232,7 +232,9 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
 
     cout << "Begin Algorithm Config" << endl;
     nav_rt.configureCurCell(&robot->sensor_info);
+    cout << "1" << endl;
     nav_rt.detectLocalCells(robot->temp_cell_list);
+    cout << "2" << endl;
     nav_rt.updateLocalMap();
     cout << "Navigation Prereqs Passed..." << endl;
     nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
