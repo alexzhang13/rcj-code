@@ -14,6 +14,7 @@ void NavThread::run(void){
     myRobot->CalibrateIMU();
     sleep(1);
     myRobot->imuCalibrated = true; //turn on IMU flag
+
     while(1) {
         switch(myRobot->currState) {
         case 0: //Planning
