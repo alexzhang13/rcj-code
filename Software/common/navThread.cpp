@@ -234,6 +234,7 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
     nav_rt.updateLocalMap();
     nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
     robot->temp_cell_list.clear();
+    cout << "Navigation Prereqs Passed..." << endl;
     //nav_rt.slam2d(); // will move to another thread
     // what to do next
     nav_rt.navigatePlanning();
@@ -243,7 +244,7 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
         robot->waypts = nav_rt.getNextCell()->waypts; //waypts
     } else {
         robot->currState = ARobot::DONE;
-        robot->picam.close();
+        //robot->picam.close();
         return;
     }
     first_iter = true;
