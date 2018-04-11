@@ -48,8 +48,6 @@ int IMUData::runFilter()
     m_pitch = madgwick.getRoll(); //inverted
     m_roll = madgwick.getPitch(); //inverted
     m_yaw = madgwick.getYaw();
-
-    printf("Timestamp: %i Roll: %f Pitch: %f Yaw: %f\n", data.tstamp,  m_roll, m_pitch, m_yaw);
     return 0;
 }
 
