@@ -229,12 +229,15 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
     robot->sensor_info.reset(); //reset temp object
     robot->UpdateCellMap(&robot->sensor_info, false, false); //false = not black
     robot->UpdateNeighborCells();
+
+    cout << "Begin Algorithm Config" << endl;
     nav_rt.configureCurCell(&robot->sensor_info);
     nav_rt.detectLocalCells(robot->temp_cell_list);
     nav_rt.updateLocalMap();
     nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
     robot->temp_cell_list.clear();
     cout << "Navigation Prereqs Passed..." << endl;
+
     //nav_rt.slam2d(); // will move to another thread
     // what to do next
     nav_rt.navigatePlanning();
