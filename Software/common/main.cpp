@@ -54,10 +54,10 @@ int main(int argc,char **argv){
 
     SerialPort *port = new SerialPort("/dev/ttyAMA0",115200);
     if(port == NULL)
-        printf(" Serial port open failed\n");
-    printf(".Start robot navigation\n");
+        printf("Serial port open failed\n");
+    printf("Start robot navigation...\n");
     ARobot *myRobot = new ARobot(port);
-    printf("ARobot Init Passed\n");
+    printf("ARobot Init Passed...\n");
 
     UartRx *uartrx = new UartRx(port, myRobot);
     uartrx->setLogFile(in_dir, rt_logname);
@@ -66,12 +66,10 @@ int main(int argc,char **argv){
     Process_T *process_thread = new Process_T(port, myRobot);
     printf("Process Thread Init Passed\n");
 
-    //currThread = new NavThread(myRobot, false);
-    digitalWrite(3, 1);
-    delay(500);
+    currThread = new NavThread(myRobot, false);
 
     while(1) {
-#if 1
+#if 0
         if(iteration % 1000 == 0) {
             printf("Dip 1: %d\tDip 2: %d\tDip 3: %d\n", digitalRead(5), digitalRead(4), digitalRead(2));
 #if 0
