@@ -67,6 +67,8 @@ int main(int argc,char **argv){
     printf("Process Thread Init Passed\n");
 
     //currThread = new NavThread(myRobot, false);
+    digitalWrite(3, 1);
+    delay(500);
 
     while(1) {
 #if 1
