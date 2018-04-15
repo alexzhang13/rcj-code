@@ -487,21 +487,25 @@ int ARobot::CheckVictimTemp()
     size_t temp_vals = tempDataList.size(); //get average values
     int numAboveThreshR=0; //multiple values above threshold [at least 1/2]
     int numAboveThreshL=0;
-
-    for(int i = 1; i < 9; i++) { //left threshold
-        if(tempDataList[temp_vals-1].getLeftTemp()[i] > this->threshLeft) {
-            ++numAboveThreshL;
+    for(int i = 1; i < 5; i++) {
+        for(int j = 1; i < 9; i++) { //left threshold
+            if(tempDataList[temp_vals-i].getLeftTemp()[j] > this->threshLeft) {
+                ++numAboveThreshL;
+            }
+            if(tempDataList[temp_vals-i].getRightTemp()[j] > this->threshRight) {
+                ++numAboveThreshR;
+            }
         }
-        if(tempDataList[temp_vals-1].getRightTemp()[i] > this->threshRight) {
-            ++numAboveThreshR;
+        if(numAboveThreshL <= 4 && numAboveThreshR <= 4) {
+            return 0;
         }
+        numAboveThreshL=0; //reset
+        numAboveThreshR=0; //reset
     }
-    if(numAboveThreshL > 4) {
+    if(numAboveThreshL > 4) { //after test (4*8)
         return 2;
-    } else if(numAboveThreshR > 4) {
+    } else if (numAboveThreshR > 4) {
         return 1;
-    } else {
-        return 0;
     }
 }
 
@@ -609,9 +613,7 @@ void ARobot::CheckLightTile()
     if(mlen_light < 3)
         return;
 
-    if(lightDataList[mlen_light-1].checkLight() == 2 && lightDataList[mlen_light-2].checkLight() == 2 && lightDataList[mlen_light-3].checkLight() == 2) {
-        currTileLight = SILVER;
-    } else if (lightDataList[mlen_light-1].checkLight() == 1 && lightDataList[mlen_light-2].checkLight() == 1 && lightDataList[mlen_light-3].checkLight() == 1) {
+    if (lightDataList[mlen_light-1].CheckLight() == 1 && lightDataList[mlen_light-2].CheckLight() == 1 && lightDataList[mlen_light-3].CheckLight() == 1) {
         currTileLight = BLACK;
         if(backingBlack == false) {
             backingBlack = true;
@@ -620,7 +622,21 @@ void ARobot::CheckLightTile()
             MoveDistance(150, BACK);
         }
     } else {
-        currTileLight = WHITE;
+        //Calculate Previous
+        int prevVals[5];
+        int avgVal;
+        for(int i=0;i<5;i++) {
+            prevVals[i] = lightDataList[mlen_light-i-1].ReturnLight();
+            avgVal += prevVals[i];
+        }
+        avgVal /= (sizeof(prevVals)/sizeof(prevVals[0]));
+
+        //Standard Deviation
+        float std = this->getSTD(prevVals, avgVal);
+        if(std > 10.0 && lightDataList[mlen_light-1].CheckLight(avgVal)==2) //10.0 calculated from recorded values
+            currTileLight = SILVER;
+        else
+            currTileLight = WHITE;
     }
     if(mlen_light > 200)
         lightDataList.erase(lightDataList.begin(), lightDataList.begin() + mlen_light - 200);

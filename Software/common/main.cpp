@@ -66,14 +66,12 @@ int main(int argc,char **argv){
     Process_T *process_thread = new Process_T(port, myRobot);
     printf("Process Thread Init Passed\n");
 
-    currThread = new NavThread(myRobot, false);
+    spawnThread(currThread, myRobot);
 
     while(1) {
-#if 0
         if(iteration % 1000 == 0) {
             printf("Dip 1: %d\tDip 2: %d\tDip 3: %d\n", digitalRead(5), digitalRead(4), digitalRead(2));
-#if 0
-            if(digitalRead(2)==1 && !isRunning && reset) { //button is pressed when off
+            if(digitalRead(2)==0 && !isRunning && reset) { //button is pressed when off
                 printf("Spawning New Thread...\n");
                 spawnThread(currThread, myRobot);
                 isRunning = true;
@@ -83,13 +81,11 @@ int main(int argc,char **argv){
                 stopThread(currThread);
                 isRunning = false;
                 reset = false;
-            } else if (digitalRead(2)==0) {
+            } else if (digitalRead(2)==1) {
                 reset = true;
             }
-#endif
         }
         ++iteration;
-#endif
         sleep(0.01);
     }
 
@@ -97,6 +93,7 @@ int main(int argc,char **argv){
 }
 
 /**
+ * 0 = On, 1 = Off
  * 0 0 --> Restart Navigation Program
  * 0 1 --> Use previous data (Silver)
  * 1 0 --> Collect Data
@@ -106,8 +103,7 @@ void spawnThread(Thread *currThread, ARobot *myRobot) {
     int currChoice = digitalRead(5) + digitalRead(4)*2;
     switch(currChoice) {
     case 0: //0 0
-        //currThread = new NavThread(myRobot, false);
-        currThread = new TestThread(myRobot);
+        currThread = new NavThread(myRobot, false);
         break;
     case 1: //1 0
         currThread = new NavThread(myRobot, true);
