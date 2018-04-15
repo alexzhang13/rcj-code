@@ -128,7 +128,7 @@ public:
     float getSTD(int* arr, int avg) {
         float total = 0;
         for(int val : arr)
-            total += std::sqrt(pow(val-avg, 2)/(sizeof(arr)/sizeof(arr[0]));
+            total += std::sqrt((float)std::pow(val-avg, 2)/(sizeof(arr)/sizeof(arr[0]));
         return total;
     }
 

@@ -38,7 +38,7 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     this->silver_thresh = 0;
     this->sLock = 0;
     this->speed_left = 100;
-    this->speed_right = 120;
+    this->speed_right = 115;
     this->threshLeft = 0;
     this->threshRight = 0;
     this->toMove = false;
