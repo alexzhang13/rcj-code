@@ -66,7 +66,8 @@ int main(int argc,char **argv){
     Process_T *process_thread = new Process_T(port, myRobot);
     printf("Process Thread Init Passed\n");
 
-    spawnThread(currThread, myRobot);
+    //spawnThread(currThread, myRobot);
+    digitalWrite(3, 1);
 
     while(1) {
         if(iteration % 1000 == 0) {
