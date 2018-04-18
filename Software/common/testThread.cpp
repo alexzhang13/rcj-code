@@ -25,8 +25,8 @@ void TestThread::run(void){
 #endif
     sleep(1);
     while(1) {
-        myRobot->TestRangeSensors();
-        sleep(1);
+        printf("Testing...");
+        sleep(5);
     }
     return;
 }
