@@ -129,7 +129,7 @@ public:
         float total = 0;
         //no break condition for size of arr = 0
         for(int i=0; i<sizeof(arr)/sizeof(arr[0]); i++)
-            total += std::sqrt((float)std::pow(arr[0]-avg, 2)/(sizeof(arr)/sizeof(arr[0]));
+            total += std::sqrt((float)std::pow(arr[0]-avg, 2)/(sizeof(arr)/sizeof(arr[0])));
         return total;
     }
 
