@@ -22,7 +22,9 @@ public:
 
 	void storeCommand(char* buf, int thresh_black, int thresh_silver);
 	int parseData();
-	int checkLight();
+        int ReturnLight();
+        int CheckLight();
+        int CheckLight(int l_reading);
 
 private:
 	char m_command[128];

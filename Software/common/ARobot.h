@@ -124,6 +124,14 @@ public:
     void PrintXYCoords(int x, int y);
     void DisplayVictimVisual();
 
+    /*Inline Functions*/
+    float getSTD(int* arr, int avg) {
+        float total = 0;
+        for(int val : arr)
+            total += std::sqrt((float)std::pow(val-avg, 2)/(sizeof(arr)/sizeof(arr[0]));
+        return total;
+    }
+
     std::vector<MazeCell> temp_cell_list;
     std::vector<int32_t> waypts; //current waypoint list
     std::vector<double> x_vals; //x accumulate

@@ -85,9 +85,9 @@ bool motorSwitch = true; //false meaning turn off
 bool isMoving = false; //if the robot is running
 bool isTurning = false; //if the robot is turning
 int left_spd = 100; //left motor power
-int right_spd = 125; //right motor power
+int right_spd = 115; //right motor power
 int off_left = 10; //for Encoder() function, offset when left encoder is higher than right
-int off_right = 25; //for Encoder() function, offset when right encoder is higher than left
+int off_right = 15; //for Encoder() function, offset when right encoder is higher than left
 float distance_mm = 0;
 volatile long int leftEncoder = 0; //left encoder
 volatile long int rightEncoder = 0; //right encoder
@@ -540,9 +540,11 @@ void Motor_Encoder()
     return;
   }
   if(abs(leftEncoder) < abs(rightEncoder)){
-    motorRight->setSpeed(left_spd + off_right); //corecting
+    motorRight->setSpeed(right_spd + off_right); //corecting
+    motorLeft->setSpeed(left_spd);
   } else {
-    motorRight->setSpeed(left_spd + off_left); //take 
+    motorRight->setSpeed(right_spd); //take 
+    motorLeft->setSpeed(left_spd + off_left);
   }
   reading += millis(); reading += " m ";
   reading += left_mm; reading += " "; reading += right_mm;
