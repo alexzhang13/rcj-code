@@ -6,17 +6,17 @@ void NavThread::run(void){
 
     sleep(1);
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
-    printf("Fault 4 Passed\n");
+    printf("Config File Read...\n");
     if(this->readMap)
         readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     else
         startNewMap(myRobot, nav);
 
-    printf("Fault 5 Passed\n");
+    printf("Map Generation Started...\n");
     myRobot->CalibrateIMU();
     sleep(1);
     myRobot->imuCalibrated = true; //turn on IMU flag
-    sleep(2);
+    sleep(1);
 
     while(1) {
         switch(myRobot->currState) {
@@ -60,7 +60,7 @@ void NavThread::run(void){
             myRobot->currState = ARobot::WAYPTNAV;
             break;
         case 5: //Move
-            //myRobot->CheckLightTile(); //check if anything happens during this time
+            myRobot->CheckLightTile(); //check if anything happens during this time
             //find the offset direction of the robot
             sleep(0.2);
             break;
