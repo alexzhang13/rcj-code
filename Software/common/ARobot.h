@@ -127,7 +127,8 @@ public:
     /*Inline Functions*/
     float getSTD(int* arr, int avg) {
         float total = 0;
-        for(const int& val: arr)
+        //no break condition for size of arr = 0
+        for(int i=0; i<sizeof(arr)/sizeof(arr[0]); i++)
             total += std::sqrt((float)std::pow(val-avg, 2)/(sizeof(arr)/sizeof(arr[0]));
         return total;
     }
