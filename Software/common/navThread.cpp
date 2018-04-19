@@ -15,6 +15,10 @@ void NavThread::run(void){
     printf("Map Generation Started...\n");
     myRobot->CalibrateIMU();
     sleep(1);
+    myRobot->CalibrateIMU();
+    sleep(1);
+    myRobot->CalibrateIMU();
+    sleep(1);
     myRobot->imuCalibrated = true; //turn on IMU flag
     sleep(1);
 
@@ -91,8 +95,6 @@ void NavThread::run(void){
         case 9: //Data collection
             myRobot->isVictim = nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim();
             if(!myRobot->isVictim) {myRobot->isDropped = false;}
-            sleep(0.5);
-            myRobot->CalibrateIMU();
             sleep(0.2);
             bot_waypts = myRobot->waypts.size();
             myRobot->currTile.x = myRobot->currTile.x_tovisit;
@@ -144,7 +146,6 @@ void NavThread::run(void){
                         switch(myRobot->CheckVictimTemp()) {
                         printf("Victim Results: %d\n", myRobot->CheckVictimTemp());
                         case 0:
-                            myRobot->currState = ARobot::WAYPTNAV;
                             break;
                         case 1: //drop or go back to calculating
                             myRobot->victimRight = true;
@@ -166,6 +167,9 @@ void NavThread::run(void){
                     break;
                 }
             }
+            sleep(1.5);
+            myRobot->CalibrateIMU();
+            sleep(0.5);
             myRobot->CorrectYaw();
             sleep(0.5);
             break;
