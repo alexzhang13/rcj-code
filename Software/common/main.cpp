@@ -110,7 +110,7 @@ void spawnThread(Thread *currThread, ARobot *myRobot) {
 
 void stopThread(Thread *currThread) {
     delete currThread;
-    delete uartx;
+    delete uartrx;
     delete process_thread;
     delete myRobot;
     delete port;
