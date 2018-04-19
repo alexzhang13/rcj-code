@@ -239,6 +239,7 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
     robot->sensor_info.reset(); //reset temp object
     robot->UpdateCellMap(&robot->sensor_info, false, false); //false = not black
     robot->UpdateNeighborCells();
+    cout << "Cells Updated..." << endl;
 
     nav_rt.configureCurCell(&robot->sensor_info);
     nav_rt.detectLocalCells(robot->temp_cell_list);
