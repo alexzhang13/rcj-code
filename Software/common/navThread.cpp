@@ -165,8 +165,6 @@ void NavThread::run(void){
                         break;
                     }
                     break;
-                } else {
-                    myRobot->currState = ARobot::WAYPTNAV;
                 }
             }
             myRobot->CorrectYaw();
@@ -242,8 +240,14 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
     cout << "Cells Updated..." << endl;
 
     nav_rt.configureCurCell(&robot->sensor_info);
+    cout << "Configuring Current Cell with Sensor Info..." << endl;
+
     nav_rt.detectLocalCells(robot->temp_cell_list);
+    cout << "Detecting Local Cells..." << endl;
+
     nav_rt.updateLocalMap();
+    cout << "Local Map Updating..." << endl;
+
     nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
     cout << "Map File Written..." << endl;
 
