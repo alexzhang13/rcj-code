@@ -22,6 +22,11 @@ using namespace std;
 void spawnThread(Thread *currThread,  ARobot *myRobot);
 void stopThread(Thread *currThread);
 
+SerialPort *port;
+ARobot *myRobot;
+UartRx *uartrx;
+Process_T *process_thread;
+
 int main(int argc,char **argv){
 #ifdef WIN32
     const char* fileConfig = "C:/projects/StormingRobots2017/Data/Mem/config_test.txt";
@@ -52,26 +57,11 @@ int main(int argc,char **argv){
     pinMode(2, INPUT); //Push Pin (Toggle Program)
     printf("WiringPI Init Passed");
 
-    SerialPort *port = new SerialPort("/dev/ttyAMA0",115200);
-    if(port == NULL)
-        printf("Serial port open failed\n");
-
-    ARobot *myRobot = new ARobot(port);
-    printf("ARobot Init Passed...\n");
-
-    UartRx *uartrx = new UartRx(port, myRobot);
-    uartrx->setLogFile(in_dir, rt_logname);
-    printf("UartRx Thread Init Passed\n");
-
-    Process_T *process_thread = new Process_T(port, myRobot);
-    printf("Process Thread Init Passed\n");
-
     while(1) {
         if(iteration % 1000 == 0) {
             if(digitalRead(2)==0 && !isRunning && reset) { //button is pressed when off
                 printf("Spawning New Thread...\n");
-                ARobot *myRobot = new ARobot(port);
-                printf("ARobot ReInit...\n");
+                setupThread();
                 spawnThread(currThread, myRobot);
                 isRunning = true;
                 reset = false;
@@ -118,6 +108,26 @@ void spawnThread(Thread *currThread, ARobot *myRobot) {
 
 void stopThread(Thread *currThread) {
     delete currThread;
+    delete uartx;
+    delete process_thread;
+    delete myRobot;
+    delete port;
+}
+
+void setupThread() {
+    port = new SerialPort("/dev/ttyAMA0",115200);
+    if(port == NULL)
+        printf("Serial port open failed\n");
+
+    myRobot = new ARobot(port);
+    printf("ARobot Init Passed...\n");
+
+    uartrx = new UartRx(port, myRobot);
+    uartrx->setLogFile(in_dir, rt_logname);
+    printf("UartRx Thread Init Passed\n");
+
+    process_thread = new Process_T(port, myRobot);
+    printf("Process Thread Init Passed\n");
 }
 
 
