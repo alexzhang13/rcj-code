@@ -79,7 +79,6 @@ void UartRx::run(void){
             printf("Data Sent!\n");
         } else if (c == 'm') {
             myRobot->currState = ARobot::DATA; //IDLE
-            printf("motor is finished\n");
             if(myRobot->backingBlack) {
                 myRobot->currState = ARobot::BLACKBACK;
             }

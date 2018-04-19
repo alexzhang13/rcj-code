@@ -696,10 +696,8 @@ void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
     if(!(currState == RAMP)) {
         currState = MOVE;
     }
-    printf("Distance: %d\n", distance_mm);
-    //TestSignal(); //Test Un
+    printf("Command: Distance: %d\n", distance_mm);
     WriteCommand(i_command, i_length);
-    //TestSignal(); //Test Deux
 }
 
 void ARobot::ResetEncoder() {
