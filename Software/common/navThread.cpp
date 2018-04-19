@@ -34,7 +34,7 @@ void NavThread::run(void){
             sleep(0.1);
             break;
         case 3: //Idle
-            sleep(1);
+            sleep(2.5);
             myRobot->CalibrateIMU();
             if(myRobot->toMove){
                 sleep(1.5);
@@ -293,7 +293,7 @@ int NavThread::WayPointNav(ARobot *robot, Navigate2D &nav_rt)
         printf("Coords -> coord: %d x: %d, y: %d\n", robot->waypts[bot_waypts-i], x, y);
     }
     first_iter = false;
-    sleep(0.5);
+    sleep(1.5);
     myRobot->CalibrateIMU();
     sleep(1);
     robot->CalcNextTile(true);
