@@ -34,10 +34,9 @@ void NavThread::run(void){
             break;
         case 3: //Idle
             if(myRobot->toMove){
-                sleep(0.3);
-                myRobot->CalibrateIMU();
-                sleep(0.3);
+                sleep(0.5);
                 myRobot->CalcNextTile();
+                sleep(0.5);
                 myRobot->toMove = false;
             } else if(myRobot->isCorrecting) {
                 sleep(0.5);
