@@ -55,7 +55,7 @@ int main(int argc,char **argv){
     SerialPort *port = new SerialPort("/dev/ttyAMA0",115200);
     if(port == NULL)
         printf("Serial port open failed\n");
-    printf("Start robot navigation...\n");
+
     ARobot *myRobot = new ARobot(port);
     printf("ARobot Init Passed...\n");
 
@@ -99,6 +99,8 @@ int main(int argc,char **argv){
 void spawnThread(Thread *currThread, ARobot *myRobot) {
     int currChoice = digitalRead(5) + digitalRead(4)*2;
     switch(currChoice) {
+    ARobot *myRobot = new ARobot(port);
+    printf("ARobot ReInit...\n");
     case 0: //0 0
         currThread = new NavThread(myRobot, false);
         break;
