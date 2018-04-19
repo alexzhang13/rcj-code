@@ -99,6 +99,9 @@ void NavThread::run(void){
             bot_waypts = myRobot->waypts.size();
             myRobot->currTile.x = myRobot->currTile.x_tovisit;
             myRobot->currTile.y = myRobot->currTile.y_tovisit;
+            sleep(1);
+            myRobot->CalibrateIMU();
+
             //nav.getCellbyIndex(myRobot->waypts[bot_waypts-1])->getCellGrid(myRobot->currTile.x, myRobot->currTile.y);
             nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]);
             printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
@@ -164,11 +167,8 @@ void NavThread::run(void){
                         }
                         break;
                     }
-                    break;
                 }
             }
-            sleep(1.5);
-            myRobot->CalibrateIMU();
             sleep(0.5);
             myRobot->CorrectYaw();
             sleep(0.5);
