@@ -931,3 +931,45 @@ void ARobot::PrintXYCoords(int x, int y) {
     }
 }
 
+void ARobot::Reset() {
+    this->backingBlack = false;
+    this->black_thresh=0;
+    this->cross_over = false;
+    this->currTileLight = WHITE;
+    this->currDir = FRONT;
+    this->currState = PLANNING; //>9 = testing purposes
+    this->currOrientation = NORTH;
+    this->currTile.x = 0;
+    this->currTile.y = 0;
+    this->dist_temp=0;
+    this->dropCnt = 0; //dropping counter
+    this->imuCalibrated = false;
+    this->initialYaw = 0;
+    this->initTurnRec = false;
+    this->isDropped = false;
+    this->isVictim = false;
+    this->mlen_imu = 0;
+    this->mlen_light = 0;
+    this->mlen_range = 0;
+    this->mlen_temp = 0;
+    this->m_letter = '0';
+    this->off_left = 5;
+    this->off_right = 25;
+    this->offsetdir = 1;
+    this->prevYaw = 0;
+    this->silver_thresh = 0;
+    this->sLock = 0;
+    this->speed_left = 100;
+    this->speed_right = 115;
+    this->threshLeft = 0;
+    this->threshRight = 0;
+    this->toMove = false;
+    this->toTurn = 0;
+    this->victim.letter = '0';
+    this->victim.m_isVictim = false;
+    this->victimDir = MazeCell::NotDecided;
+    this->victimFront = false;
+    this->victimLeft = false;
+    this->victimRight = false; //true if is dropping to the right
+    this->yaw_drift = 0;
+}

@@ -64,6 +64,7 @@ public:
     void CheckCorrection();
     void Correction();
     void CorrectYaw();
+    void Reset();
     int SlopeDir(); //const std::vector<double>& x, const std::vector<double>& y
 
     /*IMU*/
