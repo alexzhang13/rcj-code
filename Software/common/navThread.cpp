@@ -295,7 +295,7 @@ int NavThread::WayPointNav(ARobot *robot, Navigate2D &nav_rt)
     first_iter = false;
     sleep(0.5);
     myRobot->CalibrateIMU();
-    sleep(0.5);
+    sleep(1);
     robot->CalcNextTile();
     return 0;
 }
