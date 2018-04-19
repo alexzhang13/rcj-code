@@ -16,9 +16,6 @@ void NavThread::run(void){
     myRobot->CalibrateIMU();
     sleep(1);
     myRobot->CalibrateIMU();
-    sleep(1);
-    myRobot->CalibrateIMU();
-    sleep(1);
     myRobot->imuCalibrated = true; //turn on IMU flag
     sleep(1);
 
@@ -43,12 +40,12 @@ void NavThread::run(void){
                 sleep(1.5);
                 myRobot->CalcNextTile();
                 myRobot->toMove = false;
+            }  else if(myRobot->correctionFailed) {
+                sleep(0.5);
+                myRobot->CorrectionFailed();
             } else if(myRobot->isCorrecting) {
                 sleep(0.5);
                 myRobot->CheckCorrection();
-            } else if(myRobot->correctionFailed) {
-                sleep(0.5);
-                myRobot->CorrectionFailed();
             } else {
                 sleep(0.5);
                 myRobot->currState = ARobot::WAYPTNAV;
@@ -296,6 +293,9 @@ int NavThread::WayPointNav(ARobot *robot, Navigate2D &nav_rt)
         printf("Coords -> coord: %d x: %d, y: %d\n", robot->waypts[bot_waypts-i], x, y);
     }
     first_iter = false;
+    sleep(0.5);
+    myRobot->CalibrateIMU();
+    sleep(0.5);
     robot->CalcNextTile();
     return 0;
 }
