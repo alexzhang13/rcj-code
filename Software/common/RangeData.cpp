@@ -144,7 +144,7 @@ int RangeData::getPosition()
         avalid_long = false;
     }
     if(data.laserL_b <= 1200) { //check if reading is valid LONG BACK
-        temp_range[2] = (data.laserL_b+59.25) * std::abs(cos((3.1415926535*curr_yaw)/180.0));
+        temp_range[2] = (data.laserL_b+30.0) * std::abs(cos((3.1415926535*curr_yaw)/180.0));
         temp_dist = (int)temp_range[2]/300;
         distance[2] = temp_range[2] - temp_dist*300;
         if(data.laserL_a >= 900) avalid_long = false;
