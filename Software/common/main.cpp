@@ -98,9 +98,9 @@ int main(int argc,char **argv){
  */
 void spawnThread(Thread *currThread, ARobot *myRobot) {
     int currChoice = digitalRead(5) + digitalRead(4)*2;
-    switch(currChoice) {
     ARobot *myRobot = new ARobot(port);
     printf("ARobot ReInit...\n");
+    switch(currChoice) {
     case 0: //0 0
         currThread = new NavThread(myRobot, false);
         break;
