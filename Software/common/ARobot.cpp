@@ -303,6 +303,7 @@ void ARobot::TileTransition(int32_t dist)
         toMove = true;
         return;
     }
+    printf("Calculated Distance: %d\t", dist);
     MoveDistance(dist, FRONT);
     return;
 }
