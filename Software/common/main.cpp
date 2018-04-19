@@ -70,6 +70,8 @@ int main(int argc,char **argv){
         if(iteration % 1000 == 0) {
             if(digitalRead(2)==0 && !isRunning && reset) { //button is pressed when off
                 printf("Spawning New Thread...\n");
+                ARobot *myRobot = new ARobot(port);
+                printf("ARobot ReInit...\n");
                 spawnThread(currThread, myRobot);
                 isRunning = true;
                 reset = false;
@@ -98,8 +100,6 @@ int main(int argc,char **argv){
  */
 void spawnThread(Thread *currThread, ARobot *myRobot) {
     int currChoice = digitalRead(5) + digitalRead(4)*2;
-    ARobot *myRobot = new ARobot(port);
-    printf("ARobot ReInit...\n");
     switch(currChoice) {
     case 0: //0 0
         currThread = new NavThread(myRobot, false);
