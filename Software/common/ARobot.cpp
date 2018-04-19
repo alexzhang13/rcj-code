@@ -243,7 +243,7 @@ void ARobot::UpdateNeighborCells()
     }
 }
 
-void ARobot::CalcNextTile()
+void ARobot::CalcNextTile(bool first)
 {
     BotOrientation nextDir;
     float calculatedNextGlobX=0;
@@ -291,6 +291,8 @@ void ARobot::CalcNextTile()
 
     //Move on to actual movement
     currOrientation = nextDir;
+    if(!first)
+        toTurn = 0;
     TileTransition(dist);
 
 }

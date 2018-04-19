@@ -59,7 +59,7 @@ public:
     void UpdateCellMap(MazeCell *sensor_info, bool backing_black, bool CheckRamp);
     void UpdateNeighborCells();
     void TileTransition(int32_t dist);
-    void CalcNextTile();
+    void CalcNextTile(bool first);
     void CorrectionFailed();
     void CheckCorrection();
     void Correction();
