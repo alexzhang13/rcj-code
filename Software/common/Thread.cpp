@@ -72,3 +72,8 @@ void Thread::checkSuspend()
     while (m_SuspendFlag != 0) pthread_cond_wait(&m_ResumeCond, &m_SuspendMutex);
     pthread_mutex_unlock(&m_SuspendMutex);
 }
+
+void Thread::DestroyThread()
+{
+    //Override...
+}

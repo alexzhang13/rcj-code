@@ -14,6 +14,7 @@ class Thread {
     virtual void pauseThread();
     virtual void unpauseThread();
     virtual void checkSuspend();
+    virtual void DestroyThread();
 
  protected:
     int mPriority, mStackSize;
