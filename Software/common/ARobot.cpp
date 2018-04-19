@@ -393,6 +393,7 @@ void ARobot::Correction() {
 
 void ARobot::CheckCorrection() {
     float currentError = rangeDataList[rangeDataList.size()-1].getRangeOffset();
+    printf("Correction Checked\n");
     if(correctionError > currentError || currentError <= 3) {
         this->correctionFailed = false; //correction finished
         return;
