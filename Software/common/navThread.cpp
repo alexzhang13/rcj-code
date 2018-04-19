@@ -159,7 +159,6 @@ void NavThread::run(void){
                             myRobot->isVictim = true;
                             break;
                         default:
-                            myRobot->currState = ARobot::WAYPTNAV;
                             break;
                         }
                         break;
