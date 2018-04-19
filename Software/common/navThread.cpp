@@ -297,4 +297,10 @@ int NavThread::WayPointNav(ARobot *robot, Navigate2D &nav_rt)
     return 0;
 }
 
+void NavThread::DestroyThread()
+{
+    robot->currState = ARobot::STOP;
+    sleep(0.5);
+    myRobot->StopMove();
+}
 
