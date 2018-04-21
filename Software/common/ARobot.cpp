@@ -810,7 +810,7 @@ void ARobot::FixYaw(int degrees) {\
 
     if(newyaw>=360) newyaw-=360;
     else if(newyaw<0) newyaw+=360;
-    imuDataList[imu_vals-1].setYaw(this->turnOffset);
+    imuDataList[imu_vals-1].setYawOffset(this->turnOffset);
     imuDataList[imu_vals-1].m_yaw = newyaw; //after change
     printf("Fixed Yaw: %f\n", newyaw);
 }
