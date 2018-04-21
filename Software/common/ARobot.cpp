@@ -43,6 +43,7 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     this->threshRight = 0;
     this->toMove = false;
     this->toTurn = 0;
+    this->turnOffset = 0;
     this->victim.letter = '0';
     this->victim.m_isVictim = false;
     this->victimDir = MazeCell::NotDecided;
@@ -341,8 +342,9 @@ void ARobot::CorrectYaw() {
     newyaw /= 5.0;
     if(newyaw>=360)
         newyaw-=360;
-    printf("New Yaw: %f\n", newyaw);
-    imuDataList[imu_vals].setYaw(newyaw);
+    printf("Correction-New Yaw: %f\n", newyaw);
+    this->turnOffset = newyaw - (imuDataList[imu_vals].m_yaw - this->turnOffset);
+    imuDataList[imu_vals].setYawOffset(this->turnOffset);
     imuDataList[imu_vals].m_yaw = newyaw; //after change
 
     this->correctionError = rangeDataList[range_vals-1].getRangeOffset();
@@ -804,12 +806,13 @@ void ARobot::FixYaw(int degrees) {\
     const size_t imu_vals = imuDataList.size();
     float newyaw = imuDataList[imu_vals-1].m_yaw;
     newyaw += degrees;
+    this->turnOffset += degrees;
 
     if(newyaw>=360) newyaw-=360;
     else if(newyaw<0) newyaw+=360;
-    imuDataList[imu_vals].setYaw(newyaw);
-    imuDataList[imu_vals].m_yaw = newyaw; //after change
-    printf("New Yaw: %f\n", newyaw);
+    imuDataList[imu_vals-1].setYaw(this->turnOffset);
+    imuDataList[imu_vals-1].m_yaw = newyaw; //after change
+    printf("Fixed Yaw: %f\n", newyaw);
 }
 
 void ARobot::TestRangeSensors() {

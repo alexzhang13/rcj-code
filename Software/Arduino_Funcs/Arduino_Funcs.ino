@@ -65,9 +65,9 @@ String imu_queue; //Queue for IMU commands
 unsigned char tempReadingA[8];
 unsigned char tempReadingB[8];
 
-int16_t gyroX[40] = {0}; //Gyro Correction "Shifted" Array X
-int16_t gyroY[40] = {0}; //Gyro Correction "Shifted" Array Y
-int16_t gyroZ[40] = {0}; //Gyro Correction "Shifted" Array Z
+int16_t gyroX[20] = {0}; //Gyro Correction "Shifted" Array X
+int16_t gyroY[20] = {0}; //Gyro Correction "Shifted" Array Y
+int16_t gyroZ[20] = {0}; //Gyro Correction "Shifted" Array Z
 int16_t g_avgX = 0; //Gyro Correction Avg of "Shifted" Array X
 int16_t g_avgY = 0; //Gyro Correction Avg of "Shifted" Array Y
 int16_t g_avgZ = 0; //Gyro Correction Avg of "Shifted" Array Z
@@ -533,7 +533,7 @@ void Motor_setOffset(int left_offset, int right_offset) {
 void Motor_Encoder()
 {
   String reading = "";
-  if(abs(left_mm) >= distance_mm) {
+  if(abs(left_mm) >= distance_mm || abs(right_mm) >= distance_mm) {
     motor_queue = "c";
     reading += millis(); reading += "m d";
     Serial.println(reading);
@@ -546,8 +546,8 @@ void Motor_Encoder()
     motorRight->setSpeed(right_spd); //take 
     motorLeft->setSpeed(left_spd + off_left);
   }
-  reading += millis(); reading += " m ";
-  reading += left_mm; reading += " "; reading += right_mm;
+  //reading += millis(); reading += " m ";
+  //reading += left_mm; reading += " "; reading += right_mm;
   //Serial.println(reading);
 }
 
@@ -588,31 +588,27 @@ void Mount_Sweep()
     // scan from 0 to 180 degrees
   mount_laser.attach(SERVO_MOUNT);
   reading += millis(); reading += " z";
-  Serial.println(reading); //take a screenshot at this moment (tell pi)
-  reading = "";
+  Serial.println(reading); //take a screenshot at this moment (tell pi
   delay(500);
-  for(int angle = 0; angle < 180; angle++)  
+  
+  for(int angle = 0; angle <= 180; angle++)  
   {         
-    mount_laser.write(angle);       
-    if(angle == 90) {
-      reading += millis(); reading += " z";
-      Serial.println(reading); //take a screenshot at this moment (tell pi)
-      delay(500);
-    }
-    delay(1);                   
+    mount_laser.write(angle);  
+    delay(1);                       
   } 
-
+  
   reading = "";
   reading += millis(); reading += " z";
   Serial.println(reading); //take a screenshot at this moment (tell pi)
   delay(500);
+
   // now scan back from 180 to 0 degrees                            
-  for(int angle = 180; angle > 0; angle--)  
+  for(int angle = 180; angle >= 0; angle--)  
   {         
     mount_laser.write(angle);       
-    delay(3);                   
+    delay(1);                   
   }     
-  delay(500);       
+  delay(50);       
   mount_laser.detach();
 }
 
@@ -629,14 +625,14 @@ void getDistanceReading()
 
 void calibrateIMU() {
   g_avgX=0; g_avgY=0; g_avgZ=0;
-  for(int i=0; i<40; i++) {
+  for(int i=0; i<sizeof(gyroX)/sizeof(gyroX[0]); i++) {
     g_avgX += gyroX[i];
     g_avgY += gyroY[i];
     g_avgZ += gyroZ[i];
   }
-  g_avgX /= 40;
-  g_avgY /= 40;
-  g_avgZ /= 40;
+  g_avgX /= sizeof(gyroX)/sizeof(gyroX[0]);
+  g_avgY /= sizeof(gyroY)/sizeof(gyroY[0]);
+  g_avgZ /= sizeof(gyroZ)/sizeof(gyroZ[0]);
   return;
 }
 
@@ -661,17 +657,22 @@ void getIMU()
   int16_t gy=Buf[10]<<8 | Buf[11];
   int16_t gz=Buf[12]<<8 | Buf[13];
 
-  /*Getting Drift*/
-  gyroX[__iter] = gx;
-  gyroY[__iter] = gy;
-  gyroZ[__iter] = gz;
-  ++__iter;
-  if(__iter>=40) __iter=0; //reset
-  
-  //Apply drift
-  gx -= g_avgX;
-  gy -= g_avgY;
-  gz -= g_avgZ;
+  //IF NOT MOVING ADJUST GYRO
+  if(!isTurning) {
+    /*Getting Drift When Not Moving*/
+    if(!isMoving) {
+      gyroX[__iter] = gx;
+      gyroY[__iter] = gy;
+      gyroZ[__iter] = gz;
+      ++__iter;
+      if(__iter>=sizeof(gyroX)/sizeof(gyroX[0])) 
+        __iter=0; //reset
+    }
+    //Apply drift
+    gx -= g_avgX;
+    gy -= g_avgY;
+    gz -= g_avgZ;
+  }
   
   // Accelerometer
   reading += ax; reading += " "; reading += ay; reading += " "; reading += az; reading += " ";
