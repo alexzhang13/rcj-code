@@ -65,14 +65,10 @@ String imu_queue; //Queue for IMU commands
 unsigned char tempReadingA[8];
 unsigned char tempReadingB[8];
 
-int16_t gyroX[20] = {0}; //Gyro Correction "Shifted" Array X
-int16_t gyroY[20] = {0}; //Gyro Correction "Shifted" Array Y
 int16_t gyroZ[20] = {0}; //Gyro Correction "Shifted" Array Z
-int16_t g_avgX = 0; //Gyro Correction Avg of "Shifted" Array X
-int16_t g_avgY = 0; //Gyro Correction Avg of "Shifted" Array Y
 int16_t g_avgZ = 0; //Gyro Correction Avg of "Shifted" Array Z
 int8_t __iter = 0; //Curr Iteration "Faux Shift"
-bool isCalib = false; //Fire calibration y/n?
+bool isCalib = true; //Fire calibration y/n?
 
 bool motorWait = false; //wait for motor thread
 bool distanceWait = false; //wait for distance thread
@@ -404,7 +400,7 @@ static int imu_pt_func(struct pt *pt, int interval) { //125 hz = 8ms
          imuSwitch = !imuSwitch;
          imu_queue = " ";
       } else if (func == 'b') {
-        isCalib = !isCalib;
+        //calibrateIMU(); 
         imu_queue = " ";
       } else {
         Serial.println("i e");
@@ -412,10 +408,7 @@ static int imu_pt_func(struct pt *pt, int interval) { //125 hz = 8ms
       }
     } 
     if(imuSwitch) {
-       getIMU();
-    }
-    if(isCalib) {
-       calibrateIMU(); 
+      getIMU();
     }
     PT_WAIT_UNTIL(pt, millis() - timestamp > interval);
     timestamp = millis(); // take a new timestamp
@@ -624,15 +617,11 @@ void getDistanceReading()
 }
 
 void calibrateIMU() {
-  g_avgX=0; g_avgY=0; g_avgZ=0;
-  for(int i=0; i<sizeof(gyroX)/sizeof(gyroX[0]); i++) {
-    g_avgX += gyroX[i];
-    g_avgY += gyroY[i];
+  g_avgZ=0;
+  for(int i=0; i<20; i++) {
     g_avgZ += gyroZ[i];
   }
-  g_avgX /= sizeof(gyroX)/sizeof(gyroX[0]);
-  g_avgY /= sizeof(gyroY)/sizeof(gyroY[0]);
-  g_avgZ /= sizeof(gyroZ)/sizeof(gyroZ[0]);
+  g_avgZ /= 20;
   return;
 }
 
@@ -658,20 +647,16 @@ void getIMU()
   int16_t gz=Buf[12]<<8 | Buf[13];
 
   //IF NOT MOVING ADJUST GYRO
-  if(!isTurning) {
-    /*Getting Drift When Not Moving*/
-    if(!isMoving) {
-      gyroX[__iter] = gx;
-      gyroY[__iter] = gy;
-      gyroZ[__iter] = gz;
-      ++__iter;
-      if(__iter>=sizeof(gyroX)/sizeof(gyroX[0])) 
-        __iter=0; //reset
-    }
+  if(!isTurning && isMoving) {
+    gyroZ[__iter] = gz;
+    calibrateIMU();
+    
+    ++__iter;
+    if(__iter>=20) 
+      __iter=0; //reset
     //Apply drift
-    gx -= g_avgX;
-    gy -= g_avgY;
     gz -= g_avgZ;
+    gz /= 10;
   }
   
   // Accelerometer
