@@ -197,6 +197,7 @@ private:
     float prevYaw; //previous yaw reading
     float toTurn; //distance to turns
     float correctionError; //if correction fails, find distance to ensure something went wrong
+    float turnOffset; //turnOffset
     BotDir correctionDir; //direction the robot just tried to fix itself
     bool initTurnRec; //specific special case (glitch) -- cleaner way will remove this sooner or later
     bool cross_over; //[check StopTurn() function] --> determines if the yaw has turned over 360 degs
