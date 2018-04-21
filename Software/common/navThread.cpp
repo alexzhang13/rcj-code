@@ -13,9 +13,6 @@ void NavThread::run(void){
         startNewMap(myRobot, nav);
 
     printf("Map Generation Started...\n");
-    myRobot->CalibrateIMU();
-    sleep(1);
-    myRobot->CalibrateIMU();
     myRobot->imuCalibrated = true; //turn on IMU flag
     sleep(1);
 
@@ -94,16 +91,14 @@ void NavThread::run(void){
             bot_waypts = myRobot->waypts.size();
             myRobot->currTile.x = myRobot->currTile.x_tovisit;
             myRobot->currTile.y = myRobot->currTile.y_tovisit;
-            sleep(1);
-            myRobot->CalibrateIMU();
 
             //nav.getCellbyIndex(myRobot->waypts[bot_waypts-1])->getCellGrid(myRobot->currTile.x, myRobot->currTile.y);
             nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]);
             printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
             sleep(1);
             if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
-                //myRobot->SpinLaser();
-                //sleep(2.5); //time for laser
+                myRobot->SpinLaser();
+                sleep(2.5); //time for laser
                 //myRobot->CheckVictimVisual();
 
                 if(myRobot->CheckRamp()) { //is ramp
