@@ -300,7 +300,7 @@ void ARobot::CalcNextTile(bool first)
 
 void ARobot::TileTransition(int32_t dist)
 {
-    if(abs(toTurn) > 4.0f) { //ignore smaller angles
+    if(abs(toTurn) > 5.0f) { //ignore smaller angles
         TurnDistance((int)abs(toTurn), (toTurn > 0) ? LEFT : RIGHT); //left is positive for IMU
         dist_temp = dist;
         toMove = true;
@@ -415,26 +415,26 @@ void ARobot::CorrectionFailed() { //if correction was faulty try to change
 
     if(this->correctionDir == LEFT) {
         if(currentError < this->correctionError) { //correct direction
-            this->FixYaw(2);
+            this->FixYaw(2.0);
             TurnDistance(2, RIGHT); //correct correction
         } else if(currentError == this->correctionError) {
             this->correctionFailed = false; //correction finished
             this->isCorrecting = false;
         } else { //bad case, means something went wrong
-            this->FixYaw(-2);
+            this->FixYaw(-2.0);
             this->correctionFailed = false; //correction finished
             this->isCorrecting = false;
             TurnDistance(2, LEFT); //overshot correction
         }
     } else { //right
         if(currentError < this->correctionError) { //good case, 3.0 margin
-            this->FixYaw(-2);
+            this->FixYaw(-2.0);
             TurnDistance(2, LEFT); //correct correction
         } else if(currentError == this->correctionError) {
             this->correctionFailed = false; //correction finished
             this->isCorrecting = false;
         } else { //bad case, means something went wrong
-            this->FixYaw(2);
+            this->FixYaw(2.0);
             this->correctionFailed = false; //correction finished
             this->isCorrecting = false;
             TurnDistance(2, RIGHT); //correct correction
