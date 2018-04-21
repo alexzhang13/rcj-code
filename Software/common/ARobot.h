@@ -193,10 +193,10 @@ private:
     int off_left; //robot left motor offset
     int off_right; //robot right motor offset
     int yaw_drift; //Add to counter yaw drift...
+    int correctionError; //if correction fails, find distance to ensure something went wrong
     float initialYaw; //initial yaw in a turn
     float prevYaw; //previous yaw reading
     float toTurn; //distance to turns
-    float correctionError; //if correction fails, find distance to ensure something went wrong
     float turnOffset; //turnOffset
     BotDir correctionDir; //direction the robot just tried to fix itself
     bool initTurnRec; //specific special case (glitch) -- cleaner way will remove this sooner or later
