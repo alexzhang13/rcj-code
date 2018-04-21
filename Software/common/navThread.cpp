@@ -33,7 +33,7 @@ void NavThread::run(void){
         case 3: //Idle
             if(myRobot->toMove){
                 sleep(1.0);
-                myRobot->CalcNextTile(true);
+                myRobot->CalcNextTile(false);
                 myRobot->toMove = false;
             }  else if(myRobot->correctionFailed) {
                 sleep(0.5);
