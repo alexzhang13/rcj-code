@@ -14,82 +14,83 @@ class ARobot;
 class RangeData {
 public:
 
-	typedef struct {
-		uint32_t tstamp; //timestamp
-		char id; //always comes out as r for range
-		int angle; //0 unless robot is turning
-		float laserL_a; //reading from the long laser facing forward
-		float laserL_b; //reading from the long laser facing backwards
-		float laserS_a; //reading from the short laser facing right
-		float laserS_b; //reading from the short laser facing left
-		int dir; //n = 0, e = 3, s = 2, w = 1
-		int axis; //n = 0, e = 1, s = 2, w = 3
-	}Range_DataType;
+    typedef struct {
+        uint32_t tstamp; //timestamp
+        char id; //always comes out as r for range
+        int angle; //0 unless robot is turning
+        float laserL_a; //reading from the long laser facing forward
+        float laserL_b; //reading from the long laser facing backwards
+        float laserS_a; //reading from the short laser facing right
+        float laserS_b; //reading from the short laser facing left
+        int dir; //n = 0, e = 3, s = 2, w = 1
+        int axis; //n = 0, e = 1, s = 2, w = 3
+    }Range_DataType;
 
-	typedef struct {
-		float x;
-		float y;
-		float x_glob; //from (0, 0) -> (300, 300)
-		float y_glob; //from (0, 0) -> (300, 300)
-		bool x_flag; //if valid
-		bool y_flag; //if valid point
-	}Range_Coord;
+    typedef struct {
+        float x;
+        float y;
+        float x_glob; //from (0, 0) -> (300, 300)
+        float y_glob; //from (0, 0) -> (300, 300)
+        bool x_flag; //if valid
+        bool y_flag; //if valid point
+    }Range_Coord;
 
-	typedef struct {
-		int16_t wallN; //how many cells away is a wall
-		int16_t wallE;
-		int16_t wallS;
-		int16_t wallW;
-	}Wall_Dist;
+    typedef struct {
+        int16_t wallN; //how many cells away is a wall
+        int16_t wallE;
+        int16_t wallS;
+        int16_t wallW;
+    }Wall_Dist;
 
-	typedef struct {
-		uint32_t tstamp; //timestamp
-		char id;
-		int angle;
-		float readingN;
-		float readingE;
-		float readingS;
-		float readingW;
-	}Scan_DataType;
+    typedef struct {
+        uint32_t tstamp; //timestamp
+        char id;
+        int angle;
+        float readingN;
+        float readingE;
+        float readingS;
+        float readingW;
+    }Scan_DataType;
 
-	RangeData(ARobot *robot);
-	~RangeData();
+    RangeData(ARobot *robot);
+    ~RangeData();
 
-	void storeCommand(char* buf);
-	int parseData();
-	int getPosition();
-        int getRangeOffset();
-	int getScan();
-	int setAngle(); //based on object's data
-        int getRangeShort();
-        int getRangeLong();
-	float getAngle();
-	float getAlpha();
-	//generated based on excel tests
-	inline float CorrectLongReading(float reading) {
-		return 159 + 177*reading - 3.26*pow(reading, 2);
-	};
+    void storeCommand(char* buf);
+    int parseData();
+    int getPosition();
+    int getRangeOffset();
+    int getScan();
+    int setAngle(); //based on object's data
+    int getRangeShort();
+    int getRangeLong();
+    float getAngle();
+    float getAlpha();
+    //generated based on excel tests
+    float CorrectLongReading(float reading) {
+        if(reading >= 1500) return 8190;
+        return 19.6 + 0.802*reading + 0.000118*pow(reading, 2);
+    }
 
-	Scan_DataType scan;
-	Range_DataType data;
-	Range_Coord coord;
-	Wall_Dist walls;
+    Scan_DataType scan;
+    Range_DataType data;
+    Range_Coord coord;
+    Wall_Dist walls;
 
 protected:
-	ARobot *myRobot;
+    ARobot *myRobot;
 private:
-	bool avalid_long; //alpha is valid for verification using long distance
-	bool avalid_short; //alpha is valid for verification using short distance
-	char m_command[128]; //stored command
-	int temp_dist; //temporary number
-        int numwallslong; //number of walls calculated (long distance)
-	uint8_t x_count; //count if the lasers don't see anything
-	uint8_t y_count;
-	float distance[4];
-	float temp_range[4]; //temporary number
-	float curr_yaw;
-	float alpha;
-	float angled;
+    bool avalid_long; //alpha is valid for verification using long distance
+    bool avalid_short; //alpha is valid for verification using short distance
+    char m_command[128]; //stored command
+    int temp_dist; //temporary number
+    int numwallslong; //number of walls calculated (long distance)
+    uint8_t x_count; //count if the lasers don't see anything
+    uint8_t y_count;
+    float distance[4];
+    float temp_range[4]; //temporary number
+    float curr_yaw;
+    float alpha;
+    float angled;
 };
 
 #endif // !_TEMP_DATA_H_

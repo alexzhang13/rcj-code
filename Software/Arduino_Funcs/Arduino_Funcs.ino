@@ -539,11 +539,11 @@ void Motor_Encoder()
     Serial.println(reading);
     return;
   }
-  if(abs(leftEncoder) > abs(rightEncoder)){
-    motorRight->setSpeed(right_spd + off_right); //correcting
+  if(abs(leftEncoder) < abs(rightEncoder)){
+    motorRight->setSpeed(right_spd + off_right); //corecting
     motorLeft->setSpeed(left_spd);
   } else {
-    motorRight->setSpeed(right_spd);
+    motorRight->setSpeed(right_spd); //take 
     motorLeft->setSpeed(left_spd + off_left);
   }
   //reading += millis(); reading += " m ";
