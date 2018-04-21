@@ -473,7 +473,7 @@ void sortCommands(String command)
        imu_queue = command;
        command = " "; //dequeue central queue
     } else { //not supposed to happen but if it somehow does
-       String reading = ""; reading += millis(); reading += " z Invalid Command -> Sent";
+       String reading = ""; reading += millis(); reading += " y Invalid Command -> Sent";
        Serial.println(reading);
        command = " "; //dequeue central queue
     }
