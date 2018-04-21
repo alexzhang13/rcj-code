@@ -80,10 +80,10 @@ bool distanceSwitch = true; //false meaning turn off
 bool motorSwitch = true; //false meaning turn off
 bool isMoving = false; //if the robot is running
 bool isTurning = false; //if the robot is turning
-int left_spd = 100; //left motor power
-int right_spd = 115; //right motor power
-int off_left = 10; //for Encoder() function, offset when left encoder is higher than right
-int off_right = 15; //for Encoder() function, offset when right encoder is higher than left
+int left_spd = 110; //left motor power
+int right_spd = 130; //right motor power
+int off_left = 20; //for Encoder() function, offset when left encoder is higher than right
+int off_right = 30; //for Encoder() function, offset when right encoder is higher than left
 float distance_mm = 0;
 volatile long int leftEncoder = 0; //left encoder
 volatile long int rightEncoder = 0; //right encoder
@@ -547,30 +547,24 @@ void Motor_Encoder()
 void Motor_Turn() //Turning encoders
 {
    if(abs(leftEncoder) < abs(rightEncoder)){
-    motorRight->setSpeed(left_spd + off_right); //corecting
+    motorRight->setSpeed(right_spd + off_right); //corecting
+    motorLeft->setSpeed(left_spd);
   } else {
-    motorRight->setSpeed(left_spd + off_left); //take 
+    motorRight->setSpeed(right_spd); //take 
+    motorLeft->setSpeed(left_spd + off_left);
   }
 }
 
 void Turn_Small(int dir) {
   isTurning = true;
   if(dir == 0) { //turn left
-    motorRight->setSpeed(120);
-    motorLeft->setSpeed(100);
     Motor_TurnLeft();
-    delay(1000);
+    delay(300);
     Motor_Stop();
-    motorRight->setSpeed(right_spd);
-    motorLeft->setSpeed(left_spd);
   } else { //turn right
-    motorRight->setSpeed(120);
-    motorLeft->setSpeed(100);
     Motor_TurnRight();
-    delay(1000);
+    delay(300);
     Motor_Stop();
-    motorRight->setSpeed(right_spd);
-    motorLeft->setSpeed(left_spd);
   }
   isTurning = false;
 }
@@ -580,28 +574,20 @@ void Mount_Sweep()
   String reading = "";
     // scan from 0 to 180 degrees
   mount_laser.attach(SERVO_MOUNT);
+  mount_laser.write(0);  
   reading += millis(); reading += " z";
   Serial.println(reading); //take a screenshot at this moment (tell pi
   delay(500);
   
-  for(int angle = 0; angle <= 180; angle++)  
-  {         
-    mount_laser.write(angle);  
-    delay(1);                       
-  } 
-  
+  mount_laser.write(180);
+  delay(1600);
   reading = "";
   reading += millis(); reading += " z";
-  Serial.println(reading); //take a screenshot at this moment (tell pi)
-  delay(500);
-
-  // now scan back from 180 to 0 degrees                            
-  for(int angle = 180; angle >= 0; angle--)  
-  {         
-    mount_laser.write(angle);       
-    delay(1);                   
-  }     
-  delay(50);       
+  Serial.println(reading); //take a screenshot at this moment (tell pi) 
+  delay(200);
+  
+  mount_laser.write(0);  
+  delay(1000);       
   mount_laser.detach();
 }
 
