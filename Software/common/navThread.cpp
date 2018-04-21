@@ -223,8 +223,8 @@ void NavThread::readCurrentMap(const char* filedir, const char* xmlname, ARobot 
 
 void NavThread::writeCurrentMap(const char* filedir, const char* xmlname, ARobot *robot, Navigate2D &nav_rt)
 {
-    std::string t = nav_rt.getCurTime();
-    std::string newfile = std::string(xmlname) + "_" + t + ".xml";
+    const char* t = nav_rt.getCurTime();
+    const char* newfile = xmlname + "_" + t + ".xml";
     nav_rt.writeMapFile(filedir, newfile);
     return;
 }
