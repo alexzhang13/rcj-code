@@ -411,7 +411,7 @@ void ARobot::CheckCorrection() {
 void ARobot::CorrectionFailed() { //if correction was faulty try to change
     //check if everything is good
     float currentError = rangeDataList[rangeDataList.size()-1].getRangeOffset();
-    printf("Current Error: %f\tPrevious Error: %f\n", currentError, this->correctionError);
+    printf("Current Error: %d\tPrevious Error: %d\n", currentError, this->correctionError);
 
     if(this->correctionDir == LEFT) {
         if(currentError < this->correctionError) { //correct direction
