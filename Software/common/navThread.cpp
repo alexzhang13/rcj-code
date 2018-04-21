@@ -33,7 +33,7 @@ void NavThread::run(void){
         case 3: //Idle
             if(myRobot->toMove){
                 sleep(1.0);
-                myRobot->CalcNextTile(true);
+                myRobot->CalcNextTile(false);
                 myRobot->toMove = false;
             }  else if(myRobot->correctionFailed) {
                 sleep(0.5);
@@ -190,8 +190,11 @@ void NavThread::readConfig(const char* filename, ARobot *robot)
     int ret = fscanf(datafile, "%d %d %f %f %d %d %d %d", &black_thresh, &silver_thresh, &threshLeft, &threshRight, &speed_left, &speed_right, &off_left, &off_right);
     robot->setTempThresh(threshLeft, threshRight);
     robot->setLightThresh(black_thresh, silver_thresh);
+    sleep(0.5);
     robot->setSpeed(speed_left, speed_right);
+    sleep(1);
     robot->setOffsetSpeed(off_left, off_right);
+    sleep(1);
     fclose(datafile);
 }
 
