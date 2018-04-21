@@ -36,7 +36,7 @@ void NavThread::run(void){
                 myRobot->CalcNextTile(false);
                 myRobot->toMove = false;
             }  else if(myRobot->correctionFailed) {
-                sleep(0.5);
+                sleep(1.0);
                 myRobot->CorrectionFailed();
             } else if(myRobot->isCorrecting) {
                 sleep(0.5);
