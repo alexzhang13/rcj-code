@@ -177,7 +177,7 @@ public:
     bool correctionFailed; // if correction fails
     bool isCorrecting; //is the robot in a state of correcting
     int dist_temp; //store temporary distance to travel
-    float correctionErrorChange; //delta error
+    int correctionErrorChange; //delta error
 
 protected:
     SerialPort *mPort;
