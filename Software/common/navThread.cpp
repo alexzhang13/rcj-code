@@ -295,6 +295,7 @@ int NavThread::WayPointNav(ARobot *robot, Navigate2D &nav_rt)
 
 void NavThread::DestroyThread()
 {
+    writeCurrentMap(this->xml_name, this->in_dir, this->myRobot, this->nav);
     myRobot->currState = ARobot::STOP;
     sleep(0.5);
     myRobot->StopMove();
