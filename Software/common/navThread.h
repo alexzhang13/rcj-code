@@ -56,7 +56,7 @@ private:
     const char* in_dir = "/home/alex/projects/rcj-code/Data";
     const char* rt_logname = "realtime/rcj_log";
     const char* xml_name = "map_data/mazemap";
-    const char* map_dir = "/home/alex/projects/rcj-code/Data/maze_map";
+    const char* map_dir = "/home/alex/projects/rcj-code/Data/maze_map/";
     const char* map_name = "map.xml";
 #endif
 };
