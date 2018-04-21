@@ -13,9 +13,6 @@ void NavThread::run(void){
         startNewMap(myRobot, nav);
 
     printf("Map Generation Started...\n");
-    myRobot->CalibrateIMU();
-    sleep(1);
-    myRobot->CalibrateIMU();
     myRobot->imuCalibrated = true; //turn on IMU flag
     sleep(1);
 
@@ -36,7 +33,7 @@ void NavThread::run(void){
         case 3: //Idle
             if(myRobot->toMove){
                 sleep(1.0);
-                myRobot->CalcNextTile(true);
+                myRobot->CalcNextTile(false);
                 myRobot->toMove = false;
             }  else if(myRobot->correctionFailed) {
                 sleep(0.5);
@@ -94,8 +91,6 @@ void NavThread::run(void){
             bot_waypts = myRobot->waypts.size();
             myRobot->currTile.x = myRobot->currTile.x_tovisit;
             myRobot->currTile.y = myRobot->currTile.y_tovisit;
-            sleep(1);
-            myRobot->CalibrateIMU();
 
             //nav.getCellbyIndex(myRobot->waypts[bot_waypts-1])->getCellGrid(myRobot->currTile.x, myRobot->currTile.y);
             nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]);
@@ -195,8 +190,11 @@ void NavThread::readConfig(const char* filename, ARobot *robot)
     int ret = fscanf(datafile, "%d %d %f %f %d %d %d %d", &black_thresh, &silver_thresh, &threshLeft, &threshRight, &speed_left, &speed_right, &off_left, &off_right);
     robot->setTempThresh(threshLeft, threshRight);
     robot->setLightThresh(black_thresh, silver_thresh);
+    sleep(0.5);
     robot->setSpeed(speed_left, speed_right);
+    sleep(1);
     robot->setOffsetSpeed(off_left, off_right);
+    sleep(1);
     fclose(datafile);
 }
 
