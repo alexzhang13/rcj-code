@@ -532,8 +532,8 @@ void Motor_Encoder()
     Serial.println(reading);
     return;
   }
-  if(abs(leftEncoder) < abs(rightEncoder)){
-    motorRight->setSpeed(right_spd + off_right); //corecting
+  if(abs(leftEncoder) > abs(rightEncoder)){
+    motorRight->setSpeed(right_spd + off_right); //correcting
     motorLeft->setSpeed(left_spd);
   } else {
     motorRight->setSpeed(right_spd); //take 
@@ -546,8 +546,8 @@ void Motor_Encoder()
 
 void Motor_Turn() //Turning encoders
 {
-   if(abs(leftEncoder) < abs(rightEncoder)){
-    motorRight->setSpeed(right_spd + off_right); //corecting
+   if(abs(leftEncoder) > abs(rightEncoder)){
+    motorRight->setSpeed(right_spd + off_right); //correcting
     motorLeft->setSpeed(left_spd);
   } else {
     motorRight->setSpeed(right_spd); //take 
