@@ -101,6 +101,7 @@ void NavThread::run(void){
                 //sleep(2.5); //time for laser
                 //myRobot->CheckVictimVisual();
 
+                myRobot->CheckLightTile();
                 if(myRobot->CheckRamp()) { //is ramp
                     myRobot->MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
                     break;
