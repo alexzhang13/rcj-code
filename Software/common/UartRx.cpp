@@ -26,12 +26,16 @@ static std::string getCurDate()
     cur_date = std::to_string(system_time.wYear) + "_" +
             std::to_string(system_time.wMonth) + "_" +
             std::to_string(system_time.wDay);
+    const char* leftcapture_file = "C:/projects/StormingRobots2017/rcj-code/Software/letter/randomFolder/capL.jpg";
+    const char* rightcapture_file = "C:/projects/StormingRobots2017/rcj-code/Software/letter/randomFolder/capR.jpg";
 #else
     std::stringstream currentDateTime;
     // current date/time based on current system
     time_t ttNow = time(0);
     struct tm * now = localtime( & ttNow );
     cur_date = std::to_string(now->tm_year + 1900) + std::to_string(now->tm_mon + 1) + 		std::to_string(now->tm_mday);
+    const char* leftcapture_file = "/home/alex/projects/rcj-code/Software/letter/randomFolder/capL.jpg";
+    const char* rightcapture_file = "/home/alex/projects/rcj-code/Software/letter/randomFolder/capR.jpg";
 #endif
     return cur_date;
 }
@@ -75,7 +79,12 @@ void UartRx::run(void){
         } else if (c == 'y') {
             storeScan(mBuf);
         } else if (c == 'z') {
-            myRobot->picam.frameCapture("./letter/randomFolder/img.jpg");
+            if(camFlip) {
+                myRobot->picam.frameCapture(leftcapture_file);
+            } else {
+                myRobot->picam.frameCapture(rightcapture_file);
+            }
+            camFlip = !camFlip;
         } else if (c == 'm') {
             myRobot->currState = ARobot::DATA; //IDLE
             if(myRobot->backingBlack) {
