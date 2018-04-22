@@ -101,11 +101,13 @@ void NavThread::run(void){
                 //sleep(2.5); //time for laser
                 //myRobot->CheckVictimVisual();
 
+                myRobot->CheckLightTile();
                 if(myRobot->CheckRamp()) { //is ramp
                     myRobot->MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
                     break;
                 }
                 if(myRobot->currTileLight == ARobot::SILVER) {
+                    writeCurrentMap(this->map_dir, this->map_name, this->myRobot, this->nav);
                     myRobot->LEDLight(5000);
                     sleep(5);
                     //save state
@@ -221,8 +223,6 @@ void NavThread::readCurrentMap(const char* filedir, const char* xmlname, ARobot 
 
 void NavThread::writeCurrentMap(const char* filedir, const char* xmlname, ARobot *robot, Navigate2D &nav_rt)
 {
-    std::string t = nav_rt.getCurTime();
-    std::string newfile = std::string(xmlname) + "_" + t;
     nav_rt.writeMapFile(filedir, xmlname);
     return;
 }
@@ -257,6 +257,7 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
     if(nav_rt.getNextCell()->waypts.size() >= 2) {
         robot->waypts = nav_rt.getNextCell()->waypts; //waypts
     } else {
+        writeCurrentMap(this->map_dir, this->map_name, this->myRobot, this->nav);
         robot->currState = ARobot::DONE;
         //robot->picam.close();
         return;
@@ -295,6 +296,7 @@ int NavThread::WayPointNav(ARobot *robot, Navigate2D &nav_rt)
 
 void NavThread::DestroyThread()
 {
+    writeCurrentMap(this->map_dir, this->map_name, this->myRobot, this->nav);
     myRobot->currState = ARobot::STOP;
     sleep(0.5);
     myRobot->StopMove();

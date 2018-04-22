@@ -49,11 +49,15 @@ private:
     const char* in_dir = "C:/projects/StormingRobots2017/Data";
     const char* rt_logname = "realtime/rcj_log";
     const char* xml_name = "map_data/mazemap";
+    const char* map_dir = "C:/projects/StormingRobots2017/Data/maze_map";
+    const char* map_name = "map.xml";
 #else
     const char* fileConfig = "/home/alex/projects/rcj-code/Software/common/Mem/config.txt";
     const char* in_dir = "/home/alex/projects/rcj-code/Data";
     const char* rt_logname = "realtime/rcj_log";
     const char* xml_name = "map_data/mazemap";
+    const char* map_dir = "/home/alex/projects/rcj-code/Data/maze_map";
+    const char* map_name = "map.xml";
 #endif
 };
 #endif // _NAV_THREAD_h_
