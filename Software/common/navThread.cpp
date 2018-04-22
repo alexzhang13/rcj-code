@@ -114,8 +114,8 @@ void NavThread::run(void){
                     //save state
                 }
                 //check visual victim
-                if(!nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim()) { //get currCell
-                    switch(myRobot->ProcessImage_Victim()) {
+                cout << "Victim Status: " << myRobot->isVictim << endl;
+                if(!myRobot->isVictim) { //get currCell
                     if(myRobot->victim.letter == 'H') { //H
                         myRobot->dropCnt = 2;
                     } else if (myRobot->victim.letter == 'S') { //S
@@ -123,6 +123,7 @@ void NavThread::run(void){
                     } else { //U or nothing
                         myRobot->dropCnt = 0;
                     }
+                    switch(3/*myRobot->ProcessImage_Victim()*/) {
                     case 0: //drop left
                         myRobot->victimLeft = true;
                         myRobot->TurnDistance(90, ARobot::RIGHT); //turn left to drop from back onto right side
