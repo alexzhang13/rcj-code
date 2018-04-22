@@ -33,6 +33,7 @@ bool _PiCamera_::cameraOpen(int32_t width, int32_t height)
     }
     //m_camera.setWidth ( m_width );
     //m_camera.setHeight ( m_height );
+    m_camera.setBrightness(70);
 
     //Open camera
     printf("Opening Camera...\n");
