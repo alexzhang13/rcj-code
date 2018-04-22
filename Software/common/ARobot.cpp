@@ -544,7 +544,7 @@ int ARobot::ProcessImage_Victim() {
     this->pystream = popen(pyLeft, "r" );
     fgets(leftVVictim, 1, pystream);
     fprintf(stdout, "%c", this->leftVVictim[0]);
-    pclose(f);
+    pclose(pystream);
 
     if(leftVVictim[0] == 'H' || leftVVictim[0] == 'S' || leftVVictim[0] == 'U') {
         this->victim.letter = leftVVictim[0];
@@ -558,7 +558,7 @@ int ARobot::ProcessImage_Victim() {
     this->pystream = popen(pyRight, "r" );
     fgets(rightVVictim, 1, pystream);
     fprintf(stdout, "%c", this->rightVVictim[0]);
-    pclose(f);
+    pclose(pystream);
 
     if(rightVVictim[0] == 'H' || rightVVictim[0] == 'S' || rightVVictim[0] == 'U') {
         this->victim.letter = rightVVictim[0];
