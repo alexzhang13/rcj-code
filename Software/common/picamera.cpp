@@ -58,7 +58,7 @@ bool _PiCamera_::cameraOpen(int32_t width, int32_t height)
 	return true;
 }
 
-bool _PiCamera_::frameCapture(char* fileName)
+bool _PiCamera_::frameCapture(std::string fileName)
 {
 	cv::Mat img;
 	m_camera.grab();
