@@ -68,7 +68,7 @@ public:
     //generated based on excel tests
     float CorrectLongReading(float reading) {
         if(reading >= 1500) return 8190;
-        return 6.49 + 0.911*reading + 0.0000416*pow(reading, 2);
+        return 4.2 + 0.918*reading + 0.0000372*pow(reading, 2);
     }
 
     Scan_DataType scan;
