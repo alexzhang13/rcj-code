@@ -5,7 +5,7 @@
 #include <string.h>
 #include "IMUData.h"
 
-#define OFFSET 20
+#define OFFSET 28
 #define PI 3.1415926535
 #define SHORTOFFSET 30.0
 #define LONGOFFSET 55.0
@@ -76,9 +76,9 @@ int RangeData::getRangeLong() {
 //pos or negative
 int RangeData::getRangeOffset() {
     if(avalid_short) {
-        return data.laserS_a + data.laserS_b + 20 - 300;
+        return data.laserS_a + data.laserS_b + OFFSET - 300;
     } else if(avalid_long) {
-        return data.laserL_a + data.laserL_b + 20 - this->numwallslong*300;
+        return data.laserL_a + data.laserL_b + OFFSET - this->numwallslong*300;
     }
 }
 
@@ -134,7 +134,7 @@ int RangeData::getPosition()
     }
     //3.1415926535 * 90 = 282.743338815
     if(data.laserL_a <= 1200) { //check if reading is valid LONG FRONT
-        temp_range[0] = (data.laserL_a-30.0) * std::abs(cos((3.1415926535*curr_yaw)/180.0)); //-18.0
+        temp_range[0] = (data.laserL_a-10) * std::abs(cos((3.1415926535*curr_yaw)/180.0)); //-18.0
         temp_dist = (int)temp_range[0]/300;
         distance[0] = temp_range[0] - temp_dist*300;
         if(data.laserL_a >= 900) avalid_long = false;
@@ -144,7 +144,7 @@ int RangeData::getPosition()
         avalid_long = false;
     }
     if(data.laserL_b <= 1200) { //check if reading is valid LONG BACK
-        temp_range[2] = (data.laserL_b+30.0) * std::abs(cos((3.1415926535*curr_yaw)/180.0));
+        temp_range[2] = (data.laserL_b+37.5) * std::abs(cos((3.1415926535*curr_yaw)/180.0));
         temp_dist = (int)temp_range[2]/300;
         distance[2] = temp_range[2] - temp_dist*300;
         if(data.laserL_a >= 900) avalid_long = false;
