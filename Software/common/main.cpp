@@ -20,7 +20,7 @@
 using namespace std;
 
 void spawnThread(Thread *currThread,  ARobot *myRobot);
-void stopThread(Thread *currThread);
+void stopThread(Thread *currThread, ARobot *myRobot);
 
 int main(int argc,char **argv){
 #ifdef WIN32
