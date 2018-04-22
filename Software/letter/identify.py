@@ -124,7 +124,7 @@ def main2():
     imgBlurred = cv2.GaussianBlur(imgGray, (11, 11), 0)
     imgThresh = cv2.adaptiveThreshold(imgBlurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, BLOCKSIZE, C)
     imgThreshCopy = imgThresh.copy()
-    _, contours, _ = cv2.findContours(imgThreshCopy, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(imgThreshCopy, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     cv2.imwrite("randomFolder/gray.jpg", imgThresh)
 
