@@ -12,8 +12,8 @@ void NavThread::run(void){
         startNewMap(myRobot, nav);
 
     printf("Map Generation Started...\n");
-    myRobot->picam.cameraOpen(720, 480);
-    sleep(1);
+    cout << "PiCamera: " << myRobot->picam.cameraOpen(720, 480) << endl;
+    sleep(3);
     myRobot->imuCalibrated = true; //turn on IMU flag
 
     while(1) {
