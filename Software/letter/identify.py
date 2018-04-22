@@ -135,14 +135,14 @@ def main2():
     topROI, bottomROI = genTopAndBottom(imgThresh, contourData)
     result = solveLetter(topROI, bottomROI)
     exists = isBackground(maxContour, imgOriginal, imgGray)
-    ratio = contourData.rectHeight/contourData.rectHeight
+    ratio = contourData.rectHeight/contourData.rectWidth
     if result == -1:
-        print (str(1) + result)
+        print (str(1) + str(result))
     elif cv2.contourArea(maxContour) < MIN_SIZE:
         print (str(2) + result)
     elif exists == -1:
         print (str(3) + result)
-    elif ratio < 0.9 or ratio > 1.6:
+    elif ratio < 0.9 or ratio > 1.9:
         print (str(4) + result)
     elif contourData.touchingEdge():
         print (str(5) + result)
