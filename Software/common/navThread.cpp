@@ -3,7 +3,6 @@
 using namespace std;
 
 void NavThread::run(void){
-
     sleep(1);
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     printf("Config File Read...\n");
@@ -12,7 +11,6 @@ void NavThread::run(void){
     else
         startNewMap(myRobot, nav);
 
-    myRobot->picam.cameraOpen(720, 480);
     printf("Map Generation Started...\n");
     myRobot->imuCalibrated = true; //turn on IMU flag
     sleep(1);
@@ -94,14 +92,12 @@ void NavThread::run(void){
             myRobot->currTile.x = myRobot->currTile.x_tovisit;
             myRobot->currTile.y = myRobot->currTile.y_tovisit;
 
-            //nav.getCellbyIndex(myRobot->waypts[bot_waypts-1])->getCellGrid(myRobot->currTile.x, myRobot->currTile.y);
             nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]);
             printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
             sleep(1);
             if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
                 myRobot->SpinLaser();
                 sleep(3); //time for laser
-                //myRobot->CheckVictimVisual();
 
                 myRobot->CheckLightTile();
                 if(myRobot->CheckRamp()) { //is ramp
@@ -117,6 +113,7 @@ void NavThread::run(void){
                 //check visual victim
                 cout << "Victim Status: " << myRobot->isVictim << endl;
                 if(!myRobot->isVictim) { //get currCell
+                    switch(myRobot->ProcessImage_Victim()) {
                     if(myRobot->victim.letter == 'H') { //H
                         myRobot->dropCnt = 2;
                     } else if (myRobot->victim.letter == 'S') { //S
@@ -124,21 +121,20 @@ void NavThread::run(void){
                     } else { //U or nothing
                         myRobot->dropCnt = 0;
                     }
-                    switch(3/*myRobot->ProcessImage_Victim()*/) {
                     case 0: //drop left
                         myRobot->victimLeft = true;
-                        myRobot->TurnDistance(90, ARobot::RIGHT); //turn left to drop from back onto right side
                         myRobot->isVictim = true;
+                        myRobot->TurnDistance(90, ARobot::RIGHT); //turn left to drop from back onto right side
                         break;
                     case 1: //drop front
                         myRobot->victimFront = true;
-                        myRobot->TurnDistance(180, ARobot::RIGHT); //turn left to drop from back onto right side
                         myRobot->isVictim = true;
+                        myRobot->TurnDistance(180, ARobot::RIGHT); //turn left to drop from back onto right side
                         break;
                     case 2: //drop right
                         myRobot->victimRight = true;
-                        myRobot->TurnDistance(90, ARobot::LEFT); //turn left to drop from back onto right side
                         myRobot->isVictim = true;
+                        myRobot->TurnDistance(90, ARobot::LEFT); //turn left to drop from back onto right side
                         break;
                     default:
                         switch(myRobot->CheckVictimTemp()) {
@@ -147,15 +143,15 @@ void NavThread::run(void){
                             break;
                         case 1: //drop or go back to calculating
                             myRobot->victimRight = true;
-                            myRobot->TurnDistance(90, ARobot::LEFT); //turn left to drop from back onto right side
                             myRobot->dropCnt = 1;
                             myRobot->isVictim = true;
+                            myRobot->TurnDistance(90, ARobot::LEFT); //turn left to drop from back onto right side
                             break;
                         case 2:
                             myRobot->victimLeft = true;
-                            myRobot->TurnDistance(90, ARobot::RIGHT); //turn right to drop from back onto left side
                             myRobot->dropCnt = 1;
                             myRobot->isVictim = true;
+                            myRobot->TurnDistance(90, ARobot::RIGHT); //turn right to drop from back onto left side
                             break;
                         default:
                             break;

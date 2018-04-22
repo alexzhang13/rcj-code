@@ -44,6 +44,7 @@ protected:
     ARobot *myRobot;
 private:
     Navigate2D nav; //main map class obj
+
 #ifdef WIN32
     const char* fileConfig = "C:/projects/StormingRobots2017/Data/Mem/config.txt";
     const char* in_dir = "C:/projects/StormingRobots2017/Data";

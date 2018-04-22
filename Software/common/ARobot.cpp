@@ -26,6 +26,8 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     this->initTurnRec = false;
     this->isDropped = false;
     this->isVictim = false;
+    this->leftVVictim = '0';
+    this->rightVVictim = '0';
     this->mlen_imu = 0;
     this->mlen_light = 0;
     this->mlen_range = 0;
@@ -526,63 +528,44 @@ int ARobot::CheckVictimTemp()
 }
 
 void ARobot::CheckVictimVisual() {
-    for(int i = 0; i < picam.getImageList()->size(); i++) {
-        imgList.push_back(picam.getImageList()->at(i).clone());
-    }
-    printf("List Size: %d\n", imgList.size());
 }
 
 /**
  * Tester Function
  */
 void ARobot::DisplayVictimVisual() {
-    if(imgList.size() == 0) return;
-    cv::imwrite("img_disp.jpg", picam.getImageList()[0]);
-    /*for(int i = 0; i < imgList.size(); i++) {
-                string str = "img_disp" + std::to_string(i) + ".jpg";
-                cv::imwrite(str, imgList[i]);
-        }*/
+
 }
 
 int ARobot::ProcessImage_Victim() {
-    victim.letter = '0'; //reset
-    victim.m_isVictim = false;
+    this->victim.m_isVictim = false;
 
-    /*for(int i = 0; i < imgList.size(); i++) {
-        m_letter = knn.detectVictim(imgList[i]);
-        if(m_letter != '0' && victim.m_isVictim == true) { //error, not supposed to happen, means there is a mistake
-            printf("DNE\n");
-            victim.m_isVictim = false;
-            isVictim = false;
-            break;
-        }
-        if(m_letter != '0') {
-            victim.letter = m_letter;
-            if(i == 0) {
-                printf("Left\n");
-                victim.dir_victim = LEFT;
-            } else if(i == 1) {
-                printf("Right\n");
-                victim.dir_victim = FRONT;
-            } else {
-                printf("Front\n");
-                victim.dir_victim = RIGHT;
-            }
-            victim.m_isVictim = true;
-            isVictim = true;
-        }
+    //Check LEFT Visual Victim First
+    this->pystream = popen(pyLeft, "r" );
+    fgets(leftVVictim, 1, f);
+    fprintf(stdout, "%c", this->leftVVictim);
+    pclose(f);
+
+    if(leftVVictim == 'H' || leftVVictim == 'S' || leftVVictim == 'U') {
+        this->victim.letter = leftVVictim;
+        printf("Left Victim Detected with Letter: %c\n", leftVVictim);
+        this->victim.dir_victim = LEFT;
+        this->victim.m_isVictim = true;
+        return 0;
     }
-    picam.resetFrameBuffers();
-    ClearImgList();*/
 
-    if(victim.m_isVictim == true) {
-        if(victim.dir_victim == RIGHT) {
-            return 2;
-        } else if (victim.dir_victim == LEFT) {
-            return 0;
-        } else if (victim.dir_victim == FRONT) {
-            return 1;
-        }
+    //Check RIGHT Visual Victim First
+    this->pystream = popen(pyRight, "r" );
+    fgets(rightVVictim, 1, f);
+    fprintf(stdout, "%c", this->rightVVictim);
+    pclose(f);
+
+    if(rightVVictim == 'H' || rightVVictim == 'S' || rightVVictim = 'U') {
+        this->victim.letter = rightVVictim;
+        printf("Right Victim Detected with Letter: %c\n", rightVVictim);
+        this->victim.dir_victim = RIGHT;
+        this->victim.m_isVictim = true;
+        return 2;
     }
     return -1;
 }

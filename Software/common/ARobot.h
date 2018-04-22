@@ -126,7 +126,7 @@ public:
     void DisplayVictimVisual();
 
     /*Inline Functions*/
-    float getSTD(int* arr, int avg) {
+    inline float getSTD(int* arr, int avg) {
         float total = 0;
         //no break condition for size of arr = 0
         for(int i=0; i<sizeof(arr)/sizeof(arr[0]); i++)
@@ -178,12 +178,17 @@ public:
     bool isCorrecting; //is the robot in a state of correcting
     int dist_temp; //store temporary distance to travel
     int correctionErrorChange; //delta error
+    FILE *pystream; //stream for extracting letter
+    char leftVVictim; //character for left
+    char rightVVictim; //character for right
 
 protected:
     SerialPort *mPort;
 
 private:
     char m_letter;
+    char* pyLeft = "python /home/alex/projects/rcj-code/Software/letter/identify.py /home/alex/projects/rcj-code/Software/letter/randomFolder/capL.jpg";
+    char* pyRight = "python /home/alex/projects/rcj-code/Software/letter/identify.py /home/alex/projects/rcj-code/Software/letter/randomFolder/capR.jpg";
     float threshLeft; //Left Temperature Threshold
     float threshRight; //Right Temperature Threshold
     int silver_thresh; //Silver Tile Threshold
