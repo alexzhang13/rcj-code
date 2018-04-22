@@ -120,7 +120,7 @@ void spawnThread(Thread *currThread, ARobot *myRobot) {
 
 void stopThread(Thread *currThread, ARobot *myRobot) {
     delete currThread;
-    //myRobot->picam.close();
+    myRobot->picam.close();
     myRobot->Reset();
 }
 
