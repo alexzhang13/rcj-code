@@ -292,7 +292,7 @@ void ARobot::CalcNextTile(bool first)
 
     //Move on to actual movement
     currOrientation = nextDir;
-    if(!first && (int)angle < 4)
+    if(!first)
         toTurn = 0;
     TileTransition(dist);
 
