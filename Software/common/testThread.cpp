@@ -14,7 +14,7 @@ void TestThread::run(void){
     FILE * f = popen( "python /home/alex/projects/rcj-code/Software/letter/identify.py /home/alex/projects/rcj-code/Software/letter/randomFolder/img.jpg", "r" );
     char* buf;
     fgets(buf, 10, f);
-    fprintf( stdout, "%c", buf[0]);
+    //fprintf( stdout, "%c", buf[0]);
     pclose( f );
     sleep(1);
 
