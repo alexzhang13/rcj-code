@@ -543,12 +543,12 @@ int ARobot::ProcessImage_Victim() {
     //Check LEFT Visual Victim First
     this->pystream = popen(pyLeft, "r" );
     fgets(leftVVictim, 1, pystream);
-    fprintf(stdout, "%c", this->leftVVictim);
+    fprintf(stdout, "%c", this->leftVVictim[0]);
     pclose(f);
 
-    if(leftVVictim == 'H' || leftVVictim == 'S' || leftVVictim == 'U') {
-        this->victim.letter = leftVVictim;
-        printf("Left Victim Detected with Letter: %c\n", leftVVictim);
+    if(leftVVictim[0] == 'H' || leftVVictim[0] == 'S' || leftVVictim[0] == 'U') {
+        this->victim.letter = leftVVictim[0];
+        printf("Left Victim Detected with Letter: %c\n", leftVVictim[0]);
         this->victim.dir_victim = LEFT;
         this->victim.m_isVictim = true;
         return 0;
@@ -557,12 +557,12 @@ int ARobot::ProcessImage_Victim() {
     //Check RIGHT Visual Victim First
     this->pystream = popen(pyRight, "r" );
     fgets(rightVVictim, 1, pystream);
-    fprintf(stdout, "%c", this->rightVVictim);
+    fprintf(stdout, "%c", this->rightVVictim[0]);
     pclose(f);
 
-    if(rightVVictim == 'H' || rightVVictim == 'S' || rightVVictim == 'U') {
-        this->victim.letter = rightVVictim;
-        printf("Right Victim Detected with Letter: %c\n", rightVVictim);
+    if(rightVVictim[0] == 'H' || rightVVictim[0] == 'S' || rightVVictim[0] == 'U') {
+        this->victim.letter = rightVVictim[0];
+        printf("Right Victim Detected with Letter: %c\n", rightVVictim[0]);
         this->victim.dir_victim = RIGHT;
         this->victim.m_isVictim = true;
         return 2;

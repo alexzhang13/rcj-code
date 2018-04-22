@@ -11,14 +11,14 @@ void TestThread::run(void){
     myRobot->picam.close();
 
     FILE * f = popen( "python /home/alex/projects/rcj-code/Software/letter/identify.py /home/alex/projects/rcj-code/Software/letter/randomFolder/img.jpg", "r" );
-    char buf;
+    char* buf;
     fgets(buf, 1, f);
-    fprintf( stdout, "%c", buf  );
+    fprintf( stdout, "%c", buf[0]);
     pclose( f );
     sleep(1);
 
     while(1) {
-        printf("%c\n", buf);
+        printf("%c\n", buf[0]);
         sleep(8);
     }
     return;
