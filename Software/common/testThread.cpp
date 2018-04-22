@@ -12,10 +12,10 @@ void TestThread::run(void){
     printf("Capture 1\n");
 
     FILE * f = popen( "python /home/alex/projects/rcj-code/Software/letter/identify.py /home/alex/projects/rcj-code/Software/letter/randomFolder/img.jpg", "r" );
-    char buf[ 150 ];
-    fgets(buf, 150, f);
-    fprintf( stdout, "%s", buf  );
-    pclose( f );
+    char buf[ 10 ];
+    while( fgets( buf, 10,  f ) ) {
+        fprintf( stdout, "%s", buf  );
+    }
     myRobot->picam.close();
 
     sleep(1);
