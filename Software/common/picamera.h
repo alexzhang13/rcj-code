@@ -24,7 +24,7 @@ public:
 
 	bool cameraOpen(int32_t width, int32_t height);
 
-        bool frameCapture(char* fileName);
+        bool frameCapture(std::string fileName);
 
 	bool videoCapture();
 
