@@ -12,8 +12,9 @@ void NavThread::run(void){
         startNewMap(myRobot, nav);
 
     printf("Map Generation Started...\n");
+    myRobot->picam.cameraOpen(720, 480);
+    sleep(2);
     myRobot->imuCalibrated = true; //turn on IMU flag
-    sleep(1);
 
     while(1) {
         switch(myRobot->currState) {

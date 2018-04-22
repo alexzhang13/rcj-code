@@ -542,7 +542,7 @@ int ARobot::ProcessImage_Victim() {
 
     //Check LEFT Visual Victim First
     this->pystream = popen(pyLeft, "r" );
-    fgets(leftVVictim, 1, pystream);
+    fgets(leftVVictim, 10, pystream);
     fprintf(stdout, "%c", this->leftVVictim[0]);
     pclose(pystream);
 
@@ -556,7 +556,7 @@ int ARobot::ProcessImage_Victim() {
 
     //Check RIGHT Visual Victim First
     this->pystream = popen(pyRight, "r" );
-    fgets(rightVVictim, 1, pystream);
+    fgets(rightVVictim, 10, pystream);
     fprintf(stdout, "%c", this->rightVVictim[0]);
     pclose(pystream);
 

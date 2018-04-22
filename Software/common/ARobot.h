@@ -179,8 +179,8 @@ public:
     int dist_temp; //store temporary distance to travel
     int correctionErrorChange; //delta error
     FILE *pystream; //stream for extracting letter
-    char* leftVVictim; //character for left
-    char* rightVVictim; //character for right
+    char leftVVictim[10]; //character for left
+    char rightVVictim[10]; //character for right
 
 protected:
     SerialPort *mPort;
