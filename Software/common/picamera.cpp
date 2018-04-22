@@ -55,13 +55,13 @@ bool _PiCamera_::frameCapture(std::string fileName)
     //capture
     m_camera.grab();
     //allocate memory
-    unsigned char *data=new unsigned char[m_camera.getImageTypeSize (raspicam::RASPICAM_FORMAT_IGNORE)];
+    unsigned char *data=new unsigned char[m_camera.getImageTypeSize (raspicam::RASPICAM_FORMAT_RGB)];
     //extract the image in rgb format
     m_camera.retrieve (data, raspicam::RASPICAM_FORMAT_RGB);//get camera image
     //save
     std::ofstream outFile (fileName,std::ios::binary );
     outFile<<"P6\n" <<m_camera.getWidth() << " " << m_camera.getHeight() <<" 255\n";
-    outFile.write((char*)data, m_camera.getImageTypeSize(raspicam::RASPICAM_FORMAT_IGNORE));
+    outFile.write((char*)data, m_camera.getImageTypeSize(raspicam::RASPICAM_FORMAT_RGB));
     cv::imshow("Display Image", img);
     delete data;
     return true;
