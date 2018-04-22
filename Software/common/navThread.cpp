@@ -115,8 +115,6 @@ void NavThread::run(void){
                 cout << "Victim Status: " << myRobot->isVictim << endl;
                 if(!myRobot->isVictim) { //get currCell
                     int i = myRobot->ProcessImage_Victim();
-                    sleep(2);
-                    cout << "Delayed..." << endl;
                     switch(i) {
                     if(myRobot->victim.letter == 'H') { //H
                         myRobot->dropCnt = 2;
