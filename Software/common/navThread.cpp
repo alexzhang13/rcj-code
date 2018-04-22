@@ -98,8 +98,8 @@ void NavThread::run(void){
             printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
             sleep(1);
             if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
-                //myRobot->SpinLaser();
-                //sleep(2.5); //time for laser
+                myRobot->SpinLaser();
+                sleep(3); //time for laser
                 //myRobot->CheckVictimVisual();
 
                 myRobot->CheckLightTile();
