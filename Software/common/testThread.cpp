@@ -4,6 +4,7 @@ using namespace std;
 
 void TestThread::run(void){
     printf("Test Thread Started...\n");
+    myRobot->picam.cameraOpen(720, 480);
     sleep(3);
     myRobot->picam.frameCapture("/home/alex/projects/rcj-code/Software/letter/randomFolder/img.jpg");
     sleep(1);

@@ -99,9 +99,8 @@ int main(int argc,char **argv){
  */
 void spawnThread(Thread *currThread, ARobot *myRobot) {
     int currChoice = digitalRead(5) + digitalRead(4)*2;
-    myRobot->picam.cameraOpen(720, 480);
+    //myRobot->picam.cameraOpen(720, 480);
     printf("PICam Init Passed...\n");
-    sleep(2);
 
     switch(currChoice) {
     case 0: //0 0
@@ -121,7 +120,7 @@ void spawnThread(Thread *currThread, ARobot *myRobot) {
 
 void stopThread(Thread *currThread, ARobot *myRobot) {
     delete currThread;
-    myRobot->picam.close();
+    //myRobot->picam.close();
     myRobot->Reset();
 }
 
