@@ -292,7 +292,7 @@ void ARobot::CalcNextTile(bool first)
 
     //Move on to actual movement
     currOrientation = nextDir;
-    if(!first)
+    if(!first && (int)angle < 4)
         toTurn = 0;
     TileTransition(dist);
 
@@ -300,7 +300,7 @@ void ARobot::CalcNextTile(bool first)
 
 void ARobot::TileTransition(int32_t dist)
 {
-    if(abs(toTurn) > 5.0f) { //ignore smaller angles
+    if(abs(toTurn) > 3.0f) { //ignore smaller angles
         TurnDistance((int)abs(toTurn), (toTurn > 0) ? LEFT : RIGHT); //left is positive for IMU
         dist_temp = dist;
         toMove = true;
