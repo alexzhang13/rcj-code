@@ -123,7 +123,7 @@ def main2():
     imgBlurred = cv2.GaussianBlur(imgGray, (11, 11), 0)
     imgThresh = cv2.adaptiveThreshold(imgBlurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, BLOCKSIZE, C)
     imgThreshCopy = imgThresh.copy()
-    _, contours, _ = cv2.findContours(imgThreshCopy, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(imgThreshCopy, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     if len(contours) > 0:
         maxContour = findContour(contours)
@@ -135,14 +135,14 @@ def main2():
     topROI, bottomROI = genTopAndBottom(imgThresh, contourData)
     result = solveLetter(topROI, bottomROI)
     exists = isBackground(maxContour, imgOriginal, imgGray)
-    ratio = contourData.rectHeight/contourData.rectHeight
+    ratio = contourData.rectHeight/contourData.rectWidth
     if result == -1:
-        print (str(1) + result)
+        print (str(1) + str(result))
     elif cv2.contourArea(maxContour) < MIN_SIZE:
         print (str(2) + result)
     elif exists == -1:
         print (str(3) + result)
-    elif ratio < 0.9 or ratio > 1.6:
+    elif ratio < 0.9 or ratio > 1.9:
         print (str(4) + result)
     elif contourData.touchingEdge():
         print (str(5) + result)

@@ -31,6 +31,9 @@ bool _PiCamera_::cameraOpen(int32_t width, int32_t height)
         m_width = width;
         m_height = height;
     }
+    m_camera.setWidth ( m_width );
+    m_camera.setHeight ( m_height );
+    m_camera.setBrightness (60);
 
     //Open camera
     printf("Opening Camera...\n");
@@ -60,7 +63,6 @@ bool _PiCamera_::frameCapture(std::string fileName)
     std::ofstream outFile (fileName,std::ios::binary );
     outFile<<"P6\n" <<m_camera.getWidth() << " " << m_camera.getHeight() <<" 255\n";
     outFile.write((char*)data, m_camera.getImageTypeSize(raspicam::RASPICAM_FORMAT_RGB));
-    cout<<"Image saved at raspicam_image.ppm"<<endl;
     delete data;
     return true;
 }
