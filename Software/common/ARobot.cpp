@@ -26,8 +26,6 @@ ARobot::ARobot(SerialPort *port) :mPort(port)
     this->initTurnRec = false;
     this->isDropped = false;
     this->isVictim = false;
-    this->leftVVictim = "0";
-    this->rightVVictim = "0";
     this->mlen_imu = 0;
     this->mlen_light = 0;
     this->mlen_range = 0;
