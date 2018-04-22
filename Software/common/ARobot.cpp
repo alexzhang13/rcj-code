@@ -542,7 +542,7 @@ int ARobot::ProcessImage_Victim() {
 
     //Check LEFT Visual Victim First
     this->pystream = popen(pyLeft, "r" );
-    fgets(leftVVictim, 1, f);
+    fgets(leftVVictim, 1, pystream);
     fprintf(stdout, "%c", this->leftVVictim);
     pclose(f);
 
@@ -556,11 +556,11 @@ int ARobot::ProcessImage_Victim() {
 
     //Check RIGHT Visual Victim First
     this->pystream = popen(pyRight, "r" );
-    fgets(rightVVictim, 1, f);
+    fgets(rightVVictim, 1, pystream);
     fprintf(stdout, "%c", this->rightVVictim);
     pclose(f);
 
-    if(rightVVictim == 'H' || rightVVictim == 'S' || rightVVictim = 'U') {
+    if(rightVVictim == 'H' || rightVVictim == 'S' || rightVVictim == 'U') {
         this->victim.letter = rightVVictim;
         printf("Right Victim Detected with Letter: %c\n", rightVVictim);
         this->victim.dir_victim = RIGHT;
