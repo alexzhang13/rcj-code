@@ -115,14 +115,19 @@ void NavThread::run(void){
                 cout << "Victim Status: " << myRobot->isVictim << endl;
                 if(!myRobot->isVictim) { //get currCell
                     int i = myRobot->ProcessImage_Victim();
-                    sleep(4);
+                    sleep(2);
                     cout << "Delayed..." << endl;
                     switch(i) {
                     if(myRobot->victim.letter == 'H') { //H
                         myRobot->dropCnt = 2;
                     } else if (myRobot->victim.letter == 'S') { //S
                         myRobot->dropCnt = 1;
-                    } else { //U or nothing
+                    } else if(myRobot->vicim.letter == 'U') { //U or nothing
+                        myRobot->dropCnt = 0;
+                        myRobot->LEDLight(4500);
+                        sleep(4);
+                        break;
+                    } else {
                         myRobot->dropCnt = 0;
                     }
                     case 0: //drop left
@@ -262,7 +267,7 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
     } else {
         writeCurrentMap(this->map_dir, this->map_name, this->myRobot, this->nav);
         robot->currState = ARobot::DONE;
-        //robot->picam.close();
+        robot->picam.close();
         return;
     }
     first_iter = true;
