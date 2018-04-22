@@ -76,7 +76,7 @@ int main(int argc,char **argv){
                 reset = false;
             } else if(digitalRead(2)==0 && isRunning && reset) {
                 printf("Thread Killed...\n");
-                stopThread(currThread);
+                stopThread(currThread, myRobot);
                 isRunning = false;
                 reset = false;
             } else if (digitalRead(2)==1) {
