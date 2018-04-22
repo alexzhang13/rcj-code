@@ -187,8 +187,8 @@ protected:
 
 private:
     char m_letter;
-    std::string pyLeft = "python /home/alex/projects/rcj-code/Software/letter/identify.py /home/alex/projects/rcj-code/Software/letter/randomFolder/capL.jpg";
-    std::string pyRight = "python /home/alex/projects/rcj-code/Software/letter/identify.py /home/alex/projects/rcj-code/Software/letter/randomFolder/capR.jpg";
+    char* pyLeft = "python /home/alex/projects/rcj-code/Software/letter/identify.py /home/alex/projects/rcj-code/Software/letter/randomFolder/capL.jpg";
+    char* pyRight = "python /home/alex/projects/rcj-code/Software/letter/identify.py /home/alex/projects/rcj-code/Software/letter/randomFolder/capR.jpg";
     float threshLeft; //Left Temperature Threshold
     float threshRight; //Right Temperature Threshold
     int silver_thresh; //Silver Tile Threshold
