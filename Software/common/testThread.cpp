@@ -8,12 +8,12 @@ void TestThread::run(void){
     sleep(3);
     myRobot->picam.frameCapture("/home/alex/projects/rcj-code/Software/letter/randomFolder/img.jpg");
     sleep(1);
-    printf("Capture 1\n");
     myRobot->picam.close();
+    printf("Capture 1\n");
 
     FILE * f = popen( "python /home/alex/projects/rcj-code/Software/letter/identify.py /home/alex/projects/rcj-code/Software/letter/randomFolder/img.jpg", "r" );
     char* buf;
-    fgets(buf, 1, f);
+    fgets(buf, 10, f);
     fprintf( stdout, "%c", buf[0]);
     pclose( f );
     sleep(1);
