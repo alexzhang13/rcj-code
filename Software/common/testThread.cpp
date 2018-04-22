@@ -12,8 +12,8 @@ void TestThread::run(void){
     printf("Capture 1\n");
 
     FILE * f = popen( "python /home/alex/projects/rcj-code/Software/letter/identify.py /home/alex/projects/rcj-code/Software/letter/randomFolder/img.jpg", "r" );
-    char buf[ 10 ];
-    fgets(buf, 10, f);
+    char buf[ 150 ];
+    fgets(buf, 150, f);
     fprintf( stdout, "%s", buf  );
     pclose( f );
     myRobot->picam.close();
@@ -21,7 +21,7 @@ void TestThread::run(void){
     sleep(1);
     while(1) {
         printf("%s\n", buf);
-        sleep(8);
+        sleep(5);
     }
     return;
 }
