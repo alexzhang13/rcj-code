@@ -98,7 +98,7 @@ void NavThread::run(void){
             sleep(1);
             if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
                 myRobot->SpinLaser();
-                sleep(3); //time for laser
+                sleep(6); //time for laser
 
                 myRobot->CheckLightTile();
                 if(myRobot->CheckRamp()) { //is ramp
@@ -115,6 +115,7 @@ void NavThread::run(void){
                 cout << "Victim Status: " << myRobot->isVictim << endl;
                 if(!myRobot->isVictim) { //get currCell
                     int i = myRobot->ProcessImage_Victim();
+                    sleep(3);
                     switch(i) {
                     if(myRobot->victim.letter == 'H') { //H
                         myRobot->dropCnt = 2;
@@ -236,6 +237,7 @@ void NavThread::writeCurrentMap(const char* filedir, const char* xmlname, ARobot
 void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt) 
 {
     /*Navigational functions*/
+    cout << "Error is HERE" << endl;
     robot->sensor_info.reset(); //reset temp object
     robot->UpdateCellMap(&robot->sensor_info, false, false); //false = not black
     robot->UpdateNeighborCells();
