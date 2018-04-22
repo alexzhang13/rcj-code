@@ -85,7 +85,7 @@ void NavThread::run(void){
             printf("DONE!");
             break;
         case 9: //Data collection
-            myRobot->UpdateCellMap(&robot->sensor_info, false, false); //false = not black
+            myRobot->UpdateCellMap(&myRobot->sensor_info, false, false); //false = not black
             myRobot->isVictim = nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim();
             if(!myRobot->isVictim) {myRobot->isDropped = false;}
             sleep(0.2);
