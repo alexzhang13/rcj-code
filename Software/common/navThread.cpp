@@ -304,4 +304,3 @@ void NavThread::DestroyThread()
     myRobot->StopMove();
 }
 
->>>>>>> d1cb26708b118d757053f7f9d3b97593397128e3
