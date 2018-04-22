@@ -12,6 +12,7 @@ void NavThread::run(void){
     else
         startNewMap(myRobot, nav);
 
+    myRobot->picam.cameraOpen(720, 480);
     printf("Map Generation Started...\n");
     myRobot->imuCalibrated = true; //turn on IMU flag
     sleep(1);
@@ -92,6 +93,12 @@ void NavThread::run(void){
             bot_waypts = myRobot->waypts.size();
             myRobot->currTile.x = myRobot->currTile.x_tovisit;
             myRobot->currTile.y = myRobot->currTile.y_tovisit;
+
+            FILE * f = popen( "python3 identify.py randomFolder/img.jpg", "r" );
+            char buf[ 10 ];
+            fgets(buf, 10, f);
+            fprintf( stdout, "%s", buf  );
+            pclose( f );
 
             //nav.getCellbyIndex(myRobot->waypts[bot_waypts-1])->getCellGrid(myRobot->currTile.x, myRobot->currTile.y);
             nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]);

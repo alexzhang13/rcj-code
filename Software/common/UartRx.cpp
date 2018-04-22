@@ -75,8 +75,7 @@ void UartRx::run(void){
         } else if (c == 'y') {
             storeScan(mBuf);
         } else if (c == 'z') {
-            //myRobot->picam.frameCapture();
-            printf("Data Sent!\n");
+            myRobot->picam.frameCapture("./letter/randomFolder/img.jpg");
         } else if (c == 'm') {
             myRobot->currState = ARobot::DATA; //IDLE
             if(myRobot->backingBlack) {

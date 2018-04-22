@@ -13,7 +13,7 @@ _PiCamera_::_PiCamera_()
 {
 	m_max_len = 5;
 	m_data = NULL;
-	m_width = 640;
+        m_width = 720;
 	m_height = 480;
 }
 
@@ -58,7 +58,7 @@ bool _PiCamera_::cameraOpen(int32_t width, int32_t height)
 	return true;
 }
 
-bool _PiCamera_::frameCapture()
+bool _PiCamera_::frameCapture(char* fileName)
 {
 	cv::Mat img;
 	m_camera.grab();
@@ -72,7 +72,7 @@ bool _PiCamera_::frameCapture()
 	if(m_frames.size() > m_max_len)
 		m_frames.erase(m_frames.begin());
 
-	imwrite("img.jpg", img);
+        imwrite(fileName, img);
 	delete m_data;
 	return true;
 }

@@ -548,7 +548,7 @@ int ARobot::ProcessImage_Victim() {
     victim.letter = '0'; //reset
     victim.m_isVictim = false;
 
-    for(int i = 0; i < imgList.size(); i++) {
+    /*for(int i = 0; i < imgList.size(); i++) {
         m_letter = knn.detectVictim(imgList[i]);
         if(m_letter != '0' && victim.m_isVictim == true) { //error, not supposed to happen, means there is a mistake
             printf("DNE\n");
@@ -573,7 +573,8 @@ int ARobot::ProcessImage_Victim() {
         }
     }
     picam.resetFrameBuffers();
-    ClearImgList();
+    ClearImgList();*/
+
     if(victim.m_isVictim == true) {
         if(victim.dir_victim == RIGHT) {
             return 2;
@@ -988,3 +989,4 @@ void ARobot::Reset() {
     this->victimRight = false; //true if is dropping to the right
     this->yaw_drift = 0;
 }
+

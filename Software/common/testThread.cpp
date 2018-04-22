@@ -4,29 +4,22 @@ using namespace std;
 
 void TestThread::run(void){
     printf("Test Thread Started...\n");
-#if 0
-    myRobot->picam.cameraOpen(320, 240); //start up camera
-    printf("Capture 1\n");
-    myRobot->picam.frameCapture();
-    sleep(0.5);
-    printf("Capture 2\n");
-    myRobot->picam.frameCapture();
-    sleep(0.5);
-    printf("Capture 3\n");
-    myRobot->picam.frameCapture();
-    sleep(0.5);
 
-    myRobot->CheckVictimVisual();
-    printf("Pushed Mat's into ImgList<Mat>\n");
-    sleep(0.5);
-    printf("Side of Victim: %d\n", myRobot->ProcessImage_Victim());
-    sleep(0.5);
-    myRobot->picam.close();
-#endif
+    myRobot->picam.cameraOpen(720, 480); //start up camera
+    sleep(1);
+    myRobot->picam.frameCapture("/home/alex/projects/rcj-code/Software/letter/randomFolder/img.jpg");
+    sleep(1);
+    printf("Capture 1\n");
+
+    FILE * f = popen( "python /home/alex/projects/rcj-code/Software/letter/identify.py /home/alex/projects/rcj-code/Software/letter/randomFolder/img.jpg", "r" );
+    char buf[ 10 ];
+    fgets(buf, 10, f);
+    fprintf( stdout, "%s", buf  );
+    pclose( f );
+
     sleep(1);
     while(1) {
-        myRobot->TestRangeSensors();
-        sleep(3);
+        printf("%s\n", buf);
     }
     return;
 }
