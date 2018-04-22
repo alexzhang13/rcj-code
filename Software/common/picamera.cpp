@@ -41,7 +41,7 @@ bool _PiCamera_::cameraOpen(int32_t width, int32_t height)
     m_camera.setContrast ( 0 );
     m_camera.setSaturation ( 0);
     m_camera.setShutterSpeed( 0 );
-    m_camera.setISO ( 400 );
+    //m_camera.setISO ( 400 );
 
    //Open camera 
     printf("Opening Camera...\n");

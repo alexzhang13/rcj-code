@@ -16,6 +16,7 @@ void TestThread::run(void){
     fgets(buf, 10, f);
     fprintf( stdout, "%s", buf  );
     pclose( f );
+    myRobot->picam.close();
 
     sleep(1);
     while(1) {
