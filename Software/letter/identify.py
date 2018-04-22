@@ -86,7 +86,7 @@ def isBackground(maxContour, imgOriginal, imgGray):
     white = round(np.average(background), 2)
     total = round(np.average(imgGray), 2)
     black = round(np.average(letter), 2)
-
+    print ("t: " + str(total) + " w:, " + str(white) + " ,b: " + str(black))
     if total > white or black*3/2 > white:
         return -1
     else:
@@ -119,11 +119,14 @@ def genTopAndBottom(thres, contourData):
 
 def main2():
     imgOriginal = cv2.imread(PATH)
+    imgOriginal = cv2.resize(imgOriginal, (720, 480))
     imgGray = cv2.cvtColor(imgOriginal, cv2.COLOR_BGR2GRAY)
     imgBlurred = cv2.GaussianBlur(imgGray, (11, 11), 0)
     imgThresh = cv2.adaptiveThreshold(imgBlurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, BLOCKSIZE, C)
     imgThreshCopy = imgThresh.copy()
-    contours, _ = cv2.findContours(imgThreshCopy, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    _, contours, _ = cv2.findContours(imgThreshCopy, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    cv2.imwrite("randomFolder/gray.jpg", imgThresh)
 
     if len(contours) > 0:
         maxContour = findContour(contours)
@@ -136,13 +139,16 @@ def main2():
     result = solveLetter(topROI, bottomROI)
     exists = isBackground(maxContour, imgOriginal, imgGray)
     ratio = contourData.rectHeight/contourData.rectWidth
+
     if result == -1:
         print (str(1) + str(result))
     elif cv2.contourArea(maxContour) < MIN_SIZE:
+        print (cv2.contourArea(maxContour))
         print (str(2) + result)
     elif exists == -1:
         print (str(3) + result)
     elif ratio < 0.9 or ratio > 1.9:
+        print("ratio is: ", + str(ratio))
         print (str(4) + result)
     elif contourData.touchingEdge():
         print (str(5) + result)
