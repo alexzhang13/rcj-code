@@ -142,7 +142,7 @@ void NavThread::run(void){
                         break;
                     default:
                         switch(myRobot->CheckVictimTemp()) {
-                        printf("Victim Results: %d\n", myRobot->CheckVictimTemp());
+                        printf("Victim Resultss: %d\n", myRobot->CheckVictimTemp());
                         case 0:
                             break;
                         case 1: //drop or go back to calculating
