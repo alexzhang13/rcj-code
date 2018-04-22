@@ -21,6 +21,7 @@ void TestThread::run(void){
     sleep(1);
     while(1) {
         printf("%s\n", buf);
+        sleep(8);
     }
     return;
 }

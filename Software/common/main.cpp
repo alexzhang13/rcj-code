@@ -65,7 +65,7 @@ int main(int argc,char **argv){
 
     Process_T *process_thread = new Process_T(port, myRobot);
     printf("Process Thread Init Passed\n");
-
+    myRobot->picam.close();
     while(1) {
         if(iteration % 1000 == 0) {
             if(digitalRead(2)==0 && !isRunning && reset) { //button is pressed when off
