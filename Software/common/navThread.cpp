@@ -122,7 +122,7 @@ void NavThread::run(void){
                         myRobot->dropCnt = 2;
                     } else if (myRobot->victim.letter == 'S') { //S
                         myRobot->dropCnt = 1;
-                    } else if(myRobot->vicim.letter == 'U') { //U or nothing
+                    } else if(myRobot->victim.letter == 'U') { //U or nothing
                         myRobot->dropCnt = 0;
                         myRobot->LEDLight(4500);
                         sleep(4);
