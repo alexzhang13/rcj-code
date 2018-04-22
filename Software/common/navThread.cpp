@@ -10,10 +10,10 @@ void NavThread::run(void){
         readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     else
         startNewMap(myRobot, nav);
-
+    sleep(1);
     printf("Map Generation Started...\n");
-    cout << "PiCamera: " << myRobot->picam.cameraOpen(720, 480) << endl;
-    sleep(3);
+    myRobot->picam.cameraOpen(720, 480);
+    sleep(1);
     myRobot->imuCalibrated = true; //turn on IMU flag
 
     while(1) {
