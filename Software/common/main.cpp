@@ -101,11 +101,11 @@ int main(int argc,char **argv){
                 sleep(0.1);
                 delete process_thread;
                 sleep(0.1);
-                //delete uartrx;
+                delete uartrx;
                 sleep(0.1);
                 //delete myRobot;
                 sleep(0.1);
-                delete port;
+                //delete port;
                 sleep(0.1);
                 isRunning = false;
                 reset = false;

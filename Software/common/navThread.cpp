@@ -241,7 +241,6 @@ void NavThread::writeCurrentMap(const char* filedir, const char* xmlname, ARobot
 void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt) 
 {
     /*Navigational functions*/
-    cout << "Error is HERE" << endl;
     robot->sensor_info.reset(); //reset temp object
     robot->UpdateCellMap(&robot->sensor_info, false, false); //false = not black
     robot->UpdateNeighborCells();
