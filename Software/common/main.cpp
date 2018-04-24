@@ -51,7 +51,7 @@ int main(int argc,char **argv){
     pinMode(5, INPUT); //Dipswitch PIN 1
     pinMode(2, INPUT); //Push Pin (Toggle Program)
     printf("WiringPI Init Passed");
-
+#if 0
     SerialPort *port = new SerialPort("/dev/ttyAMA0",115200);
     if(port == NULL)
         printf("Serial port open failed\n");
@@ -65,10 +65,26 @@ int main(int argc,char **argv){
 
     Process_T *process_thread = new Process_T(port, myRobot);
     printf("Process Thread Init Passed\n");
+#endif
 
     while(1) {
         if(iteration % 1000 == 0) {
             if(digitalRead(2)==0 && !isRunning && reset) { //button is pressed when off
+                SerialPort *port = new SerialPort("/dev/ttyAMA0",115200);
+                if(port == NULL)
+                    printf("Serial port open failed\n");
+                printf("Start robot navigation...\n");
+                ARobot *myRobot = new ARobot(port);
+                printf("ARobot Init Passed...\n");
+
+                UartRx *uartrx = new UartRx(port, myRobot);
+                uartrx->setLogFile(in_dir, rt_logname);
+                printf("UartRx Thread Init Passed\n");
+
+                Process_T *process_thread = new Process_T(port, myRobot);
+                printf("Process Thread Init Passed\n");
+                sleep(3);
+
                 printf("Spawning New Thread...\n");
                 myRobot->Reset();
                 spawnThread(currThread, myRobot);
@@ -77,6 +93,15 @@ int main(int argc,char **argv){
             } else if(digitalRead(2)==0 && isRunning && reset) {
                 printf("Thread Killed...\n");
                 stopThread(currThread, myRobot);
+                sleep(0.1);
+                delete process_thread;
+                sleep(0.1);
+                delete uartx;
+                sleep(0.1);
+                delete myRobot;
+                sleep(0.1);
+                delete port;
+                sleep(0.1);
                 isRunning = false;
                 reset = false;
             } else if (digitalRead(2)==1) {
