@@ -176,6 +176,8 @@ void NavThread::run(void){
             }
 
             break;
+        case 10:
+            return -1;
         default:
             /*Testing Purposes Only*/
             sleep(1);
@@ -307,9 +309,8 @@ int NavThread::WayPointNav(ARobot *robot, Navigate2D &nav_rt)
 
 void NavThread::DestroyThread()
 {
-    writeCurrentMap(this->map_dir, this->map_name, this->myRobot, this->nav);
-    myRobot->currState = ARobot::STOP;
     sleep(0.5);
     myRobot->StopMove();
+    myRobot->currState = ARobot::STOP;
 }
 

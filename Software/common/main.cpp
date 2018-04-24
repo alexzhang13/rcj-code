@@ -103,7 +103,7 @@ int main(int argc,char **argv){
                 sleep(0.1);
                 delete uartrx;
                 sleep(0.1);
-                //delete myRobot;
+                delete myRobot;
                 sleep(0.1);
                 //delete port;
                 sleep(0.1);
@@ -147,6 +147,7 @@ void spawnThread(Thread *currThread, ARobot *myRobot) {
 }
 
 void stopThread(Thread *currThread, ARobot *myRobot) {
+    currThread->DestroyThread();
     delete currThread;
     myRobot->picam.close();
     myRobot->Reset();
