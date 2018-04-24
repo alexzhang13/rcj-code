@@ -101,7 +101,7 @@ int main(int argc,char **argv){
                 sleep(0.1);
                 delete process_thread;
                 sleep(0.1);
-                delete uartx;
+                delete uartrx;
                 sleep(0.1);
                 delete myRobot;
                 sleep(0.1);
