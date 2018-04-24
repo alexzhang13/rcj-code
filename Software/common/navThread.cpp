@@ -88,7 +88,7 @@ void NavThread::run(void){
             //myRobot->UpdateCellMap(&myRobot->sensor_info, false, false); //false = not black
             myRobot->isVictim = nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim();
             if(!myRobot->isVictim) {myRobot->isDropped = false;}
-            sleep(0.2);
+            sleep(0.1);
             bot_waypts = myRobot->waypts.size();
             myRobot->currTile.x = myRobot->currTile.x_tovisit;
             myRobot->currTile.y = myRobot->currTile.y_tovisit;
@@ -98,7 +98,7 @@ void NavThread::run(void){
             sleep(1);
             if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
                 myRobot->SpinLaser();
-                sleep(6); //time for laser
+                sleep(3); //time for laser
 
                 myRobot->CheckLightTile();
                 if(myRobot->CheckRamp()) { //is ramp
@@ -115,7 +115,6 @@ void NavThread::run(void){
                 cout << "Victim Status: " << myRobot->isVictim << endl;
                 if(!myRobot->isVictim) { //get currCell
                     int i = myRobot->ProcessImage_Victim();
-                    sleep(3);
                     switch(i) {
                     if(myRobot->victim.letter == 'H') { //H
                         myRobot->dropCnt = 2;
@@ -146,8 +145,11 @@ void NavThread::run(void){
                         break;
                     default:
                         switch(myRobot->CheckVictimTemp()) {
-                        printf("Victim Resultss: %d\n", myRobot->CheckVictimTemp());
+                        printf("Victim Results: %d\n", myRobot->CheckVictimTemp());
                         case 0:
+                            sleep(0.2);
+                            myRobot->CorrectYaw();
+                            sleep(0.2);
                             break;
                         case 1: //drop or go back to calculating
                             myRobot->victimRight = true;
@@ -167,10 +169,12 @@ void NavThread::run(void){
                         break;
                     }
                 }
+            } else {
+                sleep(0.3);
+                myRobot->CorrectYaw();
+                sleep(0.2);
             }
-            sleep(0.5);
-            myRobot->CorrectYaw();
-            sleep(0.5);
+
             break;
         default:
             /*Testing Purposes Only*/

@@ -86,6 +86,7 @@ void UartRx::run(void){
                 myRobot->picam.frameCapture(rightcapture_file);
             }
             camFlip = !camFlip;
+            printf("Camera!\n");
         } else if (c == 'm') {
             myRobot->currState = ARobot::DATA; //IDLE
             if(myRobot->backingBlack) {
