@@ -399,7 +399,7 @@ void ARobot::Correction() {
     default:
         return;
     }
-    this->currState = ARobot::WAYPTNAV; //if fails
+    //this->currState = ARobot::WAYPTNAV; //if fails
     return;
 
 }
@@ -630,12 +630,12 @@ void ARobot::CheckLightTile()
     if(mlen_light < 3)
         return;
 
+    printf("Light: %d\n", lightDataList[mlen_light-1].CheckLight());
     if (lightDataList[mlen_light-1].CheckLight() == 1 && lightDataList[mlen_light-2].CheckLight() == 1 && lightDataList[mlen_light-3].CheckLight() == 1) {
         currTileLight = BLACK;
         if(backingBlack == false) {
             backingBlack = true;
             ResetEncoder();
-            sleep(1);
             MoveDistance(150, BACK);
         }
     } else {
