@@ -422,7 +422,7 @@ void ARobot::CorrectionFailed() { //if correction was faulty try to change
     int currentError = rangeDataList[rangeDataList.size()-1].getRangeOffset();
     printf("Current Error: %d\tPrevious Error: %d\n", currentError, this->correctionError);
 
-    if(this->correctionDir == LEFT) {
+    if(this->correctionDir == RIGHT) {
         if(currentError < this->correctionError) { //correct direction
             this->FixYaw(2.0);
             TurnDistance(2, RIGHT); //correct correction
