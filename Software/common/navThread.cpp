@@ -177,7 +177,7 @@ void NavThread::run(void){
 
             break;
         case 10:
-            return;
+            //return;
         default:
             /*Testing Purposes Only*/
             sleep(1);
