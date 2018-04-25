@@ -110,7 +110,7 @@ void NavThread::run(void){
                 }
             }
             if(!nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim()) {
-                myRobot->picam.frameCapture(leftcapture_file);
+                myRobot->picam.frameCapture(myRobot->leftcapture_file);
                 sleep(2);
                 cout << "Victim Status: " << myRobot->isVictim << endl;
                 if(!myRobot->isVictim) { //get currCell

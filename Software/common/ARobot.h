@@ -179,6 +179,8 @@ public:
     int dist_temp; //store temporary distance to travel
     int correctionErrorChange; //delta error
     FILE *pystream; //stream for extracting letter
+    char* pyLeft = "python /home/alex/projects/rcj-code/Software/letter/identify.py /home/alex/projects/rcj-code/Software/letter/randomFolder/capL.jpg";
+    char* pyRight = "python /home/alex/projects/rcj-code/Software/letter/identify.py /home/alex/projects/rcj-code/Software/letter/randomFolder/capR.jpg";
     char leftVVictim[10]; //character for left
     char rightVVictim[10]; //character for right
 
@@ -187,8 +189,6 @@ protected:
 
 private:
     char m_letter;
-    char* pyLeft = "python /home/alex/projects/rcj-code/Software/letter/identify.py /home/alex/projects/rcj-code/Software/letter/randomFolder/capL.jpg";
-    char* pyRight = "python /home/alex/projects/rcj-code/Software/letter/identify.py /home/alex/projects/rcj-code/Software/letter/randomFolder/capR.jpg";
     float threshLeft; //Left Temperature Threshold
     float threshRight; //Right Temperature Threshold
     int silver_thresh; //Silver Tile Threshold
