@@ -149,8 +149,6 @@ void spawnThread(Thread *currThread, ARobot *myRobot) {
 void stopThread(Thread *currThread, ARobot *myRobot) {
     currThread->DestroyThread();
     delete currThread;
-    myRobot->picam.close();
-    myRobot->Reset();
 }
 
 

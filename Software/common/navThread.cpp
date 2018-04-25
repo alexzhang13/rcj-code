@@ -177,7 +177,9 @@ void NavThread::run(void){
 
             break;
         case 10:
-            //return;
+            pthread_exit();
+            sleep(0.5);
+            return;
         default:
             /*Testing Purposes Only*/
             sleep(1);
@@ -309,8 +311,10 @@ int NavThread::WayPointNav(ARobot *robot, Navigate2D &nav_rt)
 
 void NavThread::DestroyThread()
 {
-    sleep(0.5);
+    sleep(0.2);
     myRobot->StopMove();
     myRobot->currState = ARobot::STOP;
+    myRobot->picam.close();
+    myRobot->Reset();
 }
 
