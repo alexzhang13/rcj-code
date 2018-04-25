@@ -177,7 +177,7 @@ void NavThread::run(void){
 
             break;
         case 10:
-            pthread_exit();
+            pthread_exit(NULL);
             sleep(0.5);
             return;
         default:
