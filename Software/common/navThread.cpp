@@ -81,9 +81,10 @@ void NavThread::run(void){
             myRobot->currState = ARobot::PLANNING;
             break;
         case 8: //DONE
+            writeCurrentMap(this->map_dir, this->map_name, this->myRobot, this->nav);
             sleep(1);
             printf("DONE!");
-            break;
+            myRobot->currState = ARobot::STOP;
         case 9: //Data collection
             //myRobot->UpdateCellMap(&myRobot->sensor_info, false, false); //false = not black
             myRobot->isVictim = nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim();
