@@ -538,7 +538,7 @@ void ARobot::DisplayVictimVisual() {
 int ARobot::ProcessImage_Victim() {
     this->victim.m_isVictim = false;
     this->victim.letter = '0';
-    myRobot->dropCnt = 0;
+    this->dropCnt = 0;
 
     //Check LEFT Visual Victim First
     this->pystream = popen(pyLeft, "r" );
@@ -554,9 +554,9 @@ int ARobot::ProcessImage_Victim() {
         if(leftVVictim[0] == 'U') {
             return -1;
         } else if(leftVVictim[0] == 'S') {
-            myRobot->dropCnt = 1;
+            this->dropCnt = 1;
         } else {
-            myRobot->dropCnt = 2;
+            this->dropCnt = 2;
         }
         return 0;
     }
@@ -575,9 +575,9 @@ int ARobot::ProcessImage_Victim() {
         if(rightVVictim[0] == 'U') {
             return -1;
         } else if(rightVVictim[0] == 'S') {
-            myRobot->dropCnt = 1;
+            this->dropCnt = 1;
         } else {
-            myRobot->dropCnt = 2;
+            this->dropCnt = 2;
         }
         return 2;
     }
