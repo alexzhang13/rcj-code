@@ -49,7 +49,6 @@ int RangeData::parseData()
     //Correct the two VL5L30X Sensors based on the equation
     data.laserL_a = CorrectLongReading(data.laserL_a);
     data.laserL_b = CorrectLongReading(data.laserL_b);
-    printf("Front Laser: %f\n", data.laserL_a);
     return 0;
 }
 
