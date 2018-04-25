@@ -109,9 +109,10 @@ void NavThread::run(void){
                 }
             }
             if(!nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim()) {
-                myRobot->picam.frameCapture(leftcapture_file);
+                //myRobot->picam.frameCapture(leftcapture_file);
                 sleep(2);
-                int i = myRobot->ProcessImage_Victim();
+                //int i = myRobot->ProcessImage_Victim();
+                int i = 3;
                 sleep(2);
                 cout << "Victim Status: " << i << endl;
                 switch(i) {
