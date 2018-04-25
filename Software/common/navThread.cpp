@@ -108,7 +108,7 @@ void NavThread::run(void){
                 if(myRobot->currTileLight == ARobot::SILVER) {
                     writeCurrentMap(this->map_dir, this->map_name, this->myRobot, this->nav);
                     myRobot->LEDLight(1000);
-                    sleep(1);
+                    sleep(1.5);
                     //save state
                 }
                 //check visual victim
@@ -134,8 +134,11 @@ void NavThread::run(void){
                     default:
                         if(myRobot->victim.letter == 'U') { //U or nothing
                             myRobot->dropCnt = 0;
-                            myRobot->LEDLight(4500);
+                            myRobot->LEDLight(3500);
                             sleep(4);
+                            sleep(1);
+                            myRobot->CorrectYaw();
+                            sleep(0.2);
                             break;
                         }
                         switch(myRobot->CheckVictimTemp()) {
