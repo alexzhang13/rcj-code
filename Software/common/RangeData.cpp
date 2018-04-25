@@ -88,8 +88,8 @@ int RangeData::setAngle() {
         angled = acos(min(1.0, 300.0/(data.laserS_a + data.laserS_b + OFFSET))) * 180 / PI;
         alpha = max(0.0, 1 - (this->getRangeOffset()/10.0)); //linear as opposed to based on angles
         //alpha = max(0.0, 7.62*(300.0/(data.laserS_a + data.laserS_b + OFFSET)-0.866)); //30 degree turn range 0-1
-        if(alpha >= 1.5) //too high, must be invalid
-            alpha = 0;
+        if(alpha > 1.7) //too high, must be invalid
+            alpha = alpha - 1.0;
         else if (alpha > 1)
             alpha = 1;
         //printf("Distance: %f\tAlpha: %f\n", data.laserS_a + data.laserS_b + OFFSET, alpha);

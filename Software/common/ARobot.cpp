@@ -399,7 +399,7 @@ void ARobot::Correction() {
     default:
         return;
     }
-    //this->currState = ARobot::WAYPTNAV; //if fails
+    this->currState = ARobot::WAYPTNAV; //if fails
     return;
 
 }
