@@ -139,8 +139,8 @@ void NavThread::run(void){
                         sleep(0.2);
                         break;
                     }
-                    switch(myRobot->CheckVictimTemp()) {
                     printf("Temperature Victim Results: %d\n", myRobot->CheckVictimTemp());
+                    switch(myRobot->CheckVictimTemp()) {
                     case 0:
                         sleep(0.5);
                         myRobot->CorrectYaw();
