@@ -5,7 +5,7 @@
 #include <errno.h>
 
 Thread::Thread(int priority, int stackSize)
-    :mPriority(priority), mStackSize(stackSize)
+    :mPriority(priority), mStackSize(stackSize), mExitFlag(false)
 {
     start();
 }
@@ -76,4 +76,5 @@ void Thread::checkSuspend()
 void Thread::DestroyThread()
 {
     //Override...
+    mExitFlag = true;
 }

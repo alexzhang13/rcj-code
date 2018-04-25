@@ -16,6 +16,9 @@ class Thread {
     virtual void checkSuspend();
     virtual void DestroyThread();
 
+    inline bool isExit() {
+        return mExitFlag;
+    }
  protected:
     int mPriority, mStackSize;
 
@@ -23,6 +26,7 @@ class Thread {
     pthread_t mThread;
     pthread_mutex_t m_SuspendMutex;
     pthread_cond_t m_ResumeCond;
+    bool mExitFlag;
 
     static void *threadFunc(void * obj);
 }; // class Thread

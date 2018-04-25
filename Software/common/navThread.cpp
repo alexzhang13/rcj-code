@@ -16,7 +16,7 @@ void NavThread::run(void){
     sleep(1);
     myRobot->imuCalibrated = true; //turn on IMU flag
 
-    while(1) {
+    while(isExit()) {
         switch(myRobot->currState) {
         case 0: //Planning
             Navigate(in_dir, xml_name, myRobot, nav);
@@ -189,6 +189,7 @@ void NavThread::run(void){
         sleep(0.1);
     }
 
+    pthread_exit();
     return;
 }
 
@@ -317,5 +318,6 @@ void NavThread::DestroyThread()
     myRobot->currState = ARobot::STOP;
     myRobot->picam.close();
     myRobot->Reset();
+    Thread::DestroyThread();
 }
 
