@@ -10,7 +10,6 @@ void NavThread::run(void){
         readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     else
         startNewMap(myRobot, nav);
-    sleep(1);
     printf("Map Generation Started...\n");
     myRobot->picam.cameraOpen(720, 480);
     sleep(1);
@@ -108,8 +107,8 @@ void NavThread::run(void){
                 }
                 if(myRobot->currTileLight == ARobot::SILVER) {
                     writeCurrentMap(this->map_dir, this->map_name, this->myRobot, this->nav);
-                    myRobot->LEDLight(5000);
-                    sleep(5);
+                    myRobot->LEDLight(1000);
+                    sleep(1);
                     //save state
                 }
                 //check visual victim
@@ -117,18 +116,6 @@ void NavThread::run(void){
                 if(!myRobot->isVictim) { //get currCell
                     int i = myRobot->ProcessImage_Victim();
                     switch(i) {
-                    if(myRobot->victim.letter == 'H') { //H
-                        myRobot->dropCnt = 2;
-                    } else if (myRobot->victim.letter == 'S') { //S
-                        myRobot->dropCnt = 1;
-                    } else if(myRobot->victim.letter == 'U') { //U or nothing
-                        myRobot->dropCnt = 0;
-                        myRobot->LEDLight(4500);
-                        sleep(4);
-                        break;
-                    } else {
-                        myRobot->dropCnt = 0;
-                    }
                     case 0: //drop left
                         myRobot->victimLeft = true;
                         myRobot->isVictim = true;
@@ -145,10 +132,16 @@ void NavThread::run(void){
                         myRobot->TurnDistance(90, ARobot::LEFT); //turn left to drop from back onto right side
                         break;
                     default:
+                        if(myRobot->victim.letter == 'U') { //U or nothing
+                            myRobot->dropCnt = 0;
+                            myRobot->LEDLight(4500);
+                            sleep(4);
+                            break;
+                        }
                         switch(myRobot->CheckVictimTemp()) {
                         printf("Victim Results: %d\n", myRobot->CheckVictimTemp());
                         case 0:
-                            sleep(0.2);
+                            sleep(1);
                             myRobot->CorrectYaw();
                             sleep(0.2);
                             break;
@@ -171,14 +164,14 @@ void NavThread::run(void){
                     }
                 }
             } else {
-                sleep(0.3);
+                sleep(1);
                 myRobot->CorrectYaw();
                 sleep(0.2);
             }
 
             break;
         case 10:
-            pthread_exit(NULL);
+            pthread_exit(0);
             sleep(0.5);
             return;
         default:

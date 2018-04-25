@@ -537,6 +537,8 @@ void ARobot::DisplayVictimVisual() {
 
 int ARobot::ProcessImage_Victim() {
     this->victim.m_isVictim = false;
+    this->victim.letter = '0';
+    myRobot->dropCnt = 0;
 
     //Check LEFT Visual Victim First
     this->pystream = popen(pyLeft, "r" );
@@ -549,6 +551,13 @@ int ARobot::ProcessImage_Victim() {
         printf("Left Victim Detected with Letter: %c\n", leftVVictim[0]);
         this->victim.dir_victim = LEFT;
         this->victim.m_isVictim = true;
+        if(leftVVictim[0] == 'U') {
+            return -1;
+        } else if(leftVVictim[0] == 'S') {
+            myRobot->dropCnt = 1;
+        } else {
+            myRobot->dropCnt = 2;
+        }
         return 0;
     }
 
@@ -563,6 +572,13 @@ int ARobot::ProcessImage_Victim() {
         printf("Right Victim Detected with Letter: %c\n", rightVVictim[0]);
         this->victim.dir_victim = RIGHT;
         this->victim.m_isVictim = true;
+        if(rightVVictim[0] == 'U') {
+            return -1;
+        } else if(rightVVictim[0] == 'S') {
+            myRobot->dropCnt = 1;
+        } else {
+            myRobot->dropCnt = 2;
+        }
         return 2;
     }
     return -1;

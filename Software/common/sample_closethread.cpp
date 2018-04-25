@@ -39,23 +39,8 @@ int main(int argc,char **argv){
     const char* rt_logname = "realtime/rcj_log";
     const char* xml_name = "map_data/mazemap";
 #endif
-    bool isRunning = false; //start program button
-    bool reset = false; //flag
-    int iteration = 0;
+
     Thread *currThread; //spawned thread
-
-    //Set up Wires, Below is the wiringPi -> Pi Rev.3 GPIO Mapping
-    //22 --> 3 (WiringPI)
-    //23 --> 4
-    //24 --> 5 [WORKS]
-    //27 --> 2 [WORKS]
-
-    wiringPiSetup();
-    pinMode(3, OUTPUT); //LED Pin
-    pinMode(4, INPUT); //Dipswitch PIN 2
-    pinMode(5, INPUT); //Dipswitch PIN 1
-    pinMode(2, INPUT); //Push Pin (Toggle Program)
-    printf("WiringPI Init Passed");
 
     port = new SerialPort("/dev/ttyAMA0",115200);
     if(port == NULL)
@@ -70,10 +55,27 @@ int main(int argc,char **argv){
 
     process_thread = new Process_T(port, myRobot);
     printf("Process Thread Init Passed\n");
+#endif
 
     while(1) {
         if(iteration % 1000 == 0) {
             if(digitalRead(2)==0 && !isRunning && reset) { //button is pressed when off
+                port = new SerialPort("/dev/ttyAMA0",115200);
+                if(port == NULL)
+                    printf("Serial port open failed\n");
+                printf("Start robot navigation...\n");
+                myRobot = new ARobot(port);
+                printf("ARobot Init Passed...\n");
+
+                uartrx = new UartRx(port, myRobot);
+                uartrx->setLogFile(in_dir, rt_logname);
+                printf("UartRx Thread Init Passed\n");
+
+                process_thread = new Process_T(port, myRobot);
+                printf("Process Thread Init Passed\n");
+                sleep(3);
+
+                printf("Spawning New Thread...\n");
                 myRobot->Reset();
                 spawnThread(currThread, myRobot);
                 isRunning = true;
@@ -81,6 +83,15 @@ int main(int argc,char **argv){
             } else if(digitalRead(2)==0 && isRunning && reset) {
                 printf("Thread Killed...\n");
                 stopThread(currThread, myRobot);
+                sleep(0.1);
+                delete process_thread;
+                sleep(0.1);
+                delete uartrx;
+                sleep(0.1);
+                delete myRobot;
+                sleep(0.1);
+                //delete port;
+                sleep(0.1);
                 isRunning = false;
                 reset = false;
             } else if (digitalRead(2)==1) {
