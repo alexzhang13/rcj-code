@@ -552,7 +552,7 @@ int ARobot::ProcessImage_Victim() {
         this->victim.dir_victim = LEFT;
         this->victim.m_isVictim = true;
         if(leftVVictim[0] == 'U') {
-            return -1;
+            return 3;
         } else if(leftVVictim[0] == 'S') {
             this->dropCnt = 1;
         } else {
@@ -560,7 +560,7 @@ int ARobot::ProcessImage_Victim() {
         }
         return 0;
     }
-
+#if 0
     //Check RIGHT Visual Victim First
     this->pystream = popen(pyRight, "r" );
     fgets(rightVVictim, 10, pystream);
@@ -581,7 +581,8 @@ int ARobot::ProcessImage_Victim() {
         }
         return 2;
     }
-    return -1;
+#endif
+    return 3;
 }
 
 void ARobot::ClearImgList() {

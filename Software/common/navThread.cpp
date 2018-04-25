@@ -97,9 +97,6 @@ void NavThread::run(void){
             printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
             sleep(1);
             if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
-                myRobot->SpinLaser();
-                sleep(3); //time for laser
-
                 myRobot->CheckLightTile();
                 if(myRobot->CheckRamp()) { //is ramp
                     myRobot->MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
@@ -111,7 +108,10 @@ void NavThread::run(void){
                     sleep(1.5);
                     //save state
                 }
-                //check visual victim
+            }
+            if(!nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim()) {
+                myRobot->picam.frameCapture(leftcapture_file);
+                sleep(2);
                 cout << "Victim Status: " << myRobot->isVictim << endl;
                 if(!myRobot->isVictim) { //get currCell
                     int i = myRobot->ProcessImage_Victim();
@@ -131,20 +131,19 @@ void NavThread::run(void){
                         myRobot->isVictim = true;
                         myRobot->TurnDistance(90, ARobot::LEFT); //turn left to drop from back onto right side
                         break;
-                    default:
+                    case 3:
                         if(myRobot->victim.letter == 'U') { //U or nothing
                             myRobot->dropCnt = 0;
                             myRobot->LEDLight(3500);
                             sleep(4);
-                            sleep(1);
                             myRobot->CorrectYaw();
                             sleep(0.2);
                             break;
                         }
                         switch(myRobot->CheckVictimTemp()) {
-                        printf("Victim Results: %d\n", myRobot->CheckVictimTemp());
+                        printf("Temperature Victim Results: %d\n", myRobot->CheckVictimTemp());
                         case 0:
-                            sleep(1);
+                            sleep(0.5);
                             myRobot->CorrectYaw();
                             sleep(0.2);
                             break;
@@ -164,10 +163,12 @@ void NavThread::run(void){
                             break;
                         }
                         break;
+                    default:
+                        break;
                     }
                 }
             } else {
-                sleep(1);
+                sleep(0.5);
                 myRobot->CorrectYaw();
                 sleep(0.2);
             }
