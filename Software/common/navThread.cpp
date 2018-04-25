@@ -2,6 +2,9 @@
 
 using namespace std;
 
+const char* leftcapture_file = "/home/alex/projects/rcj-code/Software/letter/randomFolder/capL.jpg";
+const char* rightcapture_file = "/home/alex/projects/rcj-code/Software/letter/randomFolder/capR.jpg";
+
 void NavThread::run(void){
     sleep(1);
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
@@ -110,7 +113,7 @@ void NavThread::run(void){
                 }
             }
             if(!nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim()) {
-                myRobot->picam.frameCapture(myRobot->leftcapture_file);
+                myRobot->picam.frameCapture(leftcapture_file);
                 sleep(2);
                 cout << "Victim Status: " << myRobot->isVictim << endl;
                 if(!myRobot->isVictim) { //get currCell
