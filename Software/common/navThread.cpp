@@ -2,9 +2,6 @@
 
 using namespace std;
 
-const char* leftcapture_file = "/home/alex/projects/rcj-code/Software/letter/randomFolder/capL.jpg";
-const char* rightcapture_file = "/home/alex/projects/rcj-code/Software/letter/randomFolder/capR.jpg";
-
 void NavThread::run(void){
     sleep(1);
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
