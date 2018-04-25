@@ -95,7 +95,6 @@ void NavThread::run(void){
 
             nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]);
             printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
-            sleep(1);
             if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
                 myRobot->CheckLightTile();
                 if(myRobot->CheckRamp()) { //is ramp
@@ -112,60 +111,59 @@ void NavThread::run(void){
             if(!nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim()) {
                 myRobot->picam.frameCapture(leftcapture_file);
                 sleep(2);
-                cout << "Victim Status: " << myRobot->isVictim << endl;
-                if(!myRobot->isVictim) { //get currCell
-                    int i = myRobot->ProcessImage_Victim();
-                    switch(i) {
-                    case 0: //drop left
-                        myRobot->victimLeft = true;
-                        myRobot->isVictim = true;
-                        myRobot->TurnDistance(90, ARobot::RIGHT); //turn left to drop from back onto right side
+                int i = myRobot->ProcessImage_Victim();
+                sleep(2);
+                cout << "Victim Status: " << i << endl;
+                switch(i) {
+                case 0: //drop left
+                    myRobot->victimLeft = true;
+                    myRobot->isVictim = true;
+                    myRobot->TurnDistance(90, ARobot::RIGHT); //turn left to drop from back onto right side
+                    break;
+                case 1: //drop front
+                    myRobot->victimFront = true;
+                    myRobot->isVictim = true;
+                    myRobot->TurnDistance(180, ARobot::RIGHT); //turn left to drop from back onto right side
+                    break;
+                case 2: //drop right
+                    myRobot->victimRight = true;
+                    myRobot->isVictim = true;
+                    myRobot->TurnDistance(90, ARobot::LEFT); //turn left to drop from back onto right side
+                    break;
+                case 3:
+                    if(myRobot->victim.letter == 'U') { //U or nothing
+                        myRobot->dropCnt = 0;
+                        myRobot->LEDLight(3500);
+                        sleep(4);
+                        myRobot->CorrectYaw();
+                        sleep(0.2);
                         break;
-                    case 1: //drop front
-                        myRobot->victimFront = true;
-                        myRobot->isVictim = true;
-                        myRobot->TurnDistance(180, ARobot::RIGHT); //turn left to drop from back onto right side
+                    }
+                    switch(myRobot->CheckVictimTemp()) {
+                    printf("Temperature Victim Results: %d\n", myRobot->CheckVictimTemp());
+                    case 0:
+                        sleep(0.5);
+                        myRobot->CorrectYaw();
+                        sleep(0.2);
                         break;
-                    case 2: //drop right
+                    case 1: //drop or go back to calculating
                         myRobot->victimRight = true;
+                        myRobot->dropCnt = 1;
                         myRobot->isVictim = true;
                         myRobot->TurnDistance(90, ARobot::LEFT); //turn left to drop from back onto right side
                         break;
-                    case 3:
-                        if(myRobot->victim.letter == 'U') { //U or nothing
-                            myRobot->dropCnt = 0;
-                            myRobot->LEDLight(3500);
-                            sleep(4);
-                            myRobot->CorrectYaw();
-                            sleep(0.2);
-                            break;
-                        }
-                        switch(myRobot->CheckVictimTemp()) {
-                        printf("Temperature Victim Results: %d\n", myRobot->CheckVictimTemp());
-                        case 0:
-                            sleep(0.5);
-                            myRobot->CorrectYaw();
-                            sleep(0.2);
-                            break;
-                        case 1: //drop or go back to calculating
-                            myRobot->victimRight = true;
-                            myRobot->dropCnt = 1;
-                            myRobot->isVictim = true;
-                            myRobot->TurnDistance(90, ARobot::LEFT); //turn left to drop from back onto right side
-                            break;
-                        case 2:
-                            myRobot->victimLeft = true;
-                            myRobot->dropCnt = 1;
-                            myRobot->isVictim = true;
-                            myRobot->TurnDistance(90, ARobot::RIGHT); //turn right to drop from back onto left side
-                            break;
-                        default:
-                            break;
-                        }
+                    case 2:
+                        myRobot->victimLeft = true;
+                        myRobot->dropCnt = 1;
+                        myRobot->isVictim = true;
+                        myRobot->TurnDistance(90, ARobot::RIGHT); //turn right to drop from back onto left side
                         break;
                     default:
                         break;
                     }
+                    break;
+                default:
+                    break;
                 }
             } else {
                 sleep(0.5);

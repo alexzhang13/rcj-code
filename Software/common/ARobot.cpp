@@ -522,6 +522,8 @@ int ARobot::CheckVictimTemp()
         return 2;
     } else if (numAboveThreshR >= 4) {
         return 1;
+    } else {
+        return 0;
     }
 }
 
@@ -573,7 +575,7 @@ int ARobot::ProcessImage_Victim() {
         this->victim.dir_victim = RIGHT;
         this->victim.m_isVictim = true;
         if(rightVVictim[0] == 'U') {
-            return -1;
+            return 3;
         } else if(rightVVictim[0] == 'S') {
             this->dropCnt = 1;
         } else {
