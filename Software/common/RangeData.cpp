@@ -76,9 +76,9 @@ int RangeData::getRangeLong() {
 //pos or negative
 int RangeData::getRangeOffset() {
     if(avalid_short) {
-        return data.laserS_a + data.laserS_b + OFFSET - 300;
+        return data.laserS_a + data.laserS_b + OFFSET/2 - 300;
     } else if(avalid_long) {
-        return data.laserL_a + data.laserL_b + OFFSET - this->numwallslong*300;
+        return data.laserL_a + data.laserL_b + OFFSET/2 - this->numwallslong*300;
     }
 }
 
@@ -88,7 +88,7 @@ int RangeData::setAngle() {
         angled = acos(min(1.0, 300.0/(data.laserS_a + data.laserS_b + OFFSET))) * 180 / PI;
         alpha = max(0.0, 1 - (this->getRangeOffset()/10.0)); //linear as opposed to based on angles
         printf("Alpha: %f\n", alpha);
-        if(alpha > 2.2) //too high, must be invalid
+        if(alpha > 1.5) //too high, must be invalid
             alpha = alpha - 1.0;
         else if (alpha > 1)
             alpha = 1;
