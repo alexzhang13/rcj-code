@@ -630,7 +630,6 @@ void ARobot::CheckLightTile()
     if(mlen_light < 3)
         return;
 
-    printf("Light: %d\n", lightDataList[mlen_light-1].CheckLight());
     if (lightDataList[mlen_light-1].CheckLight() == 1 && lightDataList[mlen_light-2].CheckLight() == 1 && lightDataList[mlen_light-3].CheckLight() == 1) {
         currTileLight = BLACK;
         if(backingBlack == false) {
