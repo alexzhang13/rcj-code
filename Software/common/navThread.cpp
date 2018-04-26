@@ -310,9 +310,13 @@ int NavThread::WayPointNav(ARobot *robot, Navigate2D &nav_rt)
 
 void NavThread::DestroyThread()
 {
+    printf("1");
     myRobot->currState = ARobot::STOP;
+    printf("2");
     myRobot->StopMove();
-    myRobot->picam.close();
+    //myRobot->picam.close();
+    printf("3");
     this->mExitFlag = true;
+    printf("4\n");
 }
 
