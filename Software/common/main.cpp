@@ -24,8 +24,8 @@ ARobot *myRobot;
 UartRx *uartrx;
 Process_T *process_thread;
 
-void spawnThread(Thread *currThread,  ARobot *myRobot);
-void stopThread(Thread *currThread, ARobot *myRobot);
+void spawnThread(Thread *&currThread,  ARobot *myRobot);
+void stopThread(Thread *&currThread, ARobot *myRobot);
 
 int main(int argc,char **argv){
 #ifdef WIN32
@@ -42,7 +42,7 @@ int main(int argc,char **argv){
     bool isRunning = false; //start program button
     bool reset = false; //flag
     int iteration = 0;
-    Thread *currThread; //spawned thread
+    Thread *currThread=NULL; //spawned thread
 
     //Set up Wires, Below is the wiringPi -> Pi Rev.3 GPIO Mapping
     //22 --> 3 (WiringPI)
@@ -100,7 +100,7 @@ int main(int argc,char **argv){
  * 1 0 --> Collect Data
  * 1 1 --> Tester Thread (i.e. Testing kNN PiCam, etc.)
  */
-void spawnThread(Thread *currThread, ARobot *myRobot) {
+void spawnThread(Thread *&currThread, ARobot *myRobot) {
     int currChoice = digitalRead(5) + digitalRead(4)*2;
 
     switch(currChoice) {
@@ -117,12 +117,13 @@ void spawnThread(Thread *currThread, ARobot *myRobot) {
         currThread = new TestThread(myRobot);
         break;
     }
+    printf("CurrThread started with address: %d\n", currThread);
 }
 
-void stopThread(Thread *currThread, ARobot *myRobot) {
-    printf("Thread Stopping...\n");
-    currThread->DestroyThread();
-    //currThread->setDestroy(true);
+void stopThread(Thread *&currThread, ARobot *myRobot) {
+    printf("Thread Stopping...&d\n", currThread);
+    //currThread->DestroyThread();
+    currThread->setDestroy(true);
     //while(!currThread->isReadyExit()) {
         printf("t-Thread Stopping...\n");
         sleep(0.1);
