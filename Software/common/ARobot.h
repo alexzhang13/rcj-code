@@ -103,7 +103,7 @@ public:
     void setOffsetSpeed(int offset_l, int offset_r);
     void MoveDistance(int distance_mm, BotDir forward);
     void StopMove();
-    void TurnDistance(int degrees, BotDir right);
+    void TurnDistance(float degrees, BotDir dir);
     void StopTurn(BotDir right);
     void ResetEncoder();
 

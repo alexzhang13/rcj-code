@@ -726,7 +726,7 @@ void ARobot::ResetEncoder() {
     snprintf(i_command, i_length, "%c %c", 'm', 'g');
     WriteCommand(i_command, i_length);
 }
-void ARobot::TurnDistance(int degrees, BotDir dir)
+void ARobot::TurnDistance(float degrees, BotDir dir)
 {
     size_t imu_list = imuDataList.size();
     int i_length = snprintf(NULL, 0, "%c %c", 'm', 'd') + 1;
