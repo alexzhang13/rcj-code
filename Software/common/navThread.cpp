@@ -187,6 +187,7 @@ void NavThread::run(void){
     pthread_cancel(pthread_self());
     sleep(0.1);
     myReadyExitFlag = true;
+    printf("Thread Destroyed: Signal\n");
     return;
 }
 
@@ -311,12 +312,8 @@ int NavThread::WayPointNav(ARobot *robot, Navigate2D &nav_rt)
 void NavThread::DestroyThread()
 {
     myRobot->StopMove();
-    printf("1");
     myRobot->currState = ARobot::STOP;
-    printf("2");
     //myRobot->picam.close();
-    printf("3");
     this->mExitFlag = true;
-    printf("4\n");
 }
 
