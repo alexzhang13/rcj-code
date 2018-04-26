@@ -61,6 +61,8 @@ void NavThread::run(void){
             sleep(0.2);
             break;
         case 6: //Drop
+            printf("Dropping: %d\n", myRobot->dropCnt);
+            sleep(1);
             myRobot->LEDLight(3000);
             sleep(0.2);
             for(int i = 0; i < myRobot->dropCnt; i++) {
@@ -87,6 +89,7 @@ void NavThread::run(void){
             myRobot->currState = ARobot::STOP;
         case 9: //Data collection
             //myRobot->UpdateCellMap(&myRobot->sensor_info, false, false); //false = not black
+            writeCurrentMap(this->map_dir, this->map_name, this->myRobot, this->nav);
             myRobot->isVictim = nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim();
             if(!myRobot->isVictim) {myRobot->isDropped = false;}
             sleep(0.1);

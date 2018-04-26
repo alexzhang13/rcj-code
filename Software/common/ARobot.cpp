@@ -94,32 +94,32 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag, bool CheckRam
 
         if(rangeDataList[range_size-1].walls.wallN == 0) {
             sensor_info->setWallNorth(MazeCell::MWall);
-        } else if(rangeDataList[range_size-1].walls.wallN == -1) {
-            sensor_info->setWallNorth(MazeCell::MOpen);
+        } else if(rangeDataList[range_size-1].walls.wallN == -1 && sensor_info->getWallNorth != MazeCell::MOpen) {
+            sensor_info->setWallNorth(MazeCell::MUnknown);
         } else {
             sensor_info->setWallNorth(MazeCell::MOpen);
         }
 
         if(rangeDataList[range_size-1].walls.wallE == 0) {
             sensor_info->setWallEast(MazeCell::MWall);
-        } else if (rangeDataList[range_size-1].walls.wallE == -1) {
-            sensor_info->setWallEast(MazeCell::MOpen);
+        } else if (rangeDataList[range_size-1].walls.wallE == -1 && sensor_info->getWallEast != MazeCell::MOpen) {
+            sensor_info->setWallEast(MazeCell::MUnknown);
         } else {
             sensor_info->setWallEast(MazeCell::MOpen);
         }
 
         if(rangeDataList[range_size-1].walls.wallS == 0) {
             sensor_info->setWallSouth(MazeCell::MWall);
-        } else if (rangeDataList[range_size-1].walls.wallS == -1) {
-            sensor_info->setWallSouth(MazeCell::MOpen);
+        } else if (rangeDataList[range_size-1].walls.wallS == -1 && sensor_info->getWallSouth != MazeCell::MOpen) {
+            sensor_info->setWallSouth(MazeCell::MUnknown);
         } else {
             sensor_info->setWallSouth(MazeCell::MOpen);
         }
 
         if(rangeDataList[range_size-1].walls.wallW == 0) {
             sensor_info->setWallWest(MazeCell::MWall);
-        } else if (rangeDataList[range_size-1].walls.wallW == -1) {
-            sensor_info->setWallWest(MazeCell::MOpen);
+        } else if (rangeDataList[range_size-1].walls.wallW == -1 && sensor_info->getWallWest != MazeCell::MOpen) {
+            sensor_info->setWallWest(MazeCell::MUnknown);
         } else {
             sensor_info->setWallWest(MazeCell::MOpen);
         }
