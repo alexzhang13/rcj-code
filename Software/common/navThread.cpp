@@ -316,7 +316,7 @@ void NavThread::DestroyThread()
     sleep(0.2);
     //myRobot->StopMove();
     printf("1");
-    myRobot->currState = ARobot::STOP;
+    //myRobot->currState = ARobot::STOP;
     printf("2");
     //myRobot->picam.close();
     printf("3");
