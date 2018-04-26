@@ -17,16 +17,16 @@ public:
     virtual void DestroyThread();
 
     //return true when thread is ready to be killed
-    inline bool isExit() {
+    bool isExit() {
         return mExitFlag;
     }
 
     //ensure signal to kill and kill have no discrepancy
-    inline bool isReadyExit() {
+    bool isReadyExit() {
         return myReadyExitFlag;
     }
 
-    inline bool isToDestroy() {
+    bool isToDestroy() {
         return toDestroy;
     }
 
