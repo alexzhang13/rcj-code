@@ -122,7 +122,7 @@ void spawnThread(Thread *currThread, ARobot *myRobot) {
 void stopThread(Thread *currThread, ARobot *myRobot) {
     printf("Thread Stopping...\n");
     //currThread->DestroyThread();
-    currThread->setDestroy(true);
+    //currThread->setDestroy(true);
     while(!currThread->isReadyExit())
         printf("t-Thread Stopping...\n");
         sleep(0.1);
