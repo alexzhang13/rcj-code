@@ -6,6 +6,7 @@
 #include "IMUData.h"
 
 #define OFFSET 20
+#define ALPHAOFFSET 12
 #define PI 3.1415926535
 #define SHORTOFFSET 30.0
 #define LONGOFFSET 55.0
@@ -76,9 +77,9 @@ int RangeData::getRangeLong() {
 //pos or negative
 int RangeData::getRangeOffset() {
     if(avalid_short) {
-        return data.laserS_a + data.laserS_b + OFFSET/2 - 300;
+        return data.laserS_a + data.laserS_b + ALPHAOFFSET - 300;
     } else if(avalid_long) {
-        return data.laserL_a + data.laserL_b + OFFSET/2 - this->numwallslong*300;
+        return data.laserL_a + data.laserL_b + ALPHAOFFSET - this->numwallslong*300;
     }
 }
 
@@ -87,9 +88,8 @@ int RangeData::setAngle() {
     if(avalid_short) {
         angled = acos(min(1.0, 300.0/(data.laserS_a + data.laserS_b + OFFSET))) * 180 / PI;
         alpha = max(0.0, 1 - (this->getRangeOffset()/10.0)); //linear as opposed to based on angles
-        printf("Alpha: %f\n", alpha);
-        if(alpha > 1.5) //too high, must be invalid
-            alpha = alpha - 1.0;
+        if(alpha > 2.5) //too high, must be invalid
+            alpha = 0;
         else if (alpha > 1)
             alpha = 1;
         //printf("Distance: %f\tAlpha: %f\n", data.laserS_a + data.laserS_b + OFFSET, alpha);
@@ -98,7 +98,7 @@ int RangeData::setAngle() {
         angled = acos(min(1.0, (double)(far*300)/(data.laserL_a + data.laserL_b + OFFSET))) * 180 / PI;
         alpha = max(0.0, 1 - (this->getRangeOffset()/20.0)); //linear as opposed to based on angles
         //alpha = max(0.0, (7.62/pow(far-1,2))*((far*300)/(data.laserL_a + data.laserL_b + OFFSET)-0.786)); //30 degree turn range 0-1
-        if(alpha >= 1.5)
+        if(alpha > 2.5)
             alpha = 0;
         else if (alpha > 1)
             alpha = 1;
