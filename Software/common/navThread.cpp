@@ -11,7 +11,7 @@ void NavThread::run(void){
     else
         startNewMap(myRobot, nav);
     printf("Map Generation Started...\n");
-    //myRobot->picam.cameraOpen(720, 480);
+    myRobot->picam.cameraOpen(720, 480);
     sleep(1);
     myRobot->imuCalibrated = true; //turn on IMU flag
 
@@ -312,7 +312,7 @@ void NavThread::DestroyThread()
 {
     myRobot->StopMove();
     myRobot->currState = ARobot::STOP;
-    //myRobot->picam.close();
+    myRobot->picam.close();
     this->mExitFlag = true;
 }
 
