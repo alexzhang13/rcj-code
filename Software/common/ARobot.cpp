@@ -290,7 +290,7 @@ void ARobot::CalcNextTile(bool first)
     if(turnNext == 3) turnNext = -1; //west -> north = turn right 1
     else if (turnNext == -3) turnNext = 1; //north -> west = turn left 1
 
-    angle = turnNext==0 ? 0 : angle; //if the bot is turning don't correct
+    angle = turnNext==0 ? 0 : angle/2.0; //if the bot is turning don't correct
     toTurn = turnNext*90 + (int)angle; //turning distance
 
     //Debugging Stuff
@@ -513,6 +513,7 @@ int ARobot::CheckVictimTemp()
             }
         }
         if(numAboveThreshL < 4 && numAboveThreshR < 4) {
+            printf("TLeft: %d\tTRight: %d\n", numAboveThreshL, numAboveThreshR);
             return 0;
         }
         if(i < 4) {
