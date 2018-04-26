@@ -95,7 +95,7 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag, bool CheckRam
         if(rangeDataList[range_size-1].walls.wallN == 0) {
             sensor_info->setWallNorth(MazeCell::MWall);
         } else if(rangeDataList[range_size-1].walls.wallN == -1) {
-            sensor_info->setWallNorth(MazeCell::MUnknown);
+            sensor_info->setWallNorth(MazeCell::MOpen);
         } else {
             sensor_info->setWallNorth(MazeCell::MOpen);
         }
@@ -111,7 +111,7 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag, bool CheckRam
         if(rangeDataList[range_size-1].walls.wallS == 0) {
             sensor_info->setWallSouth(MazeCell::MWall);
         } else if (rangeDataList[range_size-1].walls.wallS == -1) {
-            sensor_info->setWallSouth(MazeCell::MUnknown);
+            sensor_info->setWallSouth(MazeCell::MOpen);
         } else {
             sensor_info->setWallSouth(MazeCell::MOpen);
         }
