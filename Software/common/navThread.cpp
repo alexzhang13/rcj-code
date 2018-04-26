@@ -61,10 +61,10 @@ void NavThread::run(void){
             sleep(0.2);
             break;
         case 6: //Drop
-            myRobot->LEDLight(4500);
+            myRobot->LEDLight(3000);
             for(int i = 0; i < myRobot->dropCnt; i++) {
                 myRobot->Drop();
-                sleep(2);
+                sleep(4);
             }
             myRobot->isDropped = true;
             nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->setVictim(true);
