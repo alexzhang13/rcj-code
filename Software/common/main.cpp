@@ -79,7 +79,6 @@ int main(int argc,char **argv){
                 isRunning = true;
                 reset = false;
             } else if(digitalRead(2)==0 && isRunning && reset) {
-                printf("Thread Killed...\n");
                 stopThread(currThread, myRobot);
                 isRunning = false;
                 reset = false;
@@ -121,6 +120,7 @@ void spawnThread(Thread *currThread, ARobot *myRobot) {
 }
 
 void stopThread(Thread *currThread, ARobot *myRobot) {
+    printf("Thread Killed...\n");
     currThread->DestroyThread();
     while(!currThread->isReadyExit())
         sleep(0.05);
