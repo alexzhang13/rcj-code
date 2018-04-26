@@ -744,7 +744,7 @@ void ARobot::TurnDistance(float degrees, BotDir dir)
     }
     this->currState = TURN;
     this->initTurnRec = true;
-    printf("Initial Yaw: %f Degrees: %d ToTurn: %f\n", initialYaw, degrees, toTurn);
+    printf("Initial Yaw: %f Degrees: %f ToTurn: %f\n", initialYaw, degrees, toTurn);
     WriteCommand(i_command, i_length);
 }
 
@@ -764,7 +764,7 @@ void ARobot::StopTurn(BotDir dir)
         prevYaw = currYaw;
     }
     if(dir == RIGHT) {
-        if(prevYaw < currYaw) {//if robot crosses over from 180 to -180, direction switches
+        if(prevYaw < currYaw && abs(prevYaw-currYaw) >= 0.5) {//if robot crosses over from 180 to -180, direction switches
             //printf("Curr Yaw: %f\tPrev Yaw: %f\n", currYaw, prevYaw);
             cross_over = true;
         }
@@ -779,6 +779,7 @@ void ARobot::StopTurn(BotDir dir)
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
             WriteCommand(i_command, i_length);
             if(isVictim && isDropped == false) {
+                printf("Drop\n");
                 currState = DROP;
             } else {
                 currState = IDLE;
@@ -786,7 +787,7 @@ void ARobot::StopTurn(BotDir dir)
             return;
         }
     } else if(dir == LEFT) {
-        if(prevYaw > currYaw) //if robot crosses over from -180 to 180, direction switches
+        if(prevYaw > currYaw && abs(prevYaw-currYaw) >= 0.5) //if robot crosses over from -180 to 180, direction switches
             cross_over = true;
         if(cross_over)
             currYaw += 360.0f; //range fixing
@@ -799,6 +800,7 @@ void ARobot::StopTurn(BotDir dir)
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
             WriteCommand(i_command, i_length);
             if(isVictim && isDropped == false) {
+                printf("Drop\n");
                 currState = DROP;
             } else {
                 currState = IDLE;
