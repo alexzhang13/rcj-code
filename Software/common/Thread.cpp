@@ -43,6 +43,7 @@ bool Thread::start(void){
         return false;
     }
     this->mExitFlag = false;
+    this->toDestroy = false;
     pthread_attr_destroy(&attr);
     return true;
 }

@@ -16,6 +16,9 @@ void NavThread::run(void){
     myRobot->imuCalibrated = true; //turn on IMU flag
 
     while(!this->isExit()) {
+        if(this->toDestroy) {
+            this->DestroyThread();
+        }
         switch(myRobot->currState) {
         case 0: //Planning
             Navigate(in_dir, xml_name, myRobot, nav);

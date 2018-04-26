@@ -6,7 +6,7 @@ class Thread {
 public:
     Thread(int priority=50, int stackSize=20000);
 
-    bool m_SuspendFlag;
+    bool m_SuspendFlag, toDestroy;
 
     virtual bool start(void);
     virtual void run(void)=0;
