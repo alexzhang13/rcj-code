@@ -369,28 +369,28 @@ void ARobot::Correction() {
     switch((int)currOrientation) {
     case 0: //Bot facing North
         if(currYaw >= 180) currYaw -= 360; //negative range
-        if(abs(0.0f-currYaw) >= 1.0f) {
+        if(abs(0.0f-currYaw) >= 2.0f) {
             this->correctionDir = (0.0f-currYaw > 0.0f) ? LEFT : RIGHT;
             TurnDistance((int)abs(0.0f-currYaw), this->correctionDir); //If yaw is negative, robot is on right side, so turn left, and vice versa
             return;
         }
         break;
     case 1: //Bot facing East
-        if(abs(270.0f-currYaw) >= 1.0f) {
+        if(abs(270.0f-currYaw) >= 2.0f) {
             this->correctionDir = (270.0f-currYaw > 0.0f) ? LEFT : RIGHT;
             TurnDistance((int)abs(270.0f-currYaw), this->correctionDir); //If 270-yaw is positive, robot is on right side, so turn left, and vice versa
             return;
         }
         break;
     case 2: //Bot facing South
-        if(abs(180.0f-currYaw) >= 1.0f) {
+        if(abs(180.0f-currYaw) >= 2.0f) {
             this->correctionDir = (180.0f-currYaw > 0.0f) ? LEFT : RIGHT;
             TurnDistance((int)abs(180.0f-currYaw), this->correctionDir); //If 180-yaw is positive, robot is on right side, so turn left, and vice versa
             return;
         }
         break;
     case 3: //Bot facing West
-        if(abs(90.0f-currYaw) >= 1.0f) {
+        if(abs(90.0f-currYaw) >= 2.0f) {
             this->correctionDir = (90.0f-currYaw > 0.0f) ? LEFT : RIGHT;
             TurnDistance((int)abs(90.0f-currYaw), this->correctionDir); //If 90-yaw is positive, robot is on right side, so turn left, and vice versa
             return;
@@ -424,29 +424,29 @@ void ARobot::CorrectionFailed() { //if correction was faulty try to change
 
     if(this->correctionDir == RIGHT) {
         if(currentError < this->correctionError) { //correct direction
-            this->FixYaw(1.5);
-            TurnDistance(1.5, RIGHT); //correct correction
+            this->FixYaw(2.0);
+            TurnDistance(2.0, RIGHT); //correct correction
         } else if(currentError == this->correctionError) {
             this->correctionFailed = false; //correction finished
             this->isCorrecting = false;
         } else { //bad case, means something went wrong
-            this->FixYaw(-1.5);
+            this->FixYaw(-2.0);
             this->correctionFailed = false; //correction finished
             this->isCorrecting = false;
-            TurnDistance(1.5, LEFT); //overshot correction
+            TurnDistance(2.0, LEFT); //overshot correction
         }
     } else { //right
         if(currentError < this->correctionError) { //good case, 3.0 margin
-            this->FixYaw(-1.5);
-            TurnDistance(1.5, LEFT); //correct correction
+            this->FixYaw(-2.0);
+            TurnDistance(2.0, LEFT); //correct correction
         } else if(currentError == this->correctionError) {
             this->correctionFailed = false; //correction finished
             this->isCorrecting = false;
         } else { //bad case, means something went wrong
-            this->FixYaw(1.5);
+            this->FixYaw(2.0);
             this->correctionFailed = false; //correction finished
             this->isCorrecting = false;
-            TurnDistance(1.5, RIGHT); //correct correction
+            TurnDistance(2.0, RIGHT); //correct correction
         }
     }
     this->correctionError = rangeDataList[rangeDataList.size()-1].getRangeOffset();
