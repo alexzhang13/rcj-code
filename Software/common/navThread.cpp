@@ -17,7 +17,8 @@ void NavThread::run(void){
 
     while(!this->isExit()) {
         if(this->isToDestroy()) {
-            this->DestroyThread();
+            //this->DestroyThread();
+            printf("seg?\n");
         }
         switch(myRobot->currState) {
         case 0: //Planning
@@ -313,7 +314,6 @@ int NavThread::WayPointNav(ARobot *robot, Navigate2D &nav_rt)
 
 void NavThread::DestroyThread()
 {
-    sleep(0.2);
     myRobot->StopMove();
     printf("1");
     myRobot->currState = ARobot::STOP;
