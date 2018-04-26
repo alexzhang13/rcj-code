@@ -3,7 +3,7 @@
 using namespace std;
 
 void NavThread::run(void){
-    sleep(1);
+    sleep(0.1);
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     printf("Config File Read...\n");
     if(this->readMap)
@@ -314,7 +314,7 @@ int NavThread::WayPointNav(ARobot *robot, Navigate2D &nav_rt)
 void NavThread::DestroyThread()
 {
     sleep(0.2);
-    myRobot->StopMove();
+    //myRobot->StopMove();
     printf("1");
     myRobot->currState = ARobot::STOP;
     printf("2");
