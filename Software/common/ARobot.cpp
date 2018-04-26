@@ -515,8 +515,10 @@ int ARobot::CheckVictimTemp()
         if(numAboveThreshL < 4 && numAboveThreshR < 4) {
             return 0;
         }
-        numAboveThreshL=0; //reset
-        numAboveThreshR=0; //reset
+        if(i < 4) {
+            numAboveThreshL=0; //reset
+            numAboveThreshR=0; //reset
+        }
     }
     if(numAboveThreshL >= 4) { //after test (4*8)
         return 2;

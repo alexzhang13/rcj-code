@@ -174,7 +174,6 @@ void NavThread::run(void){
 
             break;
         case 10:
-            printf("stop\n");
             //kill thread here
             break;
         default:
