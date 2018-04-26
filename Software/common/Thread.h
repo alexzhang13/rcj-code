@@ -16,18 +16,25 @@ public:
     virtual void checkSuspend();
     virtual void DestroyThread();
 
+    //return true when thread is ready to be killed
     inline bool isExit() {
         return mExitFlag;
     }
 
+    //ensure signal to kill and kill have no discrepancy
+    inline bool isReadyExit() {
+        return myReadyExitFlag;
+    }
+
 protected:
     int mPriority, mStackSize;
+    bool myReadyExitFlag, mExitFlag;
 
 private:
     pthread_t mThread;
     pthread_mutex_t m_SuspendMutex;
     pthread_cond_t m_ResumeCond;
-    bool mExitFlag;
+
 
     static void *threadFunc(void * obj);
 }; // class Thread

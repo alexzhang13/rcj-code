@@ -122,7 +122,8 @@ void spawnThread(Thread *currThread, ARobot *myRobot) {
 
 void stopThread(Thread *currThread, ARobot *myRobot) {
     currThread->DestroyThread();
-    sleep(0.5);
+    while(!currThread->isReadyExit())
+        sleep(0.05);
     delete currThread;
 }
 

@@ -42,7 +42,7 @@ bool Thread::start(void){
         printf("Thread::error: create thread fails(%s)\n",strerror(status));
         return false;
     }
-
+    this->mExitFlag = false;
     pthread_attr_destroy(&attr);
     return true;
 }

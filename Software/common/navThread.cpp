@@ -15,7 +15,7 @@ void NavThread::run(void){
     sleep(1);
     myRobot->imuCalibrated = true; //turn on IMU flag
 
-    while(1) {
+    while(!this->isExit()) {
         switch(myRobot->currState) {
         case 0: //Planning
             Navigate(in_dir, xml_name, myRobot, nav);
@@ -174,9 +174,8 @@ void NavThread::run(void){
 
             break;
         case 10:
-            pthread_exit(0);
-            sleep(0.5);
-            return;
+            //kill thread here
+            break;
         default:
             /*Testing Purposes Only*/
             sleep(1);
@@ -184,7 +183,9 @@ void NavThread::run(void){
         }
         sleep(0.1);
     }
-
+    pthread_cancel(pthread_self());
+    sleep(0.1);
+    myReadyExitFlag = true;
     return;
 }
 
@@ -308,10 +309,9 @@ int NavThread::WayPointNav(ARobot *robot, Navigate2D &nav_rt)
 
 void NavThread::DestroyThread()
 {
-    sleep(0.2);
-    myRobot->StopMove();
     myRobot->currState = ARobot::STOP;
+    myRobot->StopMove();
     myRobot->picam.close();
-    myRobot->Reset();
+    this->mExitFlag = true;
 }
 
