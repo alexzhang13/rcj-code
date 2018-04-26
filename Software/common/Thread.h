@@ -6,7 +6,7 @@ class Thread {
 public:
     Thread(int priority=50, int stackSize=20000);
 
-    bool m_SuspendFlag, toDestroy;
+    bool m_SuspendFlag;
 
     virtual bool start(void);
     virtual void run(void)=0;
@@ -26,9 +26,17 @@ public:
         return myReadyExitFlag;
     }
 
+    inline bool isToDestroy() {
+        return toDestroy;
+    }
+
+    void setDestroy(bool flag) {
+        toDestroy = flag;
+    }
+
 protected:
     int mPriority, mStackSize;
-    bool myReadyExitFlag, mExitFlag;
+    bool myReadyExitFlag, mExitFlag, toDestroy;
 
 private:
     pthread_t mThread;

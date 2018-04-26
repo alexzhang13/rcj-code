@@ -16,7 +16,7 @@ void NavThread::run(void){
     myRobot->imuCalibrated = true; //turn on IMU flag
 
     while(!this->isExit()) {
-        if(this->toDestroy) {
+        if(this->isToDestroy()) {
             this->DestroyThread();
         }
         switch(myRobot->currState) {
@@ -320,7 +320,7 @@ void NavThread::DestroyThread()
     printf("2");
     //myRobot->picam.close();
     printf("3");
-    //this->mExitFlag = true;
+    this->mExitFlag = true;
     printf("4\n");
 }
 
