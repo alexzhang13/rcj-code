@@ -424,29 +424,29 @@ void ARobot::CorrectionFailed() { //if correction was faulty try to change
 
     if(this->correctionDir == RIGHT) {
         if(currentError < this->correctionError) { //correct direction
-            this->FixYaw(1.0);
-            TurnDistance(1, RIGHT); //correct correction
+            this->FixYaw(1.5);
+            TurnDistance(1.5, RIGHT); //correct correction
         } else if(currentError == this->correctionError) {
             this->correctionFailed = false; //correction finished
             this->isCorrecting = false;
         } else { //bad case, means something went wrong
-            this->FixYaw(-1.0);
+            this->FixYaw(-1.5);
             this->correctionFailed = false; //correction finished
             this->isCorrecting = false;
-            TurnDistance(1, LEFT); //overshot correction
+            TurnDistance(1.5, LEFT); //overshot correction
         }
     } else { //right
         if(currentError < this->correctionError) { //good case, 3.0 margin
-            this->FixYaw(-1.0);
-            TurnDistance(1, LEFT); //correct correction
+            this->FixYaw(-1.5);
+            TurnDistance(1.5, LEFT); //correct correction
         } else if(currentError == this->correctionError) {
             this->correctionFailed = false; //correction finished
             this->isCorrecting = false;
         } else { //bad case, means something went wrong
-            this->FixYaw(1.0);
+            this->FixYaw(1.5);
             this->correctionFailed = false; //correction finished
             this->isCorrecting = false;
-            TurnDistance(1, RIGHT); //correct correction
+            TurnDistance(1.5, RIGHT); //correct correction
         }
     }
     this->correctionError = rangeDataList[rangeDataList.size()-1].getRangeOffset();
