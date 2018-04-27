@@ -632,6 +632,7 @@ void ARobot::CheckLightTile()
     mlen_light = lightDataList.size();
     if(mlen_light < 3)
         return;
+    printf("Light Reading: %d\n", lightDataList[mlen_light-1].ReturnLight());
 
     if (lightDataList[mlen_light-1].CheckLight() == 1 && lightDataList[mlen_light-2].CheckLight() == 1 && lightDataList[mlen_light-3].CheckLight() == 1) {
         currTileLight = BLACK;
@@ -781,6 +782,8 @@ void ARobot::StopTurn(BotDir dir)
             if(isVictim && isDropped == false) {
                 printf("Drop\n");
                 currState = DROP;
+            } else if (isVictim && isDropped) {
+                currState = PLANNING;
             } else {
                 currState = IDLE;
             }

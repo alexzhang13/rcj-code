@@ -49,11 +49,11 @@ void NavThread::run(void){
             while(myRobot->CheckRamp()) {
                 sleep(0.1);
             }
-            sleep(2);
+            sleep(1.2);
             myRobot->StopMove();
             //do something with myRobot-sensor_info to update the cell info
-            //myRobot->UpdateCellMap(&myRobot->sensor_info, false, true); //update curr cell location ??
-            myRobot->currState = ARobot::WAYPTNAV;
+            nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(0);
+            myRobot->currState = ARobot::PLANNING;
             break;
         case 5: //Move
             myRobot->CheckLightTile(); //check if anything happens during this time
@@ -71,13 +71,24 @@ void NavThread::run(void){
             }
             myRobot->isDropped = true;
             nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->setVictim(true);
-            myRobot->currState = ARobot::PLANNING;
+
+            //turn back
+            if(myRobot->victimLeft) {
+                myRobot->TurnDistance(90, ARobot::LEFT); //turn back left after right turn
+            } else if(myRobot->victimFront) {
+                myRobot->TurnDistance(180, ARobot::LEFT); //turn left to drop from back onto right side
+            } else if(myRobot->victimRight) {
+                myRobot->TurnDistance(90, ARobot::RIGHT); //turn back right after left turn
+            } else { //this shouldn't happen
+                printf("Error: Drop Failed?\n");
+                myRobot->currState = ARobot::WAYPTNAV;
+            }
             break;
         case 7: //BLACKBACK
             sleep(1);
             myRobot->backingBlack = false;
             nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]); //update "temp curr_cell"
-            myRobot->UpdateCellMap(&myRobot->sensor_info, myRobot->backingBlack, false); //sensor_info auto resets in this function call
+            myRobot->UpdateCellMap(&myRobot->sensor_info, true, false); //sensor_info auto resets in this function call
             nav.configureCurCell(&myRobot->sensor_info);
             nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-1]); //reupdate curr_cell
             myRobot->currState = ARobot::PLANNING;
@@ -102,6 +113,8 @@ void NavThread::run(void){
             if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
                 myRobot->CheckLightTile();
                 if(myRobot->CheckRamp()) { //is ramp
+                    robot->UpdateCellMap(&robot->sensor_info, false, true);
+                    nav.configureCurCell(&robot->sensor_info);
                     myRobot->MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
                     break;
                 }
