@@ -89,7 +89,6 @@ void NavThread::run(void){
             myRobot->backingBlack = false;
             nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]); //update "temp curr_cell"
             myRobot->UpdateCellMap(&myRobot->sensor_info, true, false); //sensor_info auto resets in this function call
-            nav.configureCurCell(&myRobot->sensor_info);
             nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-1]); //reupdate curr_cell
             myRobot->currState = ARobot::PLANNING;
             break;
