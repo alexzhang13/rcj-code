@@ -640,7 +640,7 @@ void ARobot::CheckLightTile()
             sleep(0.2);
             ResetEncoder();
             sleep(0.2);
-            MoveDistance(150, BACK);
+            MoveDistance(1500, BACK);
         }
     } else {
         //Calculate Previous
