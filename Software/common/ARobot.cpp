@@ -638,7 +638,10 @@ void ARobot::CheckLightTile()
         currTileLight = BLACK;
         if(backingBlack == false) {
             backingBlack = true;
+            StopMove();
+            sleep(0.5);
             ResetEncoder();
+            sleep(0.5);
             MoveDistance(150, BACK);
         }
     } else {
@@ -709,13 +712,14 @@ void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
 
     if(dir == FRONT) {
         snprintf(i_command, i_length, "%c %c %d", 'm', 'a', distance_mm);
+        printf("Forward: Distance: %d\n", distance_mm);
     } else {
         snprintf(i_command, i_length, "%c %c %d", 'm', 'b', distance_mm);
+        printf("Backward: Distance: %d\n", distance_mm);
     }
     if(!(currState == RAMP)) {
         currState = MOVE;
     }
-    printf("Command: Distance: %d\n", distance_mm);
     WriteCommand(i_command, i_length);
 }
 
