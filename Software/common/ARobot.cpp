@@ -484,16 +484,16 @@ void ARobot::SpinLaser() {
 }
 bool ARobot::CheckRamp()
 {
+    int check = 0;
     size_t pitch_vals = imuDataList.size()-1;
     for(int i = 1; i < 5; i++) {
-        if(!(abs(imuDataList[pitch_vals-i].m_pitch) <= 15)) { //if not ramp, break (return false)
-            return false;
-        } else if (!(abs(imuDataList[pitch_vals-i].m_pitch) >= 345)) {
-            return false;
+        if(imuDataList[pitch_vals-i].m_pitch >= 10 && imuDataList[pitch_vals-i].m_pitch <= 350) { //if not ramp, break (return false)
+            ++check;
         }
-        
     }
-    return true; //ramp is true if past 5 pitches match > 15 degrees
+    if(check > 3)
+        return true; //ramp is true if past 5 pitches match > 15 degrees
+    return false;
 }
 
 int ARobot::CheckVictimTemp()
