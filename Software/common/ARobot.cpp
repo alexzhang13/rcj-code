@@ -501,10 +501,11 @@ int ARobot::CheckVictimTemp()
     if(isVictim) //if a victim has already been there
         return 0;
     size_t temp_vals = tempDataList.size(); //get average values
-    int numAboveThreshR=0; //multiple values above threshold [at least 1/2]
-    int numAboveThreshL=0;
+    int numAboveThreshR = 0; //multiple values above threshold [at least 1/2]
+    int numAboveThreshL = 0;
     for(int i = 1; i < 5; i++) {
         for(int j = 1; i < 9; i++) { //left threshold
+            cout << "Left Temp: " << tempDataList[temp_vals-i].getLeftTemp()[j] << endl;
             if(tempDataList[temp_vals-i].getLeftTemp()[j] > this->threshLeft) {
                 ++numAboveThreshL;
             }
