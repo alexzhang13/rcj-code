@@ -49,10 +49,11 @@ void NavThread::run(void){
             while(myRobot->CheckRamp()) {
                 sleep(0.1);
             }
-            sleep(1.2);
+            sleep(1.25);
             myRobot->StopMove();
             //do something with myRobot-sensor_info to update the cell info
             nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(0);
+            sleep(1);
             myRobot->currState = ARobot::PLANNING;
             break;
         case 5: //Move
@@ -268,6 +269,7 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
     robot->sensor_info.reset(); //reset temp object
     robot->UpdateCellMap(&robot->sensor_info, false, false); //false = not black
     robot->UpdateNeighborCells();
+    cout << "Floor Number: " << nav_rt.getCurrentFloorIndex() << endl;
     cout << "Cells Updated..." << endl;
 
     nav_rt.configureCurCell(&robot->sensor_info);
@@ -281,6 +283,12 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
 
     nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
     cout << "Map File Written..." << endl;
+
+    cout << "North Wall State: " <<  nav_rt.getCellbyIndex(0)->getWallNorth() << endl;
+    cout << "South Wall State: " <<  nav_rt.getCellbyIndex(0)->getWallSouth() << endl;
+    cout << "East Wall State: " <<  nav_rt.getCellbyIndex(0)->getWallEast() << endl;
+    cout << "West Wall State: " <<  nav_rt.getCellbyIndex(0)->getWallWest() << endl;
+
 
     robot->temp_cell_list.clear();
 
