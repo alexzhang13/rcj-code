@@ -53,7 +53,7 @@ void NavThread::run(void){
             myRobot->StopMove();
             //do something with myRobot-sensor_info to update the cell info
             nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(0);
-            sleep(1);
+            sleep(2.5);
             myRobot->currState = ARobot::PLANNING;
             break;
         case 5: //Move
