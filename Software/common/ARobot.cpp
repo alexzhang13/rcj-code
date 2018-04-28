@@ -512,8 +512,7 @@ int ARobot::CheckVictimTemp()
                 ++numAboveThreshR;
             }
         }
-        if(numAboveThreshL < 4 && numAboveThreshR < 4) {
-            printf("TLeft: %d\tTRight: %d\n", numAboveThreshL, numAboveThreshR);
+        if(numAboveThreshL < 3 && numAboveThreshR < 3) {
             return 0;
         }
         if(i < 4) {
@@ -521,9 +520,9 @@ int ARobot::CheckVictimTemp()
             numAboveThreshR=0; //reset
         }
     }
-    if(numAboveThreshL >= 4) { //after test (4*8)
+    if(numAboveThreshL >= 3) { //after test (4*8)
         return 2;
-    } else if (numAboveThreshR >= 4) {
+    } else if (numAboveThreshR >= 3) {
         return 1;
     } else {
         return 0;

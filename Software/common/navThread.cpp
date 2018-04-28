@@ -226,6 +226,7 @@ void NavThread::readConfig(const char* filename, ARobot *robot)
     sleep(0.2);
     robot->setTempThresh(threshLeft, threshRight);
     sleep(0.2);
+    printf("Victim: &f\n", robot->getLeftVictimTemp());
     robot->setLightThresh(black_thresh, silver_thresh);
     sleep(0.2);
     robot->setSpeed(speed_left, speed_right);
