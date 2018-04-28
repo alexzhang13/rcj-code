@@ -67,30 +67,7 @@ def solveLetter(top, bottom):
     elif sum == 0: return 'H' #H
     elif whitePixelsTop == 0 and whitePixelsBottom == 1: return 'U' #U
     else: return -1
-
-
-def isBackground(maxContour, imgOriginal, imgGray):
-    letter = []
-    background = []
-    maxContourArray = []
-    maxContourArray.append(maxContour)
-
-    cimg = np.zeros_like(imgOriginal)
-    cv2.drawContours(cimg, maxContourArray, -1, color=(255, 255, 255), thickness=-1)
-
-    letterPoints = np.where(cimg == 255)
-    backgroundPoints = np.where(cimg == 0)
-    letter.append(imgOriginal[letterPoints[0], letterPoints[1]])
-    background.append(imgOriginal[backgroundPoints[0], backgroundPoints[1]])
-
-    white = round(np.average(background), 2)
-    total = round(np.average(imgGray), 2)
-    black = round(np.average(letter), 2)
-    if total > white or black*3/2 > white:
-        return -1
-    else:
-        return 1
-
+    
 
 def findContour(contours):
     maxContour = contours[0]
@@ -125,8 +102,6 @@ def main2():
     imgThreshCopy = imgThresh.copy()
     contours, _ = cv2.findContours(imgThreshCopy, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    cv2.imwrite("randomFolder/gray.jpg", imgThresh)
-
     if len(contours) > 0:
         maxContour = findContour(contours)
     else:
@@ -136,10 +111,9 @@ def main2():
     contourData = genContourData(maxContour)
     topROI, bottomROI = genTopAndBottom(imgThresh, contourData)
     result = solveLetter(topROI, bottomROI)
-    exists = isBackground(maxContour, imgOriginal, imgGray)
     ratio = contourData.rectHeight/contourData.rectWidth
 
-    if result == -1 or cv2.contourArea(maxContour) < MIN_SIZE or exists == -1 or ratio < 0.9 or ratio > 1.9 or contourData.touchingEdge():
+    if result == -1 or cv2.contourArea(maxContour) < MIN_SIZE or ratio < 0.9 or ratio > 1.9 or contourData.touchingEdge():
         print (0)
     else:
         print(result)
