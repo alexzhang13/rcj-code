@@ -62,13 +62,13 @@ void NavThread::run(void){
             break;
         case 6: //Drop
             printf("Dropping: %d\n", myRobot->dropCnt);
-            sleep(1);
-            myRobot->LEDLight(3000);
-            sleep(0.2);
             for(int i = 0; i < myRobot->dropCnt; i++) {
                 myRobot->Drop();
                 sleep(3);
             }
+            sleep(1);
+            myRobot->LEDLight(2000);
+            sleep(2.1);
             myRobot->isDropped = true;
             nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->setVictim(true);
 
