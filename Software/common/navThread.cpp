@@ -115,6 +115,7 @@ void NavThread::run(void){
                 myRobot->CheckLightTile();
                 sleep(0.1);
                 if(myRobot->CheckRamp()) { //is ramp
+                    myRobot->currState = ARobot::RAMP;
                     myRobot->UpdateCellMap(&myRobot->sensor_info, false, true);
                     nav.configureCurCell(&myRobot->sensor_info);
                     myRobot->MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
