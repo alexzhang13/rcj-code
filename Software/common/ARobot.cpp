@@ -65,6 +65,7 @@ void ARobot::WriteCommand(char* i_command, int size)
 void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag, bool CheckRamp)
 {
     const size_t range_size = rangeDataList.size();
+    int orientflag = (int)currOrientation % 2;
     if(!black_flag) {
         if(currTileLight == SILVER) {
             sensor_info->setCheckPt(true);
@@ -95,7 +96,7 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag, bool CheckRam
         if(rangeDataList[range_size-1].walls.wallN == 0) {
             sensor_info->setWallNorth(MazeCell::MWall);
         } else if(rangeDataList[range_size-1].walls.wallN == -1 && sensor_info->getWallNorth() != MazeCell::MOpen) {
-            sensor_info->setWallNorth(MazeCell::MUnknown);
+            sensor_info->setWallNorth(MazeCell::MOpen);
         } else {
             sensor_info->setWallNorth(MazeCell::MOpen);
         }
@@ -103,7 +104,7 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag, bool CheckRam
         if(rangeDataList[range_size-1].walls.wallE == 0) {
             sensor_info->setWallEast(MazeCell::MWall);
         } else if (rangeDataList[range_size-1].walls.wallE == -1 && sensor_info->getWallEast() != MazeCell::MOpen) {
-            sensor_info->setWallEast(MazeCell::MUnknown);
+            sensor_info->setWallEast(MazeCell::MOpen);
         } else {
             sensor_info->setWallEast(MazeCell::MOpen);
         }
@@ -111,7 +112,7 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag, bool CheckRam
         if(rangeDataList[range_size-1].walls.wallS == 0) {
             sensor_info->setWallSouth(MazeCell::MWall);
         } else if (rangeDataList[range_size-1].walls.wallS == -1 && sensor_info->getWallSouth() != MazeCell::MOpen) {
-            sensor_info->setWallSouth(MazeCell::MUnknown);
+            sensor_info->setWallSouth(MazeCell::MOpen);
         } else {
             sensor_info->setWallSouth(MazeCell::MOpen);
         }
@@ -119,7 +120,7 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag, bool CheckRam
         if(rangeDataList[range_size-1].walls.wallW == 0) {
             sensor_info->setWallWest(MazeCell::MWall);
         } else if (rangeDataList[range_size-1].walls.wallW == -1 && sensor_info->getWallWest() != MazeCell::MOpen) {
-            sensor_info->setWallWest(MazeCell::MUnknown);
+            sensor_info->setWallWest(MazeCell::MOpen);
         } else {
             sensor_info->setWallWest(MazeCell::MOpen);
         }
