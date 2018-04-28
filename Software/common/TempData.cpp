@@ -25,12 +25,16 @@ int TempData::parseData()
     return 0;
 }
 
-int* TempData::getRightTemp()
+int TempData::getRightTemp(int index)
 {
-    return data.tmpR;
+    if(index < 0 || index > 8)
+        return data.tmpR[0];
+    return data.tmpR[index];
 }
 
-int* TempData::getLeftTemp()
+int TempData::getLeftTemp(int index)
 {
-    return data.tmpL;
+    if(index < 0 || index > 8)
+        return data.tmpL[0];
+    return data.tmpL[index];
 }

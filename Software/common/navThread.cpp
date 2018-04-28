@@ -128,10 +128,9 @@ void NavThread::run(void){
                 }
             }
             if(!nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim()) {
-                //myRobot->picam.frameCapture(leftcapture_file);
+                myRobot->picam.frameCapture(leftcapture_file);
                 sleep(2);
-                //int i = myRobot->ProcessImage_Victim();
-                int i = 3;
+                int i = myRobot->ProcessImage_Victim();
                 sleep(2);
                 cout << "Victim Status: " << i << endl;
                 switch(i) {
@@ -159,7 +158,6 @@ void NavThread::run(void){
                         sleep(0.2);
                         break;
                     }
-                    printf("Temperature Victim Results: %d\n", myRobot->CheckVictimTemp());
                     switch(myRobot->CheckVictimTemp()) {
                     case 0:
                         sleep(0.5);

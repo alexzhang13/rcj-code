@@ -504,12 +504,12 @@ int ARobot::CheckVictimTemp()
     int numAboveThreshR = 0; //multiple values above threshold [at least 1/2]
     int numAboveThreshL = 0;
     for(int i = 1; i < 5; i++) {
-        for(int j = 1; i < 9; i++) { //left threshold
-            cout << "Left Temp: " << tempDataList[temp_vals-i].getLeftTemp()[j] << endl;
-            if(tempDataList[temp_vals-i].getLeftTemp()[j] > this->threshLeft) {
+        for(int j = 1; j < 9; j++) { //left threshold
+            cout << "Left Temp: " << tempDataList[temp_vals-i].getLeftTemp(j) << endl;
+            if(tempDataList[temp_vals-i].getLeftTemp(j) > this->threshLeft) {
                 ++numAboveThreshL;
             }
-            if(tempDataList[temp_vals-i].getRightTemp()[j] > this->threshRight) {
+            if(tempDataList[temp_vals-i].getRightTemp(j) > this->threshRight) {
                 ++numAboveThreshR;
             }
         }
