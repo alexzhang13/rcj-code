@@ -648,7 +648,7 @@ void ARobot::CheckLightTile()
         //Calculate Previous
         int prevVals[5];
         int avgVal;
-        for(int i=0;i<5;i++) {
+        for(int i=1;i<5;i++) {
             prevVals[i] = lightDataList[mlen_light-i-1].ReturnLight();
             avgVal += prevVals[i];
         }
@@ -656,7 +656,7 @@ void ARobot::CheckLightTile()
 
         //Standard Deviation
         //float std = this->getSTD(prevVals, avgVal);
-        if(lightDataList[mlen_light-1].CheckLight(avgVal)==2) //10.0 calculated from recorded values
+        if(lightDataList[mlen_light-2].CheckLight(avgVal)==2) //10.0 calculated from recorded values
             currTileLight = SILVER;
         else
             currTileLight = WHITE;
