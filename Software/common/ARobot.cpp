@@ -94,8 +94,8 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag, bool CheckRam
         }
 
         if(rangeDataList[range_size-1].walls.wallN == 0) {
-            printf("NORTH IS A WALL\n");
             sensor_info->setWallNorth(MazeCell::MWall);
+            cout << "North Wall State: " <<  sensor_info->getWallNorth() << endl;
         } else if(rangeDataList[range_size-1].walls.wallN == -1 && sensor_info->getWallNorth() != MazeCell::MOpen) {
             sensor_info->setWallNorth(MazeCell::MUnknown);
         } else {
