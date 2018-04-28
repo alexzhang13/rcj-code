@@ -61,6 +61,7 @@ void NavThread::run(void){
             sleep(0.2);
             break;
         case 6: //Drop
+            sleep(1);
             printf("Dropping: %d\n", myRobot->dropCnt);
             for(int i = 0; i < myRobot->dropCnt; i++) {
                 myRobot->Drop();
@@ -222,13 +223,15 @@ void NavThread::readConfig(const char* filename, ARobot *robot)
         return;
     }
     int ret = fscanf(datafile, "%d %d %f %f %d %d %d %d", &black_thresh, &silver_thresh, &threshLeft, &threshRight, &speed_left, &speed_right, &off_left, &off_right);
+    sleep(0.2);
     robot->setTempThresh(threshLeft, threshRight);
+    sleep(0.2);
     robot->setLightThresh(black_thresh, silver_thresh);
-    sleep(0.5);
+    sleep(0.2);
     robot->setSpeed(speed_left, speed_right);
-    sleep(1);
+    sleep(0.2);
     robot->setOffsetSpeed(off_left, off_right);
-    sleep(1);
+    sleep(0.2);
     fclose(datafile);
 }
 
