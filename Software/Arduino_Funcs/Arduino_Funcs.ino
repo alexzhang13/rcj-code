@@ -81,9 +81,9 @@ bool motorSwitch = true; //false meaning turn off
 bool isMoving = false; //if the robot is running
 bool isTurning = false; //if the robot is turning
 int left_spd = 110; //left motor power
-int right_spd = 130; //right motor power
+int right_spd = 125; //right motor power
 int off_left = 20; //for Encoder() function, offset when left encoder is higher than right
-int off_right = 30; //for Encoder() function, offset when right encoder is higher than left
+int off_right = 15; //for Encoder() function, offset when right encoder is higher than left
 float distance_mm = 0;
 volatile long int leftEncoder = 0; //left encoder
 volatile long int rightEncoder = 0; //right encoder
@@ -191,12 +191,14 @@ void setup() {
   /*START SENSORS*/
   mount_laser.attach(SERVO_MOUNT);   //Attach pin 10 to be for the laser mount
   mount_laser.write(0);
-  mount_laser.detach();
   delay(500);
+  mount_laser.detach();
+  delay(100);
   dropper.attach(SERVO_DROPPER);    //Attach pin 9 to be for the dropper
   dropper.write(60);
-  dropper.detach();
   delay(500);
+  dropper.detach();
+  delay(100);
 
   Serial.println("Servos Complete.");
   
@@ -341,11 +343,13 @@ static int distance_pt_func(struct pt *pt, int interval) { //125 hz = 8ms
       func = distance_queue.charAt(0); //func char val
       distance_queue.remove(0, 2); //leave only parameter left
       if(func == 'a') { 
-         Mount_Sweep();
-         distance_queue = " ";
+        Mount_Sweep();
+        distance_queue = " ";
       } else if (func == 'b') { //toggle on
-         distanceSwitch = !distanceSwitch;
-         distance_queue = " ";
+        distanceSwitch = !distanceSwitch;
+        distance_queue = " ";
+      } else if (func == 'c') {
+        Reset_MountSweep();
       } else {
         Serial.println("Distance: Invalid");
         distance_queue = " ";
@@ -400,7 +404,7 @@ static int imu_pt_func(struct pt *pt, int interval) { //125 hz = 8ms
          imuSwitch = !imuSwitch;
          imu_queue = " ";
       } else if (func == 'b') {
-        //calibrateIMU(); 
+        isCalib = !isCalib; 
         imu_queue = " ";
       } else {
         Serial.println("i e");
@@ -474,6 +478,7 @@ void sortCommands(String command)
 
 void Motor_Forward(int distance) //Function for moving forward a certain distance
 {
+  resetEncoder();
   distance_mm = distance;
   motorRight->setSpeed(right_spd);
   motorLeft->setSpeed(left_spd);
@@ -483,6 +488,7 @@ void Motor_Forward(int distance) //Function for moving forward a certain distanc
 
 void Motor_Backward(int distance)
 {
+  resetEncoder();
   distance_mm = distance;
   motorRight->setSpeed(right_spd);
   motorLeft->setSpeed(left_spd);
@@ -528,6 +534,7 @@ void Motor_Encoder()
   String reading = "";
   if(abs(left_mm) >= distance_mm || abs(right_mm) >= distance_mm) {
     motor_queue = "c";
+    Motor_Stop();
     reading += millis(); reading += "m d";
     Serial.println(reading);
     return;
@@ -573,21 +580,28 @@ void Mount_Sweep()
 {
   String reading = "";
     // scan from 0 to 180 degrees
-  mount_laser.attach(SERVO_MOUNT);
-  mount_laser.write(0);  
+  mount_laser.attach(SERVO_MOUNT); 
   reading += millis(); reading += " z";
   Serial.println(reading); //take a screenshot at this moment (tell pi
-  delay(500);
-  
+  delay(1200);
   mount_laser.write(180);
-  delay(1600);
+  delay(600);
   reading = "";
   reading += millis(); reading += " z";
   Serial.println(reading); //take a screenshot at this moment (tell pi) 
-  delay(200);
+  delay(800);
   
   mount_laser.write(0);  
-  delay(1000);       
+  delay(700);
+  mount_laser.write(0);
+  delay(100);    
+  mount_laser.detach();
+}
+
+void Reset_MountSweep() {
+  mount_laser.attach(SERVO_MOUNT); 
+  mount_laser.write(0);
+  delay(500);   
   mount_laser.detach();
 }
 
@@ -641,8 +655,10 @@ void getIMU()
     if(__iter>=20) 
       __iter=0; //reset
     //Apply drift
-    gz -= g_avgZ;
-    gz /= 10;
+    if(isCalib) {
+      gz -= g_avgZ;
+      gz /= 10;
+    }
   }
   
   // Accelerometer
@@ -661,24 +677,21 @@ void drop() //drop a kit
 {
   int angle = 60;
   dropper.attach(SERVO_DROPPER);    //Attach pin 9 to be for the dropper
+  
   for(angle = 60; angle > 0; angle--)  
   {                                  
     dropper.write(angle);               
-    delay(5);                   
+    delay(1);                   
   } 
 
-  delay(500);
-
-  for(angle = 0; angle < 100; angle++)    
+  delay(300);
+                             
+  dropper.write(90);           
+  delay(450);
+  for(angle = 80; angle > 60; angle--)    
   {                                
     dropper.write(angle);           
     delay(1);       
-  } 
-  delay(500);
-  for(angle = 100; angle > 60; angle--)    
-  {                                
-    dropper.write(angle);           
-    delay(5);       
   } 
   dropper.detach();    //Attach pin 9 to be for the dropper
   delay(500);
