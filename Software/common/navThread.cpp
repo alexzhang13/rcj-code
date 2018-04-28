@@ -190,7 +190,7 @@ void NavThread::run(void){
             }
 
             break;
-        case 10:
+        case 10: //STOP
             //kill thread here
             break;
         default:
