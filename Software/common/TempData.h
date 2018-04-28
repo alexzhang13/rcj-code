@@ -23,8 +23,8 @@ public:
 
     void storeCommand(char* buf);
     int parseData();
-    int* getRightTemp();
-    int* getLeftTemp();
+    int getRightTemp(int index);
+    int getLeftTemp(int index);
 
 private:
     TMP_DataType data;

@@ -60,7 +60,7 @@ private:
     const char* rt_logname = "realtime/rcj_log";
     const char* xml_name = "map_data/mazemap";
     const char* map_dir = "/home/alex/projects/rcj-code/Data/map_data/";
-    const char* map_name = "map.xml";
+    const char* map_name = "savemaze";
     const char* leftcapture_file = "/home/alex/projects/rcj-code/Software/letter/randomFolder/capL.jpg";
     const char* rightcapture_file = "/home/alex/projects/rcj-code/Software/letter/randomFolder/capR.jpg";
 #endif

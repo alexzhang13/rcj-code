@@ -88,9 +88,10 @@ void UartRx::run(void){
             camFlip = !camFlip;
             printf("Camera!\n");
         } else if (c == 'm') {
-            myRobot->currState = ARobot::DATA; //IDLE
             if(myRobot->backingBlack) {
                 myRobot->currState = ARobot::BLACKBACK;
+            } else {
+                myRobot->currState = ARobot::DATA; //IDLE
             }
         } else if (c == 'd') {
             myRobot->currState = ARobot::IDLE; //IDLE

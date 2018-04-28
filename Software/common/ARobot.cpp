@@ -65,6 +65,7 @@ void ARobot::WriteCommand(char* i_command, int size)
 void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag, bool CheckRamp)
 {
     const size_t range_size = rangeDataList.size();
+    int orientflag = (int)currOrientation % 2;
     if(!black_flag) {
         if(currTileLight == SILVER) {
             sensor_info->setCheckPt(true);
@@ -94,32 +95,34 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag, bool CheckRam
 
         if(rangeDataList[range_size-1].walls.wallN == 0) {
             sensor_info->setWallNorth(MazeCell::MWall);
-        } else if(rangeDataList[range_size-1].walls.wallN == -1) {
-            sensor_info->setWallNorth(MazeCell::MOpen);
+            cout << "North Wall State: " <<  sensor_info->getWallNorth() << endl;
+        } else if(rangeDataList[range_size-1].walls.wallN == -1 && sensor_info->getWallNorth() != MazeCell::MOpen) {
+            sensor_info->setWallNorth(MazeCell::MUnknown);
         } else {
             sensor_info->setWallNorth(MazeCell::MOpen);
         }
 
         if(rangeDataList[range_size-1].walls.wallE == 0) {
             sensor_info->setWallEast(MazeCell::MWall);
-        } else if (rangeDataList[range_size-1].walls.wallE == -1) {
-            sensor_info->setWallEast(MazeCell::MOpen);
+            cout << "East Wall State: " <<  sensor_info->getWallEast() << endl;
+        } else if (rangeDataList[range_size-1].walls.wallE == -1 && sensor_info->getWallEast() != MazeCell::MOpen) {
+            sensor_info->setWallEast(MazeCell::MUnknown);
         } else {
             sensor_info->setWallEast(MazeCell::MOpen);
         }
 
         if(rangeDataList[range_size-1].walls.wallS == 0) {
             sensor_info->setWallSouth(MazeCell::MWall);
-        } else if (rangeDataList[range_size-1].walls.wallS == -1) {
-            sensor_info->setWallSouth(MazeCell::MOpen);
+        } else if (rangeDataList[range_size-1].walls.wallS == -1 && sensor_info->getWallSouth() != MazeCell::MOpen) {
+            sensor_info->setWallSouth(MazeCell::MUnknown);
         } else {
             sensor_info->setWallSouth(MazeCell::MOpen);
         }
 
         if(rangeDataList[range_size-1].walls.wallW == 0) {
             sensor_info->setWallWest(MazeCell::MWall);
-        } else if (rangeDataList[range_size-1].walls.wallW == -1) {
-            sensor_info->setWallWest(MazeCell::MOpen);
+        } else if (rangeDataList[range_size-1].walls.wallW == -1 && sensor_info->getWallWest() != MazeCell::MOpen) {
+            sensor_info->setWallWest(MazeCell::MUnknown);
         } else {
             sensor_info->setWallWest(MazeCell::MOpen);
         }
@@ -484,16 +487,16 @@ void ARobot::SpinLaser() {
 }
 bool ARobot::CheckRamp()
 {
-    size_t pitch_vals = imuDataList.size();
+    int check = 0;
+    size_t pitch_vals = imuDataList.size()-1;
     for(int i = 1; i < 5; i++) {
-        if(!(abs(imuDataList[pitch_vals-i].m_pitch) <= 15)) { //if not ramp, break (return false)
-            return false;
-        } else if (!(abs(imuDataList[pitch_vals-i].m_pitch) >= 345)) {
-            return false;
+        if(imuDataList[pitch_vals-i].m_pitch >= 10 && imuDataList[pitch_vals-i].m_pitch <= 350) { //if not ramp, break (return false)
+            ++check;
         }
-        
     }
-    return true; //ramp is true if past 5 pitches match > 15 degrees
+    if(check > 3)
+        return true; //ramp is true if past 5 pitches match > 15 degrees
+    return false;
 }
 
 int ARobot::CheckVictimTemp()
@@ -501,19 +504,19 @@ int ARobot::CheckVictimTemp()
     if(isVictim) //if a victim has already been there
         return 0;
     size_t temp_vals = tempDataList.size(); //get average values
-    int numAboveThreshR=0; //multiple values above threshold [at least 1/2]
-    int numAboveThreshL=0;
-    for(int i = 1; i < 5; i++) {
-        for(int j = 1; i < 9; i++) { //left threshold
-            if(tempDataList[temp_vals-i].getLeftTemp()[j] > this->threshLeft) {
+    int numAboveThreshR = 0; //multiple values above threshold [at least 1/2]
+    int numAboveThreshL = 0;
+    for(int i = 2; i < 6; i++) {
+        for(int k = 1; k < 9; k++) { //left threshold
+            cout << "i: " << i << " k: " << k << "Left Temp: " << tempDataList[temp_vals-i].getLeftTemp(k) << endl;
+            if(tempDataList[temp_vals-i].getLeftTemp(k) > this->threshLeft) {
                 ++numAboveThreshL;
             }
-            if(tempDataList[temp_vals-i].getRightTemp()[j] > this->threshRight) {
+            if(tempDataList[temp_vals-i].getRightTemp(k) > this->threshRight) {
                 ++numAboveThreshR;
             }
         }
-        if(numAboveThreshL < 4 && numAboveThreshR < 4) {
-            printf("TLeft: %d\tTRight: %d\n", numAboveThreshL, numAboveThreshR);
+        if(numAboveThreshL < 3 && numAboveThreshR < 3) {
             return 0;
         }
         if(i < 4) {
@@ -521,9 +524,9 @@ int ARobot::CheckVictimTemp()
             numAboveThreshR=0; //reset
         }
     }
-    if(numAboveThreshL >= 4) { //after test (4*8)
+    if(numAboveThreshL >= 3) { //after test (4*8)
         return 2;
-    } else if (numAboveThreshR >= 4) {
+    } else if (numAboveThreshR >= 3) {
         return 1;
     } else {
         return 0;
@@ -637,14 +640,18 @@ void ARobot::CheckLightTile()
         currTileLight = BLACK;
         if(backingBlack == false) {
             backingBlack = true;
+            sleep(0.2);
+            StopMove();
+            sleep(0.2);
             ResetEncoder();
-            MoveDistance(150, BACK);
+            sleep(1.0);
+            MoveDistance(175, BACK);
         }
     } else {
         //Calculate Previous
         int prevVals[5];
         int avgVal;
-        for(int i=0;i<5;i++) {
+        for(int i=1;i<5;i++) {
             prevVals[i] = lightDataList[mlen_light-i-1].ReturnLight();
             avgVal += prevVals[i];
         }
@@ -652,7 +659,7 @@ void ARobot::CheckLightTile()
 
         //Standard Deviation
         //float std = this->getSTD(prevVals, avgVal);
-        if(lightDataList[mlen_light-1].CheckLight(avgVal)==2) //10.0 calculated from recorded values
+        if(lightDataList[mlen_light-2].CheckLight(avgVal)==2) //10.0 calculated from recorded values
             currTileLight = SILVER;
         else
             currTileLight = WHITE;
@@ -708,13 +715,14 @@ void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
 
     if(dir == FRONT) {
         snprintf(i_command, i_length, "%c %c %d", 'm', 'a', distance_mm);
+        printf("Forward: Distance: %d\n", distance_mm);
     } else {
         snprintf(i_command, i_length, "%c %c %d", 'm', 'b', distance_mm);
+        printf("Backward: Distance: %d\n", distance_mm);
     }
     if(!(currState == RAMP)) {
         currState = MOVE;
     }
-    printf("Command: Distance: %d\n", distance_mm);
     WriteCommand(i_command, i_length);
 }
 
@@ -781,6 +789,8 @@ void ARobot::StopTurn(BotDir dir)
             if(isVictim && isDropped == false) {
                 printf("Drop\n");
                 currState = DROP;
+            } else if (isVictim && isDropped) {
+                currState = PLANNING;
             } else {
                 currState = IDLE;
             }

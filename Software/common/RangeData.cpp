@@ -5,8 +5,8 @@
 #include <string.h>
 #include "IMUData.h"
 
-#define OFFSET 20
-#define ALPHAOFFSET 12
+#define OFFSET 25
+#define ALPHAOFFSET 25
 #define PI 3.1415926535
 #define SHORTOFFSET 30.0
 #define LONGOFFSET 55.0

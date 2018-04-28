@@ -49,11 +49,12 @@ void NavThread::run(void){
             while(myRobot->CheckRamp()) {
                 sleep(0.1);
             }
-            sleep(2);
+            sleep(1.25);
             myRobot->StopMove();
             //do something with myRobot-sensor_info to update the cell info
-            //myRobot->UpdateCellMap(&myRobot->sensor_info, false, true); //update curr cell location ??
-            myRobot->currState = ARobot::WAYPTNAV;
+            nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(0);
+            sleep(2.5);
+            myRobot->currState = ARobot::PLANNING;
             break;
         case 5: //Move
             myRobot->CheckLightTile(); //check if anything happens during this time
@@ -61,21 +62,35 @@ void NavThread::run(void){
             sleep(0.2);
             break;
         case 6: //Drop
-            myRobot->LEDLight(3000);
-            sleep(0.2);
+            sleep(1);
+            printf("Dropping: %d\n", myRobot->dropCnt);
             for(int i = 0; i < myRobot->dropCnt; i++) {
                 myRobot->Drop();
-                sleep(3);
+                sleep(2.5);
             }
+            myRobot->LEDLight(3000);
+            sleep(3.25);
             myRobot->isDropped = true;
             nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->setVictim(true);
-            myRobot->currState = ARobot::PLANNING;
+
+            //turn back
+            if(myRobot->victimLeft) {
+                myRobot->TurnDistance(90, ARobot::LEFT); //turn back left after right turn
+            } else if(myRobot->victimFront) {
+                myRobot->TurnDistance(180, ARobot::LEFT); //turn left to drop from back onto right side
+            } else if(myRobot->victimRight) {
+                myRobot->TurnDistance(90, ARobot::RIGHT); //turn back right after left turn
+            } else { //this shouldn't happen
+                printf("Error: Drop Failed?\n");
+                myRobot->currState = ARobot::WAYPTNAV;
+            }
             break;
         case 7: //BLACKBACK
             sleep(1);
+            bot_waypts = myRobot->waypts.size();
             myRobot->backingBlack = false;
             nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]); //update "temp curr_cell"
-            myRobot->UpdateCellMap(&myRobot->sensor_info, myRobot->backingBlack, false); //sensor_info auto resets in this function call
+            myRobot->UpdateCellMap(&myRobot->sensor_info, true, false); //sensor_info auto resets in this function call
             nav.configureCurCell(&myRobot->sensor_info);
             nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-1]); //reupdate curr_cell
             myRobot->currState = ARobot::PLANNING;
@@ -87,6 +102,7 @@ void NavThread::run(void){
             myRobot->currState = ARobot::STOP;
         case 9: //Data collection
             //myRobot->UpdateCellMap(&myRobot->sensor_info, false, false); //false = not black
+            writeCurrentMap(this->map_dir, this->map_name, this->myRobot, this->nav);
             myRobot->isVictim = nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim();
             if(!myRobot->isVictim) {myRobot->isDropped = false;}
             sleep(0.1);
@@ -98,23 +114,27 @@ void NavThread::run(void){
             printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
             if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
                 myRobot->CheckLightTile();
+                sleep(0.1);
                 if(myRobot->CheckRamp()) { //is ramp
+                    myRobot->currState = ARobot::RAMP;
+                    myRobot->UpdateCellMap(&myRobot->sensor_info, false, true);
+                    nav.configureCurCell(&myRobot->sensor_info);
                     myRobot->MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
                     break;
                 }
+                cout << "Current Light Tile: " << myRobot->currTileLight << endl;
                 if(myRobot->currTileLight == ARobot::SILVER) {
                     writeCurrentMap(this->map_dir, this->map_name, this->myRobot, this->nav);
-                    myRobot->LEDLight(1000);
-                    sleep(1.5);
+                    myRobot->LEDLight(3000);
+                    sleep(3.25);
                     //save state
                 }
             }
             if(!nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim()) {
-                //myRobot->picam.frameCapture(leftcapture_file);
+                myRobot->picam.frameCapture(leftcapture_file);
                 sleep(2);
-                //int i = myRobot->ProcessImage_Victim();
-                int i = 3;
-                sleep(2);
+                int i = myRobot->ProcessImage_Victim();
+                sleep(1);
                 cout << "Victim Status: " << i << endl;
                 switch(i) {
                 case 0: //drop left
@@ -135,13 +155,12 @@ void NavThread::run(void){
                 case 3:
                     if(myRobot->victim.letter == 'U') { //U or nothing
                         myRobot->dropCnt = 0;
-                        myRobot->LEDLight(3500);
-                        sleep(4);
+                        myRobot->LEDLight(3000);
+                        sleep(3.5);
                         myRobot->CorrectYaw();
                         sleep(0.2);
                         break;
                     }
-                    printf("Temperature Victim Results: %d\n", myRobot->CheckVictimTemp());
                     switch(myRobot->CheckVictimTemp()) {
                     case 0:
                         sleep(0.5);
@@ -174,7 +193,7 @@ void NavThread::run(void){
             }
 
             break;
-        case 10:
+        case 10: //STOP
             //kill thread here
             break;
         default:
@@ -205,13 +224,15 @@ void NavThread::readConfig(const char* filename, ARobot *robot)
         return;
     }
     int ret = fscanf(datafile, "%d %d %f %f %d %d %d %d", &black_thresh, &silver_thresh, &threshLeft, &threshRight, &speed_left, &speed_right, &off_left, &off_right);
+    sleep(0.2);
     robot->setTempThresh(threshLeft, threshRight);
+    sleep(0.2);
     robot->setLightThresh(black_thresh, silver_thresh);
-    sleep(0.5);
+    sleep(0.2);
     robot->setSpeed(speed_left, speed_right);
-    sleep(1);
+    sleep(0.2);
     robot->setOffsetSpeed(off_left, off_right);
-    sleep(1);
+    sleep(0.2);
     fclose(datafile);
 }
 
@@ -244,10 +265,13 @@ void NavThread::writeCurrentMap(const char* filedir, const char* xmlname, ARobot
 
 void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt) 
 {
+    cout << "\n\nRAMP HAS BEEN ENTERED\n\n";
+
     /*Navigational functions*/
     robot->sensor_info.reset(); //reset temp object
     robot->UpdateCellMap(&robot->sensor_info, false, false); //false = not black
     robot->UpdateNeighborCells();
+    cout << "Floor Number: " << nav_rt.getCurrentFloorIndex() << endl;
     cout << "Cells Updated..." << endl;
 
     nav_rt.configureCurCell(&robot->sensor_info);
@@ -261,6 +285,12 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
 
     nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
     cout << "Map File Written..." << endl;
+
+    cout << "North Wall State: " <<  nav_rt.getCellbyIndex(0)->getWallNorth() << endl;
+    cout << "South Wall State: " <<  nav_rt.getCellbyIndex(0)->getWallSouth() << endl;
+    cout << "East Wall State: " <<  nav_rt.getCellbyIndex(0)->getWallEast() << endl;
+    cout << "West Wall State: " <<  nav_rt.getCellbyIndex(0)->getWallWest() << endl;
+
 
     robot->temp_cell_list.clear();
 
