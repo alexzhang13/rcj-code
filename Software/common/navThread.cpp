@@ -119,6 +119,7 @@ void NavThread::run(void){
                     myRobot->MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
                     break;
                 }
+                cout << "Current Light Tile: " << myRobot->currTileLight << endl;
                 if(myRobot->currTileLight == ARobot::SILVER) {
                     writeCurrentMap(this->map_dir, this->map_name, this->myRobot, this->nav);
                     myRobot->LEDLight(3000);
