@@ -503,7 +503,7 @@ int ARobot::CheckVictimTemp()
     size_t temp_vals = tempDataList.size(); //get average values
     int numAboveThreshR = 0; //multiple values above threshold [at least 1/2]
     int numAboveThreshL = 0;
-    for(int i = 1; i < 5; i++) {
+    for(int i = 2; i < 6; i++) {
         for(int k = 1; k < 9; k++) { //left threshold
             cout << "i: " << i << " k: " << k << "Left Temp: " << tempDataList[temp_vals-i].getLeftTemp(k) << endl;
             if(tempDataList[temp_vals-i].getLeftTemp(k) > this->threshLeft) {
@@ -648,7 +648,7 @@ void ARobot::CheckLightTile()
         //Calculate Previous
         int prevVals[5];
         int avgVal;
-        for(int i=0;i<5;i++) {
+        for(int i=1;i<5;i++) {
             prevVals[i] = lightDataList[mlen_light-i-1].ReturnLight();
             avgVal += prevVals[i];
         }
@@ -656,7 +656,7 @@ void ARobot::CheckLightTile()
 
         //Standard Deviation
         //float std = this->getSTD(prevVals, avgVal);
-        if(lightDataList[mlen_light-1].CheckLight(avgVal)==2) //10.0 calculated from recorded values
+        if(lightDataList[mlen_light-2].CheckLight(avgVal)==2) //10.0 calculated from recorded values
             currTileLight = SILVER;
         else
             currTileLight = WHITE;

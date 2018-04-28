@@ -67,8 +67,8 @@ void NavThread::run(void){
                 myRobot->Drop();
                 sleep(2.5);
             }
-            myRobot->LEDLight(2000);
-            sleep(2.1);
+            myRobot->LEDLight(3000);
+            sleep(3.25);
             myRobot->isDropped = true;
             nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->setVictim(true);
 
@@ -113,6 +113,7 @@ void NavThread::run(void){
             printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
             if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
                 myRobot->CheckLightTile();
+                sleep(0.1);
                 if(myRobot->CheckRamp()) { //is ramp
                     myRobot->UpdateCellMap(&myRobot->sensor_info, false, true);
                     nav.configureCurCell(&myRobot->sensor_info);
@@ -152,8 +153,8 @@ void NavThread::run(void){
                 case 3:
                     if(myRobot->victim.letter == 'U') { //U or nothing
                         myRobot->dropCnt = 0;
-                        myRobot->LEDLight(3500);
-                        sleep(4);
+                        myRobot->LEDLight(3000);
+                        sleep(3.5);
                         myRobot->CorrectYaw();
                         sleep(0.2);
                         break;
@@ -190,7 +191,7 @@ void NavThread::run(void){
             }
 
             break;
-        case 10:
+        case 10: //STOP
             //kill thread here
             break;
         default:
