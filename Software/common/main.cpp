@@ -43,7 +43,7 @@ int main(int argc,char **argv){
     bool reset = false; //flag
     int iteration = 0;
     Thread *currThread=NULL; //spawned thread
-
+    sleep(5);
     //Set up Wires, Below is the wiringPi -> Pi Rev.3 GPIO Mapping
     //22 --> 3 (WiringPI)
     //23 --> 4

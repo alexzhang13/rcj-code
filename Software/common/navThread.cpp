@@ -65,9 +65,8 @@ void NavThread::run(void){
             printf("Dropping: %d\n", myRobot->dropCnt);
             for(int i = 0; i < myRobot->dropCnt; i++) {
                 myRobot->Drop();
-                sleep(3);
+                sleep(2.5);
             }
-            sleep(1);
             myRobot->LEDLight(2000);
             sleep(2.1);
             myRobot->isDropped = true;
@@ -122,8 +121,8 @@ void NavThread::run(void){
                 }
                 if(myRobot->currTileLight == ARobot::SILVER) {
                     writeCurrentMap(this->map_dir, this->map_name, this->myRobot, this->nav);
-                    myRobot->LEDLight(1000);
-                    sleep(1.5);
+                    myRobot->LEDLight(3000);
+                    sleep(3.25);
                     //save state
                 }
             }
@@ -131,7 +130,7 @@ void NavThread::run(void){
                 myRobot->picam.frameCapture(leftcapture_file);
                 sleep(2);
                 int i = myRobot->ProcessImage_Victim();
-                sleep(2);
+                sleep(1);
                 cout << "Victim Status: " << i << endl;
                 switch(i) {
                 case 0: //drop left
