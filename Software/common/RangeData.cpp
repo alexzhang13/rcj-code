@@ -87,7 +87,6 @@ int RangeData::setAngle() {
     // 7.62 = (1 - 0) / (1 - 0.866) --> 0.886 = root (3) / 2 which is cos(30 deg)
     if(avalid_short) {
         angled = acos(min(1.0, 300.0/(data.laserS_a + data.laserS_b + OFFSET))) * 180 / PI;
-        printf("Laser Reading: %f\n", data.laserS_a + data.laserS_b + OFFSET);
         alpha = max(0.0, 1 - (this->getRangeOffset()/10.0)); //linear as opposed to based on angles
         if(alpha > 2.5) //too high, must be invalid
             alpha = 0;
