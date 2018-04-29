@@ -8,7 +8,7 @@ void NavThread::run(void){
     sleep(0.1);
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     if(this->readMap)
-        readCurrentMap(map_dir, xml_name, myRobot, nav); //check for previous map from mem
+        readCurrentMap(map_dir, map_name, myRobot, nav); //check for previous map from mem
     else
         startNewMap(myRobot, nav);
     myRobot->picam.cameraOpen(720, 480);
@@ -275,8 +275,6 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
     nav_rt.detectLocalCells(robot->temp_cell_list);
 
     nav_rt.updateLocalMap();
-
-    nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
 
     cout << "North Wall State: " <<  nav_rt.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->getCurrentCell()->getWallNorth() << endl;
     cout << "South Wall State: " <<  nav_rt.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->getCurrentCell()->getWallSouth() << endl;
