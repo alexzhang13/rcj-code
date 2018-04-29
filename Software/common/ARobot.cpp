@@ -515,17 +515,17 @@ int ARobot::CheckVictimTemp()
                 ++numAboveThreshR;
             }
         }
-        if(numAboveThreshL < 3 && numAboveThreshR < 3) {
+        if(numAboveThreshL < 2 && numAboveThreshR < 2) {
             return 0;
         }
-        if(i < 4) {
+        if(i < 5) {
             numAboveThreshL=0; //reset
             numAboveThreshR=0; //reset
         }
     }
-    if(numAboveThreshL >= 3) { //after test (4*8)
+    if(numAboveThreshL >= 2) { //after test (4*8)
         return 2;
-    } else if (numAboveThreshR >= 3) {
+    } else if (numAboveThreshR >= 2) {
         return 1;
     } else {
         return 0;
