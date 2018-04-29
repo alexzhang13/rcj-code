@@ -8,7 +8,7 @@ void NavThread::run(void){
     sleep(0.1);
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     if(this->readMap)
-        readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
+        readCurrentMap(map_dir, xml_name, myRobot, nav); //check for previous map from mem
     else
         startNewMap(myRobot, nav);
     myRobot->picam.cameraOpen(720, 480);
@@ -243,11 +243,11 @@ void NavThread::readCurrentMap(const char* filedir, const char* xmlname, ARobot 
 {
     MazeCell::NavDir heading = MazeCell::navNorth;
     int32_t home_floor_num = 0;
-    if(nav_rt.readChkPtMaps(filedir, std::string(xmlname).c_str()) != 0) {
-        printf("Silver Map Loaded...\n");
+    if(nav_rt.readChkPtMaps(filedir, xmlname) != 0) {
         nav_rt.setHomeCell(home_floor_num, heading);
         //set current robot coords to x, y
     }
+    printf("Silver Map Loaded...\n");
     return;
 }
 
