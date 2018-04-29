@@ -3,6 +3,7 @@
 using namespace std;
 
 void NavThread::run(void){
+    start = time(0);
     sleep(0.1);
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     printf("Config File Read...\n");
@@ -52,7 +53,6 @@ void NavThread::run(void){
             sleep(1.25);
             myRobot->StopMove();
             //do something with myRobot-sensor_info to update the cell info
-            nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(0);
             sleep(2.5);
             myRobot->currState = ARobot::PLANNING;
             break;
@@ -102,7 +102,6 @@ void NavThread::run(void){
             myRobot->currState = ARobot::STOP;
         case 9: //Data collection
             //myRobot->UpdateCellMap(&myRobot->sensor_info, false, false); //false = not black
-            writeCurrentMap(this->map_dir, this->map_name, this->myRobot, this->nav);
             myRobot->isVictim = nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim();
             if(!myRobot->isVictim) {myRobot->isDropped = false;}
             sleep(0.1);
@@ -247,10 +246,8 @@ void NavThread::readCurrentMap(const char* filedir, const char* xmlname, ARobot 
 {
     MazeCell::NavDir heading = MazeCell::navNorth;
     int32_t home_floor_num = 0;
-    std::string t = nav_rt.getCurTime();
-    std::string newfile = std::string(xmlname) + "_" + t;
-    if(nav_rt.readChkPtMaps(filedir, newfile.c_str())!= 0) {
-        printf("call_home\n");
+    if(nav_rt.readChkPtMaps(filedir, xmlname.c_str()) != 0) {
+        printf("Silver Map Loaded...\n");
         nav_rt.setHomeCell(home_floor_num, heading);
         //set current robot coords to x, y
     }
@@ -265,7 +262,7 @@ void NavThread::writeCurrentMap(const char* filedir, const char* xmlname, ARobot
 
 void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt) 
 {
-    cout << "\n\nRAMP HAS BEEN ENTERED\n\n";
+    cout << "\n\nNEW NAV HAS BEEN ENTERED with TIME = " << difftime(time(0), start) << endl << endl;
 
     /*Navigational functions*/
     robot->sensor_info.reset(); //reset temp object
@@ -296,7 +293,7 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
 
     //nav_rt.slam2d(); // will move to another thread
     // what to do next
-    nav_rt.navigatePlanning();
+    nav_rt.navigatePlanning(difftime(time(0), start) >= 360.0);
     // move on to the next cell
     //nav_rt.navigation2D();
     if(nav_rt.getNextCell()->waypts.size() >= 2) {
