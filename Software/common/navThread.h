@@ -45,7 +45,9 @@ protected:
     ARobot *myRobot;
 private:
     Navigate2D nav; //main map class obj
-    time_t start;
+    long int start_time;
+    long int time_difference;
+    struct timespec gettime_now;
 
 #ifdef WIN32
     const char* fileConfig = "C:/projects/StormingRobots2017/Data/Mem/config.txt";
