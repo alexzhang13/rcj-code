@@ -118,7 +118,7 @@ void NavThread::run(void){
                     myRobot->MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
                     break;
                 }
-                cout << "Current Light Tile: " << myRobot->currTileLight << endl;
+                // cout << "Current Light Tile: " << myRobot->currTileLight << endl;
                 if(myRobot->currTileLight == ARobot::SILVER) {
                     writeCurrentMap(this->map_dir, this->map_name, this->myRobot, this->nav);
                     myRobot->LEDLight(3000);
@@ -131,7 +131,7 @@ void NavThread::run(void){
                 sleep(2);
                 int i = myRobot->ProcessImage_Victim();
                 sleep(1);
-                cout << "Victim Status: " << i << endl;
+                // cout << "Victim Status: " << i << endl;
                 switch(i) {
                 case 0: //drop left
                     myRobot->victimLeft = true;
@@ -261,14 +261,14 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
 {
     clock_gettime(CLOCK_REALTIME, &gettime_now);
     time_difference = gettime_now.tv_sec - start_time;
-    cout << "\n\nNEW NAV HAS BEEN ENTERED with TIME = " << time_difference << endl << endl;
+    // cout << "\n\nNEW NAV HAS BEEN ENTERED with TIME = " << time_difference << endl << endl;
 
     /*Navigational functions*/
     robot->sensor_info.reset(); //reset temp object
     robot->UpdateCellMap(&robot->sensor_info, false, false); //false = not black
     robot->UpdateNeighborCells();
-    cout << "Floor Number: " << nav_rt.getCurrentFloorIndex() << endl;
-    cout << "Cell: " << nav_rt.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->getCurrentCell() << endl;
+    // cout << "Floor Number: " << nav_rt.getCurrentFloorIndex() << endl;
+    // cout << "Cell: " << nav_rt.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->getCurrentCell() << endl;
 
     nav_rt.configureCurCell(&robot->sensor_info);
 
@@ -276,10 +276,10 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
 
     nav_rt.updateLocalMap();
 
-    cout << "North Wall State: " <<  nav_rt.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->getCurrentCell()->getWallNorth() << endl;
-    cout << "South Wall State: " <<  nav_rt.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->getCurrentCell()->getWallSouth() << endl;
-    cout << "East Wall State: " <<  nav_rt.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->getCurrentCell()->getWallEast() << endl;
-    cout << "West Wall State: " <<  nav_rt.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->getCurrentCell()->getWallWest() << endl;
+    // cout << "North Wall State: " <<  nav_rt.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->getCurrentCell()->getWallNorth() << endl;
+    // cout << "South Wall State: " <<  nav_rt.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->getCurrentCell()->getWallSouth() << endl;
+    // cout << "East Wall State: " <<  nav_rt.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->getCurrentCell()->getWallEast() << endl;
+    // cout << "West Wall State: " <<  nav_rt.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->getCurrentCell()->getWallWest() << endl;
 
 
     robot->temp_cell_list.clear();
