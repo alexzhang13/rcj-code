@@ -337,6 +337,11 @@ int ARobot::getOffsetDir() {
 }
 
 void ARobot::CorrectYaw() {
+    if(this->toMove) {
+        this->currState = ARobot::WAYPTNAV; //if fails
+        return;
+    }
+
     const size_t range_vals = rangeDataList.size()-1; //size may change, set constant size
     const size_t imu_vals = imuDataList.size()-1;
     float angley;
