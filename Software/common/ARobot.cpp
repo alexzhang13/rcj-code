@@ -520,13 +520,13 @@ int ARobot::CheckVictimTemp()
                 ++numAboveThreshR;
             }
         }
-        if(numAboveThreshL < 2 && numAboveThreshR < 2) {
+        /*if(numAboveThreshL < 1 && numAboveThreshR < 1) {
             return 0;
         }
         if(i < 5) {
             numAboveThreshL=0; //reset
             numAboveThreshR=0; //reset
-        }
+        }*/
     }
     if(numAboveThreshL >= 2) { //after test (4*8)
         return 2;
