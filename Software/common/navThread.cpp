@@ -246,7 +246,7 @@ void NavThread::readCurrentMap(const char* filedir, const char* xmlname, ARobot 
 {
     MazeCell::NavDir heading = MazeCell::navNorth;
     int32_t home_floor_num = 0;
-    if(nav_rt.readChkPtMaps(filedir, xmlname.c_str()) != 0) {
+    if(nav_rt.readChkPtMaps(filedir, std::string(xmlname).c_str()) != 0) {
         printf("Silver Map Loaded...\n");
         nav_rt.setHomeCell(home_floor_num, heading);
         //set current robot coords to x, y
