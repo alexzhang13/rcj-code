@@ -7,12 +7,10 @@ void NavThread::run(void){
     start_time = gettime_now.tv_sec;
     sleep(0.1);
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
-    printf("Config File Read...\n");
     if(this->readMap)
         readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
     else
         startNewMap(myRobot, nav);
-    printf("Map Generation Started...\n");
     myRobot->picam.cameraOpen(720, 480);
     sleep(1);
     myRobot->imuCalibrated = true; //turn on IMU flag
@@ -64,7 +62,6 @@ void NavThread::run(void){
             break;
         case 6: //Drop
             sleep(1);
-            printf("Dropping: %d\n", myRobot->dropCnt);
             for(int i = 0; i < myRobot->dropCnt; i++) {
                 myRobot->Drop();
                 sleep(2.5);
@@ -82,7 +79,6 @@ void NavThread::run(void){
             } else if(myRobot->victimRight) {
                 myRobot->TurnDistance(90, ARobot::RIGHT); //turn back right after left turn
             } else { //this shouldn't happen
-                printf("Error: Drop Failed?\n");
                 myRobot->currState = ARobot::WAYPTNAV;
             }
             break;
@@ -272,19 +268,15 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
     robot->UpdateCellMap(&robot->sensor_info, false, false); //false = not black
     robot->UpdateNeighborCells();
     cout << "Floor Number: " << nav_rt.getCurrentFloorIndex() << endl;
-    cout << "Cells Updated..." << endl;
+    cout << "Cell: " << nav_rt.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->getCurrentCell() << endl;
 
     nav_rt.configureCurCell(&robot->sensor_info);
-    cout << "Configuring Current Cell with Sensor Info..." << endl;
 
     nav_rt.detectLocalCells(robot->temp_cell_list);
-    cout << "Detecting Local Cells..." << endl;
 
     nav_rt.updateLocalMap();
-    cout << "Local Map Updating..." << endl;
 
     nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
-    cout << "Map File Written..." << endl;
 
     cout << "North Wall State: " <<  nav_rt.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->getCurrentCell()->getWallNorth() << endl;
     cout << "South Wall State: " <<  nav_rt.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->getCurrentCell()->getWallSouth() << endl;
@@ -310,7 +302,6 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
     first_iter = true;
     robot->currState = ARobot::WAYPTNAV;
     return;
-    //nav_rt->getCellbyIndex(nav_rt.m_next_cell.waypts.begin()).getCellGrid(&robot.currTile.x_tovisit, &robot.currTile.y_tovisit);
 }
 
 int NavThread::WayPointNav(ARobot *robot, Navigate2D &nav_rt)
