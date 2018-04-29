@@ -2,12 +2,90 @@
 <mazemap>
     <floors levels="2" home="0" current="0" />
     <floor0>
-        <floorinfo width="2" height="2" cellsize="300" home="0" stair="-1" checkpt="0" />
-        <cell id="0" i="0" j="0" cx="0.000000" cy="0.000000" North="50000000" East="50000000" South="50000000" West="50000000" VisitStatus="2" HomeCell="1" NonMovable="1" />
-        <cell id="1" i="0" j="1" cx="0.000000" cy="300.000000" North="50000000" East="10" South="50000000" West="50000000" VisitStatus="2" NonMovable="1" />
-        <cell id="2" i="1" j="1" cx="300.000000" cy="300.000000" North="0" East="10" South="0" West="0" VisitStatus="1" />
+        <floorinfo width="6" height="9" cellsize="300" home="-1" stair="46" checkpt="30" />
+        <cell id="0" i="1" j="0" cx="300.000000" cy="0.000000" North="10" East="10" South="100000000" West="10" VisitStatus="0" />
+        <cell id="1" i="2" j="0" cx="600.000000" cy="0.000000" North="10" East="10" South="100000000" West="10" VisitStatus="0" />
+        <cell id="2" i="3" j="0" cx="900.000000" cy="0.000000" North="10" East="10" South="100000000" West="10" VisitStatus="0" />
+        <cell id="3" i="4" j="0" cx="1200.000000" cy="0.000000" North="10" East="10" South="100000000" West="10" VisitStatus="0" Victim="1" VictimDir="3" />
+        <cell id="4" i="5" j="0" cx="1500.000000" cy="0.000000" North="10" East="100000000" South="100000000" West="10" VisitStatus="0" />
+        <cell id="5" i="1" j="1" cx="300.000000" cy="300.000000" North="10" East="10" South="10" West="100000000" VisitStatus="0" />
+        <cell id="6" i="2" j="1" cx="600.000000" cy="300.000000" North="10" East="10" South="10" West="10" VisitStatus="0" />
+        <cell id="7" i="3" j="1" cx="900.000000" cy="300.000000" North="10" East="10" South="10" West="10" VisitStatus="0" Victim="1" VictimDir="3" />
+        <cell id="8" i="4" j="1" cx="1200.000000" cy="300.000000" North="10" East="10" South="10" West="10" VisitStatus="0" />
+        <cell id="9" i="5" j="1" cx="1500.000000" cy="300.000000" North="100000000" East="100000000" South="10" West="10" VisitStatus="0" />
+        <cell id="10" i="1" j="2" cx="300.000000" cy="600.000000" North="10" East="10" South="10" West="100000000" VisitStatus="0" />
+        <cell id="11" i="2" j="2" cx="600.000000" cy="600.000000" North="10" East="10" South="10" West="10" VisitStatus="0" />
+        <cell id="12" i="3" j="2" cx="900.000000" cy="600.000000" North="10" East="10" South="10" West="10" VisitStatus="0" />
+        <cell id="13" i="4" j="2" cx="1200.000000" cy="600.000000" North="10" East="10" South="10" West="10" VisitStatus="0" />
+        <cell id="14" i="5" j="2" cx="1500.000000" cy="600.000000" North="10" East="100000000" South="100000000" West="10" VisitStatus="0" />
+        <cell id="15" i="1" j="3" cx="300.000000" cy="900.000000" North="10" East="10" South="10" West="100000000" VisitStatus="0" />
+        <cell id="16" i="2" j="3" cx="600.000000" cy="900.000000" North="10" East="10" South="10" West="10" VisitStatus="0" />
+        <cell id="17" i="3" j="3" cx="900.000000" cy="900.000000" North="10" East="10" South="10" West="10" VisitStatus="0" />
+        <cell id="18" i="4" j="3" cx="1200.000000" cy="900.000000" North="100000000" East="10" South="10" West="10" VisitStatus="0" />
+        <cell id="19" i="5" j="3" cx="1500.000000" cy="900.000000" North="10" East="100000000" South="10" West="10" VisitStatus="0" CheckPt="1" />
+        <cell id="20" i="1" j="4" cx="300.000000" cy="1200.000000" North="100000000" East="10" South="10" West="100000000" VisitStatus="0" />
+        <cell id="21" i="2" j="4" cx="600.000000" cy="1200.000000" North="10" East="10" South="10" West="10" VisitStatus="0" />
+        <cell id="22" i="3" j="4" cx="900.000000" cy="1200.000000" North="10" East="10" South="10" West="10" VisitStatus="0" CheckPt="1" />
+        <cell id="23" i="4" j="4" cx="1200.000000" cy="1200.000000" North="50000000" East="100000000" South="100000000" West="10" VisitStatus="0" />
+        <cell id="24" i="5" j="4" cx="1500.000000" cy="1200.000000" North="10" East="100000000" South="10" West="100000000" VisitStatus="0" />
+        <cell id="25" i="1" j="5" cx="300.000000" cy="1500.000000" North="10" East="10" South="100000000" West="100000000" VisitStatus="0" />
+        <cell id="26" i="2" j="5" cx="600.000000" cy="1500.000000" North="10" East="10" South="10" West="10" VisitStatus="0" />
+        <cell id="27" i="3" j="5" cx="900.000000" cy="1500.000000" North="10" East="50000000" South="10" West="10" VisitStatus="0" Victim="1" VictimDir="3" />
+        <cell id="28" i="4" j="5" cx="1200.000000" cy="1500.000000" North="50000000" East="100000000" South="50000000" West="50000000" VisitStatus="0" NonMovable="1" />
+        <cell id="29" i="5" j="5" cx="1500.000000" cy="1500.000000" North="50000000" East="100000000" South="10" West="100000000" VisitStatus="0" />
+        <cell id="30" i="1" j="6" cx="300.000000" cy="1800.000000" North="10" East="10" South="10" West="100000000" VisitStatus="0" CheckPt="1" />
+        <cell id="31" i="2" j="6" cx="600.000000" cy="1800.000000" North="10" East="10" South="10" West="10" VisitStatus="0" />
+        <cell id="32" i="3" j="6" cx="900.000000" cy="1800.000000" North="10" East="100000000" South="10" West="10" VisitStatus="0" />
+        <cell id="33" i="4" j="6" cx="1200.000000" cy="1800.000000" North="10" East="50000000" South="50000000" West="100000000" VisitStatus="0" />
+        <cell id="34" i="5" j="6" cx="1500.000000" cy="1800.000000" North="50000000" East="100000000" South="50000000" West="50000000" VisitStatus="0" NonMovable="1" />
+        <cell id="35" i="1" j="7" cx="300.000000" cy="2100.000000" North="10" East="10" South="10" West="100000000" VisitStatus="0" />
+        <cell id="36" i="2" j="7" cx="600.000000" cy="2100.000000" North="10" East="100000000" South="10" West="10" VisitStatus="0" />
+        <cell id="37" i="3" j="7" cx="900.000000" cy="2100.000000" North="10" East="10" South="10" West="100000000" VisitStatus="0" />
+        <cell id="38" i="4" j="7" cx="1200.000000" cy="2100.000000" North="10000" East="10" South="10" West="10" VisitStatus="0" />
+        <cell id="39" i="5" j="7" cx="1500.000000" cy="2100.000000" North="10" East="100000000" South="50000000" West="10" VisitStatus="0" />
+        <cell id="40" i="1" j="8" cx="300.000000" cy="2400.000000" North="100000000" East="10" South="10" West="100000000" VisitStatus="0" />
+        <cell id="41" i="2" j="8" cx="600.000000" cy="2400.000000" North="100000000" East="10" South="10" West="10" VisitStatus="0" />
+        <cell id="42" i="3" j="8" cx="900.000000" cy="2400.000000" North="100000000" East="10000" South="10" West="10" VisitStatus="0" />
+        <cell id="43" i="4" j="8" cx="1200.000000" cy="2400.000000" North="100000000" East="10000" South="10000" West="10000" VisitStatus="0" Obstacle="1" />
+        <cell id="44" i="5" j="8" cx="1500.000000" cy="2400.000000" North="100000000" East="100000000" South="10" West="10000" VisitStatus="0" />
+        <cell id="45" i="0" j="0" cx="0.000000" cy="0.000000" North="1" East="10" South="100000000" West="100000000" VisitStatus="0" />
+        <cell id="46" i="0" j="1" cx="0.000000" cy="300.000000" North="10" East="100000000" South="1" West="100000000" VisitStatus="0" Stair="1" />
     </floor0>
     <floor1>
-        <floorinfo width="0" height="0" cellsize="300" home="-1" stair="-1" checkpt="-1" />
+        <floorinfo width="5" height="9" cellsize="300" home="-1" stair="33" checkpt="17" />
+        <cell id="0" i="1" j="0" cx="300.000000" cy="0.000000" North="10" East="10" South="100000000" West="100000000" VisitStatus="0" />
+        <cell id="1" i="2" j="0" cx="600.000000" cy="0.000000" North="10" East="50000000" South="100000000" West="10" VisitStatus="0" />
+        <cell id="2" i="3" j="0" cx="900.000000" cy="0.000000" North="50000000" East="50000000" South="100000000" West="50000000" VisitStatus="0" NonMovable="1" />
+        <cell id="3" i="4" j="0" cx="1200.000000" cy="0.000000" North="10" East="100000000" South="100000000" West="50000000" VisitStatus="0" />
+        <cell id="4" i="1" j="1" cx="300.000000" cy="300.000000" North="10" East="10" South="10" West="100000000" VisitStatus="0" />
+        <cell id="5" i="2" j="1" cx="600.000000" cy="300.000000" North="10" East="10" South="10" West="10" VisitStatus="0" />
+        <cell id="6" i="3" j="1" cx="900.000000" cy="300.000000" North="10" East="10" South="50000000" West="10" VisitStatus="0" />
+        <cell id="7" i="4" j="1" cx="1200.000000" cy="300.000000" North="10" East="100000000" South="10" West="10" VisitStatus="0" />
+        <cell id="8" i="1" j="2" cx="300.000000" cy="600.000000" North="10" East="10" South="10" West="100000000" VisitStatus="0" />
+        <cell id="9" i="2" j="2" cx="600.000000" cy="600.000000" North="10" East="100000000" South="10" West="10" VisitStatus="0" Victim="1" VictimDir="1" />
+        <cell id="10" i="3" j="2" cx="900.000000" cy="600.000000" North="10" East="10" South="10" West="100000000" VisitStatus="0" />
+        <cell id="11" i="4" j="2" cx="1200.000000" cy="600.000000" North="10000" East="100000000" South="10" West="10" VisitStatus="0" />
+        <cell id="12" i="1" j="3" cx="300.000000" cy="900.000000" North="10" East="10" South="10" West="100000000" VisitStatus="0" CheckPt="1" Victim="1" VictimDir="0" />
+        <cell id="13" i="2" j="3" cx="600.000000" cy="900.000000" North="10" East="10" South="10" West="10" VisitStatus="0" />
+        <cell id="14" i="3" j="3" cx="900.000000" cy="900.000000" North="10" East="10000" South="10" West="10" VisitStatus="0" CheckPt="1" />
+        <cell id="15" i="4" j="3" cx="1200.000000" cy="900.000000" North="10000" East="100000000" South="10000" West="10000" VisitStatus="0" Obstacle="1" />
+        <cell id="16" i="1" j="4" cx="300.000000" cy="1200.000000" North="50000000" East="10" South="10" West="100000000" VisitStatus="0" />
+        <cell id="17" i="2" j="4" cx="600.000000" cy="1200.000000" North="10" East="10" South="10" West="10" VisitStatus="0" CheckPt="1" />
+        <cell id="18" i="3" j="4" cx="900.000000" cy="1200.000000" North="10" East="100000000" South="10" West="10" VisitStatus="0" />
+        <cell id="19" i="4" j="4" cx="1200.000000" cy="1200.000000" North="10" East="100000000" South="10000" West="100000000" VisitStatus="0" />
+        <cell id="20" i="1" j="5" cx="300.000000" cy="1500.000000" North="50000000" East="100000000" South="50000000" West="100000000" VisitStatus="0" NonMovable="1" />
+        <cell id="21" i="2" j="5" cx="600.000000" cy="1500.000000" North="10" East="10" South="10" West="100000000" VisitStatus="0" />
+        <cell id="22" i="3" j="5" cx="900.000000" cy="1500.000000" North="10" East="10" South="10" West="10" VisitStatus="0" />
+        <cell id="23" i="4" j="5" cx="1200.000000" cy="1500.000000" North="10" East="100000000" South="10" West="10" VisitStatus="0" />
+        <cell id="24" i="1" j="6" cx="300.000000" cy="1800.000000" North="10" East="100000000" South="50000000" West="100000000" VisitStatus="0" />
+        <cell id="25" i="2" j="6" cx="600.000000" cy="1800.000000" North="10" East="10" South="10" West="100000000" VisitStatus="0" />
+        <cell id="26" i="3" j="6" cx="900.000000" cy="1800.000000" North="10" East="10" South="10" West="10" VisitStatus="0" Victim="1" VictimDir="2" />
+        <cell id="27" i="4" j="6" cx="1200.000000" cy="1800.000000" North="10" East="100000000" South="10" West="10" VisitStatus="0" />
+        <cell id="28" i="1" j="7" cx="300.000000" cy="2100.000000" North="100000000" East="10" South="10" West="10" VisitStatus="0" />
+        <cell id="29" i="2" j="7" cx="600.000000" cy="2100.000000" North="100000000" East="10" South="10" West="10" VisitStatus="0" />
+        <cell id="30" i="3" j="7" cx="900.000000" cy="2100.000000" North="100000000" East="10" South="10" West="10" VisitStatus="0" />
+        <cell id="31" i="4" j="7" cx="1200.000000" cy="2100.000000" North="100000000" East="100000000" South="10" West="10" VisitStatus="0" />
+        <cell id="32" i="0" j="7" cx="0.000000" cy="2100.000000" North="1" East="10" South="100000000" West="100000000" VisitStatus="0" />
+        <cell id="33" i="0" j="8" cx="0.000000" cy="2400.000000" North="10" East="100000000" South="1" West="100000000" VisitStatus="0" Stair="1" />
     </floor1>
 </mazemap>
