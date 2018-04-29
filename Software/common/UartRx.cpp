@@ -13,9 +13,14 @@
 #include <sys/utime.h>
 #include <sstream>
 #include <ctime>
+const char* leftcapture_file = "C:/projects/StormingRobots2017/rcj-code/Software/letter/randomFolder/capL.jpg";
+const char* rightcapture_file = "C:/projects/StormingRobots2017/rcj-code/Software/letter/randomFolder/capR.jpg";
 #else
 #include <ctime>
+const char* leftcapture_file = "/home/alex/projects/rcj-code/Software/letter/randomFolder/capL.jpg";
+const char* rightcapture_file = "/home/alex/projects/rcj-code/Software/letter/randomFolder/capR.jpg";
 #endif
+
 
 static std::string getCurDate()
 {
@@ -75,12 +80,18 @@ void UartRx::run(void){
         } else if (c == 'y') {
             storeScan(mBuf);
         } else if (c == 'z') {
-            //myRobot->picam.frameCapture();
-            printf("Data Sent!\n");
+            if(camFlip) {
+                myRobot->picam.frameCapture(leftcapture_file);
+            } else {
+                myRobot->picam.frameCapture(rightcapture_file);
+            }
+            camFlip = !camFlip;
+            printf("Camera!\n");
         } else if (c == 'm') {
-            myRobot->currState = ARobot::DATA; //IDLE
             if(myRobot->backingBlack) {
                 myRobot->currState = ARobot::BLACKBACK;
+            } else {
+                myRobot->currState = ARobot::DATA; //IDLE
             }
         } else if (c == 'd') {
             myRobot->currState = ARobot::IDLE; //IDLE

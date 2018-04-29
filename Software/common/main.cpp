@@ -19,8 +19,13 @@
 
 using namespace std;
 
-void spawnThread(Thread *currThread,  ARobot *myRobot);
-void stopThread(Thread *currThread);
+SerialPort *port;
+ARobot *myRobot;
+UartRx *uartrx;
+Process_T *process_thread;
+
+void spawnThread(Thread *&currThread,  ARobot *myRobot);
+void stopThread(Thread *&currThread, ARobot *myRobot);
 
 int main(int argc,char **argv){
 #ifdef WIN32
@@ -37,8 +42,8 @@ int main(int argc,char **argv){
     bool isRunning = false; //start program button
     bool reset = false; //flag
     int iteration = 0;
-    Thread *currThread; //spawned thread
-
+    Thread *currThread=NULL; //spawned thread
+    sleep(5);
     //Set up Wires, Below is the wiringPi -> Pi Rev.3 GPIO Mapping
     //22 --> 3 (WiringPI)
     //23 --> 4
@@ -52,31 +57,29 @@ int main(int argc,char **argv){
     pinMode(2, INPUT); //Push Pin (Toggle Program)
     printf("WiringPI Init Passed");
 
-    SerialPort *port = new SerialPort("/dev/ttyAMA0",115200);
+    port = new SerialPort("/dev/ttyAMA0",115200);
     if(port == NULL)
         printf("Serial port open failed\n");
     printf("Start robot navigation...\n");
-    ARobot *myRobot = new ARobot(port);
+    myRobot = new ARobot(port);
     printf("ARobot Init Passed...\n");
 
-    UartRx *uartrx = new UartRx(port, myRobot);
+    uartrx = new UartRx(port, myRobot);
     uartrx->setLogFile(in_dir, rt_logname);
     printf("UartRx Thread Init Passed\n");
 
-    Process_T *process_thread = new Process_T(port, myRobot);
+    process_thread = new Process_T(port, myRobot);
     printf("Process Thread Init Passed\n");
 
     while(1) {
         if(iteration % 1000 == 0) {
             if(digitalRead(2)==0 && !isRunning && reset) { //button is pressed when off
-                printf("Spawning New Thread...\n");
                 myRobot->Reset();
                 spawnThread(currThread, myRobot);
                 isRunning = true;
                 reset = false;
             } else if(digitalRead(2)==0 && isRunning && reset) {
-                printf("Thread Killed...\n");
-                stopThread(currThread);
+                stopThread(currThread, myRobot);
                 isRunning = false;
                 reset = false;
             } else if (digitalRead(2)==1) {
@@ -97,8 +100,9 @@ int main(int argc,char **argv){
  * 1 0 --> Collect Data
  * 1 1 --> Tester Thread (i.e. Testing kNN PiCam, etc.)
  */
-void spawnThread(Thread *currThread, ARobot *myRobot) {
+void spawnThread(Thread *&currThread, ARobot *myRobot) {
     int currChoice = digitalRead(5) + digitalRead(4)*2;
+
     switch(currChoice) {
     case 0: //0 0
         currThread = new NavThread(myRobot, false);
@@ -113,11 +117,20 @@ void spawnThread(Thread *currThread, ARobot *myRobot) {
         currThread = new TestThread(myRobot);
         break;
     }
+    printf("CurrThread started with address: %d\n", currThread);
 }
 
-void stopThread(Thread *currThread) {
+void stopThread(Thread *&currThread, ARobot *myRobot) {
+    printf("Thread Stopping...%d\n", currThread);
+    currThread->DestroyThread();
+    while(!currThread->isReadyExit()) {
+        printf("Waiting for Thread to Finish...\n");
+        sleep(0.1);
+    }
     delete currThread;
+    printf("Thread Killed...\n");
 }
+
 
 
 

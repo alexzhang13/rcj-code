@@ -103,7 +103,7 @@ public:
     void setOffsetSpeed(int offset_l, int offset_r);
     void MoveDistance(int distance_mm, BotDir forward);
     void StopMove();
-    void TurnDistance(int degrees, BotDir right);
+    void TurnDistance(float degrees, BotDir dir);
     void StopTurn(BotDir right);
     void ResetEncoder();
 
@@ -126,7 +126,7 @@ public:
     void DisplayVictimVisual();
 
     /*Inline Functions*/
-    float getSTD(int* arr, int avg) {
+    inline float getSTD(int* arr, int avg) {
         float total = 0;
         //no break condition for size of arr = 0
         for(int i=0; i<sizeof(arr)/sizeof(arr[0]); i++)
@@ -177,13 +177,18 @@ public:
     bool correctionFailed; // if correction fails
     bool isCorrecting; //is the robot in a state of correcting
     int dist_temp; //store temporary distance to travel
-    float correctionErrorChange; //delta error
+    int correctionErrorChange; //delta error
+    FILE *pystream; //stream for extracting letter
+    char leftVVictim[10]; //character for left
+    char rightVVictim[10]; //character for right
 
 protected:
     SerialPort *mPort;
 
 private:
     char m_letter;
+    char* pyLeft = "python /home/alex/projects/rcj-code/Software/letter/identify.py /home/alex/projects/rcj-code/Software/letter/randomFolder/capL.jpg";
+    char* pyRight = "python /home/alex/projects/rcj-code/Software/letter/identify.py /home/alex/projects/rcj-code/Software/letter/randomFolder/capR.jpg";
     float threshLeft; //Left Temperature Threshold
     float threshRight; //Right Temperature Threshold
     int silver_thresh; //Silver Tile Threshold
@@ -193,10 +198,10 @@ private:
     int off_left; //robot left motor offset
     int off_right; //robot right motor offset
     int yaw_drift; //Add to counter yaw drift...
+    int correctionError; //if correction fails, find distance to ensure something went wrong
     float initialYaw; //initial yaw in a turn
     float prevYaw; //previous yaw reading
     float toTurn; //distance to turns
-    float correctionError; //if correction fails, find distance to ensure something went wrong
     float turnOffset; //turnOffset
     BotDir correctionDir; //direction the robot just tried to fix itself
     bool initTurnRec; //specific special case (glitch) -- cleaner way will remove this sooner or later
@@ -208,3 +213,4 @@ private:
     size_t mlen_temp;
 }; // class Thread
 #endif // _Thread_h_
+

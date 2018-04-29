@@ -5,7 +5,7 @@
 #include <errno.h>
 
 Thread::Thread(int priority, int stackSize)
-    :mPriority(priority), mStackSize(stackSize)
+    :mPriority(priority), mStackSize(stackSize), mExitFlag(false)
 {
     start();
 }
@@ -42,7 +42,8 @@ bool Thread::start(void){
         printf("Thread::error: create thread fails(%s)\n",strerror(status));
         return false;
     }
-
+    this->mExitFlag = false;
+    this->setDestroy(false);
     pthread_attr_destroy(&attr);
     return true;
 }
@@ -75,5 +76,5 @@ void Thread::checkSuspend()
 
 void Thread::DestroyThread()
 {
-    //Override...
+    mExitFlag = true;
 }

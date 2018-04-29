@@ -3,7 +3,7 @@
 #include <pthread.h>
 
 class Thread {
- public:
+public:
     Thread(int priority=50, int stackSize=20000);
 
     bool m_SuspendFlag;
@@ -16,13 +16,33 @@ class Thread {
     virtual void checkSuspend();
     virtual void DestroyThread();
 
- protected:
-    int mPriority, mStackSize;
+    //return true when thread is ready to be killed
+    bool isExit() {
+        return mExitFlag;
+    }
 
- private:
+    //ensure signal to kill and kill have no discrepancy
+    bool isReadyExit() {
+        return myReadyExitFlag;
+    }
+
+    bool isToDestroy() {
+        return toDestroy;
+    }
+
+    void setDestroy(bool flag) {
+        toDestroy = flag;
+    }
+
+protected:
+    int mPriority, mStackSize;
+    bool myReadyExitFlag, mExitFlag, toDestroy;
+
+private:
     pthread_t mThread;
     pthread_mutex_t m_SuspendMutex;
     pthread_cond_t m_ResumeCond;
+
 
     static void *threadFunc(void * obj);
 }; // class Thread

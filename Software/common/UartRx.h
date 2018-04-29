@@ -33,5 +33,6 @@ class UartRx : public Thread {
 	uint32_t mCnt;
 	uint32_t mNum;
 	FILE *mpFile;
+        bool camFlip; //denote the side, 0 = left, 1 = right
 };
 #endif // _UartRx_h_
