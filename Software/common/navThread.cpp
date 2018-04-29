@@ -286,10 +286,10 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
     nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
     cout << "Map File Written..." << endl;
 
-    cout << "North Wall State: " <<  nav_rt.getCellbyIndex(0)->getWallNorth() << endl;
-    cout << "South Wall State: " <<  nav_rt.getCellbyIndex(0)->getWallSouth() << endl;
-    cout << "East Wall State: " <<  nav_rt.getCellbyIndex(0)->getWallEast() << endl;
-    cout << "West Wall State: " <<  nav_rt.getCellbyIndex(0)->getWallWest() << endl;
+    cout << "North Wall State: " <<  nav_rt.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->getCurrentCell()->getWallNorth() << endl;
+    cout << "South Wall State: " <<  nav_rt.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->getCurrentCell()->getWallSouth() << endl;
+    cout << "East Wall State: " <<  nav_rt.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->getCurrentCell()->getWallEast() << endl;
+    cout << "West Wall State: " <<  nav_rt.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->getCurrentCell()->getWallWest() << endl;
 
 
     robot->temp_cell_list.clear();
