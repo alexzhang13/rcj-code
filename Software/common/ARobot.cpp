@@ -94,7 +94,7 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag, bool CheckRam
 
         if(rangeDataList[range_size-1].walls.wallN == 0) {
             sensor_info->setWallNorth(MazeCell::MWall);
-            cout << "North Wall State: " <<  sensor_info->getWallNorth() << endl;
+            // cout << "North Wall State: " <<  sensor_info->getWallNorth() << endl;
         } else if(rangeDataList[range_size-1].walls.wallN == -1 && sensor_info->getWallNorth() != MazeCell::MOpen) {
             sensor_info->setWallNorth(MazeCell::MUnknown);
         } else {
@@ -103,7 +103,7 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag, bool CheckRam
 
         if(rangeDataList[range_size-1].walls.wallE == 0) {
             sensor_info->setWallEast(MazeCell::MWall);
-            cout << "East Wall State: " <<  sensor_info->getWallEast() << endl;
+            // cout << "East Wall State: " <<  sensor_info->getWallEast() << endl;
         } else if (rangeDataList[range_size-1].walls.wallE == -1 && sensor_info->getWallEast() != MazeCell::MOpen) {
             sensor_info->setWallEast(MazeCell::MUnknown);
         } else {
@@ -507,7 +507,7 @@ int ARobot::CheckVictimTemp()
     int numAboveThreshL = 0;
     for(int i = 2; i < 6; i++) {
         for(int k = 1; k < 9; k++) { //left threshold
-            cout << "i: " << i << " k: " << k << "Left Temp: " << tempDataList[temp_vals-i].getLeftTemp(k) << endl;
+            // cout << "i: " << i << " k: " << k << "Left Temp: " << tempDataList[temp_vals-i].getLeftTemp(k) << endl;
             if(tempDataList[temp_vals-i].getLeftTemp(k) > this->threshLeft) {
                 ++numAboveThreshL;
             }
