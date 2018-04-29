@@ -6,6 +6,7 @@
 #include <string>
 #include <iostream>
 
+#include <time.h>
 #include <vector>
 #include "ARobot.h"
 #include "IMUData.h"
@@ -44,6 +45,7 @@ protected:
     ARobot *myRobot;
 private:
     Navigate2D nav; //main map class obj
+    time_t start;
 
 #ifdef WIN32
     const char* fileConfig = "C:/projects/StormingRobots2017/Data/Mem/config.txt";

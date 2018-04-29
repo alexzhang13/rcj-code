@@ -262,7 +262,7 @@ int32_t Navigate2D::updateLocalMap()
 }
 
 //! navigation planning
-int32_t Navigate2D::navigatePlanning()
+int32_t Navigate2D::navigatePlanning(bool returnStart)
 {
 	int32_t i;
 	int32_t cellsize = m_navigateMaps.getFloorMap(m_cur_floor_index)->getCellSize();
@@ -297,7 +297,7 @@ int32_t Navigate2D::navigatePlanning()
 
 	std::vector<GreedyDijkstra::DistInfo> *vlist = m_dijkstra.sortShortestPath();
 
-	if(vlist != 0)
+        if(vlist != 0 && !returnStart)
 		m_next_cell = (*vlist)[0];
 	else {
 		std::vector<GreedyDijkstra::DistInfo>* lst = m_dijkstra.getDistList();
