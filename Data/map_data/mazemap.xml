@@ -2,10 +2,12 @@
 <mazemap>
     <floors levels="2" home="0" current="0" />
     <floor0>
-        <floorinfo width="2" height="2" cellsize="300" home="0" stair="-1" checkpt="0" />
-        <cell id="0" i="0" j="0" cx="0.000000" cy="0.000000" North="50000000" East="50000000" South="50000000" West="50000000" VisitStatus="2" HomeCell="1" NonMovable="1" />
-        <cell id="1" i="0" j="1" cx="0.000000" cy="300.000000" North="50000000" East="10" South="50000000" West="50000000" VisitStatus="2" NonMovable="1" />
-        <cell id="2" i="1" j="1" cx="300.000000" cy="300.000000" North="0" East="10" South="0" West="0" VisitStatus="1" />
+        <floorinfo width="1" height="5" cellsize="300" home="0" stair="-1" checkpt="0" />
+        <cell id="0" i="0" j="2" cx="0.000000" cy="600.000000" North="10" East="10" South="10" West="100000000" VisitStatus="2" HomeCell="1" />
+        <cell id="1" i="0" j="3" cx="0.000000" cy="900.000000" North="10" East="0" South="10" West="0" VisitStatus="1" />
+        <cell id="2" i="0" j="4" cx="0.000000" cy="1200.000000" North="0" East="0" South="10" West="0" VisitStatus="1" />
+        <cell id="3" i="0" j="1" cx="0.000000" cy="300.000000" North="0" East="0" South="10" West="0" VisitStatus="1" />
+        <cell id="4" i="0" j="0" cx="0.000000" cy="0.000000" North="0" East="0" South="10" West="0" VisitStatus="1" />
     </floor0>
     <floor1>
         <floorinfo width="0" height="0" cellsize="300" home="-1" stair="-1" checkpt="-1" />
