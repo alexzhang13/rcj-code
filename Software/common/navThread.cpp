@@ -320,6 +320,7 @@ int NavThread::WayPointNav(ARobot *robot, Navigate2D &nav_rt)
         //printf("Coords -> coord: %d x: %d, y: %d\n", robot->waypts[bot_waypts-i], x, y);
     }
     first_iter = false;
+    sleep(0.1);
     if(myRobot->toMove){
         myRobot->CalcNextTile(false);
         myRobot->toMove = false;
