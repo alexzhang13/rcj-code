@@ -648,11 +648,9 @@ void ARobot::CheckLightTile()
         }
     } else {
         //Calculate Previous
-        int prevVals[5];
         int cnt = 0;
-        for(int i=1;i<5;i++) {
-            prevVals[i] = lightDataList[mlen_light-i-1].ReturnLight();
-            if(lightDataList[mlen_light-2].CheckLight(prevVals[i])==2)
+        for(int i=1;i<6;i++) {
+            if(lightDataList[mlen_light-2].CheckLight(lightDataList[mlen_light-i-1].ReturnLight())==2)
                 ++cnt;
         }
 
