@@ -30,11 +30,7 @@ void NavThread::run(void){
             sleep(0.1);
             break;
         case 3: //Idle
-            if(myRobot->toMove){
-                sleep(1.0);
-                myRobot->CalcNextTile(false);
-                myRobot->toMove = false;
-            }  else if(myRobot->correctionFailed) {
+            if(myRobot->correctionFailed) {
                 sleep(1.0);
                 myRobot->CorrectionFailed();
             } else if(myRobot->isCorrecting) {
@@ -324,7 +320,12 @@ int NavThread::WayPointNav(ARobot *robot, Navigate2D &nav_rt)
         //printf("Coords -> coord: %d x: %d, y: %d\n", robot->waypts[bot_waypts-i], x, y);
     }
     first_iter = false;
-    robot->CalcNextTile(true);
+    if(myRobot->toMove){
+        myRobot->CalcNextTile(false);
+        myRobot->toMove = false;
+    } else {
+        robot->CalcNextTile(true);
+    }
     return 0;
 }
 
