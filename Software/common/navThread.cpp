@@ -3,7 +3,8 @@
 using namespace std;
 
 void NavThread::run(void){
-    start = time(0);
+    clock_gettime(CLOCK_REALTIME, &gettime_now);
+    start_time = gettime_now.tv_sec;
     sleep(0.1);
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     printf("Config File Read...\n");
@@ -262,7 +263,9 @@ void NavThread::writeCurrentMap(const char* filedir, const char* xmlname, ARobot
 
 void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt) 
 {
-    cout << "\n\nNEW NAV HAS BEEN ENTERED with TIME = " << difftime(time(0), start) << endl << endl;
+    clock_gettime(CLOCK_REALTIME, &gettime_now);
+    time_difference = gettime_now.tv_sec - start_time;
+    cout << "\n\nNEW NAV HAS BEEN ENTERED with TIME = " << time_difference << endl << endl;
 
     /*Navigational functions*/
     robot->sensor_info.reset(); //reset temp object
@@ -293,7 +296,7 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
 
     //nav_rt.slam2d(); // will move to another thread
     // what to do next
-    nav_rt.navigatePlanning(difftime(time(0), start) >= 360.0);
+    nav_rt.navigatePlanning(time_difference > 360);
     // move on to the next cell
     //nav_rt.navigation2D();
     if(nav_rt.getNextCell()->waypts.size() >= 2) {
