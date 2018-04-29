@@ -109,7 +109,7 @@ void NavThread::run(void){
             nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]);
             //printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
             if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
-                myRobot->CheckLightTile();
+                //myRobot->CheckLightTile();
                 sleep(0.1);
                 if(myRobot->CheckRamp()) { //is ramp
                     myRobot->currState = ARobot::RAMP;
@@ -119,12 +119,12 @@ void NavThread::run(void){
                     break;
                 }
                 // cout << "Current Light Tile: " << myRobot->currTileLight << endl;
-                if(myRobot->currTileLight == ARobot::SILVER) {
+                /*if(myRobot->currTileLight == ARobot::SILVER) {
                     writeCurrentMap(this->map_dir, this->map_name, this->myRobot, this->nav);
                     myRobot->LEDLight(3000);
                     sleep(3.25);
                     //save state
-                }
+                }*/
             }
             if(!nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim()) {
                 myRobot->picam.frameCapture(leftcapture_file);
