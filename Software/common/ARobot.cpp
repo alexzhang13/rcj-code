@@ -641,8 +641,6 @@ void ARobot::CheckLightTile()
             backingBlack = true;
             sleep(0.2);
             StopMove();
-            sleep(0.2);
-            ResetEncoder();
             sleep(1.0);
             MoveDistance(175, BACK);
         }
