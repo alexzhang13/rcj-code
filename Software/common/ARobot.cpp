@@ -646,7 +646,7 @@ void ARobot::CheckLightTile()
         }
     } else {
         //Calculate Previous
-        int cnt = 0;
+        /*int cnt = 0;
         for(int i=1;i<6;i++) {
             if(lightDataList[mlen_light-2].CheckLight(lightDataList[mlen_light-i-1].ReturnLight())==2)
                 ++cnt;
@@ -656,8 +656,8 @@ void ARobot::CheckLightTile()
         //float std = this->getSTD(prevVals, avgVal);
         if(cnt > 2) //10.0 calculated from recorded values
             currTileLight = SILVER;
-        else
-            currTileLight = WHITE;
+        else*/
+        currTileLight = WHITE;
     }
     if(mlen_light > 200)
         lightDataList.erase(lightDataList.begin(), lightDataList.begin() + mlen_light - 200);
