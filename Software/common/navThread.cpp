@@ -30,7 +30,10 @@ void NavThread::run(void){
             sleep(0.1);
             break;
         case 3: //Idle
-            if(myRobot->correctionFailed) {
+            if(myRobot->toMove) {
+                sleep(0.5);
+                myRobot->currState = ARobot::WAYPTNAV;
+            } else if(myRobot->correctionFailed) {
                 sleep(1.0);
                 myRobot->CorrectionFailed();
             } else if(myRobot->isCorrecting) {
