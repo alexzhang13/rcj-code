@@ -76,6 +76,7 @@ public:
 
 	void printoutData();
 
+	inline void setPosition(int32_t xPos, int32_t yPos) {mXpos = xPos; mYpos = yPos;}
 	inline void setlineDetectTol(double tor) { mEpsilon = tor; }
 	inline double getLineDetectTol(void) { return mEpsilon;}
 	
@@ -95,8 +96,10 @@ protected:
 
 private:
 	cv::Mat mImage;
-	TimeDist mTimeDist_rr[BUF_LF_SIZE];
-	TimeDist mTimeDist_rl[BUF_LF_SIZE];
+	std::vector<TimeDist*> mTimeDistrr_vec; //vector of points for rr
+	std::vector<TimeDist*> mTimeDistrl_vec; //vector of points
+	TimeDist* mTimeDist_rr;
+	TimeDist* mTimeDist_rl;
 	AdjustPt2D mPts[BUF_LF_SIZE];
 	std::vector<cv::Point2f> mAvgPts;
 	std::vector<cv::Point2f> mLines;
@@ -112,6 +115,7 @@ private:
 	double mOffset2BotCenter[2];
 	int32_t mXmin, mYmin;
 	int32_t mXmax, mYmax;
+	int32_t mXpos, mYpos;
 	double mEpsilon;
 	int32_t mLineThresh;
 	float mAngleThresh;
