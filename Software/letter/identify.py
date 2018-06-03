@@ -7,7 +7,7 @@ import sys
 RESIZED_IMAGE_WIDTH = 12
 RESIZED_IMAGE_HEIGHT = 12
 BLOCKSIZE = 131
-MIN_SIZE = 2000
+MIN_SIZE = 5000
 C = 5
 PATH = sys.argv[1]
 
@@ -89,8 +89,8 @@ def genTopAndBottom(thres, contourData):
     imgROI = thres[contourData.rectY : contourData.rectY+contourData.rectHeight, contourData.rectX : contourData.rectX+contourData.rectWidth]
     imgROIResized = cv2.resize(imgROI, (RESIZED_IMAGE_WIDTH, RESIZED_IMAGE_HEIGHT))
     imgROIResized = cv2.adaptiveThreshold(imgROIResized, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, BLOCKSIZE, C)
-    top = imgROIResized[0: 2, 4: 7][0]
-    bottom = imgROIResized[10: 12, 4: 7][0]
+    top = imgROIResized[0: 1, 4: 7][0]
+    bottom = imgROIResized[11: 12, 4: 7][0]
     return top, bottom
 
 def main2():
