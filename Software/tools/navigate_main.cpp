@@ -12,9 +12,9 @@ int main(int argc, char **argv)
 {
 	//int ret = greedy_dikjstra_test();
 	//int ret = mapgen_test();
-	int ret = navigation_simul_test();
+	//int ret = navigation_simul_test();
 	//int ret = testMapLoad();
-	//int ret = lineFitTest();
+	int ret = lineFitTest();
 	return ret;
 }
 
@@ -80,7 +80,7 @@ int mapgen_test()
 	const float walls = 0.2f;
 	int32_t home_floor_num = 0;
 	int32_t floors = 2;
-	const char* out_dir = "C:/projects/StormingRobots2017/Data/map_data/";
+	const char* out_dir = "D:/users/alex/StormingRobots/rcj-code/Data/map_data/";
 	const char* xmlname = "mazemap";
 	const char* xmlname_new = "mazemap_new";
 	// generate floor maps
@@ -113,7 +113,7 @@ int mapgen_test()
 int navigation_simul_test()
 {
 	int32_t i;
-	const char* in_dir = "D:/users/family/alex/rcj-code/Data/map_data";
+	const char* in_dir = "D:/users/alex/StormingRobots/rcj-code/Data/map_data";
 	const char* xmlname = "mazemap";
 	const char* xmlname_u = "updated_mazemap";
 	int32_t home_floor_num = 0;
@@ -141,7 +141,7 @@ int navigation_simul_test()
 		// back to the previous way point
 		// shall call configure cells
 		nav_simul.displayRouteMap();
-		_sleep(100);
+		_sleep(500);
 	}
 
 	return 0;
@@ -191,7 +191,7 @@ int testMapLoad()
 	//nav_rt.slam2d(); // will move to another thread
 
 	// what to do next
-	nav_rt.navigatePlanning();
+	nav_rt.navigatePlanning(false);
 
 	// move on to the next cell
 	nav_rt.navigation2D();
@@ -204,7 +204,7 @@ int testMapLoad()
 
 int lineFitTest()
 {
-	const char* filename = "D:/users/family/alex/rcj-code/Data/laser_data/distance_data1.txt";
+	const char* filename = "D:/users/alex/StormingRobots/rcj-code/Data/laser_data/slam_data/fivefivesample_1.txt";
 	LineFitAlgo lfa;
 	int32_t num_half_samples = 36;
 	int32_t angl_step = 5;
