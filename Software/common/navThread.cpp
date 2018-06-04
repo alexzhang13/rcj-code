@@ -3,14 +3,14 @@
 using namespace std;
 
 void NavThread::run(void){
+    clock_gettime(CLOCK_REALTIME, &gettime_now);
+    start_time = gettime_now.tv_sec;
     sleep(0.1);
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
-    printf("Config File Read...\n");
     if(this->readMap)
-        readCurrentMap(in_dir, xml_name, myRobot, nav); //check for previous map from mem
+        readCurrentMap(map_dir, map_name, myRobot, nav); //check for previous map from mem
     else
         startNewMap(myRobot, nav);
-    printf("Map Generation Started...\n");
     myRobot->picam.cameraOpen(720, 480);
     sleep(1);
     myRobot->imuCalibrated = true; //turn on IMU flag
@@ -30,11 +30,10 @@ void NavThread::run(void){
             sleep(0.1);
             break;
         case 3: //Idle
-            if(myRobot->toMove){
-                sleep(1.0);
-                myRobot->CalcNextTile(false);
-                myRobot->toMove = false;
-            }  else if(myRobot->correctionFailed) {
+            if(myRobot->toMove) {
+                sleep(0.5);
+                myRobot->currState = ARobot::WAYPTNAV;
+            } else if(myRobot->correctionFailed) {
                 sleep(1.0);
                 myRobot->CorrectionFailed();
             } else if(myRobot->isCorrecting) {
@@ -52,7 +51,6 @@ void NavThread::run(void){
             sleep(1.25);
             myRobot->StopMove();
             //do something with myRobot-sensor_info to update the cell info
-            nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(0);
             sleep(2.5);
             myRobot->currState = ARobot::PLANNING;
             break;
@@ -63,7 +61,6 @@ void NavThread::run(void){
             break;
         case 6: //Drop
             sleep(1);
-            printf("Dropping: %d\n", myRobot->dropCnt);
             for(int i = 0; i < myRobot->dropCnt; i++) {
                 myRobot->Drop();
                 sleep(2.5);
@@ -81,7 +78,6 @@ void NavThread::run(void){
             } else if(myRobot->victimRight) {
                 myRobot->TurnDistance(90, ARobot::RIGHT); //turn back right after left turn
             } else { //this shouldn't happen
-                printf("Error: Drop Failed?\n");
                 myRobot->currState = ARobot::WAYPTNAV;
             }
             break;
@@ -102,7 +98,6 @@ void NavThread::run(void){
             myRobot->currState = ARobot::STOP;
         case 9: //Data collection
             //myRobot->UpdateCellMap(&myRobot->sensor_info, false, false); //false = not black
-            writeCurrentMap(this->map_dir, this->map_name, this->myRobot, this->nav);
             myRobot->isVictim = nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim();
             if(!myRobot->isVictim) {myRobot->isDropped = false;}
             sleep(0.1);
@@ -111,9 +106,9 @@ void NavThread::run(void){
             myRobot->currTile.y = myRobot->currTile.y_tovisit;
 
             nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]);
-            printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
+            //printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
             if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
-                myRobot->CheckLightTile();
+                //myRobot->CheckLightTile();
                 sleep(0.1);
                 if(myRobot->CheckRamp()) { //is ramp
                     myRobot->currState = ARobot::RAMP;
@@ -122,20 +117,20 @@ void NavThread::run(void){
                     myRobot->MoveDistance(10000, ARobot::FRONT); //keep moving up ramp unless stopped otherwise
                     break;
                 }
-                cout << "Current Light Tile: " << myRobot->currTileLight << endl;
-                if(myRobot->currTileLight == ARobot::SILVER) {
+                // cout << "Current Light Tile: " << myRobot->currTileLight << endl;
+                /*if(myRobot->currTileLight == ARobot::SILVER) {
                     writeCurrentMap(this->map_dir, this->map_name, this->myRobot, this->nav);
                     myRobot->LEDLight(3000);
                     sleep(3.25);
                     //save state
-                }
+                }*/
             }
             if(!nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim()) {
                 myRobot->picam.frameCapture(leftcapture_file);
                 sleep(2);
                 int i = myRobot->ProcessImage_Victim();
                 sleep(1);
-                cout << "Victim Status: " << i << endl;
+                // cout << "Victim Status: " << i << endl;
                 switch(i) {
                 case 0: //drop left
                     myRobot->victimLeft = true;
@@ -247,13 +242,11 @@ void NavThread::readCurrentMap(const char* filedir, const char* xmlname, ARobot 
 {
     MazeCell::NavDir heading = MazeCell::navNorth;
     int32_t home_floor_num = 0;
-    std::string t = nav_rt.getCurTime();
-    std::string newfile = std::string(xmlname) + "_" + t;
-    if(nav_rt.readChkPtMaps(filedir, newfile.c_str())!= 0) {
-        printf("call_home\n");
+    if(nav_rt.readChkPtMaps(filedir, xmlname) != 0) {
         nav_rt.setHomeCell(home_floor_num, heading);
         //set current robot coords to x, y
     }
+    printf("Silver Map Loaded...\n");
     return;
 }
 
@@ -265,38 +258,34 @@ void NavThread::writeCurrentMap(const char* filedir, const char* xmlname, ARobot
 
 void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt) 
 {
-    cout << "\n\nRAMP HAS BEEN ENTERED\n\n";
+    clock_gettime(CLOCK_REALTIME, &gettime_now);
+    time_difference = gettime_now.tv_sec - start_time;
+    // cout << "\n\nNEW NAV HAS BEEN ENTERED with TIME = " << time_difference << endl << endl;
 
     /*Navigational functions*/
     robot->sensor_info.reset(); //reset temp object
     robot->UpdateCellMap(&robot->sensor_info, false, false); //false = not black
     robot->UpdateNeighborCells();
-    cout << "Floor Number: " << nav_rt.getCurrentFloorIndex() << endl;
-    cout << "Cells Updated..." << endl;
+    // cout << "Floor Number: " << nav_rt.getCurrentFloorIndex() << endl;
+    // cout << "Cell: " << nav_rt.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->getCurrentCell() << endl;
 
     nav_rt.configureCurCell(&robot->sensor_info);
-    cout << "Configuring Current Cell with Sensor Info..." << endl;
 
     nav_rt.detectLocalCells(robot->temp_cell_list);
-    cout << "Detecting Local Cells..." << endl;
 
     nav_rt.updateLocalMap();
-    cout << "Local Map Updating..." << endl;
 
-    nav_rt.getNavigateMaps()->writeXmlMap(filename, xmlname);
-    cout << "Map File Written..." << endl;
-
-    cout << "North Wall State: " <<  nav_rt.getCellbyIndex(0)->getWallNorth() << endl;
-    cout << "South Wall State: " <<  nav_rt.getCellbyIndex(0)->getWallSouth() << endl;
-    cout << "East Wall State: " <<  nav_rt.getCellbyIndex(0)->getWallEast() << endl;
-    cout << "West Wall State: " <<  nav_rt.getCellbyIndex(0)->getWallWest() << endl;
+    // cout << "North Wall State: " <<  nav_rt.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->getCurrentCell()->getWallNorth() << endl;
+    // cout << "South Wall State: " <<  nav_rt.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->getCurrentCell()->getWallSouth() << endl;
+    // cout << "East Wall State: " <<  nav_rt.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->getCurrentCell()->getWallEast() << endl;
+    // cout << "West Wall State: " <<  nav_rt.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->getCurrentCell()->getWallWest() << endl;
 
 
     robot->temp_cell_list.clear();
 
     //nav_rt.slam2d(); // will move to another thread
     // what to do next
-    nav_rt.navigatePlanning();
+    nav_rt.navigatePlanning(time_difference > 360);
     // move on to the next cell
     //nav_rt.navigation2D();
     if(nav_rt.getNextCell()->waypts.size() >= 2) {
@@ -310,7 +299,6 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
     first_iter = true;
     robot->currState = ARobot::WAYPTNAV;
     return;
-    //nav_rt->getCellbyIndex(nav_rt.m_next_cell.waypts.begin()).getCellGrid(&robot.currTile.x_tovisit, &robot.currTile.y_tovisit);
 }
 
 int NavThread::WayPointNav(ARobot *robot, Navigate2D &nav_rt)
@@ -329,13 +317,19 @@ int NavThread::WayPointNav(ARobot *robot, Navigate2D &nav_rt)
     }
     nav_rt.getCellbyIndex(robot->waypts[bot_waypts-1])->getCellGrid(robot->currTile.x, robot->currTile.y);
     nav_rt.getCellbyIndex(robot->waypts[bot_waypts-2])->getCellGrid(robot->currTile.x_tovisit, robot->currTile.y_tovisit);
-    printf("X_Tovisit: %d, Y_Tovisit: %d\n", robot->currTile.x_tovisit, robot->currTile.y_tovisit);
+    //printf("X_Tovisit: %d, Y_Tovisit: %d\n", robot->currTile.x_tovisit, robot->currTile.y_tovisit);
     for(int i = 1; i <= bot_waypts; i++) {
         nav_rt.getCellbyIndex(robot->waypts[bot_waypts-i])->getCellGrid(x, y);
-        printf("Coords -> coord: %d x: %d, y: %d\n", robot->waypts[bot_waypts-i], x, y);
+        //printf("Coords -> coord: %d x: %d, y: %d\n", robot->waypts[bot_waypts-i], x, y);
     }
     first_iter = false;
-    robot->CalcNextTile(true);
+    sleep(0.1);
+    if(myRobot->toMove){
+        myRobot->CalcNextTile(false);
+        myRobot->toMove = false;
+    } else {
+        robot->CalcNextTile(true);
+    }
     return 0;
 }
 

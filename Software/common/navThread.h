@@ -6,6 +6,7 @@
 #include <string>
 #include <iostream>
 
+#include <time.h>
 #include <vector>
 #include "ARobot.h"
 #include "IMUData.h"
@@ -44,6 +45,9 @@ protected:
     ARobot *myRobot;
 private:
     Navigate2D nav; //main map class obj
+    long int start_time;
+    long int time_difference;
+    struct timespec gettime_now;
 
 #ifdef WIN32
     const char* fileConfig = "C:/projects/StormingRobots2017/Data/Mem/config.txt";
@@ -58,8 +62,8 @@ private:
     const char* fileConfig = "/home/alex/projects/rcj-code/Software/common/Mem/config.txt";
     const char* in_dir = "/home/alex/projects/rcj-code/Data";
     const char* rt_logname = "realtime/rcj_log";
-    const char* xml_name = "map_data/mazemap";
-    const char* map_dir = "/home/alex/projects/rcj-code/Data/map_data/";
+    const char* xml_name = "mazemap";
+    const char* map_dir = "/home/alex/projects/rcj-code/Data/map_data";
     const char* map_name = "savemaze";
     const char* leftcapture_file = "/home/alex/projects/rcj-code/Software/letter/randomFolder/capL.jpg";
     const char* rightcapture_file = "/home/alex/projects/rcj-code/Software/letter/randomFolder/capR.jpg";

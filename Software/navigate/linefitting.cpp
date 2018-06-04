@@ -2,15 +2,17 @@
 
 LineFitAlgo::LineFitAlgo()
 {
+	mTimeDist_rr = new TimeDist[BUF_LF_SIZE];
+	mTimeDist_rl = new TimeDist[BUF_LF_SIZE];
 	resetData();
-	mShortThresh = 255;
+	mShortThresh = 400;
 	mLongThresh = 1300;
 	mAngleSep = 0;
 	m_SampleCnt = 0;
 	m_scan_angle = -1;
 	mDistOffset = 13.75f; // mm 
 	mAngleOffset = 10.0; //-1.5; //-1.8; // degrees
-	mEpsilon = 20.0;
+	mEpsilon = 15.0;
 	mLineThresh = 10; //25;
 	mAngleThresh = 35.0f;
 	mOffset2BotCenter[0] = 9.525f; // dx
@@ -75,9 +77,16 @@ bool LineFitAlgo::readData(TimeDist &td)
 	bool rotate_left = false;
 
 	int32_t angle = td.angle;
-	if(angle == m_scan_angle) // angle not updated
+	if(angle == m_scan_angle) { // angle not updated
+		if(angle == 0) { //right -> left [0]
+			mTimeDistrl_vec.push_back(mTimeDist_rl);
+			mTimeDist_rl = new TimeDist[BUF_LF_SIZE];
+		} else { //left -> right [180]
+			mTimeDistrr_vec.push_back(mTimeDist_rr);
+			mTimeDist_rr = new TimeDist[BUF_LF_SIZE];
+		}	
 		return false;
-	else {
+	} else {
 		if(angle > m_scan_angle)
 			rotate_right = true;
 		else if(angle < m_scan_angle)
@@ -152,7 +161,7 @@ bool LineFitAlgo::parseData(TimeDist *datalist)
 	int32_t thresh;
 	DataStat datas;
 
-	for(j =0; j < 360/mAngleSep; j++) {
+	for(j =0; j < mHalf_samples; j++) {
 		if(datalist[j].angle != -1) {
 			for(i = 0; i < 4; i++) 
 			{
@@ -184,16 +193,18 @@ bool LineFitAlgo::readDataFile(const char *filename)
 		return false;
 
 		resetData();
-
+		int32_t j = 0;
 		for(int32_t i = 0; i < mHalf_samples*2+1; i++) {
 			if(feof(hf)) {
 				ret = true;
 				break;
 			}
 			fscanf(hf, "%d %c %d %d %d %d %d", &td.timestamp, &td.ctrl, &td.angle, &td.d[0], &td.d[1], &td.d[2], &td.d[3]);
-
+			j = i;
 			readData(td);
 		}
+		mTimeDistrl_vec.push_back(mTimeDist_rl);
+
 		fclose(hf);
 
 		return true;
@@ -201,8 +212,10 @@ bool LineFitAlgo::readDataFile(const char *filename)
 
 bool LineFitAlgo::run()
 {
-	parseData(mTimeDist_rr);
-	parseData(mTimeDist_rl);
+	for(int i = 0; i < mTimeDistrr_vec.size(); i++) {
+		parseData(mTimeDistrr_vec[i]);
+		parseData(mTimeDistrl_vec[i]);
+	}
 	convert2Vec();
 	lineFit();
 	updateCellConfigs();
@@ -248,8 +261,8 @@ bool LineFitAlgo::convert2Vec()
 		for(j = 0; j < 4; j++) {
 			for(k = 0; k < mPts[i].data[j].size(); k++) {
 				if(mPts[i].data[j][k].status == 1) {
-					mPts[i].data[j][k].pt.x =cos(((double)mPts[i].adjust_angle+mAngleOffset)*3.1415926/180)*(mPts[i].data[j][k].pt.d+mDistOffset) - mOffset2BotCenter[0];
-					mPts[i].data[j][k].pt.y =sin(((double)mPts[i].adjust_angle+mAngleOffset)*3.1415926/180)*(mPts[i].data[j][k].pt.d+mDistOffset) - mOffset2BotCenter[1];
+					mPts[i].data[j][k].pt.x =cos(((double)mPts[i].adjust_angle+mAngleOffset)*3.1415926/180)*(mPts[i].data[j][k].pt.d+mDistOffset) - mOffset2BotCenter[0] + mXpos;
+					mPts[i].data[j][k].pt.y =sin(((double)mPts[i].adjust_angle+mAngleOffset)*3.1415926/180)*(mPts[i].data[j][k].pt.d+mDistOffset) - mOffset2BotCenter[1] + mYpos;
 				}
 				else {
 					if(j == 0 || j == 2) {
@@ -261,6 +274,7 @@ bool LineFitAlgo::convert2Vec()
 						mPts[i].data[j][k].pt.y = 0.0;
 					}
 				}
+				//take min max here
 				xmin = std::min(xmin, mPts[i].data[j][k].pt.x);
 				xmax = std::max(xmax, mPts[i].data[j][k].pt.x);
 				ymin = std::min(ymin, mPts[i].data[j][k].pt.y);
@@ -776,10 +790,10 @@ void LineFitAlgo::setWallProp(MazeCell &curCell, int32_t *wall_status)
 void LineFitAlgo::displayPoints()
 {
 	int32_t i, j;
-	int32_t w = ((mXmax - mXmin + 7)/8)*8 + 32;
-	int32_t h = ((mYmax - mYmin + 8)/8)*8 + 32;
-	int32_t xoffset = -mXmin + 16;
-	int32_t yoffset = -mYmin + 16;
+	int32_t w = mXmax + 32;//((mXmax - mXmin + 7)/8)*8 + 32;
+	int32_t h = mYmax + 32;//((mYmax - mYmin + 8)/8)*8 + 32;
+	int32_t xoffset = 0;//-mXmin + 16;
+	int32_t yoffset = 0;//-mYmin + 16;
 
 	int thickness = -1;
 	int lineType = 8;
@@ -820,7 +834,7 @@ void LineFitAlgo::displayPoints()
 	}
 
 	// display origin
-	cv::Point center = cv::Point(xoffset, h-yoffset);
+	cv::Point center = cv::Point(mXpos + xoffset, mYpos + h-yoffset);
 	cv::circle( mImage, center,5, cv::Scalar( 0, 255, 0 ), 2, lineType );
 
 	cv::imshow("distance sensors", mImage);

@@ -65,7 +65,6 @@ void ARobot::WriteCommand(char* i_command, int size)
 void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag, bool CheckRamp)
 {
     const size_t range_size = rangeDataList.size();
-    int orientflag = (int)currOrientation % 2;
     if(!black_flag) {
         if(currTileLight == SILVER) {
             sensor_info->setCheckPt(true);
@@ -95,7 +94,7 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag, bool CheckRam
 
         if(rangeDataList[range_size-1].walls.wallN == 0) {
             sensor_info->setWallNorth(MazeCell::MWall);
-            cout << "North Wall State: " <<  sensor_info->getWallNorth() << endl;
+            // cout << "North Wall State: " <<  sensor_info->getWallNorth() << endl;
         } else if(rangeDataList[range_size-1].walls.wallN == -1 && sensor_info->getWallNorth() != MazeCell::MOpen) {
             sensor_info->setWallNorth(MazeCell::MUnknown);
         } else {
@@ -104,7 +103,7 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag, bool CheckRam
 
         if(rangeDataList[range_size-1].walls.wallE == 0) {
             sensor_info->setWallEast(MazeCell::MWall);
-            cout << "East Wall State: " <<  sensor_info->getWallEast() << endl;
+            // cout << "East Wall State: " <<  sensor_info->getWallEast() << endl;
         } else if (rangeDataList[range_size-1].walls.wallE == -1 && sensor_info->getWallEast() != MazeCell::MOpen) {
             sensor_info->setWallEast(MazeCell::MUnknown);
         } else {
@@ -136,7 +135,7 @@ void ARobot::UpdateCellMap(MazeCell *sensor_info, bool black_flag, bool CheckRam
         printf("black!");
     }
     /*WALL DATA*/
-    printf("Walls: N: %d, E: %d, S: %d, W: %d\n", rangeDataList[range_size-1].walls.wallN, rangeDataList[range_size-1].walls.wallE, rangeDataList[range_size-1].walls.wallS, rangeDataList[range_size-1].walls.wallW);
+    //printf("Walls: N: %d, E: %d, S: %d, W: %d\n", rangeDataList[range_size-1].walls.wallN, rangeDataList[range_size-1].walls.wallE, rangeDataList[range_size-1].walls.wallS, rangeDataList[range_size-1].walls.wallW);
 
 }
 
@@ -293,14 +292,14 @@ void ARobot::CalcNextTile(bool first)
     if(turnNext == 3) turnNext = -1; //west -> north = turn right 1
     else if (turnNext == -3) turnNext = 1; //north -> west = turn left 1
 
-    angle = turnNext==0 ? 0 : angle/2.0; //if the bot is turning don't correct
+    angle = turnNext==0 ? 0 : angle/5.0; //if the bot is turning don't correct
     toTurn = turnNext*90 + (int)angle; //turning distance
 
     //Debugging Stuff
-    printf("Calculated X: %f\nCalculated Y: %f\n", calculatedNextGlobX, calculatedNextGlobY);
-    printf("Current Orientation: %d\nNext Direction: %d\nTurn Angle: %f", (int)currOrientation, (int)nextDir, toTurn);
-    printf("To Travel[X]: %d, To Travel[Y]: %d, Next X-Cell: %d, Next Y-Cell: %d, X-Absolute: %f, Y-Absolute: %f\n", next_x, next_y, currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
-    PrintXYCoords((int)calculatedNextGlobX/10, (int)calculatedNextGlobY/10);
+    //printf("Calculated X: %f\nCalculated Y: %f\n", calculatedNextGlobX, calculatedNextGlobY);
+    //printf("Current Orientation: %d\nNext Direction: %d\nTurn Angle: %f", (int)currOrientation, (int)nextDir, toTurn);
+    //printf("To Travel[X]: %d, To Travel[Y]: %d, Next X-Cell: %d, Next Y-Cell: %d, X-Absolute: %f, Y-Absolute: %f\n", next_x, next_y, currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
+    //PrintXYCoords((int)calculatedNextGlobX/10, (int)calculatedNextGlobY/10);
 
     //Move on to actual movement
     currOrientation = nextDir;
@@ -318,7 +317,7 @@ void ARobot::TileTransition(int32_t dist)
         toMove = true;
         return;
     }
-    printf("Calculated Distance: %d\t", dist);
+    //printf("Calculated Distance: %d\t", dist);
     MoveDistance(dist, FRONT);
     return;
 }
@@ -338,6 +337,11 @@ int ARobot::getOffsetDir() {
 }
 
 void ARobot::CorrectYaw() {
+    if(this->toMove) {
+        this->currState = ARobot::WAYPTNAV; //if fails
+        return;
+    }
+
     const size_t range_vals = rangeDataList.size()-1; //size may change, set constant size
     const size_t imu_vals = imuDataList.size()-1;
     float angley;
@@ -349,12 +353,12 @@ void ARobot::CorrectYaw() {
         angley = (rangeDataList[range_vals-i].getAngle()*offsetdir + ((4-(int)currOrientation)%4)*90.0);
         if(angley <= 30.0) angley += 360;
         newyaw += rangeDataList[range_vals-i].getAlpha() * angley + (1.0 - rangeDataList[range_vals-i].getAlpha()) * (imuDataList[imu_vals-i].m_yaw > 10 ? imuDataList[imu_vals-i].m_yaw : imuDataList[imu_vals-i].m_yaw + 360.0);
-        printf("Angley: %f\tCurrent Alpha: %f\tCurrent New: %f\n", angley, rangeDataList[range_vals-i].getAlpha(), newyaw);
+        //printf("Angley: %f\tCurrent Alpha: %f\tCurrent New: %f\n", angley, rangeDataList[range_vals-i].getAlpha(), newyaw);
     }
     newyaw /= 5.0;
     if(newyaw>=360)
         newyaw-=360;
-    printf("Correction-New Yaw: %f\n", newyaw);
+    //printf("Correction-New Yaw: %f\n", newyaw);
     this->turnOffset = newyaw - (imuDataList[imu_vals].m_yaw - this->turnOffset);
     imuDataList[imu_vals].setYawOffset(this->turnOffset);
     imuDataList[imu_vals].m_yaw = newyaw; //after change
@@ -368,7 +372,7 @@ void ARobot::Correction() {
     float currYaw = imuDataList[yaw_vals].m_yaw;
 
     //Assume correction is only necessary in the range -90 degrees -> +90 degrees
-    printf("Current Orientation: %d\nCurr Yaw: %f\n", (int)currOrientation, currYaw);
+    //printf("Current Orientation: %d\nCurr Yaw: %f\n", (int)currOrientation, currYaw);
     switch((int)currOrientation) {
     case 0: //Bot facing North
         if(currYaw >= 180) currYaw -= 360; //negative range
@@ -410,7 +414,7 @@ void ARobot::Correction() {
 void ARobot::CheckCorrection() {
     int currentError = rangeDataList[rangeDataList.size()-1].getRangeOffset();
     if(correctionError > currentError && currentError < 5) {
-        printf("PrevError: %d\tCurrError: %d\n", correctionError, currentError);
+        //printf("PrevError: %d\tCurrError: %d\n", correctionError, currentError);
         this->correctionFailed = false; //correction finished
         this->isCorrecting = false;
         return;
@@ -423,7 +427,7 @@ void ARobot::CheckCorrection() {
 void ARobot::CorrectionFailed() { //if correction was faulty try to change
     //check if everything is good
     int currentError = rangeDataList[rangeDataList.size()-1].getRangeOffset();
-    printf("Current Error: %d\tPrevious Error: %d\n", currentError, this->correctionError);
+    //printf("Current Error: %d\tPrevious Error: %d\n", currentError, this->correctionError);
 
     if(this->correctionDir == RIGHT) {
         if(currentError < this->correctionError) { //correct direction
@@ -508,7 +512,7 @@ int ARobot::CheckVictimTemp()
     int numAboveThreshL = 0;
     for(int i = 2; i < 6; i++) {
         for(int k = 1; k < 9; k++) { //left threshold
-            cout << "i: " << i << " k: " << k << "Left Temp: " << tempDataList[temp_vals-i].getLeftTemp(k) << endl;
+            // cout << "i: " << i << " k: " << k << "Left Temp: " << tempDataList[temp_vals-i].getLeftTemp(k) << endl;
             if(tempDataList[temp_vals-i].getLeftTemp(k) > this->threshLeft) {
                 ++numAboveThreshL;
             }
@@ -516,17 +520,17 @@ int ARobot::CheckVictimTemp()
                 ++numAboveThreshR;
             }
         }
-        if(numAboveThreshL < 3 && numAboveThreshR < 3) {
+        /*if(numAboveThreshL < 1 && numAboveThreshR < 1) {
             return 0;
         }
-        if(i < 4) {
+        if(i < 5) {
             numAboveThreshL=0; //reset
             numAboveThreshR=0; //reset
-        }
+        }*/
     }
-    if(numAboveThreshL >= 3) { //after test (4*8)
+    if(numAboveThreshL >= 2) { //after test (4*8)
         return 2;
-    } else if (numAboveThreshR >= 3) {
+    } else if (numAboveThreshR >= 2) {
         return 1;
     } else {
         return 0;
@@ -556,7 +560,7 @@ int ARobot::ProcessImage_Victim() {
 
     if(leftVVictim[0] == 'H' || leftVVictim[0] == 'S' || leftVVictim[0] == 'U') {
         this->victim.letter = leftVVictim[0];
-        printf("Left Victim Detected with Letter: %c\n", leftVVictim[0]);
+        //printf("Left Victim Detected with Letter: %c\n", leftVVictim[0]);
         this->victim.dir_victim = LEFT;
         this->victim.m_isVictim = true;
         if(leftVVictim[0] == 'U') {
@@ -640,29 +644,23 @@ void ARobot::CheckLightTile()
         currTileLight = BLACK;
         if(backingBlack == false) {
             backingBlack = true;
-            sleep(0.2);
-            StopMove();
-            sleep(0.2);
-            ResetEncoder();
-            sleep(1.0);
+            sleep(0.5);
             MoveDistance(175, BACK);
         }
     } else {
         //Calculate Previous
-        int prevVals[5];
-        int avgVal;
-        for(int i=1;i<5;i++) {
-            prevVals[i] = lightDataList[mlen_light-i-1].ReturnLight();
-            avgVal += prevVals[i];
+        /*int cnt = 0;
+        for(int i=1;i<6;i++) {
+            if(lightDataList[mlen_light-2].CheckLight(lightDataList[mlen_light-i-1].ReturnLight())==2)
+                ++cnt;
         }
-        avgVal /= (sizeof(prevVals)/sizeof(prevVals[0]));
 
         //Standard Deviation
         //float std = this->getSTD(prevVals, avgVal);
-        if(lightDataList[mlen_light-2].CheckLight(avgVal)==2) //10.0 calculated from recorded values
+        if(cnt > 2) //10.0 calculated from recorded values
             currTileLight = SILVER;
-        else
-            currTileLight = WHITE;
+        else*/
+        currTileLight = WHITE;
     }
     if(mlen_light > 200)
         lightDataList.erase(lightDataList.begin(), lightDataList.begin() + mlen_light - 200);
@@ -715,10 +713,10 @@ void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
 
     if(dir == FRONT) {
         snprintf(i_command, i_length, "%c %c %d", 'm', 'a', distance_mm);
-        printf("Forward: Distance: %d\n", distance_mm);
+        //printf("Forward: Distance: %d\n", distance_mm);
     } else {
         snprintf(i_command, i_length, "%c %c %d", 'm', 'b', distance_mm);
-        printf("Backward: Distance: %d\n", distance_mm);
+        //printf("Backward: Distance: %d\n", distance_mm);
     }
     if(!(currState == RAMP)) {
         currState = MOVE;
@@ -752,7 +750,7 @@ void ARobot::TurnDistance(float degrees, BotDir dir)
     }
     this->currState = TURN;
     this->initTurnRec = true;
-    printf("Initial Yaw: %f Degrees: %f ToTurn: %f\n", initialYaw, degrees, toTurn);
+    //printf("Initial Yaw: %f Degrees: %f ToTurn: %f\n", initialYaw, degrees, toTurn);
     WriteCommand(i_command, i_length);
 }
 
@@ -779,7 +777,7 @@ void ARobot::StopTurn(BotDir dir)
         if(cross_over) //condition holds even if prev doesn't when cross_over is already true
             currYaw -= 360.0f; //range fixing
         if(currYaw <= toTurn) { //error fixing
-            printf("Turn is Finished?\n");
+            //printf("Turn is Finished?\n");
             char* i_command;
             cross_over = false; //default cross bool now off
             int i_length = snprintf(NULL, 0, "%c %c", 'm', 'c') + 1;
@@ -787,7 +785,7 @@ void ARobot::StopTurn(BotDir dir)
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
             WriteCommand(i_command, i_length);
             if(isVictim && isDropped == false) {
-                printf("Drop\n");
+                //printf("Drop\n");
                 currState = DROP;
             } else if (isVictim && isDropped) {
                 currState = PLANNING;
@@ -810,7 +808,7 @@ void ARobot::StopTurn(BotDir dir)
             snprintf(i_command, i_length, "%c %c", 'm', 'c');
             WriteCommand(i_command, i_length);
             if(isVictim && isDropped == false) {
-                printf("Drop\n");
+                //printf("Drop\n");
                 currState = DROP;
             } else {
                 currState = IDLE;
@@ -840,7 +838,7 @@ void ARobot::FixYaw(int degrees) {\
     else if(newyaw<0) newyaw+=360;
     imuDataList[imu_vals-1].setYawOffset(this->turnOffset);
     imuDataList[imu_vals-1].m_yaw = newyaw; //after change
-    printf("Fixed Yaw: %f\n", newyaw);
+    //printf("Fixed Yaw: %f\n", newyaw);
 }
 
 void ARobot::TestRangeSensors() {
