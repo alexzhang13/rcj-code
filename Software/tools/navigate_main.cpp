@@ -12,9 +12,9 @@ int main(int argc, char **argv)
 {
 	//int ret = greedy_dikjstra_test();
 	//int ret = mapgen_test();
-	int ret = navigation_simul_test();
+	//int ret = navigation_simul_test();
 	//int ret = testMapLoad();
-	//int ret = lineFitTest();
+	int ret = lineFitTest();
 	return ret;
 }
 
@@ -113,7 +113,7 @@ int mapgen_test()
 int navigation_simul_test()
 {
 	int32_t i;
-	const char* in_dir = "D:/users/family/alex/rcj-code/Data/map_data";
+	const char* in_dir = "C:/projects/rcj-code/Data/map_data";
 	const char* xmlname = "mazemap";
 	const char* xmlname_u = "updated_mazemap";
 	int32_t home_floor_num = 0;
@@ -204,9 +204,9 @@ int testMapLoad()
 
 int lineFitTest()
 {
-	const char* filename = "D:/users/family/alex/rcj-code/Data/laser_data/distance_data1.txt";
+	const char* filename = "C:/projects/rcj-code/Data/laser_data/slam_data/fivefivesample_1.txt";
 	LineFitAlgo lfa;
-	int32_t num_half_samples = 36;
+	int32_t num_half_samples = 180;
 	int32_t angl_step = 5;
 	MazeCell::Position_2D pos;
 	MazeCell::NavDir orient;
@@ -219,10 +219,11 @@ int lineFitTest()
 	orient = MazeCell::navNorth;
 
 	lfa.update(num_half_samples, angl_step);
+	lfa.setPosition(450, 450);
 	lfa.setRobotStatus(cell_index, orient, pos);
 	lfa.readDataFile(filename);
 	lfa.run();
-//	lfa.printoutData();
+	lfa.printoutData();
 	lfa.debpgPrints();
 
 	return 0;
