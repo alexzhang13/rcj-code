@@ -3,6 +3,8 @@
 #include <assert.h>
 #include <string.h>
 
+#define nav_min(a,b) (a < b ? (a) : (b))
+#define nav_max(a,b) (a > b ? (a) : (b))
 
 MazeFloorMap::MazeFloorMap()
 {
@@ -354,14 +356,14 @@ int32_t MazeFloorMap::updateCellArray()
 
 	for(i = 0; i < cells_nums; i++) {
 		getCell(i)->getCellGrid(m,n);
-		min_i = std::min(m, min_i);
-		min_j = std::min(n, min_j);
-		max_i = std::max(m, max_i);
-		max_j = std::max(n, max_j);
+		min_i = nav_min(m, min_i);
+		min_j = nav_min(n, min_j);
+		max_i = nav_max(m, max_i);
+		max_j = nav_max(n, max_j);
 	}
 	if(min_i ==0 && min_j ==0) {
-		max_i = std::max(max_i, m_grid_wsize-1);
-		max_j = std::max(max_j, m_grid_hsize-1);
+		max_i = nav_max(max_i, m_grid_wsize-1);
+		max_j = nav_max(max_j, m_grid_hsize-1);
 	}
 	else if(min_i < 0 && min_j == 0) {
 		max_i = max_i - min_i;
@@ -389,8 +391,8 @@ int32_t MazeFloorMap::updateCellArray()
 		}
 	}
 
-	grid_w = std::max(max_i+1, m_grid_wsize);
-	grid_h = std::max(max_j+1, m_grid_hsize);
+	grid_w = nav_max(max_i+1, m_grid_wsize);
+	grid_h = nav_max(max_j+1, m_grid_hsize);
 
 	if(grid_w != m_grid_wsize || grid_h != m_grid_hsize)
 		update_array_flag = true;
