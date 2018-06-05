@@ -229,7 +229,7 @@ int lineFitTest()
 	while (lfa.readDataFile(filename)) {
 		lfa.setPosition(xPos, yPos);
 		lfa.run();
-		lfa.printoutData();
+		//lfa.printoutData();
 		// displays - display image size can be changed based on the explored area. However, the relative positions have
 		// to be computed with repsect to the origin of the map
 		lfa.debugPrints();
