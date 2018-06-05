@@ -20,6 +20,7 @@ LineFitAlgo::LineFitAlgo()
 	mAvgPts.clear();
 	mFittedLines.clear();
 	m_hf = NULL;
+	m_captures = -1;
 }
 
 LineFitAlgo::~LineFitAlgo()
@@ -208,6 +209,7 @@ bool LineFitAlgo::readDataFile(const char *filename)
 		}
 		mTimeDistrl_vec.push_back(mTimeDist_rl);
 		printf(" samples = %d\n", j);
+		m_captures++;
 		return ret;
 }
 
@@ -261,6 +263,7 @@ bool LineFitAlgo::convert2Vec()
 	double xmax = -1.0e9; 
 	double ymin = 1.0e9;
 	double ymax = -1.0e9;
+	std::vector<AdjustPt2D> mpts_array;
 
 	for(i = 0; i < 360; i+=mAngleSep) {
 		for(j = 0; j < 4; j++) {
@@ -286,8 +289,10 @@ bool LineFitAlgo::convert2Vec()
 				ymax = std::max(ymax, mPts[i].data[j][k].pt.y);
 			}
 		}
+		mpts_array.push_back(mPts[i]);
 	}
 
+#if 0
 	for(i = 0; i < 360; i+=mAngleSep) {
 		printf("%d: ", mPts[i].adjust_angle);
 		for(j = 0; j < 4; j++) {
@@ -297,6 +302,7 @@ bool LineFitAlgo::convert2Vec()
 		}
 		printf("\n");
 	}
+#endif
 
 	mXmin = int32_t(xmin);
 	mYmin = int32_t(ymin);
@@ -336,6 +342,8 @@ bool LineFitAlgo::convert2Vec()
 		}
 	}
 
+	m_collected_mPts[m_captures] = mpts_array;
+	m_collected_mAvgPts[m_captures] = mAvgPts;
 	return true;
 }
 
@@ -394,8 +402,10 @@ bool LineFitAlgo::lineFit()
 				mFittedLines[j].pts.push_back(mAvgPts[i]);
 			}
 		}
-		printf("j = %d, angle %f, dist = %f, side = %d, pts = %d\n", j, mFittedLines[j].aline.local_angle, mFittedLines[j].aline.distance, 
+#if 0
+		printf("Line = %d, angle %f, dist = %f, side = %d, pts = %d\n", j, mFittedLines[j].aline.local_angle, mFittedLines[j].aline.distance, 
 			mFittedLines[j].aline.side, mFittedLines[j].pts.size());
+#endif
 	}
 
 	return true;
@@ -826,6 +836,7 @@ void LineFitAlgo::displayAllPoints()
 		}
 	}
 	cv::imshow("point clouds", mImage_all_pts);
+	//cv::imwrite("point_clouds.jpg", mImage_all_pts);
 	cv::waitKey(100);
 	return;
 }
@@ -858,7 +869,7 @@ void LineFitAlgo::displayFittedPoints()
 			cv::circle( mImage_avg_pts, center,3, cv::Scalar( (i*40)%255, 0, 255 ), thickness, lineType );
 		}
 	}
-	cv::imshow("distance sensors", mImage_avg_pts);
+	cv::imshow("distance sensors per frame", mImage_avg_pts);
 	cv::waitKey(100);
 
 #endif
@@ -880,10 +891,11 @@ void LineFitAlgo::displayFittedPoints()
 	}
 
 	// display origin
-	cv::Point center = cv::Point(mXpos + xoffset, mYpos + h-yoffset);
+	cv::Point center = cv::Point(mXpos - mOffset2BotCenter[0] + xoffset, h - mYpos + mOffset2BotCenter[1] + yoffset);
 	cv::circle( mImage_avg_pts, center,5, cv::Scalar( 0, 255, 0 ), 2, lineType );
 
-	cv::imshow("distance sensors", mImage_avg_pts);
+	cv::imshow("distance sensors per frame", mImage_avg_pts);
+	//cv::imwrite("slam_per_frame.jpg", mImage_avg_pts);
 	cv::waitKey(500);
 	return;
 }

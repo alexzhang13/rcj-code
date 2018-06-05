@@ -61,7 +61,7 @@ public:
 		std::vector<cv::Point2f> pts;
 	} FittedLine;
 
-	// constructor
+	// constructor++
 	LineFitAlgo();
 	// destructor
 	~LineFitAlgo();
@@ -124,8 +124,9 @@ private:
 	DetectedCells mDetectedCells;
 	FILE *m_hf;
 	// will be added in code later on
-	std::map<int32_t, AdjustPt2D> m_collected_mPts;
-	std::map<int32_t, std::vector<cv::Point2f>> m_collected_mAvgPts;
+	std::map<int32_t, std::vector<AdjustPt2D>> m_collected_mPts; // cell number, pts
+	std::map<int32_t, std::vector<cv::Point2f>> m_collected_mAvgPts; // cell number, pts
+	int32_t m_captures;
 };
 
 ///////////////////////////////////////////////////////////////////////
