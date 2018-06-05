@@ -72,7 +72,7 @@ public:
 	bool readData(TimeDist &td);
 	bool run();
 	bool updateCellConfigs();
-	void debpgPrints();
+	void debugPrints();
 
 	void printoutData();
 
@@ -92,10 +92,12 @@ protected:
 	bool parseData(TimeDist *datalist);
 	bool convert2Vec();
 	bool lineFit();
-	void displayPoints();
+	void displayAllPoints();
+	void displayFittedPoints();
 
 private:
-	cv::Mat mImage;
+	cv::Mat mImage_all_pts;
+	cv::Mat mImage_avg_pts;
 	std::vector<TimeDist*> mTimeDistrr_vec; //vector of points for rr
 	std::vector<TimeDist*> mTimeDistrl_vec; //vector of points
 	TimeDist* mTimeDist_rr;
@@ -120,6 +122,10 @@ private:
 	int32_t mLineThresh;
 	float mAngleThresh;
 	DetectedCells mDetectedCells;
+	FILE *m_hf;
+	// will be added in code later on
+	std::map<int32_t, AdjustPt2D> m_collected_mPts;
+	std::map<int32_t, std::vector<cv::Point2f>> m_collected_mAvgPts;
 };
 
 ///////////////////////////////////////////////////////////////////////

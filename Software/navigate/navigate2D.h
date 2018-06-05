@@ -35,7 +35,7 @@ public:
 	virtual int32_t updateLocalMap(); 
 
 	//! navigation planning
-        virtual int32_t navigatePlanning(bool returnStart);
+    virtual int32_t navigatePlanning(bool returnStart);
 
 	//! navigation
 	virtual int32_t navigation2D();
