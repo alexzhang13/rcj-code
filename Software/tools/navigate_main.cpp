@@ -206,11 +206,15 @@ int lineFitTest()
 {
 	const char* filename = "D:/users/alex/StormingRobots/rcj-code/Data/laser_data/slam_data/fivefivesample_1.txt";
 	LineFitAlgo lfa;
-	int32_t num_half_samples = 180;
+	int32_t num_half_samples = 36;
 	int32_t angl_step = 5;
 	MazeCell::Position_2D pos;
 	MazeCell::NavDir orient;
 	int32_t cell_index = 3;
+	int32_t cnt = 0;
+
+	// can be hardcoded in the datafile as input
+	int32_t xPos = 450, yPos = 450; // this shall be obtained from robot navigation program
 
 	// set position
 	pos.x = 1;
@@ -218,13 +222,19 @@ int lineFitTest()
 	// set orientation
 	orient = MazeCell::navNorth;
 
+	// initialization
 	lfa.update(num_half_samples, angl_step);
-	lfa.setPosition(450, 450);
 	lfa.setRobotStatus(cell_index, orient, pos);
-	lfa.readDataFile(filename);
-	lfa.run();
-	lfa.printoutData();
-	lfa.debpgPrints();
+
+	while (lfa.readDataFile(filename)) {
+		lfa.setPosition(xPos, yPos);
+		lfa.run();
+		lfa.printoutData();
+		// displays - display image size can be changed based on the explored area. However, the relative positions have
+		// to be computed with repsect to the origin of the map
+		lfa.debugPrints();
+		printf("test %d\n", cnt++);
+	}
 
 	return 0;
 }
