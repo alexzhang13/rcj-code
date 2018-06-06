@@ -31,6 +31,9 @@ public:
 
     virtual void run(void);
     virtual void DestroyThread();
+    inline void UpdatePositionSLAM() {
+        slamOut << myRobot->rangeDataList[rangeDataList.size()-1].data.tstamp << " c " << rangeDataList[rangeDataList.size()-1].coord.x_glob << " " << rangeDataList[rangeDataList.size()-i].coord.y_glob << " " << imuDataList[imu_vals-i].m_yaw << endl;
+    }
 
     void readConfig(const char* filename, ARobot *robot);
     void startNewMap(ARobot *robot, Navigate2D &nav_rt);

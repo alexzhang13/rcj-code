@@ -55,8 +55,8 @@ void NavThread::run(void){
             myRobot->currState = ARobot::PLANNING;
             break;
         case 5: //Move
-            myRobot->CheckLightTile(); //check if anything happens during this time
-            //find the offset direction of the robot
+            //myRobot->CheckLightTile(); //check if anything happens during this time
+            UpdatePositionSLAM();
             sleep(0.2);
             break;
         case 6: //Drop
@@ -108,11 +108,12 @@ void NavThread::run(void){
 
             myRobot->SpinLaser();
             sleep(4);
-            slamOut << myRobot->rangeDataList[rangeDataList.size()-1].data.tstamp << " c " << rangeDataList[rangeDataList.size()-1].coord.x_glob << " " << rangeDataList[rangeDataList.size()-i].coord.y_glob << " " << imuDataList[imu_vals-i].m_yaw << endl;
+            UpdatePositionSLAM();
             while(myRobot->slamDataList.size() > 0) {
                 slamOut << myRobot->slamDataList.front() << endl;
                 slamOut.pop();
             }
+            sleep(0.5);
 
             //printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
 #if 0            if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
@@ -189,13 +190,14 @@ void NavThread::run(void){
                 default:
                     break;
                 }
-            #endif
+
             } else {
                 sleep(0.5);
                 myRobot->CorrectYaw();
                 sleep(0.2);
             }
-
+#endif
+            myRobot->currState = ARobot::WAYPTNAV;
             break;
         case 10: //STOP
             //kill thread here
