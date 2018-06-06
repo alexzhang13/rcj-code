@@ -11,28 +11,29 @@
 
 class ARobot;
 class UartRx : public Thread {
- public:
+public:
     UartRx(SerialPort *port, ARobot *robot);
-	~UartRx();
-	
+    ~UartRx();
+
     void storeIMU(char* buf);
-	void storeRange(char* buf);
-	void storeTemp(char* buf);
-	void storeLight(char* buf);
+    void storeRange(char* buf);
+    void storeTemp(char* buf);
+    void storeLight(char* buf);
+    void storeSLAM(char* buf);
     void storeScan(char* buf);
     virtual void run(void);
-	
-	bool setLogFile(const char* filedir, const char *filename);
- protected:
+
+    bool setLogFile(const char* filedir, const char *filename);
+protected:
     SerialPort *mPort;
     ARobot *myRobot;
-	bool runLogFile();
- private:
- 	char mBuf[128];
-	std::string mLogName;
-	uint32_t mCnt;
-	uint32_t mNum;
-	FILE *mpFile;
-        bool camFlip; //denote the side, 0 = left, 1 = right
+    bool runLogFile();
+private:
+    char mBuf[128];
+    std::string mLogName;
+    uint32_t mCnt;
+    uint32_t mNum;
+    FILE *mpFile;
+    bool camFlip; //denote the side, 0 = left, 1 = right
 };
 #endif // _UartRx_h_

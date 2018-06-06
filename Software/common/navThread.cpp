@@ -104,10 +104,18 @@ void NavThread::run(void){
             bot_waypts = myRobot->waypts.size();
             myRobot->currTile.x = myRobot->currTile.x_tovisit;
             myRobot->currTile.y = myRobot->currTile.y_tovisit;
-
             nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]);
+
+            myRobot->SpinLaser();
+            sleep(4);
+            slamOut << myRobot->rangeDataList[rangeDataList.size()-1].data.tstamp << " c " << rangeDataList[rangeDataList.size()-1].coord.x_glob << " " << rangeDataList[rangeDataList.size()-i].coord.y_glob << " " << imuDataList[imu_vals-i].m_yaw << endl;
+            while(myRobot->slamDataList.size() > 0) {
+                slamOut << myRobot->slamDataList.front() << endl;
+                slamOut.pop();
+            }
+
             //printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
-            if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
+#if 0            if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
                 //myRobot->CheckLightTile();
                 sleep(0.1);
                 if(myRobot->CheckRamp()) { //is ramp
@@ -181,6 +189,7 @@ void NavThread::run(void){
                 default:
                     break;
                 }
+            #endif
             } else {
                 sleep(0.5);
                 myRobot->CorrectYaw();
@@ -288,7 +297,7 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
     nav_rt.navigatePlanning(time_difference > 360);
     // move on to the next cell
     //nav_rt.navigation2D();
-    if(nav_rt.getNextCell()->waypts.size() >= 2) {
+    if(nav_rt.getNextCell()->waypts.size() >= 2 && nav_rt.getNextCell()->waypts[0] != 0) {
         robot->waypts = nav_rt.getNextCell()->waypts; //waypts
     } else {
         writeCurrentMap(this->map_dir, this->map_name, this->myRobot, this->nav);
@@ -338,6 +347,7 @@ void NavThread::DestroyThread()
     myRobot->StopMove();
     myRobot->currState = ARobot::STOP;
     myRobot->picam.close();
+    slamOut.close();
     this->mExitFlag = true;
 }
 
