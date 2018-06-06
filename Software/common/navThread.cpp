@@ -60,7 +60,6 @@ void NavThread::run(void){
             break;
         case 5: //Move
             //myRobot->CheckLightTile(); //check if anything happens during this time
-            UpdatePositionSLAM();
             sleep(0.2);
             break;
         case 6: //Drop
@@ -309,7 +308,6 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
     } else {
         writeCurrentMap(this->map_dir, this->map_name, this->myRobot, this->nav);
         robot->currState = ARobot::DONE;
-        robot->picam.close();
         return;
     }
     first_iter = true;
