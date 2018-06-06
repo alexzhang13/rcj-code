@@ -296,10 +296,10 @@ void ARobot::CalcNextTile(bool first)
     toTurn = turnNext*90 + (int)angle; //turning distance
 
     //Debugging Stuff
-    //printf("Calculated X: %f\nCalculated Y: %f\n", calculatedNextGlobX, calculatedNextGlobY);
-    //printf("Current Orientation: %d\nNext Direction: %d\nTurn Angle: %f", (int)currOrientation, (int)nextDir, toTurn);
-    //printf("To Travel[X]: %d, To Travel[Y]: %d, Next X-Cell: %d, Next Y-Cell: %d, X-Absolute: %f, Y-Absolute: %f\n", next_x, next_y, currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
-    //PrintXYCoords((int)calculatedNextGlobX/10, (int)calculatedNextGlobY/10);
+    printf("Calculated X: %f\nCalculated Y: %f\n", calculatedNextGlobX, calculatedNextGlobY);
+    printf("Current Orientation: %d\nNext Direction: %d\nTurn Angle: %f", (int)currOrientation, (int)nextDir, toTurn);
+    printf("To Travel[X]: %d, To Travel[Y]: %d, Next X-Cell: %d, Next Y-Cell: %d, X-Absolute: %f, Y-Absolute: %f\n", next_x, next_y, currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
+    PrintXYCoords((int)calculatedNextGlobX/10, (int)calculatedNextGlobY/10);
 
     //Move on to actual movement
     currOrientation = nextDir;
