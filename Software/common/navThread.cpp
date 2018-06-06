@@ -16,7 +16,12 @@ void NavThread::run(void){
 
     UpdatePositionSLAM();
     myRobot->SpinLaser();
-    sleep(6);
+    sleep(12);
+    while(myRobot->slamDataList.size() > 0) {
+        slamOut << myRobot->slamDataList.front() << endl;
+        printf("SLAM Size: %d\n", myRobot->slamDataList.front());
+        myRobot->slamDataList.pop();
+    }
     myRobot->imuCalibrated = true; //turn on IMU flag
 
     while(!this->isExit()) {
@@ -110,11 +115,11 @@ void NavThread::run(void){
             nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]);
 
             myRobot->SpinLaser();
-            sleep(6);
+            sleep(10);
             UpdatePositionSLAM();
             while(myRobot->slamDataList.size() > 0) {
                 slamOut << myRobot->slamDataList.front() << endl;
-                printf("SLAM Size: %d\n", myRobot->slamDataList.size());
+                printf("SLAM Size: %d\n", myRobot->slamDataList.front());
                 myRobot->slamDataList.pop();
             }
             sleep(0.5);
