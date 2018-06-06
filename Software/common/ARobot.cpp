@@ -317,7 +317,7 @@ void ARobot::TileTransition(int32_t dist)
         toMove = true;
         return;
     }
-    //printf("Calculated Distance: %d\t", dist);
+    printf("Calculated Distance: %d\t", dist);
     MoveDistance(dist, FRONT);
     return;
 }
@@ -713,10 +713,10 @@ void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
 
     if(dir == FRONT) {
         snprintf(i_command, i_length, "%c %c %d", 'm', 'a', distance_mm);
-        //printf("Forward: Distance: %d\n", distance_mm);
+        printf("Forward: Distance: %d\n", distance_mm);
     } else {
         snprintf(i_command, i_length, "%c %c %d", 'm', 'b', distance_mm);
-        //printf("Backward: Distance: %d\n", distance_mm);
+        printf("Backward: Distance: %d\n", distance_mm);
     }
     if(!(currState == RAMP)) {
         currState = MOVE;
