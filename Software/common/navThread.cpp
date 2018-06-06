@@ -11,7 +11,7 @@ void NavThread::run(void){
         readCurrentMap(map_dir, map_name, myRobot, nav); //check for previous map from mem
     else
         startNewMap(myRobot, nav);
-    //myRobot->picam.cameraOpen(720, 480);
+    myRobot->picam.cameraOpen(720, 480);
     sleep(1);
 
     UpdatePositionSLAM();
@@ -353,7 +353,7 @@ void NavThread::DestroyThread()
 {
     myRobot->StopMove();
     myRobot->currState = ARobot::STOP;
-    //myRobot->picam.close();
+    myRobot->picam.close();
     slamOut.close();
     this->mExitFlag = true;
 }
