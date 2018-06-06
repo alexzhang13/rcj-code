@@ -12,7 +12,7 @@ void NavThread::run(void){
     else
         startNewMap(myRobot, nav);
     //myRobot->picam.cameraOpen(720, 480);
-    sleep(1);
+    sleep(3);
 
     UpdatePositionSLAM();
     myRobot->SpinLaser();
