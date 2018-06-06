@@ -128,8 +128,8 @@ void UartRx::storeLight(char* buf) {
 }
 
 void UartRx::storeSLAM(char* buf) {
-    printf(buf);
     myRobot->slamDataList.push(buf);
+    printf("%s\n", myRobot->slamDataList.front());
 }
 
 void UartRx::storeScan(char* buf) {
