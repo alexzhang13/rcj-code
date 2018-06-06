@@ -127,7 +127,7 @@ void UartRx::storeLight(char* buf) {
     myRobot->lightParseList.push(curr_light); //push light data
 }
 
-void UArtRx::storeSLAM(char* buf) {
+void UartRx::storeSLAM(char* buf) {
     myRobot->slamDataList.push(buf);
 }
 
