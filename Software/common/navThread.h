@@ -32,7 +32,7 @@ public:
     virtual void run(void);
     virtual void DestroyThread();
     inline void UpdatePositionSLAM() {
-        slamOut << myRobot->rangeDataList[rangeDataList.size()-1].data.tstamp << " c " << rangeDataList[rangeDataList.size()-1].coord.x_glob << " " << rangeDataList[rangeDataList.size()-i].coord.y_glob << " " << imuDataList[imu_vals-i].m_yaw << endl;
+        slamOut << myRobot->rangeDataList[rangeDataList.size()-1].data.tstamp << " c " << rangeDataList[rangeDataList.size()-1].coord.x_glob + currTile.x*300 << " " << rangeDataList[rangeDataList.size()-i].coord.y_glob + currTile.y*300 << " " << imuDataList[imu_vals-i].m_yaw << endl;
     }
 
     void readConfig(const char* filename, ARobot *robot);
