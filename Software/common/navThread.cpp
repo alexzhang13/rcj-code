@@ -111,12 +111,13 @@ void NavThread::run(void){
             UpdatePositionSLAM();
             while(myRobot->slamDataList.size() > 0) {
                 slamOut << myRobot->slamDataList.front() << endl;
-                slamOut.pop();
+                myRobot->slamDataList.pop();
             }
             sleep(0.5);
 
             //printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
-#if 0            if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
+#if 0
+            if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
                 //myRobot->CheckLightTile();
                 sleep(0.1);
                 if(myRobot->CheckRamp()) { //is ramp
