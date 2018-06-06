@@ -71,6 +71,8 @@ int main(int argc,char **argv){
     process_thread = new Process_T(port, myRobot);
     printf("Process Thread Init Passed\n");
 
+    currThread = new NavThread(myRobot, false);
+
     while(1) {
         if(iteration % 1000 == 0) {
             if(digitalRead(2)==0 && !isRunning && reset) { //button is pressed when off
