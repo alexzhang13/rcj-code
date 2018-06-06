@@ -76,7 +76,7 @@ int main(int argc,char **argv){
         if(iteration % 1000 == 0) {
             if(digitalRead(2)==0 && !isRunning && reset) { //button is pressed when off
                 myRobot->Reset();
-                //spawnThread(currThread, myRobot);
+                spawnThread(currThread, myRobot);
                 isRunning = true;
                 reset = false;
             } else if(digitalRead(2)==0 && isRunning && reset) {
