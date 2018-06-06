@@ -77,6 +77,8 @@ void UartRx::run(void){
             storeTemp(mBuf);
         } else if (c == 'l') {
             storeLight(mBuf);
+        } else if (c == 's') {
+            storeSLAM(mBuf);
         } else if (c == 'y') {
             storeScan(mBuf);
         } else if (c == 'z') {
@@ -123,6 +125,10 @@ void UartRx::storeLight(char* buf) {
     LightData curr_light;
     curr_light.storeCommand(buf, myRobot->getBlackThresh(), myRobot->getSilverThresh());
     myRobot->lightParseList.push(curr_light); //push light data
+}
+
+void UArtRx::storeSLAM(char* buf) {
+    myRobot->slamDataList.push(buf);
 }
 
 void UartRx::storeScan(char* buf) {

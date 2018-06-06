@@ -61,7 +61,7 @@ public:
 		std::vector<cv::Point2f> pts;
 	} FittedLine;
 
-	// constructor
+	// constructor++
 	LineFitAlgo();
 	// destructor
 	~LineFitAlgo();
@@ -72,10 +72,11 @@ public:
 	bool readData(TimeDist &td);
 	bool run();
 	bool updateCellConfigs();
-	void debpgPrints();
+	void debugPrints();
 
 	void printoutData();
 
+	inline void setPosition(int32_t xPos, int32_t yPos) {mXpos = xPos; mYpos = yPos;}
 	inline void setlineDetectTol(double tor) { mEpsilon = tor; }
 	inline double getLineDetectTol(void) { return mEpsilon;}
 	
@@ -91,12 +92,16 @@ protected:
 	bool parseData(TimeDist *datalist);
 	bool convert2Vec();
 	bool lineFit();
-	void displayPoints();
+	void displayAllPoints();
+	void displayFittedPoints();
 
 private:
-	cv::Mat mImage;
-	TimeDist mTimeDist_rr[BUF_LF_SIZE];
-	TimeDist mTimeDist_rl[BUF_LF_SIZE];
+	cv::Mat mImage_all_pts;
+	cv::Mat mImage_avg_pts;
+	std::vector<TimeDist*> mTimeDistrr_vec; //vector of points for rr
+	std::vector<TimeDist*> mTimeDistrl_vec; //vector of points
+	TimeDist* mTimeDist_rr;
+	TimeDist* mTimeDist_rl;
 	AdjustPt2D mPts[BUF_LF_SIZE];
 	std::vector<cv::Point2f> mAvgPts;
 	std::vector<cv::Point2f> mLines;
@@ -112,10 +117,16 @@ private:
 	double mOffset2BotCenter[2];
 	int32_t mXmin, mYmin;
 	int32_t mXmax, mYmax;
+	int32_t mXpos, mYpos;
 	double mEpsilon;
 	int32_t mLineThresh;
 	float mAngleThresh;
 	DetectedCells mDetectedCells;
+	FILE *m_hf;
+	// will be added in code later on
+	std::map<int32_t, std::vector<AdjustPt2D>> m_collected_mPts; // cell number, pts
+	std::map<int32_t, std::vector<cv::Point2f>> m_collected_mAvgPts; // cell number, pts
+	int32_t m_captures;
 };
 
 ///////////////////////////////////////////////////////////////////////
