@@ -43,7 +43,6 @@ int main(int argc,char **argv){
     bool reset = false; //flag
     int iteration = 0;
     Thread *currThread=NULL; //spawned thread
-    sleep(5); // wait until all the gpio pins to be ready
 
     //Set up Wires, Below is the wiringPi -> Pi Rev.3 GPIO Mapping
     //22 --> 3 (WiringPI)
@@ -71,8 +70,6 @@ int main(int argc,char **argv){
 
     process_thread = new Process_T(port, myRobot);
     printf("Process Thread Init Passed\n");
-
-    currThread = new NavThread(myRobot, false);
 
     while(1) {
         if(iteration % 1000 == 0) {
