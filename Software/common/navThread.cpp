@@ -13,6 +13,10 @@ void NavThread::run(void){
         startNewMap(myRobot, nav);
     myRobot->picam.cameraOpen(720, 480);
     sleep(1);
+
+    UpdatePositionSLAM();
+    myRobot->SpinLaser();
+    sleep(4);
     myRobot->imuCalibrated = true; //turn on IMU flag
 
     while(!this->isExit()) {
