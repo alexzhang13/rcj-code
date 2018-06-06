@@ -16,10 +16,10 @@ void NavThread::run(void){
 
     UpdatePositionSLAM();
     myRobot->SpinLaser();
-    sleep(12);
+    sleep(8.5);
     while(myRobot->slamDataList.size() > 0) {
         slamOut << myRobot->slamDataList.front() << endl;
-        printf("SLAM Size: %d\n", myRobot->slamDataList.front());
+        printf("SLAM Output: %d\n", myRobot->slamDataList.front());
         myRobot->slamDataList.pop();
     }
     myRobot->imuCalibrated = true; //turn on IMU flag
