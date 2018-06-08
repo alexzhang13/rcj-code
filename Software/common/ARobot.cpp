@@ -296,9 +296,9 @@ void ARobot::CalcNextTile(bool first)
     toTurn = turnNext*90 + (int)angle; //turning distance
 
     //Debugging Stuff
-    //printf("Calculated X: %f\nCalculated Y: %f\n", calculatedNextGlobX, calculatedNextGlobY);
-    //printf("Current Orientation: %d\nNext Direction: %d\nTurn Angle: %f", (int)currOrientation, (int)nextDir, toTurn);
-    //printf("To Travel[X]: %d, To Travel[Y]: %d, Next X-Cell: %d, Next Y-Cell: %d, X-Absolute: %f, Y-Absolute: %f\n", next_x, next_y, currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
+    printf("Calculated X: %f\nCalculated Y: %f\n", calculatedNextGlobX, calculatedNextGlobY);
+    printf("Current Orientation: %d\nNext Direction: %d\nTurn Angle: %f", (int)currOrientation, (int)nextDir, toTurn);
+    printf("To Travel[X]: %d, To Travel[Y]: %d, Next X-Cell: %d, Next Y-Cell: %d, X-Absolute: %f, Y-Absolute: %f\n", next_x, next_y, currTile.x_tovisit, currTile.y_tovisit, currTile.x_map, currTile.y_map);
     //PrintXYCoords((int)calculatedNextGlobX/10, (int)calculatedNextGlobY/10);
 
     //Move on to actual movement
@@ -317,7 +317,7 @@ void ARobot::TileTransition(int32_t dist)
         toMove = true;
         return;
     }
-    //printf("Calculated Distance: %d\t", dist);
+    printf("Calculated Distance: %d\t", dist);
     MoveDistance(dist, FRONT);
     return;
 }
@@ -713,10 +713,10 @@ void ARobot::MoveDistance(int distance_mm, BotDir dir) //forward = true
 
     if(dir == FRONT) {
         snprintf(i_command, i_length, "%c %c %d", 'm', 'a', distance_mm);
-        //printf("Forward: Distance: %d\n", distance_mm);
+        printf("Forward: Distance: %d\n", distance_mm);
     } else {
         snprintf(i_command, i_length, "%c %c %d", 'm', 'b', distance_mm);
-        //printf("Backward: Distance: %d\n", distance_mm);
+        printf("Backward: Distance: %d\n", distance_mm);
     }
     if(!(currState == RAMP)) {
         currState = MOVE;

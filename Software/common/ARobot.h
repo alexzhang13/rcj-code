@@ -151,6 +151,7 @@ public:
     std::queue<TempData> tempParseList;
     std::queue<LightData> lightParseList;
     std::queue<RangeData> scanParseList;
+    std::queue<std::string> slamDataList; //string of data
 
     LightVal currTileLight; //Current Tile's Light Status
     BotDir currDir; //Turning and Moving directions, local to current pos and next direction

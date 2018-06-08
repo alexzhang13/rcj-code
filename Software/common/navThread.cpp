@@ -11,8 +11,17 @@ void NavThread::run(void){
         readCurrentMap(map_dir, map_name, myRobot, nav); //check for previous map from mem
     else
         startNewMap(myRobot, nav);
-    myRobot->picam.cameraOpen(720, 480);
-    sleep(1);
+    //myRobot->picam.cameraOpen(720, 480);
+    sleep(3);
+
+    UpdatePositionSLAM();
+    myRobot->SpinLaser();
+    sleep(8.5);
+    while(myRobot->slamDataList.size() > 0) {
+        slamOut << myRobot->slamDataList.front() << endl;
+        printf("SLAM Output: %d\n", myRobot->slamDataList.front());
+        myRobot->slamDataList.pop();
+    }
     myRobot->imuCalibrated = true; //turn on IMU flag
 
     while(!this->isExit()) {
@@ -55,8 +64,7 @@ void NavThread::run(void){
             myRobot->currState = ARobot::PLANNING;
             break;
         case 5: //Move
-            myRobot->CheckLightTile(); //check if anything happens during this time
-            //find the offset direction of the robot
+            //myRobot->CheckLightTile(); //check if anything happens during this time
             sleep(0.2);
             break;
         case 6: //Drop
@@ -104,9 +112,20 @@ void NavThread::run(void){
             bot_waypts = myRobot->waypts.size();
             myRobot->currTile.x = myRobot->currTile.x_tovisit;
             myRobot->currTile.y = myRobot->currTile.y_tovisit;
-
             nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]);
+
+            myRobot->SpinLaser();
+            sleep(10);
+            UpdatePositionSLAM();
+            while(myRobot->slamDataList.size() > 0) {
+                slamOut << myRobot->slamDataList.front() << endl;
+                printf("SLAM Size: %d\n", myRobot->slamDataList.front());
+                myRobot->slamDataList.pop();
+            }
+            sleep(0.5);
+
             //printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
+#if 0
             if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
                 //myRobot->CheckLightTile();
                 sleep(0.1);
@@ -181,12 +200,14 @@ void NavThread::run(void){
                 default:
                     break;
                 }
+
             } else {
                 sleep(0.5);
                 myRobot->CorrectYaw();
                 sleep(0.2);
             }
-
+#endif
+            myRobot->currState = ARobot::WAYPTNAV;
             break;
         case 10: //STOP
             //kill thread here
@@ -288,12 +309,11 @@ void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robo
     nav_rt.navigatePlanning(time_difference > 360);
     // move on to the next cell
     //nav_rt.navigation2D();
-    if(nav_rt.getNextCell()->waypts.size() >= 2) {
+    if(nav_rt.getNextCell()->waypts.size() >= 2 && nav_rt.getNextCell()->waypts[0] != 0) {
         robot->waypts = nav_rt.getNextCell()->waypts; //waypts
     } else {
         writeCurrentMap(this->map_dir, this->map_name, this->myRobot, this->nav);
         robot->currState = ARobot::DONE;
-        robot->picam.close();
         return;
     }
     first_iter = true;
@@ -317,7 +337,7 @@ int NavThread::WayPointNav(ARobot *robot, Navigate2D &nav_rt)
     }
     nav_rt.getCellbyIndex(robot->waypts[bot_waypts-1])->getCellGrid(robot->currTile.x, robot->currTile.y);
     nav_rt.getCellbyIndex(robot->waypts[bot_waypts-2])->getCellGrid(robot->currTile.x_tovisit, robot->currTile.y_tovisit);
-    //printf("X_Tovisit: %d, Y_Tovisit: %d\n", robot->currTile.x_tovisit, robot->currTile.y_tovisit);
+    printf("X_Tovisit: %d, Y_Tovisit: %d\n", robot->currTile.x_tovisit, robot->currTile.y_tovisit);
     for(int i = 1; i <= bot_waypts; i++) {
         nav_rt.getCellbyIndex(robot->waypts[bot_waypts-i])->getCellGrid(x, y);
         //printf("Coords -> coord: %d x: %d, y: %d\n", robot->waypts[bot_waypts-i], x, y);
@@ -337,7 +357,8 @@ void NavThread::DestroyThread()
 {
     myRobot->StopMove();
     myRobot->currState = ARobot::STOP;
-    myRobot->picam.close();
+    //myRobot->picam.close();
+    slamOut.close();
     this->mExitFlag = true;
 }
 

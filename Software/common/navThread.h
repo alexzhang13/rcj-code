@@ -8,6 +8,7 @@
 
 #include <time.h>
 #include <vector>
+#include <fstream>
 #include "ARobot.h"
 #include "IMUData.h"
 #include "processThread.h"
@@ -25,10 +26,14 @@ public:
         cnt = 0;
         bot_waypts = 0;
         first_iter = true;
+        slamOut.open(slampath);
     }
 
     virtual void run(void);
     virtual void DestroyThread();
+    inline void UpdatePositionSLAM() {
+        slamOut << myRobot->rangeDataList[myRobot->rangeDataList.size()-1].data.tstamp << " c " << myRobot->rangeDataList[myRobot->rangeDataList.size()-1].coord.x_glob + myRobot->currTile.x*300 << " " << myRobot->rangeDataList[myRobot->rangeDataList.size()-1].coord.y_glob + myRobot->currTile.y*300 << " " << myRobot->imuDataList[myRobot->imuDataList.size()-1].m_yaw << endl;
+    }
 
     void readConfig(const char* filename, ARobot *robot);
     void startNewMap(ARobot *robot, Navigate2D &nav_rt);
@@ -44,6 +49,7 @@ protected:
     SerialPort *mPort;
     ARobot *myRobot;
 private:
+    ofstream slamOut;
     Navigate2D nav; //main map class obj
     long int start_time;
     long int time_difference;
@@ -58,6 +64,7 @@ private:
     const char* map_name = "map.xml";
     const char* leftcapture_file = "C:/projects/StormingRobots2017/rcj-code/Software/letter/randomFolder/capL.jpg";
     const char* rightcapture_file = "C:/projects/StormingRobots2017/rcj-code/Software/letter/randomFolder/capR.jpg";
+    const char* slampath = "C:/projects/StormingRobots2017/Data/map_data/SLAMData.txt";
 #else
     const char* fileConfig = "/home/alex/projects/rcj-code/Software/common/Mem/config.txt";
     const char* in_dir = "/home/alex/projects/rcj-code/Data";
@@ -67,6 +74,7 @@ private:
     const char* map_name = "savemaze";
     const char* leftcapture_file = "/home/alex/projects/rcj-code/Software/letter/randomFolder/capL.jpg";
     const char* rightcapture_file = "/home/alex/projects/rcj-code/Software/letter/randomFolder/capR.jpg";
+    const char* slampath = "/home/alex/projects/rcj-code/Data/map_data/SLAMData.txt";
 #endif
 };
 #endif // _NAV_THREAD_h_
