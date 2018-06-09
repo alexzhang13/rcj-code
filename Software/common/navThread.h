@@ -26,7 +26,7 @@ public:
         cnt = 0;
         bot_waypts = 0;
         first_iter = true;
-        slamOut.open(slampath);
+	time_difference = 0;
     }
 
     virtual void run(void);

@@ -3,9 +3,11 @@
 using namespace std;
 
 void NavThread::run(void){
-    clock_gettime(CLOCK_REALTIME, &gettime_now);
-    start_time = gettime_now.tv_sec;
-    sleep(0.1);
+    //clock_gettime(CLOCK_REALTIME, &gettime_now);
+    //start_time = gettime_now.tv_sec;
+    sleep(0.2);
+    slamOut.open(slampath);
+    sleep(0.2);
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     if(this->readMap)
         readCurrentMap(map_dir, map_name, myRobot, nav); //check for previous map from mem
@@ -279,8 +281,8 @@ void NavThread::writeCurrentMap(const char* filedir, const char* xmlname, ARobot
 
 void NavThread::Navigate(const char* filename, const char* xmlname, ARobot *robot, Navigate2D &nav_rt) 
 {
-    clock_gettime(CLOCK_REALTIME, &gettime_now);
-    time_difference = gettime_now.tv_sec - start_time;
+    //clock_gettime(CLOCK_REALTIME, &gettime_now);
+    //time_difference = gettime_now.tv_sec - start_time;
     // cout << "\n\nNEW NAV HAS BEEN ENTERED with TIME = " << time_difference << endl << endl;
 
     /*Navigational functions*/
