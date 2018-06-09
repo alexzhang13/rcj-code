@@ -5,13 +5,13 @@ LineFitAlgo::LineFitAlgo()
 	mTimeDist_rr = new TimeDist[BUF_LF_SIZE];
 	mTimeDist_rl = new TimeDist[BUF_LF_SIZE];
 	resetData();
-	mShortThresh = 400;
+	mShortThresh = 255; // 400;
 	mLongThresh = 1300;
 	mAngleSep = 0;
 	m_SampleCnt = 0;
 	m_scan_angle = -1;
 	mDistOffset = 13.75f; // mm 
-	mAngleOffset = 10.0; //-1.5; //-1.8; // degrees
+	mAngleOffset= 3.0; //-1.8; // degrees
 	mEpsilon = 15.0;
 	mLineThresh = 10; //25;
 	mAngleThresh = 35.0f;
@@ -38,6 +38,10 @@ void LineFitAlgo::resetData()
 		mTimeDist_rr[i].d[1] = 0;
 		mTimeDist_rr[i].d[2] = 0;
 		mTimeDist_rr[i].d[3] = 0;
+		mTimeDist_rr[i].status[0] = 0;
+		mTimeDist_rr[i].status[1] = 0;
+		mTimeDist_rr[i].status[2] = 0;
+		mTimeDist_rr[i].status[3] = 0;
 	}
 
 	for(i = 0; i < BUF_LF_SIZE; i++) {
@@ -47,10 +51,16 @@ void LineFitAlgo::resetData()
 		mTimeDist_rl[i].d[1] = 0;
 		mTimeDist_rl[i].d[2] = 0;
 		mTimeDist_rl[i].d[3] = 0;
+		mTimeDist_rl[i].status[0] = 0;
+		mTimeDist_rl[i].status[1] = 0;
+		mTimeDist_rl[i].status[2] = 0;
+		mTimeDist_rl[i].status[3] = 0;
 	}
 
 	for(i = 0; i < BUF_LF_SIZE; i++) {
 		mPts[i].adjust_angle = 0;
+		for(j = 0; j < 4; j++)
+			mPts[i].data[j].clear();
 	}
 
 	mAvgPts.clear();
@@ -61,6 +71,7 @@ void LineFitAlgo::resetData()
 		fl.pts.clear();
 	}
 	mFittedLines.clear();
+	m_scan_angle = -1;
 }
 
 void LineFitAlgo::update(int32_t half_samples, int32_t angle_separation)
@@ -80,13 +91,6 @@ bool LineFitAlgo::readData(TimeDist &td)
 
 	int32_t angle = td.angle;
 	if(angle == m_scan_angle) { // angle not updated
-		if(angle == 0) { //right -> left [0]
-			mTimeDistrl_vec.push_back(mTimeDist_rl);
-			mTimeDist_rl = new TimeDist[BUF_LF_SIZE];
-		} else { //left -> right [180]
-			mTimeDistrr_vec.push_back(mTimeDist_rr);
-			mTimeDist_rr = new TimeDist[BUF_LF_SIZE];
-		}	
 		return false;
 	} else {
 		if(angle > m_scan_angle)
@@ -148,14 +152,14 @@ bool LineFitAlgo::readData(TimeDist &td)
 		}
 	}
 
-	if(m_SampleCnt == mHalf_samples*2)
+	if(m_SampleCnt == mHalf_samples*2-1)
 		m_SampleCnt = 0;
 	return true;
 }
 
 // sensor data order is: forward:long, right:short, downward:long, left:short
 // correspondingly, offset = 90, 360, 270, 180
-bool LineFitAlgo::parseData(TimeDist *datalist)
+bool LineFitAlgo::parseData(TimeDist *datalist, double offset_angle)
 {
 	int32_t i, j;
 	int32_t offset[4] = {90, 360, 270, 180};
@@ -170,6 +174,7 @@ bool LineFitAlgo::parseData(TimeDist *datalist)
 				datas.pt.d = datalist[j].d[i];
 				datas.status = datalist[j].status[i];
 				adjust_angle = offset[i]-datalist[j].angle;
+				datas.offset_angle = offset_angle;
 
 				if(adjust_angle >=0) {
 					mPts[adjust_angle%360].adjust_angle = adjust_angle%360;
@@ -197,6 +202,14 @@ bool LineFitAlgo::readDataFile(const char *filename)
 			return false;
 	}
 		resetData();
+
+		if (feof(m_hf)) {
+			fclose(m_hf);
+			return false;
+		}
+
+		fscanf(m_hf, "%d %c %lf %lf %lf", &m_rs.timestamp, &m_rs.c, &m_rs.xo, &m_rs.yo, &m_rs.global_angle);
+
 		for(int32_t i = 0; i < mHalf_samples*2; i++) {
 			if(feof(m_hf)) {
 				fclose(m_hf);
@@ -207,7 +220,6 @@ bool LineFitAlgo::readDataFile(const char *filename)
 			readData(td);
 			j++;
 		}
-		mTimeDistrl_vec.push_back(mTimeDist_rl);
 		printf(" samples = %d\n", j);
 		m_captures++;
 		return ret;
@@ -215,10 +227,9 @@ bool LineFitAlgo::readDataFile(const char *filename)
 
 bool LineFitAlgo::run()
 {
-	for(int i = 0; i < mTimeDistrr_vec.size(); i++) {
-		parseData(mTimeDistrr_vec[i]);
-		parseData(mTimeDistrl_vec[i]);
-	}
+	parseData(mTimeDist_rr, mAngleOffset);
+	parseData(mTimeDist_rl, -mAngleOffset);
+
 	convert2Vec();
 	lineFit();
 	updateCellConfigs();
@@ -263,14 +274,20 @@ bool LineFitAlgo::convert2Vec()
 	double xmax = -1.0e9; 
 	double ymin = 1.0e9;
 	double ymax = -1.0e9;
-	std::vector<AdjustPt2D> mpts_array;
+	ScanRaw mpts_array;
+	mpts_array.timestamp = m_rs.timestamp;
+	mpts_array.center.x = m_rs.xo;
+	mpts_array.center.y = m_rs.yo;
+	mpts_array.angle = m_rs.global_angle;
+	mXpos = m_rs.xo;
+	mYpos = m_rs.yo;
 
 	for(i = 0; i < 360; i+=mAngleSep) {
 		for(j = 0; j < 4; j++) {
 			for(k = 0; k < mPts[i].data[j].size(); k++) {
 				if(mPts[i].data[j][k].status == 1) {
-					mPts[i].data[j][k].pt.x =cos(((double)mPts[i].adjust_angle+mAngleOffset)*3.1415926/180)*(mPts[i].data[j][k].pt.d+mDistOffset) - mOffset2BotCenter[0] + mXpos;
-					mPts[i].data[j][k].pt.y =sin(((double)mPts[i].adjust_angle+mAngleOffset)*3.1415926/180)*(mPts[i].data[j][k].pt.d+mDistOffset) - mOffset2BotCenter[1] + mYpos;
+					mPts[i].data[j][k].pt.x =cos(((double)mPts[i].adjust_angle+ mPts[i].data[j][k].offset_angle + mpts_array.angle)*3.1415926/180)*(mPts[i].data[j][k].pt.d+mDistOffset) - mOffset2BotCenter[0] + mXpos;
+					mPts[i].data[j][k].pt.y =sin(((double)mPts[i].adjust_angle+ mPts[i].data[j][k].offset_angle + mpts_array.angle)*3.1415926/180)*(mPts[i].data[j][k].pt.d+mDistOffset) - mOffset2BotCenter[1] + mYpos;
 				}
 				else {
 					if(j == 0 || j == 2) {
@@ -289,7 +306,7 @@ bool LineFitAlgo::convert2Vec()
 				ymax = std::max(ymax, mPts[i].data[j][k].pt.y);
 			}
 		}
-		mpts_array.push_back(mPts[i]);
+		mpts_array.pts.push_back(mPts[i]);
 	}
 
 #if 0
@@ -343,7 +360,14 @@ bool LineFitAlgo::convert2Vec()
 	}
 
 	m_collected_mPts[m_captures] = mpts_array;
-	m_collected_mAvgPts[m_captures] = mAvgPts;
+	ScanAvg avg_array;
+	avg_array.pts = mAvgPts;
+	avg_array.timestamp = m_rs.timestamp;
+	avg_array.center.x = m_rs.xo;
+	avg_array.center.y = m_rs.yo;
+	avg_array.angle = m_rs.global_angle;
+	m_collected_mAvgPts[m_captures] = avg_array;
+
 	return true;
 }
 
@@ -804,10 +828,10 @@ void LineFitAlgo::setWallProp(MazeCell &curCell, int32_t *wall_status)
 void LineFitAlgo::displayAllPoints()
 {
 	int32_t i, j, k;
-	int32_t w = mXmax + 32;//((mXmax - mXmin + 7)/8)*8 + 32;
-	int32_t h = mYmax + 32;//((mYmax - mYmin + 8)/8)*8 + 32;
-	int32_t xoffset = 0;//-mXmin + 16;
-	int32_t yoffset = 0;//-mYmin + 16;
+	int32_t w = 1280;
+	int32_t h = 1280;
+	int32_t xoffset = 256;
+	int32_t yoffset = 256;
 
 	int thickness = -1;
 	int lineType = 8;
@@ -835,8 +859,22 @@ void LineFitAlgo::displayAllPoints()
 			}
 		}
 	}
+
+	// display origin
+	cv::Point offset_c = cv::Point(-mOffset2BotCenter[0] + xoffset, mOffset2BotCenter[1] - yoffset);
+	cv::Point center = cv::Point(mXpos, h-mYpos) + offset_c;
+	cv::circle(mImage_all_pts, center, 5, cv::Scalar(0, 255, 0), 2, lineType);
+
+	if (m_captures > 0) {
+		cv::Point pt1 = cv::Point(m_collected_mPts[m_captures - 1].center.x, h-m_collected_mPts[m_captures - 1].center.y) + offset_c;
+		cv::Point pt2 = cv::Point(m_collected_mPts[m_captures].center.x, h-m_collected_mPts[m_captures].center.y) + offset_c;
+		cv::arrowedLine(mImage_all_pts, pt1, pt2, cv::Scalar(0, 255, 0), 2, lineType);
+	}
+
 	cv::imshow("point clouds", mImage_all_pts);
-	//cv::imwrite("point_clouds.jpg", mImage_all_pts);
+	char name[128];
+	sprintf(name, "D:/users/alex/StormingRobots/rcj-code/Data/laser_data/slam_data/point_clouds_%02d.jpg", m_captures);
+	cv::imwrite(name, mImage_all_pts);
 	cv::waitKey(100);
 	return;
 }
@@ -844,10 +882,10 @@ void LineFitAlgo::displayAllPoints()
 void LineFitAlgo::displayFittedPoints()
 {
 	int32_t i, j, k;
-	int32_t w = mXmax + 32;//((mXmax - mXmin + 7)/8)*8 + 32;
-	int32_t h = mYmax + 32;//((mYmax - mYmin + 8)/8)*8 + 32;
-	int32_t xoffset = 0;//-mXmin + 16;
-	int32_t yoffset = 0;//-mYmin + 16;
+	int32_t w = ((mXmax - mXmin + 7)/8)*8 + 32;
+	int32_t h = ((mYmax - mYmin + 8)/8)*8 + 32;
+	int32_t xoffset = -mXmin + 16;
+	int32_t yoffset = -mYmin + 16;
 
 	int thickness = -1;
 	int lineType = 8;
@@ -891,11 +929,11 @@ void LineFitAlgo::displayFittedPoints()
 	}
 
 	// display origin
-	cv::Point center = cv::Point(mXpos - mOffset2BotCenter[0] + xoffset, h - mYpos + mOffset2BotCenter[1] + yoffset);
+	cv::Point center = cv::Point(mXpos - mOffset2BotCenter[0] + xoffset, h - (mYpos - mOffset2BotCenter[1] + yoffset));
 	cv::circle( mImage_avg_pts, center,5, cv::Scalar( 0, 255, 0 ), 2, lineType );
 
 	cv::imshow("distance sensors per frame", mImage_avg_pts);
-	//cv::imwrite("slam_per_frame.jpg", mImage_avg_pts);
+	cv::imwrite("D:/users/alex/StormingRobots/rcj-code/Data/laser_data/slam_data/slam_per_frame.jpg", mImage_avg_pts);
 	cv::waitKey(500);
 	return;
 }

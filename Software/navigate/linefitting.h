@@ -23,6 +23,7 @@ public:
 	typedef struct {
 		Pt2D pt;
 		int32_t status;
+		double offset_angle;
 	} DataStat;
 
 	typedef struct {
@@ -37,6 +38,14 @@ public:
 		int32_t adjust_angle;
 		std::vector<DataStat> data[4]; // N, E, S, W
 	} AdjustPt2D;
+
+	typedef struct {
+		int32_t timestamp;
+		char c;
+		double xo;
+		double yo;
+		double global_angle;
+	} RobotState;
 
 	typedef struct {
 		MazeCell::NavDir direction;
@@ -61,6 +70,20 @@ public:
 		std::vector<cv::Point2f> pts;
 	} FittedLine;
 
+	typedef struct {
+		int32_t timestamp;
+		cv::Point2f center;
+		float angle;
+		std::vector<cv::Point2f> pts;
+	} ScanAvg;
+
+	typedef struct {
+		int32_t timestamp;
+		cv::Point2f center;
+		float angle;
+		std::vector<AdjustPt2D> pts;
+	} ScanRaw;
+
 	// constructor++
 	LineFitAlgo();
 	// destructor
@@ -76,7 +99,7 @@ public:
 
 	void printoutData();
 
-	inline void setPosition(int32_t xPos, int32_t yPos) {mXpos = xPos; mYpos = yPos;}
+	inline void setPosition(double xPos, double yPos) {mXpos = xPos; mYpos = yPos;}
 	inline void setlineDetectTol(double tor) { mEpsilon = tor; }
 	inline double getLineDetectTol(void) { return mEpsilon;}
 	
@@ -89,7 +112,7 @@ protected:
 
 	void resetData();
 	void setWallProp(MazeCell &cell, int32_t *wall_status);
-	bool parseData(TimeDist *datalist);
+	bool parseData(TimeDist *datalist, double offset_angle=0.0);
 	bool convert2Vec();
 	bool lineFit();
 	void displayAllPoints();
@@ -98,8 +121,6 @@ protected:
 private:
 	cv::Mat mImage_all_pts;
 	cv::Mat mImage_avg_pts;
-	std::vector<TimeDist*> mTimeDistrr_vec; //vector of points for rr
-	std::vector<TimeDist*> mTimeDistrl_vec; //vector of points
 	TimeDist* mTimeDist_rr;
 	TimeDist* mTimeDist_rl;
 	AdjustPt2D mPts[BUF_LF_SIZE];
@@ -117,16 +138,17 @@ private:
 	double mOffset2BotCenter[2];
 	int32_t mXmin, mYmin;
 	int32_t mXmax, mYmax;
-	int32_t mXpos, mYpos;
+	double mXpos, mYpos;
 	double mEpsilon;
 	int32_t mLineThresh;
 	float mAngleThresh;
 	DetectedCells mDetectedCells;
 	FILE *m_hf;
 	// will be added in code later on
-	std::map<int32_t, std::vector<AdjustPt2D>> m_collected_mPts; // cell number, pts
-	std::map<int32_t, std::vector<cv::Point2f>> m_collected_mAvgPts; // cell number, pts
+	std::map<int32_t, ScanRaw> m_collected_mPts; // cell number, pts
+	std::map<int32_t, ScanAvg> m_collected_mAvgPts; // cell number, pts
 	int32_t m_captures;
+	RobotState m_rs;
 };
 
 ///////////////////////////////////////////////////////////////////////
