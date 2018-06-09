@@ -6,7 +6,7 @@ void NavThread::run(void){
     //clock_gettime(CLOCK_REALTIME, &gettime_now);
     //start_time = gettime_now.tv_sec;
     sleep(0.2);
-    slamOut.open(slampath);
+    myRobot->slamOut.open(slampath);
     sleep(0.2);
     readConfig(fileConfig, myRobot); //read config file about threshold calibrations
     if(this->readMap)
@@ -19,10 +19,6 @@ void NavThread::run(void){
     UpdatePositionSLAM();
     myRobot->SpinLaser();
     sleep(8.5);
-    while(myRobot->slamDataList.size() > 0) {
-        slamOut << myRobot->slamDataList.front() << endl;
-        myRobot->slamDataList.pop();
-    }
     myRobot->imuCalibrated = true; //turn on IMU flag
 
     while(!this->isExit()) {
@@ -118,10 +114,6 @@ void NavThread::run(void){
             myRobot->SpinLaser();
             sleep(8.5);
             UpdatePositionSLAM();
-            while(myRobot->slamDataList.size() > 0) {
-                slamOut << myRobot->slamDataList.front() << endl;
-                myRobot->slamDataList.pop();
-            }
             sleep(1);
 
             printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
@@ -358,7 +350,7 @@ void NavThread::DestroyThread()
     myRobot->StopMove();
     myRobot->currState = ARobot::STOP;
     //myRobot->picam.close();
-    slamOut.close();
+    myRobot->slamOut.close();
     this->mExitFlag = true;
 }
 

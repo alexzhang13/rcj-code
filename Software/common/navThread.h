@@ -32,7 +32,7 @@ public:
     virtual void run(void);
     virtual void DestroyThread();
     inline void UpdatePositionSLAM() {
-        slamOut << myRobot->rangeDataList[myRobot->rangeDataList.size()-1].data.tstamp << " c " << myRobot->rangeDataList[myRobot->rangeDataList.size()-1].coord.x_glob + myRobot->currTile.x*300 << " " << myRobot->rangeDataList[myRobot->rangeDataList.size()-1].coord.y_glob + myRobot->currTile.y*300 << " " << myRobot->imuDataList[myRobot->imuDataList.size()-1].m_yaw << endl;
+        myRobot->slamOut << myRobot->rangeDataList[myRobot->rangeDataList.size()-1].data.tstamp << " c " << myRobot->rangeDataList[myRobot->rangeDataList.size()-1].coord.x_glob + myRobot->currTile.x*300 << " " << myRobot->rangeDataList[myRobot->rangeDataList.size()-1].coord.y_glob + myRobot->currTile.y*300 << " " << myRobot->imuDataList[myRobot->imuDataList.size()-1].m_yaw << endl;
     }
 
     void readConfig(const char* filename, ARobot *robot);
@@ -49,7 +49,6 @@ protected:
     SerialPort *mPort;
     ARobot *myRobot;
 private:
-    ofstream slamOut;
     Navigate2D nav; //main map class obj
     long int start_time;
     long int time_difference;

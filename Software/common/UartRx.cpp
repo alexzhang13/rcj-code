@@ -128,7 +128,7 @@ void UartRx::storeLight(char* buf) {
 }
 
 void UartRx::storeSLAM(char* buf) {
-    myRobot->slamDataList.push(buf);
+    myRobot->slamOut << buf << endl;
 }
 
 void UartRx::storeScan(char* buf) {
