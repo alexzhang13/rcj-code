@@ -21,7 +21,6 @@ void NavThread::run(void){
     sleep(8.5);
     while(myRobot->slamDataList.size() > 0) {
         slamOut << myRobot->slamDataList.front() << endl;
-        printf("SLAM Output: %d\n", myRobot->slamDataList.front());
         myRobot->slamDataList.pop();
     }
     myRobot->imuCalibrated = true; //turn on IMU flag
@@ -110,23 +109,22 @@ void NavThread::run(void){
             //myRobot->UpdateCellMap(&myRobot->sensor_info, false, false); //false = not black
             myRobot->isVictim = nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVictim();
             if(!myRobot->isVictim) {myRobot->isDropped = false;}
-            sleep(0.1);
+            sleep(0.5);
             bot_waypts = myRobot->waypts.size();
             myRobot->currTile.x = myRobot->currTile.x_tovisit;
             myRobot->currTile.y = myRobot->currTile.y_tovisit;
             nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]);
 
             myRobot->SpinLaser();
-            sleep(10);
+            sleep(8.5);
             UpdatePositionSLAM();
             while(myRobot->slamDataList.size() > 0) {
                 slamOut << myRobot->slamDataList.front() << endl;
-                printf("SLAM Size: %d\n", myRobot->slamDataList.front());
                 myRobot->slamDataList.pop();
             }
-            sleep(0.5);
+            sleep(1);
 
-            //printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
+            printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
 #if 0
             if(nav.getCellbyIndex(myRobot->waypts[bot_waypts-2])->getVisitStatus() != MazeCell::Visited) {
                 //myRobot->CheckLightTile();
