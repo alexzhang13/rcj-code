@@ -111,10 +111,10 @@ void NavThread::run(void){
             myRobot->currTile.y = myRobot->currTile.y_tovisit;
             nav.getNavigateMaps()->getFloorMap(nav.getCurrentFloorIndex())->setCurCellIndex(myRobot->waypts[bot_waypts-2]);
 
+	    UpdatePositionSLAM();
+            sleep(0.5);
             myRobot->SpinLaser();
             sleep(8.5);
-            UpdatePositionSLAM();
-            sleep(1);
 
             printf("x: %d, y: %d\n", myRobot->currTile.x, myRobot->currTile.y);
 #if 0
